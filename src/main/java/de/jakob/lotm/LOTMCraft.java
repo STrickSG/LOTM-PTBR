@@ -251,6 +251,7 @@ public class LOTMCraft
         ModDataComponents.register(modEventBus);
         KnowledgeRecipe.SERIALIZERS.register(modEventBus);
         PotionRecipeItemHandler.registerRecipes(modEventBus);
+        de.jakob.lotm.beyonders.potions.RitualRecipeItemHandler.registerRituals(modEventBus);
         BeyonderCharacteristicItemHandler.registerCharacteristics(modEventBus);
         de.jakob.lotm.beyonders.blasphemy.BlasphemyCardItemHandler.registerCards(modEventBus);
         ModAttachments.register(modEventBus);

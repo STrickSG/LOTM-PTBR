@@ -87,6 +87,8 @@ public class ModCreativeModTabs {
                             output.accept(itemHolder.get());
                         });
                         de.jakob.lotm.beyonders.blasphemy.BlasphemyCardItemHandler.ITEMS.getEntries().forEach(itemHolder -> output.accept(itemHolder.get()));
+                        // Pergaminhos de ritual de avanço
+                        de.jakob.lotm.beyonders.potions.RitualRecipeItemHandler.ITEMS.getEntries().forEach(itemHolder -> output.accept(itemHolder.get()));
                     })
                     .build());
 
