@@ -127,6 +127,8 @@ public class AbilityHandler {
         abilities.add(new WindManipulationAbility("wind_manipulation_ability"));
         abilities.add(new FloatAbility("float_ability"));
         abilities.add(new FloatingWindAbility("floating_wind_ability"));
+        // Hidden flight toggle of Wind Manipulation (sequence 4 and up); WindManipulationAbility looks it up by this id
+        abilities.add(new de.jakob.lotm.beyonders.abilities.tyrant.WindManipulationFlightAbility("wind_manipulation_flight"));
         abilities.add(new BlessingsOfWIndAbility("blessings_of_wind_ability"));
         abilities.add(new LightningAbility("lightning_ability"));
         abilities.add(new SirenSongAbility("siren_song_ability"));
