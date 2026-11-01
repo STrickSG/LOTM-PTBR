@@ -89,6 +89,11 @@ public class MarionetteUtils {
     }
 
     public static boolean isMarionette(LivingEntity entity) {
+        // Called for every living entity almost every tick (onSanityDrop); without the component it's no marionette,
+        // and this way no marionette component gets created for every mob in the world
+        if (!entity.hasData(ModAttachments.MARIONETTE_COMPONENT)) {
+            return false;
+        }
         MarionetteComponent component = entity.getData(ModAttachments.MARIONETTE_COMPONENT);
         return component.isMarionette();
     }
