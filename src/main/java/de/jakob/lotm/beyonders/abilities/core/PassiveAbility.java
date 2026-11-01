@@ -53,6 +53,16 @@ public abstract class PassiveAbility {
         }
     }
 
+    /**
+     * Client-side variant keyed by UUID: called when new beyonder data arrives for a player,
+     * so the passives shown/applied on the client follow a pathway or sequence change right away.
+     */
+    public static void invalidateClientCache(UUID uuid) {
+        for (PassiveAbility ability : PassiveAbilityHandler.passiveAbilities) {
+            ability.cachedClient.remove(uuid);
+        }
+    }
+
     public boolean shouldApplyTo(LivingEntity entity) {
         if (!meetsBloodlineRequirement(entity)) return false;
         Map<UUID, Boolean> cached = entity.level().isClientSide ? cachedClient : cachedServer;

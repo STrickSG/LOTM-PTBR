@@ -31,7 +31,11 @@ public class ClientBeyonderCache {
     }
 
     public static void updateData(UUID playerUUID, String pathway, int sequence, float spirituality, boolean griefingEnabled, boolean isPlayer, float digestionProgress, String[] pathwayHistory, int[] charStacks, int cowardWormAmount, String pledgedSefirot, boolean hasPlayerPatron) {
-        dataCache.put(playerUUID, new BeyonderClientData(pathway, sequence, spirituality, griefingEnabled, digestionProgress, pathwayHistory, charStacks, cowardWormAmount, pledgedSefirot == null ? "" : pledgedSefirot, hasPlayerPatron));
+        BeyonderClientData old = dataCache.put(playerUUID, new BeyonderClientData(pathway, sequence, spirituality, griefingEnabled, digestionProgress, pathwayHistory, charStacks, cowardWormAmount, pledgedSefirot == null ? "" : pledgedSefirot, hasPlayerPatron));
+        // Pathway or sequence changed (e.g. advancement or a command): the passives cached for this player are stale
+        if (old == null || !old.pathway().equals(pathway) || old.sequence() != sequence) {
+            de.jakob.lotm.beyonders.abilities.core.PassiveAbility.invalidateClientCache(playerUUID);
+        }
     }
 
     public static String getPledgedSefirot(UUID playerUUID) {
@@ -119,6 +123,7 @@ public class ClientBeyonderCache {
 
     public static void removePlayer(UUID playerUUID) {
         dataCache.remove(playerUUID);
+        de.jakob.lotm.beyonders.abilities.core.PassiveAbility.invalidateClientCache(playerUUID);
     }
 
     // Inner record to store client-side beyonder data
