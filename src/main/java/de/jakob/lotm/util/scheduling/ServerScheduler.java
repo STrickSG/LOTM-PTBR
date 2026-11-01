@@ -1,5 +1,6 @@
 package de.jakob.lotm.util.scheduling;
 
+import de.jakob.lotm.LOTMCraft;
 import net.minecraft.server.level.ServerLevel;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.neoforge.common.NeoForge;
@@ -231,8 +232,7 @@ public class ServerScheduler {
                     try {
                         task.task.run();
                     } catch (Exception e) {
-                        System.err.println("Error executing scheduled task: " + e.getMessage());
-                        e.printStackTrace();
+                        LOTMCraft.LOGGER.error("Error executing scheduled task", e);
                     }
 
                     task.incrementExecutions();
@@ -312,8 +312,7 @@ public class ServerScheduler {
             try {
                 onFinish.run();
             } catch (Exception e) {
-                System.err.println("Error executing onFinish task: " + e.getMessage());
-                e.printStackTrace();
+                LOTMCraft.LOGGER.error("Error executing onFinish task", e);
             }
         }
 
