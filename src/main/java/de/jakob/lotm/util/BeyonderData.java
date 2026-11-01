@@ -389,6 +389,10 @@ public class BeyonderData {
             PacketHandler.requestBeyonderSync();
             return ClientBeyonderCache.getPathway(entity.getUUID());
         }
+        // Same answer as a default component, without attaching one to every entity that gets queried
+        if(!entity.hasData(ModAttachments.BEYONDER_COMPONENT)) {
+            return LOTMCraft.NON_BEYONDER_PATHWAY;
+        }
         BeyonderComponent component = entity.getData(ModAttachments.BEYONDER_COMPONENT);
         String pathway = component.getPathway();
         return pathway == null || pathway.isEmpty() ? LOTMCraft.NON_BEYONDER_PATHWAY : pathway;
@@ -433,6 +437,9 @@ public class BeyonderData {
 //            }
 //        }
 
+        if(!entity.hasData(ModAttachments.BEYONDER_COMPONENT)) {
+            return LOTMCraft.NON_BEYONDER_SEQ;
+        }
         BeyonderComponent component = entity.getData(ModAttachments.BEYONDER_COMPONENT);
         if(component.getSequence() != LOTMCraft.NON_BEYONDER_SEQ)
             return component.getSequence();
@@ -553,10 +560,14 @@ public class BeyonderData {
 
         float current = getSpirituality(player);
         float newAmount = Math.min(getMaxSpirituality(getPathway(player, true), getSequence(player, false, true), player), current + amount);
-        player.getData(ModAttachments.BEYONDER_COMPONENT).setSpirituality(newAmount);
+        BeyonderComponent component = player.getData(ModAttachments.BEYONDER_COMPONENT);
+        float previous = component.getSpirituality();
+        component.setSpirituality(newAmount);
 
-        // Sync to client if this is server-side
-        if (!player.level().isClientSide() && player instanceof ServerPlayer serverPlayer) {
+        // Sync to client if this is server-side. This runs every tick for spirituality regen, so only send
+        // the packet when the value actually changed (e.g. not when already full); BeyonderDataTickHandler
+        // still sends the full data to the player once per second.
+        if (newAmount != previous && !player.level().isClientSide() && player instanceof ServerPlayer serverPlayer) {
             PacketHandler.syncBeyonderDataToPlayer(serverPlayer);
         }
     }
