@@ -77,6 +77,8 @@ public class DeepSpaceDimensionChunkGenerator extends ChunkGenerator {
 
         generateSpheresForChunk(chunk, chunkX, chunkZ);
         generateFloatingIslandsForChunk(chunk, chunkX, chunkZ);
+        // planetas pesados do ritual da Chave das Estrelas (Porta 1)
+        DeepSpacePlanets.placeInChunk(chunk);
 
         return CompletableFuture.completedFuture(chunk);
     }

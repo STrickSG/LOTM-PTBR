@@ -78,6 +78,8 @@ public final class SpiritWorldStructures {
 
             B b = new B(level, rng, cp, new BlockPos(x, y, z));
             build(b, biome);
+            // guarda onde ficou a construção (ritual do Errante, Porta 3)
+            SpiritWorldStructureIndex.record(biome.name().toLowerCase(java.util.Locale.ROOT), new BlockPos(x, y, z), radius(biome));
             return true;
         }
         return false;

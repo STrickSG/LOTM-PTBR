@@ -54,7 +54,28 @@ public final class AdvancementRituals {
             new Ritual("sun", 1, () -> List.of(
                     new ItemStack(ModItems.SACRED_REGISTER.get()),
                     new ItemStack(Items.VILLAGER_SPAWN_EGG, 99),
-                    new ItemStack(PotionItemHandler.WHITE_ANGEL_POTION.get())))
+                    new ItemStack(PotionItemHandler.WHITE_ANGEL_POTION.get()))),
+            // Porta, Sequência 5 (Viajante): coordenadas em 4 pontos do Mundo Espiritual, muito longe uns dos outros
+            new Ritual("door", 5, () -> List.of(
+                    new ItemStack(Items.LODESTONE, 4),
+                    new ItemStack(PotionItemHandler.TRAVELER_POTION.get()))),
+            // Porta, Sequência 4 (Feiticeiro dos Segredos): selar uma criatura hostil de nível semideus
+            new Ritual("door", 4, () -> List.of(
+                    new ItemStack(Items.CHAIN),
+                    new ItemStack(PotionItemHandler.SECRETS_SORCERER_POTION.get()))),
+            // Porta, Sequência 3 (Errante): registrar 3 projeções do Mundo Astral no Mundo Espiritual, sem esquecer
+            new Ritual("door", 3, () -> List.of(
+                    new ItemStack(Items.WRITABLE_BOOK),
+                    new ItemStack(PotionItemHandler.WANDERER_POTION.get()))),
+            // Porta, Sequência 2 (Andarilho dos Planos): deixar lendas sobre você em 9 lugares fora do planeta
+            new Ritual("door", 2, () -> List.of(
+                    new ItemStack(Items.LECTERN, 9),
+                    new ItemStack(Items.WRITTEN_BOOK, 9),
+                    new ItemStack(PotionItemHandler.PLANESWALKER_POTION.get()))),
+            // Porta, Sequência 1 (Chave das Estrelas): pousar num planeta pesado que gira e emite sinais e ligar-se a ele
+            new Ritual("door", 1, () -> List.of(
+                    new ItemStack(Items.LODESTONE),
+                    new ItemStack(PotionItemHandler.KEY_OF_STARS_POTION.get())))
     );
 
     public static List<Ritual> all() {

@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    {
+      "item": "lotmcraft:key_of_stars"
+    },
+    {
+      "item": "lotmcraft:key_of_stars_ritual"
+    }
+  ],
+  "result": {
+    "id": "lotmcraft:key_of_stars_complete_formula",
+    "count": 1
+  }
+}

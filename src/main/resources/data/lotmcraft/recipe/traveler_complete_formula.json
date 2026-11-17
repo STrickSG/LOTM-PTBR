@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    {
+      "item": "lotmcraft:traveler"
+    },
+    {
+      "item": "lotmcraft:traveler_ritual"
+    }
+  ],
+  "result": {
+    "id": "lotmcraft:traveler_complete_formula",
+    "count": 1
+  }
+}

@@ -15,19 +15,19 @@
       "item": "lotmcraft:scribe"
     },
     {
-      "item": "lotmcraft:traveler"
+      "item": "lotmcraft:traveler_complete_formula"
     },
     {
-      "item": "lotmcraft:secrets_sorcerer"
+      "item": "lotmcraft:secrets_sorcerer_complete_formula"
     },
     {
-      "item": "lotmcraft:wanderer"
+      "item": "lotmcraft:wanderer_complete_formula"
     },
     {
-      "item": "lotmcraft:planeswalker"
+      "item": "lotmcraft:planeswalker_complete_formula"
     },
     {
-      "item": "lotmcraft:key_of_stars"
+      "item": "lotmcraft:key_of_stars_complete_formula"
     }
   ],
   "result": {

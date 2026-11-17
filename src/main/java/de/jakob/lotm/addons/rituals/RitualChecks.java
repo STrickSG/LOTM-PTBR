@@ -50,6 +50,12 @@ public final class RitualChecks {
         if ("sun".equals(pathway) && sequence == 2) return memoryPlacedBefore(player);
         // Sol, Sequência 1 (Anjo Branco): ser adorado por 100 fiéis, contando você mesmo
         if ("sun".equals(pathway) && sequence == 1) return Believers.count(player) >= Believers.NEEDED;
+        // Porta: Viajante, Feiticeiro dos Segredos, Errante, Andarilho dos Planos e Chave das Estrelas
+        if ("door".equals(pathway) && sequence == 5) return DoorRituals.coordinates(player) >= DoorRituals.COORDINATES_NEEDED;
+        if ("door".equals(pathway) && sequence == 4) return DoorRituals.sealed(player);
+        if ("door".equals(pathway) && sequence == 3) return DoorRituals.records(player) >= DoorRituals.RECORDS_NEEDED;
+        if ("door".equals(pathway) && sequence == 2) return DoorRituals.legends(player) >= DoorRituals.LEGENDS_NEEDED;
+        if ("door".equals(pathway) && sequence == 1) return DoorRituals.starConnected(player);
         return false;
     }
 
