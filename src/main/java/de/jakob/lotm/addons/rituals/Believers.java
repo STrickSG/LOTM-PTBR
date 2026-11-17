@@ -70,6 +70,15 @@ public final class Believers {
         return player.getPersistentData().getCompound(Player.PERSISTED_NBT_TAG).getBoolean(SELF);
     }
 
+    /**
+     * Contagem de fiéis com o total pedido pelo ritual do Anjo Branco (Sol 1): só aparece para quem está
+     * no Sol, Sequência 2, prestes a fazer esse ritual. Para os outros não há mensagem de contagem.
+     */
+    private static void countMessage(ServerPlayer player, String key, int color) {
+        boolean beforeWhiteAngel = BeyonderData.isBeyonder(player) && "sun".equals(BeyonderData.getPathway(player)) && BeyonderData.getSequence(player) == 2;
+        if (beforeWhiteAngel) player.displayClientMessage(Component.translatable(key, count(player), NEEDED).withColor(color), true);
+    }
+
     /** Só Beyonders de Sequência 3 ou maior podem reunir fiéis; os outros recebem um aviso. */
     private static boolean canGather(ServerPlayer player) {
         if (BeyonderData.isBeyonder(player) && BeyonderData.getSequence(player) <= MAX_SEQUENCE) return true;
@@ -86,9 +95,9 @@ public final class Believers {
             player.getPersistentData().put(Player.PERSISTED_NBT_TAG, persisted);
             player.serverLevel().sendParticles(ParticleTypes.END_ROD, player.getX(), player.getY(1.1), player.getZ(), 25, 0.4, 0.6, 0.4, 0.05);
             player.serverLevel().playSound(null, player.blockPosition(), SoundEvents.AMETHYST_BLOCK_CHIME, SoundSource.PLAYERS, 1f, 1.2f);
-            player.displayClientMessage(Component.translatable("lotmcraft.believers.self", count(player), NEEDED).withColor(COLOR), true);
+            countMessage(player, "lotmcraft.believers.self", COLOR);
         } else {
-            player.displayClientMessage(Component.translatable("lotmcraft.believers.count", count(player), NEEDED).withColor(COLOR), true);
+            countMessage(player, "lotmcraft.believers.count", COLOR);
         }
     }
 
@@ -119,7 +128,7 @@ public final class Believers {
         level.sendParticles(ParticleTypes.END_ROD, villager.getX(), villager.getY(1.1), villager.getZ(), 20, 0.3, 0.5, 0.3, 0.04);
         level.sendParticles(ParticleTypes.HAPPY_VILLAGER, villager.getX(), villager.getY(1.0), villager.getZ(), 8, 0.4, 0.4, 0.4, 0);
         villager.playSound(SoundEvents.VILLAGER_CELEBRATE, 1f, 1f);
-        player.displayClientMessage(Component.translatable("lotmcraft.believers.converted", count(player), NEEDED).withColor(COLOR), true);
+        countMessage(player, "lotmcraft.believers.converted", COLOR);
     }
 
     // Ferir um aldeão: ele perde a fé em você (se era seu fiel) e nunca mais aceita você
@@ -134,7 +143,7 @@ public final class Believers {
             tag.remove(BELIEVER_OF);
             removeTitle(villager);
             data(player.server).remove(player.getUUID(), villager.getUUID());
-            player.displayClientMessage(Component.translatable("lotmcraft.believers.lost", count(player), NEEDED).withColor(0xFF7A7A), true);
+            countMessage(player, "lotmcraft.believers.lost", 0xFF7A7A);
         }
     }
 
