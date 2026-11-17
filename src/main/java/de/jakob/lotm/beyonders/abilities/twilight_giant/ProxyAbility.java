@@ -179,7 +179,7 @@ public class ProxyAbility extends Ability {
             player.getPersistentData().remove(EMPLOY_UNTIL);
             if (RIVER.equals(pledgedSefirot(player))) {
                 writePledge(player, "");
-                player.sendSystemMessage(Component.translatable("ability.lotmcraft.proxy.river_closed"));
+                de.jakob.lotm.util.helper.MessageUtil.actionBar(player, Component.translatable("ability.lotmcraft.proxy.river_closed"));
             }
         } else if (!pledgedSefirot(player).isEmpty()) {
             writePledge(player, "");
@@ -191,7 +191,7 @@ public class ProxyAbility extends Ability {
         if (weak != 0L) {
             player.getPersistentData().remove(WEAK_UNTIL);
             clearWeak(player);
-            player.sendSystemMessage(Component.translatable("ability.lotmcraft.proxy.river_recovered"));
+            de.jakob.lotm.util.helper.MessageUtil.actionBar(player, Component.translatable("ability.lotmcraft.proxy.river_recovered"));
         }
     }
 
@@ -322,7 +322,7 @@ public class ProxyAbility extends Ability {
         pending.remove(patron.getUUID());
         ServerPlayer caster = patron.server.getPlayerList().getPlayer(casterUuid);
         if (!accepted) {
-            if (caster != null) caster.sendSystemMessage(Component.translatable("ability.lotmcraft.proxy.declined", patron.getGameProfile().getName()));
+            if (caster != null) de.jakob.lotm.util.helper.MessageUtil.actionBar(caster, Component.translatable("ability.lotmcraft.proxy.declined", patron.getGameProfile().getName()));
             return 1;
         }
         if (caster == null) return 0;
@@ -336,8 +336,8 @@ public class ProxyAbility extends Ability {
         applyAttributes(caster, "proxy", STAT_BONUS);
         stripProxyCopies(caster);
         syncAllies(caster.server);
-        caster.sendSystemMessage(Component.translatable("ability.lotmcraft.proxy.bound", patron.getGameProfile().getName()));
-        patron.sendSystemMessage(Component.translatable("ability.lotmcraft.proxy.accepted", caster.getGameProfile().getName()));
+        de.jakob.lotm.util.helper.MessageUtil.actionBar(caster, Component.translatable("ability.lotmcraft.proxy.bound", patron.getGameProfile().getName()));
+        de.jakob.lotm.util.helper.MessageUtil.actionBar(patron, Component.translatable("ability.lotmcraft.proxy.accepted", caster.getGameProfile().getName()));
     }
 
     private static int breakPatronage(ServerPlayer player) {
@@ -346,16 +346,16 @@ public class ProxyAbility extends Ability {
         if (own != null) {
             ServerPlayer patron = player.server.getPlayerList().getPlayer(own.patron);
             clearBond(player, false);
-            player.sendSystemMessage(Component.translatable("ability.lotmcraft.proxy.ended"));
-            if (patron != null) patron.sendSystemMessage(Component.translatable("ability.lotmcraft.proxy.released", player.getGameProfile().getName()));
+            de.jakob.lotm.util.helper.MessageUtil.actionBar(player, Component.translatable("ability.lotmcraft.proxy.ended"));
+            if (patron != null) de.jakob.lotm.util.helper.MessageUtil.actionBar(patron, Component.translatable("ability.lotmcraft.proxy.released", player.getGameProfile().getName()));
             any = true;
         }
         for (UUID casterId : castersOf(player.getUUID())) {
             ServerPlayer caster = player.server.getPlayerList().getPlayer(casterId);
             if (caster != null) {
                 clearBond(caster, false);
-                caster.sendSystemMessage(Component.translatable("ability.lotmcraft.proxy.ended"));
-                player.sendSystemMessage(Component.translatable("ability.lotmcraft.proxy.released", caster.getGameProfile().getName()));
+                de.jakob.lotm.util.helper.MessageUtil.actionBar(caster, Component.translatable("ability.lotmcraft.proxy.ended"));
+                de.jakob.lotm.util.helper.MessageUtil.actionBar(player, Component.translatable("ability.lotmcraft.proxy.released", caster.getGameProfile().getName()));
             } else {
                 forget(casterId);
             }
@@ -363,10 +363,10 @@ public class ProxyAbility extends Ability {
         }
         if (!pledgedSefirot(player).isEmpty() && player.getPersistentData().getLong(EMPLOY_UNTIL) <= player.server.overworld().getGameTime()) {
             writePledge(player, "");
-            player.sendSystemMessage(Component.translatable("ability.lotmcraft.proxy.pledge_released"));
+            de.jakob.lotm.util.helper.MessageUtil.actionBar(player, Component.translatable("ability.lotmcraft.proxy.pledge_released"));
             any = true;
         }
-        if (!any) player.sendSystemMessage(Component.translatable("ability.lotmcraft.proxy.none_bound"));
+        if (!any) de.jakob.lotm.util.helper.MessageUtil.actionBar(player, Component.translatable("ability.lotmcraft.proxy.none_bound"));
         return any ? 1 : 0;
     }
 
@@ -374,19 +374,19 @@ public class ProxyAbility extends Ability {
         boolean any = false;
         Bond own = stored(player.getUUID());
         if (own != null) {
-            player.sendSystemMessage(Component.translatable("ability.lotmcraft.proxy.your_patron", nameOf(player, own.patron)));
+            de.jakob.lotm.util.helper.MessageUtil.actionBar(player, Component.translatable("ability.lotmcraft.proxy.your_patron", nameOf(player, own.patron)));
             any = true;
         }
         String pledge = pledgedSefirot(player);
         if (!pledge.isEmpty()) {
-            player.sendSystemMessage(Component.translatable("ability.lotmcraft.proxy.your_pledge", Component.translatable("lotm.sefirot." + pledge)));
+            de.jakob.lotm.util.helper.MessageUtil.actionBar(player, Component.translatable("ability.lotmcraft.proxy.your_pledge", Component.translatable("lotm.sefirot." + pledge)));
             any = true;
         }
         for (UUID casterId : castersOf(player.getUUID())) {
-            player.sendSystemMessage(Component.translatable("ability.lotmcraft.proxy.your_proxy", nameOf(player, casterId)));
+            de.jakob.lotm.util.helper.MessageUtil.actionBar(player, Component.translatable("ability.lotmcraft.proxy.your_proxy", nameOf(player, casterId)));
             any = true;
         }
-        if (!any) player.sendSystemMessage(Component.translatable("ability.lotmcraft.proxy.no_proxy"));
+        if (!any) de.jakob.lotm.util.helper.MessageUtil.actionBar(player, Component.translatable("ability.lotmcraft.proxy.no_proxy"));
         return any ? 1 : 0;
     }
 
@@ -402,7 +402,7 @@ public class ProxyAbility extends Ability {
         if (bond == null) return;
         clearAttributes(caster, "proxy");
         removeCopies(caster, COPY_TYPE, bond.patron);
-        if (tell) caster.sendSystemMessage(Component.translatable("ability.lotmcraft.proxy.lost"));
+        if (tell) de.jakob.lotm.util.helper.MessageUtil.actionBar(caster, Component.translatable("ability.lotmcraft.proxy.lost"));
         PacketHandler.syncBeyonderDataToPlayer(caster);
     }
 

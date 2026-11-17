@@ -81,7 +81,7 @@ public class ExileOfBalanceAbility extends Ability {
         double total = casterScore + enemyScore;
         if (total == 0 || Math.abs(casterScore - enemyScore) <= total * 0.10) {
             if (entity instanceof ServerPlayer sp) {
-                sp.sendSystemMessage(Component.translatable("ability.lotmcraft.exile_of_balance.already_balanced")
+                de.jakob.lotm.util.helper.MessageUtil.actionBar(sp, Component.translatable("ability.lotmcraft.exile_of_balance.already_balanced")
                         .withStyle(ChatFormatting.RED));
             }
             return;
@@ -112,7 +112,7 @@ public class ExileOfBalanceAbility extends Ability {
 
             int durationSeconds = durationTicks / 20;
             if (target instanceof ServerPlayer sp) {
-                sp.sendSystemMessage(Component.translatable("ability.lotmcraft.exile_of_balance.removed_prefix")
+                de.jakob.lotm.util.helper.MessageUtil.actionBar(sp, Component.translatable("ability.lotmcraft.exile_of_balance.removed_prefix")
                         .withStyle(ChatFormatting.GOLD)
                         .append(Component.literal(String.valueOf(durationSeconds)).withStyle(ChatFormatting.WHITE))
                         .append(Component.translatable("ability.lotmcraft.exile_of_balance.removed_suffix").withStyle(ChatFormatting.GOLD)));
@@ -123,7 +123,7 @@ public class ExileOfBalanceAbility extends Ability {
 
         if (exiledCount == 0) {
             if (entity instanceof ServerPlayer sp) {
-                sp.sendSystemMessage(Component.translatable("ability.lotmcraft.exile_of_balance.already_balanced")
+                de.jakob.lotm.util.helper.MessageUtil.actionBar(sp, Component.translatable("ability.lotmcraft.exile_of_balance.already_balanced")
                         .withStyle(ChatFormatting.RED));
             }
             return;

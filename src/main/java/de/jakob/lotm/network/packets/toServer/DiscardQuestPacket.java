@@ -42,7 +42,7 @@ public record DiscardQuestPacket() implements CustomPacketPayload {
                 if (!component.getQuestProgress().isEmpty()) {
                     // Clear the active quest
                     component.getQuestProgress().clear();
-                    serverPlayer.sendSystemMessage(Component.translatable("lotm.quest.discarded").withColor(0xFF5722));
+                    de.jakob.lotm.util.helper.MessageUtil.actionBar(serverPlayer, Component.translatable("lotm.quest.discarded").withColor(0xFF5722));
                 }
             }
         });

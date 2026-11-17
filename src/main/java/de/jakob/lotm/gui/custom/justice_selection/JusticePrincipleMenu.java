@@ -84,7 +84,7 @@ public class JusticePrincipleMenu extends AbstractContainerMenu {
 
         if (id == CONFIRM_BUTTON) {
             if (!JusticeManager.swear(serverPlayer, selected.get())) return false;
-            serverPlayer.sendSystemMessage(Component.translatable("justice.lotmcraft.menu.sworn").withStyle(ChatFormatting.GOLD));
+            de.jakob.lotm.util.helper.MessageUtil.actionBar(serverPlayer, Component.translatable("justice.lotmcraft.menu.sworn").withStyle(ChatFormatting.GOLD));
             serverPlayer.closeContainer();
             return true;
         }

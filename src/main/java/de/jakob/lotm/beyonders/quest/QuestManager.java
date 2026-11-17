@@ -60,7 +60,7 @@ public class QuestManager {
         component.getCompletedQuests().add(questId);
 
         BeyonderData.digest(player, digestionReward, true);
-        player.sendSystemMessage(Component.translatable("lotm.quest.completed", Component.translatable("lotm.quest.impl." + questId).getString()).withColor(0x2196F3));
+        de.jakob.lotm.util.helper.MessageUtil.actionBar(player, Component.translatable("lotm.quest.completed", Component.translatable("lotm.quest.impl." + questId).getString()).withColor(0x2196F3));
     }
 
     public static boolean openQuestDialog(ServerPlayer player, String questId, int npcId) {
@@ -71,12 +71,12 @@ public class QuestManager {
         QuestComponent component = player.getData(ModAttachments.QUEST_COMPONENT);
 
         if(!component.getQuestProgress().isEmpty()) {
-            player.sendSystemMessage(Component.translatable("lotm.quest.already_active").withColor(0xFF5722));
+            de.jakob.lotm.util.helper.MessageUtil.actionBar(player, Component.translatable("lotm.quest.already_active").withColor(0xFF5722));
             return false;
         }
 
         if(!quest.canAccept(player)) {
-            player.sendSystemMessage(Component.translatable("lotm.quest.cannot_accept").withColor(0xFF5722));
+            de.jakob.lotm.util.helper.MessageUtil.actionBar(player, Component.translatable("lotm.quest.cannot_accept").withColor(0xFF5722));
             return false;
         }
 
@@ -113,14 +113,14 @@ public class QuestManager {
         QuestComponent component = player.getData(ModAttachments.QUEST_COMPONENT);
 
         if(!component.getQuestProgress().isEmpty()) {
-            player.sendSystemMessage(Component.translatable("lotm.quest.already_active").withColor(0xFF5722));
+            de.jakob.lotm.util.helper.MessageUtil.actionBar(player, Component.translatable("lotm.quest.already_active").withColor(0xFF5722));
             return false;
         }
 
         component.getQuestProgress().put(questId, 0f);
         component.getLockedQuestRewards().computeIfAbsent(questId, ignored -> quest.getRewards(player).stream().map(ItemStack::copy).toList());
         component.getLockedQuestDigestionRewards().computeIfAbsent(questId, ignored -> quest.getDigestionReward(player));
-        player.sendSystemMessage(Component.translatable("lotm.quest.accepted", Component.translatable("lotm.quest.impl." + questId).getString()).withColor(0x4CAF50));
+        de.jakob.lotm.util.helper.MessageUtil.actionBar(player, Component.translatable("lotm.quest.accepted", Component.translatable("lotm.quest.impl." + questId).getString()).withColor(0x4CAF50));
         quest.startQuest(player);
         player.sendSystemMessage(quest.getDescription(player).withColor(0x4CAF50));
 
@@ -150,7 +150,7 @@ public class QuestManager {
         component.getQuestLocation().remove(questId);
         component.getLockedQuestRewards().remove(questId);
         component.getLockedQuestDigestionRewards().remove(questId);
-        player.sendSystemMessage(Component.translatable("lotm.quest.discarded", Component.translatable("lotm.quest.impl." + questId).getString()).withColor(0xFF5722));
+        de.jakob.lotm.util.helper.MessageUtil.actionBar(player, Component.translatable("lotm.quest.discarded", Component.translatable("lotm.quest.impl." + questId).getString()).withColor(0xFF5722));
     }
 
     @SubscribeEvent

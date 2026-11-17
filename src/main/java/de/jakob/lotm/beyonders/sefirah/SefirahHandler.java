@@ -52,7 +52,7 @@ public class SefirahHandler {
         }
 
         if (de.jakob.lotm.beyonders.abilities.twilight_giant.ProxyAbility.blocksAccommodation(player)) {
-            player.sendSystemMessage(Component.translatable("ability.lotmcraft.proxy.cannot_accommodate").withStyle(ChatFormatting.RED));
+            de.jakob.lotm.util.helper.MessageUtil.actionBar(player, Component.translatable("ability.lotmcraft.proxy.cannot_accommodate").withStyle(ChatFormatting.RED));
             return false;
         }
 
@@ -70,12 +70,12 @@ public class SefirahHandler {
         String claimedSefirot = sefirotData.getClaimedSefirot(player.getUUID());
 
         if(!sefirotData.isInSefirot(player, claimedSefirot)) {
-            player.sendSystemMessage(Component.translatable("lotm.sefirot.not_in_sefirot").withStyle(ChatFormatting.RED));
+            de.jakob.lotm.util.helper.MessageUtil.actionBar(player, Component.translatable("lotm.sefirot.not_in_sefirot").withStyle(ChatFormatting.RED));
             return;
         }
 
         if(sefirotData.isInSefirot(invitedPlayer)) {
-            player.sendSystemMessage(Component.translatable("lotm.sefirot.cannot_reach_player").withStyle(ChatFormatting.RED));
+            de.jakob.lotm.util.helper.MessageUtil.actionBar(player, Component.translatable("lotm.sefirot.cannot_reach_player").withStyle(ChatFormatting.RED));
             return;
         }
 
@@ -90,7 +90,7 @@ public class SefirahHandler {
 
         invitedPlayer.sendSystemMessage(message);
 
-        player.sendSystemMessage(Component.translatable("lotm.sefirot.invite_sent", invitedPlayer.getName().getString()).withStyle(ChatFormatting.GREEN));
+        de.jakob.lotm.util.helper.MessageUtil.actionBar(player, Component.translatable("lotm.sefirot.invite_sent", invitedPlayer.getName().getString()).withStyle(ChatFormatting.GREEN));
     }
 
     public static boolean isInSefirot(ServerPlayer player, String sefirot) {
@@ -111,12 +111,12 @@ public class SefirahHandler {
         String claimedSefirot = sefirotData.getClaimedSefirot(player.getUUID());
 
         if(!sefirotData.isInSefirot(player, claimedSefirot)) {
-            player.sendSystemMessage(Component.translatable("lotm.sefirot.not_in_sefirot").withStyle(ChatFormatting.RED));
+            de.jakob.lotm.util.helper.MessageUtil.actionBar(player, Component.translatable("lotm.sefirot.not_in_sefirot").withStyle(ChatFormatting.RED));
             return;
         }
 
         if(!sefirotData.isInSefirot(kickedPlayer, claimedSefirot)) {
-            player.sendSystemMessage(Component.translatable("lotm.sefirot.target_not_in_sefirot").withStyle(ChatFormatting.RED));
+            de.jakob.lotm.util.helper.MessageUtil.actionBar(player, Component.translatable("lotm.sefirot.target_not_in_sefirot").withStyle(ChatFormatting.RED));
             return;
         }
 

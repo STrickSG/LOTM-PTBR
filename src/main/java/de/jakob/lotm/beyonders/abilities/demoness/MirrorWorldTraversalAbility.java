@@ -81,13 +81,13 @@ public class MirrorWorldTraversalAbility extends SelectableAbility {
 
         ServerLevel overWorldLevel = serverLevel.getServer().getLevel(Level.OVERWORLD);
         if(overWorldLevel == null) {
-            if(entity instanceof ServerPlayer player) player.sendSystemMessage(Component.translatable("ability.lotmcraft.mirror_world_traversal.no_mirrors_found").withColor(getColorForPathway("demoness")));
+            if(entity instanceof ServerPlayer player) de.jakob.lotm.util.helper.MessageUtil.actionBar(player, Component.translatable("ability.lotmcraft.mirror_world_traversal.no_mirrors_found").withColor(getColorForPathway("demoness")));
             serverLevel.playSound(null, entity.blockPosition(), SoundEvents.AMETHYST_BLOCK_HIT, SoundSource.PLAYERS, 1.0F, 0.8F);
             return;
         }
 
         if(entity instanceof ServerPlayer player) {
-            player.sendSystemMessage(Component.translatable("ability.lotmcraft.mirror_world_traversal.scanning").withColor(getColorForPathway("demoness")));
+            de.jakob.lotm.util.helper.MessageUtil.actionBar(player, Component.translatable("ability.lotmcraft.mirror_world_traversal.scanning").withColor(getColorForPathway("demoness")));
             EffectManager.playEffect(EffectIds.RING_PULSE, entity.getX(), entity.getY() + 1, entity.getZ(), serverLevel, player, EffectParams.ofParams(0.5f, 0.1f, 0.7f));
         }
 
@@ -96,7 +96,7 @@ public class MirrorWorldTraversalAbility extends SelectableAbility {
 
             new GlassScanJob(overWorldLevel, searchCenter, 100, nearestGlassBlock -> {
                 if (nearestGlassBlock == null) {
-                    if (entity instanceof ServerPlayer player) player.sendSystemMessage(Component.translatable("ability.lotmcraft.mirror_world_traversal.no_mirrors_found").withColor(getColorForPathway("demoness")));
+                    if (entity instanceof ServerPlayer player) de.jakob.lotm.util.helper.MessageUtil.actionBar(player, Component.translatable("ability.lotmcraft.mirror_world_traversal.no_mirrors_found").withColor(getColorForPathway("demoness")));
                     serverLevel.playSound(null, entity.blockPosition(), SoundEvents.AMETHYST_BLOCK_HIT, SoundSource.PLAYERS, 1.0F, 0.8F);
                     return;
                 }

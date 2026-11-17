@@ -87,7 +87,7 @@ public class JudgementOfJusticeAbility extends SelectableAbility {
         ParticleUtil.spawnParticles(serverLevel, ParticleTypes.END_ROD, target.getEyePosition(), 25, .3, .6, .3, .08);
 
         if (target instanceof ServerPlayer targetPlayer) {
-            targetPlayer.sendSystemMessage(Component.translatable("justice.lotmcraft.judgement.bound", principle.title()).withStyle(ChatFormatting.GOLD));
+            de.jakob.lotm.util.helper.MessageUtil.actionBar(targetPlayer, Component.translatable("justice.lotmcraft.judgement.bound", principle.title()).withStyle(ChatFormatting.GOLD));
         }
     }
 }

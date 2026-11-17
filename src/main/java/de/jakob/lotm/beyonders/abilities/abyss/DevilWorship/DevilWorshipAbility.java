@@ -861,7 +861,12 @@ public class DevilWorshipAbility extends SelectableAbility {
         else {say(owner, LotmText.f("lotmcraft.text.the_devil_returns_from_with", "The Devil returns from %s with: %s.", mission.title(), String.join(", ", got)), 0xFFD700);}
     }
     //helpers
-    private static void say(ServerPlayer player, String text, int color) { player.sendSystemMessage(Component.literal(text).withColor(color)); }
+    // Short status lines go above the hotbar; longer ones stay in chat, where they can be read in full
+    private static void say(ServerPlayer player, String text, int color) {
+        Component message = Component.literal(text).withColor(color);
+        if (text.length() <= 70 && !text.contains("\n")) player.displayClientMessage(message, true);
+        else player.sendSystemMessage(message);
+    }
     private static String typeId(LivingEntity entity) { return BuiltInRegistries.ENTITY_TYPE.getKey(entity.getType()).toString(); }
     private static String displayName(String typeId) {return BuiltInRegistries.ENTITY_TYPE.getOptional(ResourceLocation.parse(typeId)).map(t -> t.getDescription().getString()).orElse(typeId);}
     private static String formatTicks(long ticks) {

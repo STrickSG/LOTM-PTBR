@@ -22,6 +22,10 @@ mods ele aparece como **LOTM PTBR**.
 - Textos que o jogo compara com o que você digita continuam em inglês, porque o código só os
   entende assim: `accept`/`decline` dos contratos, a sintaxe `if ... then ...` da Escrita de
   Histórias, as palavras exigidas no nome honorífico e os cânticos do Castelo Sefirah.
+- Avisos curtos aparecem em cima da barra de itens (barra de ação) em vez do chat. Ficam no chat
+  só os textos para ler com calma: pedidos de contrato, falas de NPC, resultados com coordenadas,
+  alvos de missão, preces, pedidos que precisam de resposta e respostas de comando.
+- Conquistas e títulos de área (Submundo, Castelo Sefirah, Cidade Vitoriana...) em português.
 - Em servidor dedicado, as mensagens montadas no servidor que não passam por chave de tradução
   aparecem em inglês; em mundo de um jogador tudo aparece em português.
 

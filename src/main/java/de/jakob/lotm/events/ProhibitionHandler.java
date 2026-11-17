@@ -38,7 +38,7 @@ public class ProhibitionHandler {
                 return;
             }
             if (entity instanceof ServerPlayer sp) {
-                sp.sendSystemMessage(Component.translatable("lotmcraft.prohibition.beyonder_abilities")
+                de.jakob.lotm.util.helper.MessageUtil.actionBar(sp, Component.translatable("lotmcraft.prohibition.beyonder_abilities")
                         .withStyle(ChatFormatting.RED));
             }
             return;
@@ -55,7 +55,7 @@ public class ProhibitionHandler {
                 event.setCanceled(true);
                 WorldJudgmentHandler.escalate(entity);
                 if (entity instanceof ServerPlayer sp) {
-                    sp.sendSystemMessage(Component.translatable("lotmcraft.prohibition.outside_world_abilities")
+                    de.jakob.lotm.util.helper.MessageUtil.actionBar(sp, Component.translatable("lotmcraft.prohibition.outside_world_abilities")
                             .withStyle(ChatFormatting.RED));
                 }
                 break;
@@ -72,7 +72,7 @@ public class ProhibitionHandler {
             event.setNewDamage(0);
             WorldJudgmentHandler.escalate(attacker);
             if (attacker instanceof ServerPlayer sp) {
-                sp.sendSystemMessage(Component.translatable("lotmcraft.prohibition.combat")
+                de.jakob.lotm.util.helper.MessageUtil.actionBar(sp, Component.translatable("lotmcraft.prohibition.combat")
                         .withStyle(ChatFormatting.RED));
             }
         }
@@ -93,7 +93,7 @@ public class ProhibitionHandler {
                 player.getAbilities().flying = false;
                 player.getAbilities().mayfly = false;
                 player.onUpdateAbilities();
-                player.sendSystemMessage(Component.translatable("lotmcraft.prohibition.flying")
+                de.jakob.lotm.util.helper.MessageUtil.actionBar(player, Component.translatable("lotmcraft.prohibition.flying")
                         .withStyle(ChatFormatting.RED));
             }
         }
@@ -114,7 +114,7 @@ public class ProhibitionHandler {
                 }
                 player.setDeltaMovement(direction.scale(1.5));
                 player.hurtMarked = true;
-                player.sendSystemMessage(Component.translatable("lotmcraft.prohibition.players")
+                de.jakob.lotm.util.helper.MessageUtil.actionBar(player, Component.translatable("lotmcraft.prohibition.players")
                         .withStyle(ChatFormatting.RED));
             }
         }
@@ -132,7 +132,7 @@ public class ProhibitionHandler {
                 if (direction.lengthSqr() < 0.001) direction = new Vec3(1, 0, 0);
                 player.setDeltaMovement(direction.scale(1.5));
                 player.hurtMarked = true;
-                player.sendSystemMessage(Component.translatable("lotmcraft.prohibition.outside_world")
+                de.jakob.lotm.util.helper.MessageUtil.actionBar(player, Component.translatable("lotmcraft.prohibition.outside_world")
                         .withStyle(ChatFormatting.RED));
             }
         }
@@ -146,7 +146,7 @@ public class ProhibitionHandler {
         if (isInZone(player.position(), serverLevel, ProhibitionAbility.ProhibitionType.ITEM_USE, BeyonderData.getSequence(player))) {
             event.setCanceled(true);
             WorldJudgmentHandler.escalate(player);
-            player.sendSystemMessage(Component.translatable("lotmcraft.prohibition.item_use")
+            de.jakob.lotm.util.helper.MessageUtil.actionBar(player, Component.translatable("lotmcraft.prohibition.item_use")
                     .withStyle(ChatFormatting.RED));
         }
     }
@@ -181,7 +181,7 @@ public class ProhibitionHandler {
         if (expiry != null && sl.getGameTime() < expiry) {
             event.setCanceled(true);
             if (entity instanceof ServerPlayer sp) {
-                sp.sendSystemMessage(Component.translatable("lotmcraft.prohibition.exile_participating")
+                de.jakob.lotm.util.helper.MessageUtil.actionBar(sp, Component.translatable("lotmcraft.prohibition.exile_participating")
                         .withStyle(ChatFormatting.RED));
             }
         }
@@ -210,7 +210,7 @@ public class ProhibitionHandler {
         if (reqSeq != null && reqSeq <= 1) {
             event.setCanceled(true);
             if (entity instanceof ServerPlayer sp) {
-                sp.sendSystemMessage(Component.translatable("lotmcraft.prohibition.individual_balance_sealed")
+                de.jakob.lotm.util.helper.MessageUtil.actionBar(sp, Component.translatable("lotmcraft.prohibition.individual_balance_sealed")
                         .withStyle(ChatFormatting.RED));
             }
         }

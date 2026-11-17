@@ -260,7 +260,7 @@ public final class JusticeManager {
             effect(player, debuffs.get(player.getRandom().nextInt(debuffs.size())), 0, 100);
         }
         if (player.tickCount % 200 == 0 && player.getRandom().nextFloat() < 0.1f) {
-            player.sendSystemMessage(Component.translatable("justice.lotmcraft.regress").withStyle(ChatFormatting.DARK_RED));
+            de.jakob.lotm.util.helper.MessageUtil.actionBar(player, Component.translatable("justice.lotmcraft.regress").withStyle(ChatFormatting.DARK_RED));
             AbilityUtil.sealAllTargetAbilities(player, player, "vows_broken", 20 * 60);
             player.addEffect(new MobEffectInstance(ModEffects.LOOSING_CONTROL, 20 * 6, 1, false, false, false));
         }

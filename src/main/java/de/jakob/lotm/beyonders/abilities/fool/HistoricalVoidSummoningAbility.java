@@ -228,7 +228,7 @@ public class HistoricalVoidSummoningAbility extends SelectableAbility {
                 e.getValue().type() == SummonType.ITEM || e.getValue().type() == SummonType.ENTITY);
         data.summonedCount = 0;
 
-        player.sendSystemMessage(Component.translatable(
+        de.jakob.lotm.util.helper.MessageUtil.actionBar(player, Component.translatable(
                 "ability.lotmcraft.historical_void_summoning.returned_all", itemsReturned, entitiesReturned
         ).withStyle(ChatFormatting.GRAY));
     }
@@ -324,13 +324,13 @@ public class HistoricalVoidSummoningAbility extends SelectableAbility {
     private void summonItem(ServerLevel level, ServerPlayer player) {
         int currentSummoned = getSummonedCount(player);
         if(currentSummoned >= getMaxSummoned(player)) {
-            player.sendSystemMessage(Component.translatable("ability.lotmcraft.historical_void_summoning.max_summoned").withStyle(ChatFormatting.RED));
+            de.jakob.lotm.util.helper.MessageUtil.actionBar(player, Component.translatable("ability.lotmcraft.historical_void_summoning.max_summoned").withStyle(ChatFormatting.RED));
             return;
         }
 
         List<ItemStack> markedItems = getMarkedItems(player);
         if (markedItems.isEmpty()) {
-            player.sendSystemMessage(Component.translatable("ability.lotmcraft.historical_void_summoning.no_marked_items").withStyle(ChatFormatting.RED));
+            de.jakob.lotm.util.helper.MessageUtil.actionBar(player, Component.translatable("ability.lotmcraft.historical_void_summoning.no_marked_items").withStyle(ChatFormatting.RED));
             return;
         }
 
@@ -355,9 +355,9 @@ public class HistoricalVoidSummoningAbility extends SelectableAbility {
                                 // Re-check count before summoning
                                 if(getSummonedCount(player) < getMaxSummoned(player)) {
                                     createTemporaryItem(level, player, clickedItem.copy());
-                                    player.sendSystemMessage(Component.translatable("ability.lotmcraft.historical_void_summoning.summoned_item", clickedItem.getHoverName().getString()).withStyle(ChatFormatting.GREEN));
+                                    de.jakob.lotm.util.helper.MessageUtil.actionBar(player, Component.translatable("ability.lotmcraft.historical_void_summoning.summoned_item", clickedItem.getHoverName().getString()).withStyle(ChatFormatting.GREEN));
                                 } else {
-                                    player.sendSystemMessage(Component.translatable("ability.lotmcraft.historical_void_summoning.max_summoned").withStyle(ChatFormatting.RED));
+                                    de.jakob.lotm.util.helper.MessageUtil.actionBar(player, Component.translatable("ability.lotmcraft.historical_void_summoning.max_summoned").withStyle(ChatFormatting.RED));
                                 }
                                 player.closeContainer();
                             }
@@ -421,7 +421,7 @@ public class HistoricalVoidSummoningAbility extends SelectableAbility {
         if(foundAndRemoved || hasPlacedBlocksForSummon(player.getUUID(), summonTime)) {
             decrementSummonedCount(player, summonTime);
             if(player.isAlive()) {
-                player.sendSystemMessage(Component.translatable("ability.lotmcraft.historical_void_summoning.item_returned").withStyle(ChatFormatting.GRAY));
+                de.jakob.lotm.util.helper.MessageUtil.actionBar(player, Component.translatable("ability.lotmcraft.historical_void_summoning.item_returned").withStyle(ChatFormatting.GRAY));
             }
         }
     }
@@ -450,13 +450,13 @@ public class HistoricalVoidSummoningAbility extends SelectableAbility {
     private void summonEntity(ServerLevel level, ServerPlayer player) {
         int currentSummoned = getSummonedCount(player);
         if(currentSummoned >= getMaxSummoned(player)) {
-            player.sendSystemMessage(Component.translatable("ability.lotmcraft.historical_void_summoning.max_summoned").withStyle(ChatFormatting.RED));
+            de.jakob.lotm.util.helper.MessageUtil.actionBar(player, Component.translatable("ability.lotmcraft.historical_void_summoning.max_summoned").withStyle(ChatFormatting.RED));
             return;
         }
 
         List<CompoundTag> markedEntities = getMarkedEntities(player);
         if(markedEntities.isEmpty()) {
-            player.sendSystemMessage(Component.translatable("ability.lotmcraft.historical_void_summoning.no_marked_entities").withStyle(ChatFormatting.RED));
+            de.jakob.lotm.util.helper.MessageUtil.actionBar(player, Component.translatable("ability.lotmcraft.historical_void_summoning.no_marked_entities").withStyle(ChatFormatting.RED));
             return;
         }
 
@@ -567,7 +567,7 @@ public class HistoricalVoidSummoningAbility extends SelectableAbility {
                                                 spawnTemporaryEntity(level, player, entityData);
                                             });
                                         } else {
-                                            player.sendSystemMessage(Component.translatable("ability.lotmcraft.historical_void_summoning.max_summoned").withStyle(ChatFormatting.RED));
+                                            de.jakob.lotm.util.helper.MessageUtil.actionBar(player, Component.translatable("ability.lotmcraft.historical_void_summoning.max_summoned").withStyle(ChatFormatting.RED));
                                         }
                                         player.closeContainer();
                                     }
@@ -637,7 +637,7 @@ public class HistoricalVoidSummoningAbility extends SelectableAbility {
             Optional<EntityType<?>> optionalType = EntityType.byString(entityTypeId);
 
             if(optionalType.isEmpty()) {
-                player.sendSystemMessage(Component.translatable("ability.lotmcraft.historical_void_summoning.unknown_entity_type").withStyle(ChatFormatting.RED));
+                de.jakob.lotm.util.helper.MessageUtil.actionBar(player, Component.translatable("ability.lotmcraft.historical_void_summoning.unknown_entity_type").withStyle(ChatFormatting.RED));
                 return;
             }
 
@@ -686,7 +686,7 @@ public class HistoricalVoidSummoningAbility extends SelectableAbility {
             }
 
             if(entity == null) {
-                player.sendSystemMessage(Component.translatable("ability.lotmcraft.historical_void_summoning.failed_create_entity").withStyle(ChatFormatting.RED));
+                de.jakob.lotm.util.helper.MessageUtil.actionBar(player, Component.translatable("ability.lotmcraft.historical_void_summoning.failed_create_entity").withStyle(ChatFormatting.RED));
                 return;
             }
 
@@ -708,19 +708,19 @@ public class HistoricalVoidSummoningAbility extends SelectableAbility {
             int targetSequence = entity instanceof LivingEntity livingTarget ? getEffectiveSequence(livingTarget) : 10;
 
             if(targetSequence == 0) {
-                player.sendSystemMessage(Component.translatable("ability.lotmcraft.historical_void_summoning.cannot_summon_sequence_zero").withStyle(ChatFormatting.RED));
+                de.jakob.lotm.util.helper.MessageUtil.actionBar(player, Component.translatable("ability.lotmcraft.historical_void_summoning.cannot_summon_sequence_zero").withStyle(ChatFormatting.RED));
                 return;
             }
 
             int slotCost = getSlotCost(targetSequence);
             if(getSummonedCount(player) + slotCost > getMaxSummoned(player)) {
-                player.sendSystemMessage(Component.translatable("ability.lotmcraft.historical_void_summoning.max_summoned").withStyle(ChatFormatting.RED));
+                de.jakob.lotm.util.helper.MessageUtil.actionBar(player, Component.translatable("ability.lotmcraft.historical_void_summoning.max_summoned").withStyle(ChatFormatting.RED));
                 return;
             }
 
             double failureChance = getFailureChance(BeyonderData.getSequence(player), targetSequence);
             if(failureChance > 0 && player.getRandom().nextDouble() < failureChance) {
-                player.sendSystemMessage(Component.translatable("ability.lotmcraft.historical_void_summoning.summon_failed", entity.getName().getString()).withStyle(ChatFormatting.RED));
+                de.jakob.lotm.util.helper.MessageUtil.actionBar(player, Component.translatable("ability.lotmcraft.historical_void_summoning.summon_failed", entity.getName().getString()).withStyle(ChatFormatting.RED));
                 return;
             }
 
@@ -768,7 +768,7 @@ public class HistoricalVoidSummoningAbility extends SelectableAbility {
 
                 incrementSummonedCount(player, summonTime, SummonType.ENTITY, entityUUID, slotCost);
 
-                player.sendSystemMessage(Component.translatable("ability.lotmcraft.historical_void_summoning.summoned_entity", entity.getName().getString()).withStyle(ChatFormatting.GREEN));
+                de.jakob.lotm.util.helper.MessageUtil.actionBar(player, Component.translatable("ability.lotmcraft.historical_void_summoning.summoned_entity", entity.getName().getString()).withStyle(ChatFormatting.GREEN));
                 if(entity instanceof LivingEntity living)
                     AllyUtil.makeAllies(player, living);
                 if (isPlayer && entity instanceof BeyonderNPCEntity npc)
@@ -781,10 +781,10 @@ public class HistoricalVoidSummoningAbility extends SelectableAbility {
                     }
                 }, level);
             } else {
-                player.sendSystemMessage(Component.translatable("ability.lotmcraft.historical_void_summoning.failed_spawn_entity").withStyle(ChatFormatting.RED));
+                de.jakob.lotm.util.helper.MessageUtil.actionBar(player, Component.translatable("ability.lotmcraft.historical_void_summoning.failed_spawn_entity").withStyle(ChatFormatting.RED));
             }
         } catch(Exception e) {
-            player.sendSystemMessage(Component.translatable("ability.lotmcraft.historical_void_summoning.error_summoning", e.getMessage()).withStyle(ChatFormatting.RED));
+            de.jakob.lotm.util.helper.MessageUtil.actionBar(player, Component.translatable("ability.lotmcraft.historical_void_summoning.error_summoning", e.getMessage()).withStyle(ChatFormatting.RED));
             e.printStackTrace();
         }
     }
@@ -827,7 +827,7 @@ public class HistoricalVoidSummoningAbility extends SelectableAbility {
         if(removed) {
             decrementSummonedCount(player, summonTime, cost);
             if(player.isAlive()) {
-                player.sendSystemMessage(Component.translatable("ability.lotmcraft.historical_void_summoning.entity_returned").withStyle(ChatFormatting.GRAY));
+                de.jakob.lotm.util.helper.MessageUtil.actionBar(player, Component.translatable("ability.lotmcraft.historical_void_summoning.entity_returned").withStyle(ChatFormatting.GRAY));
             }
         }
     }
@@ -872,25 +872,25 @@ public class HistoricalVoidSummoningAbility extends SelectableAbility {
         ItemStack toMark = !mainHand.isEmpty() ? mainHand : offHand;
 
         if (toMark.isEmpty()) {
-            player.sendSystemMessage(Component.translatable("ability.lotmcraft.historical_void_summoning.no_item_held").withStyle(ChatFormatting.RED));
+            de.jakob.lotm.util.helper.MessageUtil.actionBar(player, Component.translatable("ability.lotmcraft.historical_void_summoning.no_item_held").withStyle(ChatFormatting.RED));
             return;
         }
 
         if (isExcludedFromSummoning(toMark)) {
-            player.sendSystemMessage(Component.translatable("ability.lotmcraft.historical_void_summoning.item_cannot_be_marked").withStyle(ChatFormatting.RED));
+            de.jakob.lotm.util.helper.MessageUtil.actionBar(player, Component.translatable("ability.lotmcraft.historical_void_summoning.item_cannot_be_marked").withStyle(ChatFormatting.RED));
             return;
         }
 
         addMarkedItem(player, toMark.copy());
 
-        player.sendSystemMessage(Component.translatable("ability.lotmcraft.historical_void_summoning.marked_item", toMark.getHoverName().getString()).withStyle(ChatFormatting.GREEN));
+        de.jakob.lotm.util.helper.MessageUtil.actionBar(player, Component.translatable("ability.lotmcraft.historical_void_summoning.marked_item", toMark.getHoverName().getString()).withStyle(ChatFormatting.GREEN));
     }
 
     private void markEntity(ServerLevel level, ServerPlayer player) {
         LivingEntity target = AbilityUtil.getTargetEntity(player, 20, 2f, true, true, true, false);
 
         if(target == null){
-            player.sendSystemMessage(Component.translatable("ability.lotmcraft.historical_void_summoning.no_nearby_entities").withStyle(ChatFormatting.RED));
+            de.jakob.lotm.util.helper.MessageUtil.actionBar(player, Component.translatable("ability.lotmcraft.historical_void_summoning.no_nearby_entities").withStyle(ChatFormatting.RED));
             return;
         }
 
@@ -922,7 +922,7 @@ public class HistoricalVoidSummoningAbility extends SelectableAbility {
 
         addMarkedEntity(player, entityData);
 
-        player.sendSystemMessage(Component.translatable("ability.lotmcraft.historical_void_summoning.marked_entity", target.getName().getString()).withStyle(ChatFormatting.GREEN));
+        de.jakob.lotm.util.helper.MessageUtil.actionBar(player, Component.translatable("ability.lotmcraft.historical_void_summoning.marked_entity", target.getName().getString()).withStyle(ChatFormatting.GREEN));
     }
 
 
@@ -945,7 +945,7 @@ public class HistoricalVoidSummoningAbility extends SelectableAbility {
         }
         addMarkedEntity(player, entityData);
 
-        player.sendSystemMessage(Component.translatable("ability.lotmcraft.historical_void_summoning.marked_entity", player.getName().getString()).withStyle(ChatFormatting.GREEN));
+        de.jakob.lotm.util.helper.MessageUtil.actionBar(player, Component.translatable("ability.lotmcraft.historical_void_summoning.marked_entity", player.getName().getString()).withStyle(ChatFormatting.GREEN));
     }
 
 
@@ -1016,7 +1016,7 @@ public class HistoricalVoidSummoningAbility extends SelectableAbility {
                             player.getInventory().removeItem(i, stack.getCount());
                             decrementSummonedCount(serverPlayer, tag.getLong("VoidSummonTime"));
                             if(player.isAlive()) {
-                                player.sendSystemMessage(Component.translatable("ability.lotmcraft.historical_void_summoning.item_returned").withStyle(ChatFormatting.GRAY));
+                                de.jakob.lotm.util.helper.MessageUtil.actionBar(player, Component.translatable("ability.lotmcraft.historical_void_summoning.item_returned").withStyle(ChatFormatting.GRAY));
                             }
                         }
                     }
@@ -1065,7 +1065,7 @@ public class HistoricalVoidSummoningAbility extends SelectableAbility {
             int cost = Math.max(1, data.getInt("VoidSlotCost"));
             entity.remove(Entity.RemovalReason.DISCARDED);
             decrementSummonedCount(owner, summonTime, cost);
-            owner.sendSystemMessage(Component.translatable("ability.lotmcraft.historical_void_summoning.out_of_spirituality").withStyle(ChatFormatting.RED));
+            de.jakob.lotm.util.helper.MessageUtil.actionBar(owner, Component.translatable("ability.lotmcraft.historical_void_summoning.out_of_spirituality").withStyle(ChatFormatting.RED));
             return;
         }
 

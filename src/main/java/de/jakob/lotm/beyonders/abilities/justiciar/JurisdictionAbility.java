@@ -170,7 +170,7 @@ public class JurisdictionAbility extends Ability {
 
                         if (inside && !zone.inside.contains(id)) {
                             zone.inside.add(id);
-                            owner.sendSystemMessage(Component.translatableWithFallback("lotmcraft.text.has_entered_your_jurisdiction", "§6⚖ §e%s §fhas entered your §eJurisdiction §6⚖", String.valueOf(e.getName().getString())));
+                            de.jakob.lotm.util.helper.MessageUtil.actionBar(owner, Component.translatableWithFallback("lotmcraft.text.has_entered_your_jurisdiction", "§6⚖ §e%s §fhas entered your §eJurisdiction §6⚖", String.valueOf(e.getName().getString())));
                             zone.level.playSound(null, owner.blockPosition(), SoundEvents.EXPERIENCE_ORB_PICKUP, SoundSource.PLAYERS, 0.4f, 1.5f);
 
                             if(owner instanceof ServerPlayer ownerServer && e instanceof ServerPlayer eServer)
@@ -179,7 +179,7 @@ public class JurisdictionAbility extends Ability {
 
                         if (!inside && zone.inside.contains(id)) {
                             zone.inside.remove(id);
-                            owner.sendSystemMessage(Component.translatableWithFallback("lotmcraft.text.has_left_your_jurisdiction", "§6⚖ §e%s §fhas left your §eJurisdiction §6⚖", String.valueOf(e.getName().getString())));
+                            de.jakob.lotm.util.helper.MessageUtil.actionBar(owner, Component.translatableWithFallback("lotmcraft.text.has_left_your_jurisdiction", "§6⚖ §e%s §fhas left your §eJurisdiction §6⚖", String.valueOf(e.getName().getString())));
                             zone.level.playSound(null, owner.blockPosition(), SoundEvents.EXPERIENCE_ORB_PICKUP, SoundSource.PLAYERS, 0.4f, 0.8f);
 
                             if(owner instanceof ServerPlayer ownerServer && e instanceof ServerPlayer eServer)

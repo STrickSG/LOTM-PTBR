@@ -122,7 +122,7 @@ public class FireArmorAbility extends ToggleAbility {
             if (toughnessAttribute.hasModifier(TOUGHNESS_MODIFIER_ID)) {
                 toughnessAttribute.removeModifier(TOUGHNESS_MODIFIER_ID);
                 ARMOR_SHARDS=0;
-                entity.sendSystemMessage(Component.translatableWithFallback("lotmcraft.text.your_armor_has_depleted_stay_safe", "Your armor has depleted, stay safe").withStyle(ChatFormatting.DARK_RED));
+                de.jakob.lotm.util.helper.MessageUtil.actionBar(entity, Component.translatableWithFallback("lotmcraft.text.your_armor_has_depleted_stay_safe", "Your armor has depleted, stay safe").withStyle(ChatFormatting.DARK_RED));
                 if(plates.isEmpty()) return;
                 for(FirePlateEntity firePlateEntity : plates) {
                     firePlateEntity.discard();
@@ -155,7 +155,7 @@ public class FireArmorAbility extends ToggleAbility {
         ARMOR_SHARDS-=COST;
         IN_IFRAME=true;
         event.getEntity().playSound(SoundEvents.BELL_RESONATE, 1.0F, 1.0F);
-        if (ARMOR_SHARDS > 0) event.getEntity().sendSystemMessage(Component.translatableWithFallback("lotmcraft.text.your_fire_armor_protected_you", "Your fire armor protected you.").withStyle(ChatFormatting.RED));
+        if (ARMOR_SHARDS > 0) de.jakob.lotm.util.helper.MessageUtil.actionBar(event.getEntity(), Component.translatableWithFallback("lotmcraft.text.your_fire_armor_protected_you", "Your fire armor protected you.").withStyle(ChatFormatting.RED));
         event.setCanceled(true);
         ServerScheduler.scheduleDelayed(20*IFRAME_DELAY, () -> IN_IFRAME=false);
         if(plates.isEmpty()) return;

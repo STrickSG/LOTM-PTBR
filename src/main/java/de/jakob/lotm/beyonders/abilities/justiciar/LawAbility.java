@@ -191,7 +191,7 @@ public class LawAbility extends SelectableAbility {
         LivingEntity target = AbilityUtil.getTargetEntity(caster, (int) (20 * multiplier(caster)), 1.5f);
         if (target == null) {
             if (caster instanceof ServerPlayer player) {
-                player.sendSystemMessage(Component.translatable("ability.lotmcraft.law.sealing_no_target").withStyle(ChatFormatting.RED));
+                de.jakob.lotm.util.helper.MessageUtil.actionBar(player, Component.translatable("ability.lotmcraft.law.sealing_no_target").withStyle(ChatFormatting.RED));
             }
             return;
         }
@@ -199,7 +199,7 @@ public class LawAbility extends SelectableAbility {
         String abilityId = LAST_USED_ABILITY.get(target.getUUID());
         if (abilityId == null) {
             if (caster instanceof ServerPlayer player) {
-                player.sendSystemMessage(Component.translatable("ability.lotmcraft.law.sealing_no_ability").withStyle(ChatFormatting.RED));
+                de.jakob.lotm.util.helper.MessageUtil.actionBar(player, Component.translatable("ability.lotmcraft.law.sealing_no_ability").withStyle(ChatFormatting.RED));
             }
             return;
         }
@@ -241,7 +241,7 @@ public class LawAbility extends SelectableAbility {
         if (sealed != null) abilityName = sealed.getName().getString();
 
         if (caster instanceof ServerPlayer player) {
-            player.sendSystemMessage(Component.translatable("ability.lotmcraft.law.sealing_broadcast_prefix")
+            de.jakob.lotm.util.helper.MessageUtil.actionBar(player, Component.translatable("ability.lotmcraft.law.sealing_broadcast_prefix")
                     .withStyle(ChatFormatting.GOLD)
                     .append(Component.literal(target.getDisplayName().getString()).withStyle(ChatFormatting.WHITE))
                     .append(Component.translatable("ability.lotmcraft.law.sealing_broadcast_middle").withStyle(ChatFormatting.GOLD))
@@ -249,7 +249,7 @@ public class LawAbility extends SelectableAbility {
                     .append(Component.translatable("ability.lotmcraft.law.sealing_broadcast_suffix").withStyle(ChatFormatting.GOLD)));
         }
         if (target instanceof ServerPlayer targetPlayer) {
-            targetPlayer.sendSystemMessage(Component.translatable("ability.lotmcraft.law.sealing_target_prefix")
+            de.jakob.lotm.util.helper.MessageUtil.actionBar(targetPlayer, Component.translatable("ability.lotmcraft.law.sealing_target_prefix")
                     .withStyle(ChatFormatting.RED)
                     .append(Component.literal(abilityName).withStyle(ChatFormatting.YELLOW))
                     .append(Component.translatable("ability.lotmcraft.law.sealing_target_suffix").withStyle(ChatFormatting.RED)));

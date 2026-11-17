@@ -50,7 +50,7 @@ public record StructureDivinationSelectedPacket(String structureId) implements C
         ResourceLocation structureKey = ResourceLocation.tryParse(packet.structureId());
 
         if (structureKey == null) {
-            player.sendSystemMessage(Component.translatableWithFallback("lotmcraft.text.invalid_structure_id", "§cInvalid structure id"));
+            de.jakob.lotm.util.helper.MessageUtil.actionBar(player, Component.translatableWithFallback("lotmcraft.text.invalid_structure_id", "§cInvalid structure id"));
             return;
         }
 
@@ -77,7 +77,7 @@ public record StructureDivinationSelectedPacket(String structureId) implements C
 
             context.enqueueWork(() -> {
                 if (result == null) {
-                    player.sendSystemMessage(Component.translatableWithFallback("lotmcraft.text.no_structure_nearby_in_blocks", "§cNo structure nearby in %s blocks", String.valueOf(maxDistance)));
+                    de.jakob.lotm.util.helper.MessageUtil.actionBar(player, Component.translatableWithFallback("lotmcraft.text.no_structure_nearby_in_blocks", "§cNo structure nearby in %s blocks", String.valueOf(maxDistance)));
                     return;
                 }
 

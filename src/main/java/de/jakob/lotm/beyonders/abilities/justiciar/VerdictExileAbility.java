@@ -53,7 +53,7 @@ public class VerdictExileAbility extends Ability {
         LivingEntity target = AbilityUtil.getTargetEntity(entity, (int) (25 * multiplier(entity)), 1.4f);
         if (target == null) {
             if (entity instanceof ServerPlayer sp) {
-                sp.sendSystemMessage(Component.translatable("ability.lotmcraft.verdict_exile.no_target").withStyle(ChatFormatting.RED));
+                de.jakob.lotm.util.helper.MessageUtil.actionBar(sp, Component.translatable("ability.lotmcraft.verdict_exile.no_target").withStyle(ChatFormatting.RED));
             }
             return;
         }

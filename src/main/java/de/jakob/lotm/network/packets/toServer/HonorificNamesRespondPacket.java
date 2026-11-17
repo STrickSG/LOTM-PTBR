@@ -70,7 +70,7 @@ public record HonorificNamesRespondPacket(UUID senderUUID, boolean teleport) imp
             } else {
                 // Queue message transfer: target's next chat message goes to sender
                 HonorificNamesEventHandler.isInTransferring.put(targetUUID, senderUUID);
-                target.sendSystemMessage(
+                de.jakob.lotm.util.helper.MessageUtil.actionBar(target, 
                         net.minecraft.network.chat.Component.literal(LotmText.f("lotmcraft.text.your_next_message_will_be_sent", "Your next message will be sent to %s.", sender.getName().getString()))
                                 .withStyle(net.minecraft.ChatFormatting.GREEN)
                 );

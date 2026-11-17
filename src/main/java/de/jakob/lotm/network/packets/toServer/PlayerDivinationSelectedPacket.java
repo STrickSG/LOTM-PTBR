@@ -84,7 +84,7 @@ public record PlayerDivinationSelectedPacket(UUID selectedPlayerUuid, PlayerSele
                 .getPlayer(packet.selectedPlayerUuid);
 
         if(targetPlayer == null){
-            player.sendSystemMessage(Component.translatableWithFallback("lotmcraft.text.player_not_found", "§cPlayer not found"));
+            de.jakob.lotm.util.helper.MessageUtil.actionBar(player, Component.translatableWithFallback("lotmcraft.text.player_not_found", "§cPlayer not found"));
             return;
         }
 
@@ -97,7 +97,7 @@ public record PlayerDivinationSelectedPacket(UUID selectedPlayerUuid, PlayerSele
         }
 
         if (!(player.level().dimension() == targetPlayer.level().dimension())) {
-            player.sendSystemMessage(Component.translatableWithFallback("lotmcraft.text.player_not_found", "§cPlayer not found"));
+            de.jakob.lotm.util.helper.MessageUtil.actionBar(player, Component.translatableWithFallback("lotmcraft.text.player_not_found", "§cPlayer not found"));
             return;
         }
 
@@ -125,12 +125,12 @@ public record PlayerDivinationSelectedPacket(UUID selectedPlayerUuid, PlayerSele
                 .getPlayer(packet.selectedPlayerUuid);
 
         if (targetPlayer != null && CombatAuthorityAbility.blocksDivination(player, targetPlayer)) {
-            player.sendSystemMessage(Component.translatable("ability.lotmcraft.combat_authority.divination_blocked"));
+            de.jakob.lotm.util.helper.MessageUtil.actionBar(player, Component.translatable("ability.lotmcraft.combat_authority.divination_blocked"));
             return;
         }
 
         if (ConcealmentAuthorityAbility.undivinable(targetPlayer)) {
-            player.sendSystemMessage(Component.translatableWithFallback("lotmcraft.text.divination_failed", "§cDivination failed"));
+            de.jakob.lotm.util.helper.MessageUtil.actionBar(player, Component.translatableWithFallback("lotmcraft.text.divination_failed", "§cDivination failed"));
             return;
         }
 
@@ -145,7 +145,7 @@ public record PlayerDivinationSelectedPacket(UUID selectedPlayerUuid, PlayerSele
         if (de.jakob.lotm.beyonders.abilities.error.handler.DeceitHandler.handleDivination(player, targetPlayer)) return;
 
         if (targetPlayer == null || !(player.level().dimension() == targetPlayer.level().dimension())) {
-            player.sendSystemMessage(Component.translatableWithFallback("lotmcraft.text.player_not_found", "§cPlayer not found"));
+            de.jakob.lotm.util.helper.MessageUtil.actionBar(player, Component.translatableWithFallback("lotmcraft.text.player_not_found", "§cPlayer not found"));
             return;
         }
 
@@ -154,7 +154,7 @@ public record PlayerDivinationSelectedPacket(UUID selectedPlayerUuid, PlayerSele
 
         int divinationDifference = 3 + DivinationUtil.getDivinationPower(player) - DivinationUtil.getConcealmentPower(targetPlayer);
         if (divinationDifference <= 0){
-            player.sendSystemMessage(Component.translatableWithFallback("lotmcraft.text.divination_failed", "§cDivination failed"));
+            de.jakob.lotm.util.helper.MessageUtil.actionBar(player, Component.translatableWithFallback("lotmcraft.text.divination_failed", "§cDivination failed"));
             if(playerSequence < 4 && targetSequence > 3){
                 player.addEffect(new MobEffectInstance(ModEffects.LOOSING_CONTROL, 200, 2));
             }
@@ -180,13 +180,13 @@ public record PlayerDivinationSelectedPacket(UUID selectedPlayerUuid, PlayerSele
             };
 
         if (distance >= maxDistance) {
-            player.sendSystemMessage(Component.translatableWithFallback("lotmcraft.text.player_is_very_far_from_you", "§cPlayer is very far from you"));
+            de.jakob.lotm.util.helper.MessageUtil.actionBar(player, Component.translatableWithFallback("lotmcraft.text.player_is_very_far_from_you", "§cPlayer is very far from you"));
             return;
         }
 
         if (divinationDifference < 4){
             if(playerSequence < 4 && targetSequence > 3){
-                player.sendSystemMessage(Component.translatableWithFallback("lotmcraft.text.divination_failed", "§cDivination failed"));
+                de.jakob.lotm.util.helper.MessageUtil.actionBar(player, Component.translatableWithFallback("lotmcraft.text.divination_failed", "§cDivination failed"));
                 return;
             }
             player.sendSystemMessage(Component.translatableWithFallback("lotmcraft.text.divination_sense_direction", "§5You sense §d%s§5 to the §d%s§5", targetPlayer.getGameProfile().getName(), LotmText.trc(getDirection(dx, dz))));

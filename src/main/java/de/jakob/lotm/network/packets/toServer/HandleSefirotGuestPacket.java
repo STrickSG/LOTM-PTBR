@@ -38,7 +38,7 @@ public record HandleSefirotGuestPacket(UUID allyId, int action) implements Custo
             ServerPlayer target = player.getServer().getPlayerList().getPlayer(packet.allyId());
 
             if(target == null) {
-                player.sendSystemMessage(Component.translatable("lotm.sefirot.cannot_reach_player").withStyle(ChatFormatting.RED));
+                de.jakob.lotm.util.helper.MessageUtil.actionBar(player, Component.translatable("lotm.sefirot.cannot_reach_player").withStyle(ChatFormatting.RED));
                 return;
             }
 

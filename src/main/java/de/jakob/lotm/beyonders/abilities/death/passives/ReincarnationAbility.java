@@ -91,7 +91,7 @@ public class ReincarnationAbility extends PassiveAbility {
         long cooldownUntil = player.getPersistentData().getLong(NBT_COOLDOWN_TIME);
         if (now < cooldownUntil) {
             long remainingMinutes = (cooldownUntil - now) / 60000;
-            player.sendSystemMessage(Component.translatable("ability.lotmcraft.reincarnation.on_cooldown",
+            de.jakob.lotm.util.helper.MessageUtil.actionBar(player, Component.translatable("ability.lotmcraft.reincarnation.on_cooldown",
                     remainingMinutes).withStyle(ChatFormatting.DARK_RED));
             return;
         }
@@ -152,9 +152,9 @@ public class ReincarnationAbility extends PassiveAbility {
                 CONCEALMENT_TICKS, 0, false, false, false));
 
         int sealMinutes = sealTicks / (20 * 60);
-        player.sendSystemMessage(Component.translatable("ability.lotmcraft.reincarnation.triggered")
+        de.jakob.lotm.util.helper.MessageUtil.actionBar(player, Component.translatable("ability.lotmcraft.reincarnation.triggered")
                 .withStyle(ChatFormatting.DARK_AQUA));
-        player.sendSystemMessage(Component.translatable("ability.lotmcraft.reincarnation.debuff_applied", sealMinutes)
+        de.jakob.lotm.util.helper.MessageUtil.actionBar(player, Component.translatable("ability.lotmcraft.reincarnation.debuff_applied", sealMinutes)
                 .withStyle(ChatFormatting.DARK_RED));
     }
 

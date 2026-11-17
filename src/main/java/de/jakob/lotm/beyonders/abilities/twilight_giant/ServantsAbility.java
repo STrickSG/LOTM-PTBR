@@ -175,8 +175,8 @@ public class ServantsAbility extends SelectableAbility {
                 .withStyle(style -> style.withColor(0x4CAF50).withClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/lotm_servant_boost " + masterUuid)));
         Component borrow = Component.translatable("ability.lotmcraft.servants.borrow")
                 .withStyle(style -> style.withColor(0xFF6A2A).withClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/lotm_servant_borrow " + masterUuid)));
-        servant.sendSystemMessage(Component.translatable("ability.lotmcraft.servants.accepted").append(" ").append(boost).append(" ").append(borrow));
-        master.sendSystemMessage(Component.translatable("ability.lotmcraft.servants.accepted_master", servant.getGameProfile().getName()));
+        de.jakob.lotm.util.helper.MessageUtil.actionBar(servant, Component.translatable("ability.lotmcraft.servants.accepted").append(" ").append(boost).append(" ").append(borrow));
+        de.jakob.lotm.util.helper.MessageUtil.actionBar(master, Component.translatable("ability.lotmcraft.servants.accepted_master", servant.getGameProfile().getName()));
         return 1;
     }
 
@@ -203,7 +203,7 @@ public class ServantsAbility extends SelectableAbility {
             mark.boost = false;
             mark.borrowed = true;
         }
-        servant.sendSystemMessage(Component.translatable(boost ? "ability.lotmcraft.servants.boosted" : "ability.lotmcraft.servants.borrowed"));
+        de.jakob.lotm.util.helper.MessageUtil.actionBar(servant, Component.translatable(boost ? "ability.lotmcraft.servants.boosted" : "ability.lotmcraft.servants.borrowed"));
         return 1;
     }
 
@@ -220,9 +220,9 @@ public class ServantsAbility extends SelectableAbility {
         if (mark == null || mark.accepted || mark.boost || mark.borrowed) return 0;
         owned.remove(servant.getUUID());
         if (owned.isEmpty()) marks.remove(masterUuid);
-        servant.sendSystemMessage(Component.translatable("ability.lotmcraft.servants.declined"));
+        de.jakob.lotm.util.helper.MessageUtil.actionBar(servant, Component.translatable("ability.lotmcraft.servants.declined"));
         ServerPlayer master = servant.server.getPlayerList().getPlayer(masterUuid);
-        if (master != null) master.sendSystemMessage(Component.translatable("ability.lotmcraft.servants.refused", servant.getGameProfile().getName()));
+        if (master != null) de.jakob.lotm.util.helper.MessageUtil.actionBar(master, Component.translatable("ability.lotmcraft.servants.refused", servant.getGameProfile().getName()));
         return 1;
     }
 

@@ -48,7 +48,7 @@ public record BiomeDivinationSelectedPacket(String biomeId) implements CustomPac
         ResourceLocation biomeKey = ResourceLocation.tryParse(packet.biomeId());
 
         if (biomeKey == null) {
-            player.sendSystemMessage(Component.translatableWithFallback("lotmcraft.text.invalid_biome_id", "§cInvalid biome id"));
+            de.jakob.lotm.util.helper.MessageUtil.actionBar(player, Component.translatableWithFallback("lotmcraft.text.invalid_biome_id", "§cInvalid biome id"));
             return;
         }
 
@@ -71,7 +71,7 @@ public record BiomeDivinationSelectedPacket(String biomeId) implements CustomPac
 
             context.enqueueWork(() -> {
                 if (result == null) {
-                    player.sendSystemMessage(Component.translatableWithFallback("lotmcraft.text.no_such_biome_nearby_in_the", "§cNo such biome nearby in the sensed area"));
+                    de.jakob.lotm.util.helper.MessageUtil.actionBar(player, Component.translatableWithFallback("lotmcraft.text.no_such_biome_nearby_in_the", "§cNo such biome nearby in the sensed area"));
                     return;
                 }
 

@@ -40,12 +40,12 @@ public class AllyUtil {
         if (entity1 instanceof ServerPlayer player1) {
             syncAllyData(player1);
             if (sendMessage)
-                player1.sendSystemMessage(Component.translatable("lotm.ally.added", entity2.getName()).withColor(0x4CAF50));
+                de.jakob.lotm.util.helper.MessageUtil.actionBar(player1, Component.translatable("lotm.ally.added", entity2.getName()).withColor(0x4CAF50));
         }
         if (entity2 instanceof ServerPlayer player2) {
             syncAllyData(player2);
             if (sendMessage)
-                player2.sendSystemMessage(Component.translatable("lotm.ally.added", entity1.getName()).withColor(0x4CAF50));
+                de.jakob.lotm.util.helper.MessageUtil.actionBar(player2, Component.translatable("lotm.ally.added", entity1.getName()).withColor(0x4CAF50));
         }
     }
 
@@ -67,12 +67,12 @@ public class AllyUtil {
         if (entity1 instanceof ServerPlayer player1) {
             syncAllyData(player1);
             if(sendMessage)
-                player1.sendSystemMessage(Component.translatable("lotm.ally.removed", entity2.getName()).withColor(0xFF9800));
+                de.jakob.lotm.util.helper.MessageUtil.actionBar(player1, Component.translatable("lotm.ally.removed", entity2.getName()).withColor(0xFF9800));
         }
         if (entity2 instanceof ServerPlayer player2) {
             syncAllyData(player2);
             if(sendMessage)
-                player2.sendSystemMessage(Component.translatable("lotm.ally.removed", entity1.getName()).withColor(0xFF9800));
+                de.jakob.lotm.util.helper.MessageUtil.actionBar(player2, Component.translatable("lotm.ally.removed", entity1.getName()).withColor(0xFF9800));
         }
     }
 

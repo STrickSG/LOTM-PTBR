@@ -38,10 +38,10 @@ public record HandleAllyRequestPacket(UUID allyUUID, String allyName, boolean ac
             ServerPlayer player = (ServerPlayer) context.player();
 
             if(!packet.accepted()) {
-                player.sendSystemMessage(Component.translatable("lotm.ally.request.declined", packet.allyName()).withStyle(style -> style.withColor(0xF44336)));
+                de.jakob.lotm.util.helper.MessageUtil.actionBar(player, Component.translatable("lotm.ally.request.declined", packet.allyName()).withStyle(style -> style.withColor(0xF44336)));
                 Player target = player.getServer().getPlayerList().getPlayer(packet.allyUUID());
                 if(target != null) {
-                    target.sendSystemMessage(Component.translatable("lotm.ally.request.declined_by", player.getName()).withStyle(style -> style.withColor(0xF44336)));
+                    de.jakob.lotm.util.helper.MessageUtil.actionBar(target, Component.translatable("lotm.ally.request.declined_by", player.getName()).withStyle(style -> style.withColor(0xF44336)));
                 }
                 AllyUtil.declineAllyRequest(player, packet.allyUUID());
                 return;
@@ -49,7 +49,7 @@ public record HandleAllyRequestPacket(UUID allyUUID, String allyName, boolean ac
             else {
                 Player target = player.getServer().getPlayerList().getPlayer(packet.allyUUID());
                 if(target == null) {
-                    player.sendSystemMessage(Component.translatable("lotm.ally.request.not_found", packet.allyName()).withStyle(style -> style.withColor(0xF44336)));
+                    de.jakob.lotm.util.helper.MessageUtil.actionBar(player, Component.translatable("lotm.ally.request.not_found", packet.allyName()).withStyle(style -> style.withColor(0xF44336)));
                     return;
                 }
 

@@ -77,7 +77,7 @@ public class PunishmentAbility extends Ability {
             cancelPunishment(casterUUID, serverLevel);
             spawnDismissEffect(serverLevel, entity.position());
             if (entity instanceof ServerPlayer player) {
-                player.sendSystemMessage(Component.translatable("ability.lotmcraft.punishment.cancelled")
+                de.jakob.lotm.util.helper.MessageUtil.actionBar(player, Component.translatable("ability.lotmcraft.punishment.cancelled")
                         .withStyle(ChatFormatting.YELLOW));
             }
             return;
@@ -86,7 +86,7 @@ public class PunishmentAbility extends Ability {
         LivingEntity target = AbilityUtil.getTargetEntity(entity, (int) (20 * multiplier(entity)), 1.5f);
         if (target == null) {
             if (entity instanceof ServerPlayer player) {
-                player.sendSystemMessage(Component.translatable("ability.lotmcraft.punishment.no_target")
+                de.jakob.lotm.util.helper.MessageUtil.actionBar(player, Component.translatable("ability.lotmcraft.punishment.no_target")
                         .withStyle(ChatFormatting.RED));
             }
             return;
@@ -105,7 +105,7 @@ public class PunishmentAbility extends Ability {
         spawnMarkingEffect(serverLevel, entity, target);
 
         if (entity instanceof ServerPlayer player) {
-            player.sendSystemMessage(Component.translatable("ability.lotmcraft.punishment.marked_prefix")
+            de.jakob.lotm.util.helper.MessageUtil.actionBar(player, Component.translatable("ability.lotmcraft.punishment.marked_prefix")
                     .withStyle(ChatFormatting.GOLD)
                     .append(Component.literal(target.getDisplayName().getString()).withStyle(ChatFormatting.WHITE))
                     .append(Component.translatable("ability.lotmcraft.punishment.marked_suffix").withStyle(ChatFormatting.GOLD)));
@@ -195,7 +195,7 @@ public class PunishmentAbility extends Ability {
         ServerPlayer casterPlayer = serverLevel.getServer().getPlayerList().getPlayer(casterUUID);
         if (casterPlayer != null) {
             applyRandomBuff(casterPlayer);
-            casterPlayer.sendSystemMessage(Component.translatable("ability.lotmcraft.punishment.triggered_prefix")
+            de.jakob.lotm.util.helper.MessageUtil.actionBar(casterPlayer, Component.translatable("ability.lotmcraft.punishment.triggered_prefix")
                     .withStyle(ChatFormatting.GOLD)
                     .append(Component.translatable(reason).withStyle(ChatFormatting.WHITE)));
         }

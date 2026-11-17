@@ -61,7 +61,7 @@ public class ExecutionAbility extends Ability {
 
         if (random.nextDouble() < failChance) {
             if (caster instanceof ServerPlayer player) {
-                player.sendSystemMessage(Component.translatable("ability.lotmcraft.execution.verdict_failed")
+                de.jakob.lotm.util.helper.MessageUtil.actionBar(player, Component.translatable("ability.lotmcraft.execution.verdict_failed")
                         .withStyle(ChatFormatting.RED));
             }
             return;
@@ -69,7 +69,7 @@ public class ExecutionAbility extends Ability {
 
         if (target == null) {
             if (caster instanceof ServerPlayer player) {
-                player.sendSystemMessage(Component.translatable("ability.lotmcraft.execution.no_target")
+                de.jakob.lotm.util.helper.MessageUtil.actionBar(player, Component.translatable("ability.lotmcraft.execution.no_target")
                         .withStyle(ChatFormatting.RED));
             }
             return;

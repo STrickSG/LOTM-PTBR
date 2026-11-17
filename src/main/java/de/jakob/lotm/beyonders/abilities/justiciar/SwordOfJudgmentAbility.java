@@ -52,7 +52,7 @@ public class SwordOfJudgmentAbility extends Ability {
 
         if (random.nextDouble() >= successChance) {
             if (entity instanceof ServerPlayer sp) {
-                sp.sendSystemMessage(Component.translatable("ability.lotmcraft.sword_of_judgment.deflected")
+                de.jakob.lotm.util.helper.MessageUtil.actionBar(sp, Component.translatable("ability.lotmcraft.sword_of_judgment.deflected")
                         .withStyle(ChatFormatting.RED));
             }
             return;

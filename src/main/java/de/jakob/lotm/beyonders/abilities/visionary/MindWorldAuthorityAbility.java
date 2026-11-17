@@ -110,12 +110,12 @@ public class MindWorldAuthorityAbility extends SelectableAbility {
         }
 
         if(!structures.containsKey(entity.getUUID())){
-            entity.sendSystemMessage(Component.translatableWithFallback("lotmcraft.text.you_don_t_have_any_saved", "You don't have any saved structure!").withColor(0xf5c56c));
+            de.jakob.lotm.util.helper.MessageUtil.actionBar(entity, Component.translatableWithFallback("lotmcraft.text.you_don_t_have_any_saved", "You don't have any saved structure!").withColor(0xf5c56c));
             return;
         }
 
         if(!envisioning.contains(entity.getUUID())){
-            entity.sendSystemMessage(Component.translatableWithFallback("lotmcraft.text.you_must_be_in_state_of", "You must be in state of envisioning!").withColor(0xf5c56c));
+            de.jakob.lotm.util.helper.MessageUtil.actionBar(entity, Component.translatableWithFallback("lotmcraft.text.you_must_be_in_state_of", "You must be in state of envisioning!").withColor(0xf5c56c));
             return;
         }
 
@@ -142,7 +142,7 @@ public class MindWorldAuthorityAbility extends SelectableAbility {
         posBuffer.remove(entity.getUUID());
         structures.remove(entity.getUUID());
 
-        entity.sendSystemMessage(Component.translatableWithFallback("lotmcraft.text.cleaned_structures_and_locations", "Cleaned structures and locations").withColor(0xf5c56c));
+        de.jakob.lotm.util.helper.MessageUtil.actionBar(entity, Component.translatableWithFallback("lotmcraft.text.cleaned_structures_and_locations", "Cleaned structures and locations").withColor(0xf5c56c));
     }
 
     private void copy(Level level, LivingEntity entity){
@@ -158,7 +158,7 @@ public class MindWorldAuthorityAbility extends SelectableAbility {
             if(loc1.equals(loc)){
                 posBuffer.remove(entity.getUUID());
 
-                entity.sendSystemMessage(Component.translatableWithFallback("lotmcraft.text.cleaned_saved_location", "Cleaned saved location").withColor(0xf5c56c));
+                de.jakob.lotm.util.helper.MessageUtil.actionBar(entity, Component.translatableWithFallback("lotmcraft.text.cleaned_saved_location", "Cleaned saved location").withColor(0xf5c56c));
 
                 return;
             }
@@ -192,7 +192,7 @@ public class MindWorldAuthorityAbility extends SelectableAbility {
 
             structures.put(entity.getUUID(), template);
 
-            entity.sendSystemMessage(Component.translatableWithFallback("lotmcraft.text.saved_structure", "Saved structure").withColor(0xf5c56c));
+            de.jakob.lotm.util.helper.MessageUtil.actionBar(entity, Component.translatableWithFallback("lotmcraft.text.saved_structure", "Saved structure").withColor(0xf5c56c));
 
             return;
         }

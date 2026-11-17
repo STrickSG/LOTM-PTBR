@@ -38,21 +38,21 @@ public record RemoveAllyPacket(UUID allyUUID, String allyName) implements Custom
 
             Player target = player.server.getPlayerList().getPlayerByName(packet.allyName());
             if(target == null) {
-                player.sendSystemMessage(Component.translatable("lotm.ally.remove.not_found", packet.allyName()).withStyle(style -> style.withColor(0xF44336)));
+                de.jakob.lotm.util.helper.MessageUtil.actionBar(player, Component.translatable("lotm.ally.remove.not_found", packet.allyName()).withStyle(style -> style.withColor(0xF44336)));
                 return;
             }
             if (ServantsAbility.bound(player.getUUID(), target.getUUID())) {
-                player.sendSystemMessage(Component.translatable("lotm.ally.servant_locked", target.getName()).withStyle(style -> style.withColor(0xF44336)));
+                de.jakob.lotm.util.helper.MessageUtil.actionBar(player, Component.translatable("lotm.ally.servant_locked", target.getName()).withStyle(style -> style.withColor(0xF44336)));
                 return;
             }
             if (ProxyAbility.bound(player.getUUID(), target.getUUID())) {
-                player.sendSystemMessage(Component.translatable("lotm.ally.proxy_locked", target.getName()).withStyle(style -> style.withColor(0xF44336)));
+                de.jakob.lotm.util.helper.MessageUtil.actionBar(player, Component.translatable("lotm.ally.proxy_locked", target.getName()).withStyle(style -> style.withColor(0xF44336)));
                 return;
             }
 
             AllyUtil.removeAllies(player, target, false);
-            target.sendSystemMessage(Component.translatable("lotm.ally.removed", player.getName()).withStyle(style -> style.withColor(0xF44336)));
-            player.sendSystemMessage(Component.translatable("lotm.ally.removed", target.getName()).withStyle(style -> style.withColor(0xF44336)));
+            de.jakob.lotm.util.helper.MessageUtil.actionBar(target, Component.translatable("lotm.ally.removed", player.getName()).withStyle(style -> style.withColor(0xF44336)));
+            de.jakob.lotm.util.helper.MessageUtil.actionBar(player, Component.translatable("lotm.ally.removed", target.getName()).withStyle(style -> style.withColor(0xF44336)));
         });
     }
 }

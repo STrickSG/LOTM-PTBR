@@ -120,7 +120,7 @@ public class InternalUnderworldAbility extends SelectableAbility {
         clearCaptureMode(player);
 
         if (!SpiritHandler.isCapturableSpirit(target)) {
-            player.sendSystemMessage(Component.translatable("ability.lotmcraft.internal_underworld.not_capturable")
+            de.jakob.lotm.util.helper.MessageUtil.actionBar(player, Component.translatable("ability.lotmcraft.internal_underworld.not_capturable")
                     .withStyle(ChatFormatting.RED));
             return;
         }
@@ -130,7 +130,7 @@ public class InternalUnderworldAbility extends SelectableAbility {
         int playerSeq = BeyonderData.getSequence(player);
 
         if (getStoredSouls(player).size() >= getMaxSouls(playerSeq)) {
-            player.sendSystemMessage(Component.translatable("ability.lotmcraft.internal_underworld.full")
+            de.jakob.lotm.util.helper.MessageUtil.actionBar(player, Component.translatable("ability.lotmcraft.internal_underworld.full")
                     .withStyle(ChatFormatting.RED));
             return;
         }
@@ -147,7 +147,7 @@ public class InternalUnderworldAbility extends SelectableAbility {
             spawnFailureParticles(serverLevel, target);
             if(target instanceof Mob mob) mob.setTarget(player);
             serverLevel.playSound(null, target.blockPosition(), SoundEvents.ENDERMAN_TELEPORT, SoundSource.PLAYERS, 0.8f, 1.8f);
-            player.sendSystemMessage(Component.translatable("ability.lotmcraft.internal_underworld.escaped")
+            de.jakob.lotm.util.helper.MessageUtil.actionBar(player, Component.translatable("ability.lotmcraft.internal_underworld.escaped")
                     .withStyle(ChatFormatting.GRAY));
             return;
         }
@@ -158,13 +158,13 @@ public class InternalUnderworldAbility extends SelectableAbility {
         serverLevel.playSound(null, target.blockPosition(), SoundEvents.SOUL_ESCAPE.value(), SoundSource.PLAYERS, 1.0f, 0.7f);
         target.discard();
 
-        player.sendSystemMessage(Component.translatable("ability.lotmcraft.internal_underworld.captured",
+        de.jakob.lotm.util.helper.MessageUtil.actionBar(player, Component.translatable("ability.lotmcraft.internal_underworld.captured",
                 target.getName().getString()).withStyle(ChatFormatting.DARK_AQUA));
     }
 
     private static void activateCaptureMode(ServerPlayer player) {
         player.getPersistentData().putBoolean(CAPTURE_MODE_TAG, true);
-        player.sendSystemMessage(Component.translatable("ability.lotmcraft.internal_underworld.capture_mode_on")
+        de.jakob.lotm.util.helper.MessageUtil.actionBar(player, Component.translatable("ability.lotmcraft.internal_underworld.capture_mode_on")
                 .withStyle(ChatFormatting.DARK_AQUA));
     }
 
@@ -194,7 +194,7 @@ public class InternalUnderworldAbility extends SelectableAbility {
         List<CompoundTag> storedSouls = getStoredSouls(player);
 
         if (storedSouls.isEmpty()) {
-            player.sendSystemMessage(Component.translatable("ability.lotmcraft.internal_underworld.no_souls")
+            de.jakob.lotm.util.helper.MessageUtil.actionBar(player, Component.translatable("ability.lotmcraft.internal_underworld.no_souls")
                     .withStyle(ChatFormatting.RED));
             return;
         }
@@ -263,7 +263,7 @@ public class InternalUnderworldAbility extends SelectableAbility {
                         if (discardMode) {
                             removeStoredSoul(player, soulData);
                             player.closeContainer();
-                            player.sendSystemMessage(Component.translatable("ability.lotmcraft.internal_underworld.discarded")
+                            de.jakob.lotm.util.helper.MessageUtil.actionBar(player, Component.translatable("ability.lotmcraft.internal_underworld.discarded")
                                     .withStyle(ChatFormatting.GRAY));
                         } else {
                             player.closeContainer();
@@ -279,7 +279,7 @@ public class InternalUnderworldAbility extends SelectableAbility {
         List<CompoundTag> storedSouls = getStoredSouls(player);
 
         if (storedSouls.isEmpty()) {
-            player.sendSystemMessage(Component.translatable("ability.lotmcraft.internal_underworld.no_souls")
+            de.jakob.lotm.util.helper.MessageUtil.actionBar(player, Component.translatable("ability.lotmcraft.internal_underworld.no_souls")
                     .withStyle(ChatFormatting.RED));
             return;
         }
@@ -294,7 +294,7 @@ public class InternalUnderworldAbility extends SelectableAbility {
             }
         }
 
-        player.sendSystemMessage(Component.translatable("ability.lotmcraft.internal_underworld.summoned_all", summoned)
+        de.jakob.lotm.util.helper.MessageUtil.actionBar(player, Component.translatable("ability.lotmcraft.internal_underworld.summoned_all", summoned)
                 .withStyle(ChatFormatting.DARK_AQUA));
     }
 
@@ -302,13 +302,13 @@ public class InternalUnderworldAbility extends SelectableAbility {
         try {
             Optional<EntityType<?>> optionalType = EntityType.byString(soulData.getString("EntityType"));
             if (optionalType.isEmpty()) {
-                player.sendSystemMessage(Component.translatable("ability.lotmcraft.internal_underworld.failed").withStyle(ChatFormatting.RED));
+                de.jakob.lotm.util.helper.MessageUtil.actionBar(player, Component.translatable("ability.lotmcraft.internal_underworld.failed").withStyle(ChatFormatting.RED));
                 return;
             }
 
             net.minecraft.world.entity.Entity entity = optionalType.get().create(level);
             if (entity == null) {
-                player.sendSystemMessage(Component.translatable("ability.lotmcraft.internal_underworld.failed").withStyle(ChatFormatting.RED));
+                de.jakob.lotm.util.helper.MessageUtil.actionBar(player, Component.translatable("ability.lotmcraft.internal_underworld.failed").withStyle(ChatFormatting.RED));
                 return;
             }
 
@@ -339,14 +339,14 @@ public class InternalUnderworldAbility extends SelectableAbility {
                 spawnReleaseParticles(level, livingEntity);
                 level.playSound(null, livingEntity.blockPosition(), SoundEvents.WITHER_SPAWN, SoundSource.PLAYERS, 0.4f, 1.6f);
 
-                player.sendSystemMessage(Component.translatable("ability.lotmcraft.internal_underworld.summoned",
+                de.jakob.lotm.util.helper.MessageUtil.actionBar(player, Component.translatable("ability.lotmcraft.internal_underworld.summoned",
                         entity.getName().getString()).withStyle(ChatFormatting.DARK_AQUA));
             } else {
-                player.sendSystemMessage(Component.translatable("ability.lotmcraft.internal_underworld.failed").withStyle(ChatFormatting.RED));
+                de.jakob.lotm.util.helper.MessageUtil.actionBar(player, Component.translatable("ability.lotmcraft.internal_underworld.failed").withStyle(ChatFormatting.RED));
             }
 
         } catch (Exception e) {
-            player.sendSystemMessage(Component.translatable("ability.lotmcraft.internal_underworld.failed").withStyle(ChatFormatting.RED));
+            de.jakob.lotm.util.helper.MessageUtil.actionBar(player, Component.translatable("ability.lotmcraft.internal_underworld.failed").withStyle(ChatFormatting.RED));
             e.printStackTrace();
         }
     }
@@ -354,7 +354,7 @@ public class InternalUnderworldAbility extends SelectableAbility {
     private void recallAllSouls(ServerPlayer player) {
         List<ActiveSoul> souls = activeSouls.remove(player.getUUID());
         if (souls == null || souls.isEmpty()) {
-            player.sendSystemMessage(Component.translatable("ability.lotmcraft.internal_underworld.no_active_souls")
+            de.jakob.lotm.util.helper.MessageUtil.actionBar(player, Component.translatable("ability.lotmcraft.internal_underworld.no_active_souls")
                     .withStyle(ChatFormatting.RED));
             return;
         }
@@ -372,7 +372,7 @@ public class InternalUnderworldAbility extends SelectableAbility {
             }
         }
 
-        player.sendSystemMessage(Component.translatable("ability.lotmcraft.internal_underworld.retrieved", count)
+        de.jakob.lotm.util.helper.MessageUtil.actionBar(player, Component.translatable("ability.lotmcraft.internal_underworld.retrieved", count)
                 .withStyle(ChatFormatting.DARK_AQUA));
     }
 

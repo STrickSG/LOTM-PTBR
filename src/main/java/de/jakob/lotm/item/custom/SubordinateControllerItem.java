@@ -59,7 +59,7 @@ public class SubordinateControllerItem extends Item {
                 entity = searchInOtherLevels(player, entityUUID);
             }
             if (!(entity instanceof LivingEntity livingEntity)) {
-                player.sendSystemMessage(Component.translatableWithFallback("lotmcraft.text.subordinate_not_found", "Subordinate not found!"));
+                de.jakob.lotm.util.helper.MessageUtil.actionBar(player, Component.translatableWithFallback("lotmcraft.text.subordinate_not_found", "Subordinate not found!"));
                 stack.shrink(1);
                 return InteractionResultHolder.fail(stack);
             }
@@ -75,7 +75,7 @@ public class SubordinateControllerItem extends Item {
                 // Toggle attack mode
                 if(player.isShiftKeyDown()) {
                     component.setShouldAttack(!component.shouldAttack());
-                    player.sendSystemMessage(Component.translatable("ability.lotmcraft.puppeteering.attack").append(Component.literal(": ")).append(Component.translatable(component.shouldAttack() ? "lotm.on" : "lotm.off")).withColor(0xa26fc9));
+                    de.jakob.lotm.util.helper.MessageUtil.actionBar(player, Component.translatable("ability.lotmcraft.puppeteering.attack").append(Component.literal(": ")).append(Component.translatable(component.shouldAttack() ? "lotm.on" : "lotm.off")).withColor(0xa26fc9));
                     return InteractionResultHolder.sidedSuccess(stack, false);
                 }
                 BlockHitResult blockHit = (BlockHitResult) hitResult;
@@ -83,7 +83,7 @@ public class SubordinateControllerItem extends Item {
 
                 Level entityLevel = livingEntity.level();
                 if(!(entityLevel instanceof ServerLevel entityServerLevel)) {
-                    player.sendSystemMessage(Component.translatableWithFallback("lotmcraft.text.subordinate_not_in_a_valid_dimension", "Subordinate not in a valid dimension!"));
+                    de.jakob.lotm.util.helper.MessageUtil.actionBar(player, Component.translatableWithFallback("lotmcraft.text.subordinate_not_in_a_valid_dimension", "Subordinate not in a valid dimension!"));
                     return InteractionResultHolder.fail(stack);
                 }
 
@@ -120,7 +120,7 @@ public class SubordinateControllerItem extends Item {
                     ((ServerLevel) level).getChunkSource().addEntity(livingEntity);
                 }
 
-                player.sendSystemMessage(Component.translatable("ability.lotmcraft.chain_of_command.entity_teleport").withColor(0xa26fc9));
+                de.jakob.lotm.util.helper.MessageUtil.actionBar(player, Component.translatable("ability.lotmcraft.chain_of_command.entity_teleport").withColor(0xa26fc9));
             } else {
                 // Release marionette
                 if(player.isShiftKeyDown()) {
@@ -128,7 +128,7 @@ public class SubordinateControllerItem extends Item {
                     component.setControllerUUID("");
                     livingEntity.setHealth(0);
                     stack.shrink(1);
-                    player.sendSystemMessage(Component.translatable("ability.lotm.chain_of_command.entity_released").withColor(0xa26fc9));
+                    de.jakob.lotm.util.helper.MessageUtil.actionBar(player, Component.translatable("ability.lotm.chain_of_command.entity_released").withColor(0xa26fc9));
                     return InteractionResultHolder.sidedSuccess(stack, false);
                 }
                 // Toggle follow mode
@@ -137,7 +137,7 @@ public class SubordinateControllerItem extends Item {
                     mob.setTarget(null);
                     mob.getNavigation().stop();
                 }
-                player.sendSystemMessage(Component.translatable("ability.lotmcraft.chain_of_command.follow_mode").append(Component.literal(": ")).append(Component.translatable(component.isFollowMode() ? "lotm.on" : "lotm.off")).withColor(0xa26fc9));
+                de.jakob.lotm.util.helper.MessageUtil.actionBar(player, Component.translatable("ability.lotmcraft.chain_of_command.follow_mode").append(Component.literal(": ")).append(Component.translatable(component.isFollowMode() ? "lotm.on" : "lotm.off")).withColor(0xa26fc9));
             }
         }
         
@@ -175,7 +175,7 @@ public class SubordinateControllerItem extends Item {
             entity = searchInOtherLevels(player, entityUUID);
         }
         if (!(entity instanceof LivingEntity livingEntity)) {
-            player.sendSystemMessage(Component.translatableWithFallback("lotmcraft.text.subordinate_not_found", "Subordinate not found!"));
+            de.jakob.lotm.util.helper.MessageUtil.actionBar(player, Component.translatableWithFallback("lotmcraft.text.subordinate_not_found", "Subordinate not found!"));
             itemStack.shrink(1);
             return;
         }

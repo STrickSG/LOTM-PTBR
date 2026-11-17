@@ -33,11 +33,11 @@ public record SendAllyRequestPacket(String allyName) implements CustomPacketPayl
             ServerPlayer player = (ServerPlayer) context.player();
             Player target = player.server.getPlayerList().getPlayerByName(packet.allyName());
             if(target == null) {
-                player.sendSystemMessage(Component.translatable("lotm.ally.request.not_found", packet.allyName()).withStyle(style -> style.withColor(0xF44336)));
+                de.jakob.lotm.util.helper.MessageUtil.actionBar(player, Component.translatable("lotm.ally.request.not_found", packet.allyName()).withStyle(style -> style.withColor(0xF44336)));
                 return;
             }
             AllyUtil.sendAllyRequest(player, target);
-            player.sendSystemMessage(Component.translatable("lotm.ally.request_sent", packet.allyName()).withStyle(style -> style.withColor(0x4CAF50)));
+            de.jakob.lotm.util.helper.MessageUtil.actionBar(player, Component.translatable("lotm.ally.request_sent", packet.allyName()).withStyle(style -> style.withColor(0x4CAF50)));
         });
     }
 }

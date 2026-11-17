@@ -50,12 +50,12 @@ public class WorldJudgmentAbility extends Ability {
             WorldJudgmentHandler.JUDGMENT_TIER.remove(targetUUID);
 
             if (entity instanceof ServerPlayer sp) {
-                sp.sendSystemMessage(Component.translatable("ability.lotmcraft.world_judgment.released")
+                de.jakob.lotm.util.helper.MessageUtil.actionBar(sp, Component.translatable("ability.lotmcraft.world_judgment.released")
                         .withStyle(ChatFormatting.GOLD));
             }
             LivingEntity target = serverLevel.getEntity(targetUUID) instanceof LivingEntity le ? le : null;
             if (target instanceof ServerPlayer tsp) {
-                tsp.sendSystemMessage(Component.translatable("ability.lotmcraft.world_judgment.target_released")
+                de.jakob.lotm.util.helper.MessageUtil.actionBar(tsp, Component.translatable("ability.lotmcraft.world_judgment.target_released")
                         .withStyle(ChatFormatting.GOLD));
             }
             return;
@@ -72,7 +72,7 @@ public class WorldJudgmentAbility extends Ability {
         WorldJudgmentHandler.JUDGMENT_TIER.put(target.getUUID(), 0);
 
         if (entity instanceof ServerPlayer sp) {
-            sp.sendSystemMessage(Component.translatable("ability.lotmcraft.world_judgment.designated_prefix")
+            de.jakob.lotm.util.helper.MessageUtil.actionBar(sp, Component.translatable("ability.lotmcraft.world_judgment.designated_prefix")
                     .withStyle(ChatFormatting.GOLD)
                     .append(Component.literal(target.getName().getString()).withStyle(ChatFormatting.WHITE))
                     .append(Component.translatable("ability.lotmcraft.world_judgment.designated_suffix").withStyle(ChatFormatting.GOLD)));

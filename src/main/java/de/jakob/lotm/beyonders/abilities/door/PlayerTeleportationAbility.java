@@ -88,7 +88,7 @@ public class PlayerTeleportationAbility extends SelectableAbility {
         }
 
 //        if (50 <= DivinationUtil.getConcealmentPower(targetPlayer)) {
-//            player.sendSystemMessage(Component.literal("Failed to locate the target"));
+//            de.jakob.lotm.util.helper.MessageUtil.actionBar(player, Component.literal("Failed to locate the target"));
 //            return;
 //        }
         if (unreachable(targetPlayer)) {

@@ -190,7 +190,7 @@ public class CohortMenu extends AbstractContainerMenu {
 
     private void handlePlayerRemoval(ServerPlayer sender, UUID memberUuid) {
         ServerPlayer player = sender.getServer().getPlayerList().getPlayer(memberUuid);
-        if(player == null) sender.sendSystemMessage(Component.translatableWithFallback("lotmcraft.text.player_is_not_online", "Player is not online.").withStyle(ChatFormatting.RED), false);
+        if(player == null) de.jakob.lotm.util.helper.MessageUtil.actionBar(sender, Component.translatableWithFallback("lotmcraft.text.player_is_not_online", "Player is not online.").withStyle(ChatFormatting.RED), false);
         else CohortUtil.removeMember(sender, player);
 
         sender.closeContainer();
@@ -207,7 +207,7 @@ public class CohortMenu extends AbstractContainerMenu {
     private void handleNpcObtainController(Player player, int realIndex) {
         if (realIndex >= allNpcs.size()) return;
         CohortUtil.obtainController(player, realIndex);
-        player.sendSystemMessage(Component.translatableWithFallback("lotmcraft.text.obtained_controller_of", "Obtained controller of #%s", String.valueOf(realIndex)));
+        de.jakob.lotm.util.helper.MessageUtil.actionBar(player, Component.translatableWithFallback("lotmcraft.text.obtained_controller_of", "Obtained controller of #%s", String.valueOf(realIndex)));
     }
 
     // Head construction

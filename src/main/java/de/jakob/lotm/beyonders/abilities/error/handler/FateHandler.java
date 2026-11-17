@@ -85,7 +85,7 @@ public class FateHandler {
 
         if (casterSeq > targetSeq) {
             counterable.computeIfAbsent(targetId, k -> Collections.synchronizedList(new ArrayList<>())).add(prophecy);
-            target.sendSystemMessage(Component.translatable("ability.lotmcraft.fate.prophecy_counterable").withStyle(ChatFormatting.LIGHT_PURPLE));
+            de.jakob.lotm.util.helper.MessageUtil.actionBar(target, Component.translatable("ability.lotmcraft.fate.prophecy_counterable").withStyle(ChatFormatting.LIGHT_PURPLE));
         }
     }
 
@@ -102,7 +102,7 @@ public class FateHandler {
                     new Prophecy(prophecy.casterId(), prophecy.trigger(), prophecy.triggerType(), player.getUUID()));
             ServerPlayer caster = onlinePlayer(prophecy.casterId());
             if (caster != null) {
-                caster.sendSystemMessage(Component.translatable("ability.lotmcraft.fate.prophecy_returned").withStyle(ChatFormatting.DARK_RED));
+                de.jakob.lotm.util.helper.MessageUtil.actionBar(caster, Component.translatable("ability.lotmcraft.fate.prophecy_returned").withStyle(ChatFormatting.DARK_RED));
             }
             returned++;
         }

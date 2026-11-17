@@ -56,7 +56,7 @@ public class IndividualBalanceAbility extends Ability {
 
         if (!BeyonderData.isBeyonder(target)) {
             if (entity instanceof ServerPlayer sp) {
-                sp.sendSystemMessage(Component.translatable("ability.lotmcraft.individual_balance.not_beyonder")
+                de.jakob.lotm.util.helper.MessageUtil.actionBar(sp, Component.translatable("ability.lotmcraft.individual_balance.not_beyonder")
                         .withStyle(ChatFormatting.RED));
             }
             return;

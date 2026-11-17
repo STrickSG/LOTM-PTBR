@@ -62,7 +62,7 @@ public class UndyingSealAbility extends Ability {
 
         spawnSealActivationEffects(serverLevel, player);
 
-        player.sendSystemMessage(Component.translatable("ability.lotmcraft.undying_seal.activated")
+        de.jakob.lotm.util.helper.MessageUtil.actionBar(player, Component.translatable("ability.lotmcraft.undying_seal.activated")
                 .withStyle(ChatFormatting.DARK_AQUA));
     }
 

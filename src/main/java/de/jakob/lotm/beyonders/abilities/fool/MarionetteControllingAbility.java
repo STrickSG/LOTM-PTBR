@@ -109,11 +109,11 @@ public class MarionetteControllingAbility extends SelectableAbility {
         if(component.hasWorm()) {
             component.setHasWorm(false);
             BeyonderData.incrementWormAmount(player, 1);
-            player.sendSystemMessage(Component.translatable("ability.lotmcraft.marionette_controlling.removed_worm").withColor(getColorForPathway("fool")));
+            de.jakob.lotm.util.helper.MessageUtil.actionBar(player, Component.translatable("ability.lotmcraft.marionette_controlling.removed_worm").withColor(getColorForPathway("fool")));
         } else {
             component.setHasWorm(true);
             BeyonderData.incrementWormAmount(player, -1);
-            player.sendSystemMessage(Component.translatable("ability.lotmcraft.marionette_controlling.added_worm").withColor(getColorForPathway("fool")));
+            de.jakob.lotm.util.helper.MessageUtil.actionBar(player, Component.translatable("ability.lotmcraft.marionette_controlling.added_worm").withColor(getColorForPathway("fool")));
             player.hurt(player.damageSources().generic(), 1.0F);
         }
     }
@@ -179,10 +179,10 @@ public class MarionetteControllingAbility extends SelectableAbility {
     private void toggleAutoSwap(ServerPlayer player) {
         if(swapOnDamageIsActive.contains(player.getUUID())) {
             swapOnDamageIsActive.remove(player.getUUID());
-            player.sendSystemMessage(Component.translatable("ability.lotmcraft.marionette_controlling.auto_swap").append(Component.literal(": ")).append(Component.translatable("lotm.off")).withColor(0xFFa742f5));
+            de.jakob.lotm.util.helper.MessageUtil.actionBar(player, Component.translatable("ability.lotmcraft.marionette_controlling.auto_swap").append(Component.literal(": ")).append(Component.translatable("lotm.off")).withColor(0xFFa742f5));
         } else {
             swapOnDamageIsActive.add(player.getUUID());
-            player.sendSystemMessage(Component.translatable("ability.lotmcraft.marionette_controlling.auto_swap").append(Component.literal(": ")).append(Component.translatable("lotm.on")).withColor(0xFFa742f5));
+            de.jakob.lotm.util.helper.MessageUtil.actionBar(player, Component.translatable("ability.lotmcraft.marionette_controlling.auto_swap").append(Component.literal(": ")).append(Component.translatable("lotm.on")).withColor(0xFFa742f5));
         }
     }
 

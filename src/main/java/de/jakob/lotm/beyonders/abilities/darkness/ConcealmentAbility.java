@@ -540,7 +540,7 @@ public class ConcealmentAbility extends SelectableAbility {
         PassiveAbility sense = PassiveAbilityHandler.getById("concealment_sense_ability");
         if (sense == null || !sense.shouldApplyTo(owner)) return;
         pendingProjections.put(ownerId, npc.getUUID());
-        owner.sendSystemMessage(Component.translatable("lotmcraft.concealment.projection_prayer", summoner.getName()).withColor(0xFF3300b5));
+        de.jakob.lotm.util.helper.MessageUtil.actionBar(owner, Component.translatable("lotmcraft.concealment.projection_prayer", summoner.getName()).withColor(0xFF3300b5));
     }
 
     private void concealOthers(Level level, LivingEntity entity) {

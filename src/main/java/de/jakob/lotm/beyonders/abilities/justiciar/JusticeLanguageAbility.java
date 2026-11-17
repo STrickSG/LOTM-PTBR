@@ -105,7 +105,7 @@ public class JusticeLanguageAbility extends SelectableAbility {
         }, serverLevel);
 
         if (caster instanceof ServerPlayer sp) {
-            sp.sendSystemMessage(Component.translatable("ability.lotmcraft.justice_language.secrecy_established")
+            de.jakob.lotm.util.helper.MessageUtil.actionBar(sp, Component.translatable("ability.lotmcraft.justice_language.secrecy_established")
                     .withStyle(ChatFormatting.GOLD));
         }
 
@@ -126,7 +126,7 @@ public class JusticeLanguageAbility extends SelectableAbility {
         if (random.nextDouble() < failChance) {
             spawnResistEffect(serverLevel, caster, target);
             if (caster instanceof ServerPlayer sp) {
-                sp.sendSystemMessage(Component.translatable("ability.lotmcraft.justice_language.verdict_failed")
+                de.jakob.lotm.util.helper.MessageUtil.actionBar(sp, Component.translatable("ability.lotmcraft.justice_language.verdict_failed")
                         .withStyle(ChatFormatting.RED));
             }
             return;
@@ -153,7 +153,7 @@ public class JusticeLanguageAbility extends SelectableAbility {
             serverLevel.playSound(null, target.blockPosition(), SoundEvents.PLAYER_HURT, SoundSource.PLAYERS, 1.0f, 0.6f);
 
             if (caster instanceof ServerPlayer sp) {
-                sp.sendSystemMessage(Component.translatable("ability.lotmcraft.justice_language.death_declared",
+                de.jakob.lotm.util.helper.MessageUtil.actionBar(sp, Component.translatable("ability.lotmcraft.justice_language.death_declared",
                                 Component.literal(targetName).withStyle(ChatFormatting.WHITE))
                         .withStyle(ChatFormatting.DARK_RED));
             }
@@ -229,7 +229,7 @@ public class JusticeLanguageAbility extends SelectableAbility {
         AbilityUtil.sendActionBar(caster, Component.translatableWithFallback("lotmcraft.text.next_strike_will_flog", "§6⚖ §eNext strike §fwill §eFlog §6⚖"));
 
         if (caster instanceof ServerPlayer sp) {
-            sp.sendSystemMessage(Component.translatable("ability.lotmcraft.justice_language.flog_prepared")
+            de.jakob.lotm.util.helper.MessageUtil.actionBar(sp, Component.translatable("ability.lotmcraft.justice_language.flog_prepared")
                     .withStyle(ChatFormatting.GOLD));
         }
 

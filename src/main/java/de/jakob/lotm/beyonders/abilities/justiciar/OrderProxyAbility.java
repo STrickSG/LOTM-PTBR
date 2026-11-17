@@ -168,7 +168,7 @@ public class OrderProxyAbility extends SelectableAbility {
             ParticleUtil.spawnSphereParticles(serverLevel, ParticleTypes.DUST_PLUME, pos.add(0, 1, 0), 3.0, 30);
 
             if (entity instanceof ServerPlayer sp) {
-                sp.sendSystemMessage(Component.translatable("ability.lotmcraft.order_proxy.prohibition_lifted", LotmText.trc(type.displayName))
+                de.jakob.lotm.util.helper.MessageUtil.actionBar(sp, Component.translatable("ability.lotmcraft.order_proxy.prohibition_lifted", LotmText.trc(type.displayName))
                         .withStyle(ChatFormatting.YELLOW));
             }
             return;
@@ -177,7 +177,7 @@ public class OrderProxyAbility extends SelectableAbility {
         int MAX_PROHIBITION_ZONES = (int) (3 * multiplier(entity));
         if (PERMANENT_PROHIBITION_ZONES.size() >= MAX_PROHIBITION_ZONES) {
             if (entity instanceof ServerPlayer sp) {
-                sp.sendSystemMessage(Component.translatable("ability.lotmcraft.order_proxy.prohibition_limit")
+                de.jakob.lotm.util.helper.MessageUtil.actionBar(sp, Component.translatable("ability.lotmcraft.order_proxy.prohibition_limit")
                         .withStyle(ChatFormatting.RED));
             }
             return;
@@ -232,7 +232,7 @@ public class OrderProxyAbility extends SelectableAbility {
             ParticleUtil.spawnSphereParticles(serverLevel, ParticleTypes.DUST_PLUME, pos.add(0, 1, 0), 2.5, 25);
 
             if (entity instanceof ServerPlayer sp) {
-                sp.sendSystemMessage(Component.translatable("ability.lotmcraft.order_proxy.law_lifted", LotmText.trc(type.displayName))
+                de.jakob.lotm.util.helper.MessageUtil.actionBar(sp, Component.translatable("ability.lotmcraft.order_proxy.law_lifted", LotmText.trc(type.displayName))
                         .withStyle(ChatFormatting.YELLOW));
             }
             return;
@@ -241,7 +241,7 @@ public class OrderProxyAbility extends SelectableAbility {
         int MAX_LAW_ZONES = (int) (2 * multiplier(entity));
         if (PERMANENT_LAW_ZONES.size() >= MAX_LAW_ZONES) {
             if (entity instanceof ServerPlayer sp) {
-                sp.sendSystemMessage(Component.translatable("ability.lotmcraft.order_proxy.law_limit")
+                de.jakob.lotm.util.helper.MessageUtil.actionBar(sp, Component.translatable("ability.lotmcraft.order_proxy.law_limit")
                         .withStyle(ChatFormatting.RED));
             }
             return;

@@ -112,7 +112,7 @@ public class ProhibitionAbility extends SelectableAbility {
             FAIL_COUNT_BY_ENTITY.merge(resistor.get().getUUID(), 1, Integer::sum);
             spawnResistEffect(serverLevel, entity.position());
             if (entity instanceof ServerPlayer sp) {
-                sp.sendSystemMessage(Component.translatable("ability.lotmcraft.prohibition.verdict_failed")
+                de.jakob.lotm.util.helper.MessageUtil.actionBar(sp, Component.translatable("ability.lotmcraft.prohibition.verdict_failed")
                         .withStyle(ChatFormatting.RED));
             }
             return;

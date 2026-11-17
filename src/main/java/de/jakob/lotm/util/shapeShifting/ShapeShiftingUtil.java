@@ -63,11 +63,11 @@ public class ShapeShiftingUtil {
             float widthDifference = Math.abs(entityWidth - playerWidth) / playerWidth;
 
             if (sequence >= 6 && (!isPlayerModel)) {
-                player.sendSystemMessage(Component.translatableWithFallback("lotmcraft.text.you_can_t_change_your_shape", "§fYou Can't Change Your Shape To This Entity §b"));
+                de.jakob.lotm.util.helper.MessageUtil.actionBar(player, Component.translatableWithFallback("lotmcraft.text.you_can_t_change_your_shape", "§fYou Can't Change Your Shape To This Entity §b"));
                 return;
             } else if (sequence >= 5) {
                 if (heightDifference > 0.25 || widthDifference > 0.25) {
-                    player.sendSystemMessage(Component.translatableWithFallback("lotmcraft.text.you_can_t_change_your_shape", "§fYou Can't Change Your Shape To This Entity §b"));
+                    de.jakob.lotm.util.helper.MessageUtil.actionBar(player, Component.translatableWithFallback("lotmcraft.text.you_can_t_change_your_shape", "§fYou Can't Change Your Shape To This Entity §b"));
                     return;
                 }
             }

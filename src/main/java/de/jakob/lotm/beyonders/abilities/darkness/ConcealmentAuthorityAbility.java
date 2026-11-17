@@ -352,7 +352,7 @@ public class ConcealmentAuthorityAbility extends SelectableAbility {
         if (now - told.getOrDefault(owner.getUUID(), 0L) < 60) return;
         told.put(owner.getUUID(), now);
         String who = writer == null ? LotmText.t("lotmcraft.text.someone", "Someone") : writer.getGameProfile().getName();
-        owner.sendSystemMessage(Component.translatableWithFallback("lotmcraft.text.tried_to_write_your_name", "%s tried to write your name.", String.valueOf(who)).withColor(0xFF3300b5));
+        de.jakob.lotm.util.helper.MessageUtil.actionBar(owner, Component.translatableWithFallback("lotmcraft.text.tried_to_write_your_name", "%s tried to write your name.", String.valueOf(who)).withColor(0xFF3300b5));
     }
 
     private static void pray(ServerPlayer owner, ServerPlayer writer) {
