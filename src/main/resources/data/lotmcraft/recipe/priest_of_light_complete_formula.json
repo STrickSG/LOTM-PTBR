@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    {
+      "item": "lotmcraft:priest_of_light"
+    },
+    {
+      "item": "lotmcraft:priest_of_light_ritual"
+    }
+  ],
+  "result": {
+    "id": "lotmcraft:priest_of_light_complete_formula",
+    "count": 1
+  }
+}

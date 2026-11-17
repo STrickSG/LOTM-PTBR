@@ -5323,5 +5323,7 @@
   "lotmcraft.believers.not_worthy": "Você não pode usar isso agora.",
   "lotmcraft.ritual.unknown": "Você não conhece este ritual: é preciso ter o pergaminho do ritual, ou a Carta da Blasfêmia do Caminho com esta Sequência escolhida.",
   "lotm.advancement_ritual.named": "Ritual de Avanço de %s",
-  "lotm.advancement_ritual.item": "Ritual de Avanço de %s (Sequência %s)"
+  "lotm.advancement_ritual.item": "Ritual de Avanço de %s (Sequência %s)",
+  "lotm.complete_formula.named": "Fórmula Completa de %s",
+  "lotm.complete_formula.desc": "Receita da poção e ritual de avanço da Sequência %s juntos."
 }

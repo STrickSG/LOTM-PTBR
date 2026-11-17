@@ -85,8 +85,10 @@ public class ModItemModelProvider extends ItemModelProvider {
 
         // Pergaminhos de ritual: mesmo desenho da receita de poção, em roxo
         de.jakob.lotm.beyonders.potions.RitualRecipeItemHandler.ITEMS.getEntries().forEach(i -> {
+            // Fórmula Completa: metade receita, metade ritual, com costura dourada
+            String texture = i.get() instanceof de.jakob.lotm.beyonders.potions.CompleteFormulaItem ? "item/complete_formula" : "item/ritual_recipe";
             withExistingParent(BuiltInRegistries.ITEM.getKey(i.get()).getPath(), "item/generated")
-                    .texture("layer0", modLoc("item/ritual_recipe"));
+                    .texture("layer0", modLoc(texture));
         });
 
         BeyonderCharacteristicItemHandler.ITEMS.getEntries().forEach(i -> {

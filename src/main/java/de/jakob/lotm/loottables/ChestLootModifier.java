@@ -42,6 +42,11 @@ public class ChestLootModifier extends LootModifier {
 
                 if (item != null && (sequence >= 5)) {
                     generatedLoot.add(item);
+                    // Pergaminho de ritual: raro, só junto da receita de uma Sequência que tem ritual
+                    if (item.getItem() instanceof de.jakob.lotm.beyonders.potions.PotionRecipeItem && random.nextFloat() < 0.25f) {
+                        Item scroll = de.jakob.lotm.beyonders.potions.RitualRecipeItemHandler.ritualScroll(pathway, sequence);
+                        if (scroll != null) generatedLoot.add(new ItemStack(scroll));
+                    }
                 }
             }
         }

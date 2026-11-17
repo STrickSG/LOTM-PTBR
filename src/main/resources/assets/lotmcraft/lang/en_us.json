@@ -5524,5 +5524,7 @@
   "lotmcraft.believers.not_worthy": "You can't use this right now.",
   "lotmcraft.ritual.unknown": "You do not know this ritual: you need the ritual scroll, or the Blasphemy Card of the pathway with this Sequence selected.",
   "lotm.advancement_ritual.named": "%s Advancement Ritual",
-  "lotm.advancement_ritual.item": "%s Advancement Ritual (Sequence %s)"
+  "lotm.advancement_ritual.item": "%s Advancement Ritual (Sequence %s)",
+  "lotm.complete_formula.named": "%s Complete Formula",
+  "lotm.complete_formula.desc": "Potion recipe and advancement ritual of Sequence %s together."
 }

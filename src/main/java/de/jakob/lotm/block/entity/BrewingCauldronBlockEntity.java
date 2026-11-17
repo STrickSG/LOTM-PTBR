@@ -219,6 +219,11 @@ public class BrewingCauldronBlockEntity extends BlockEntity implements MenuProvi
             if(!card.getPathway().equals(potion.getPathway()) || !card.coversSequence(potion.getSequence())) {
                 return false;
             }
+        } else if(recipeItem.getItem() instanceof de.jakob.lotm.beyonders.potions.CompleteFormulaItem formula) {
+            // the Complete Formula holds the recipe of its sequence
+            if(!formula.getPathway().equals(potion.getPathway()) || formula.getSequence() != potion.getSequence()) {
+                return false;
+            }
         } else {
             if(recipeItem.isEmpty() || !(recipeItem.getItem() instanceof PotionRecipeItem recipe)) {
                 return false;

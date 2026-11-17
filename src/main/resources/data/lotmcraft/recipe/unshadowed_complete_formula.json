@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    {
+      "item": "lotmcraft:unshadowed"
+    },
+    {
+      "item": "lotmcraft:unshadowed_ritual"
+    }
+  ],
+  "result": {
+    "id": "lotmcraft:unshadowed_complete_formula",
+    "count": 1
+  }
+}

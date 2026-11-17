@@ -26,13 +26,14 @@ public final class RitualChecks {
 
     /**
      * Para fazer o ritual é preciso conhecê-lo: ter no inventário o pergaminho deste ritual,
-     * ou a Carta da Blasfêmia do Caminho com esta Sequência escolhida.
+     * a Fórmula Completa desta Sequência, ou a Carta da Blasfêmia do Caminho com esta Sequência escolhida.
      * (Ler o ritual num mundo e fazê-lo em outro, sem o item, não vale.)
      */
     public static boolean knowsRitual(ServerPlayer player, String pathway, int sequence) {
         for (int i = 0; i < player.getInventory().getContainerSize(); i++) {
             ItemStack stack = player.getInventory().getItem(i);
             if (stack.getItem() instanceof RitualRecipeItem scroll && scroll.getPathway().equals(pathway) && scroll.getSequence() == sequence) return true;
+            if (stack.getItem() instanceof de.jakob.lotm.beyonders.potions.CompleteFormulaItem formula && formula.getPathway().equals(pathway) && formula.getSequence() == sequence) return true;
             if (stack.getItem() instanceof BlasphemyCardItem card && card.getPathway().equals(pathway) && card.getSelectedSequence(stack) == sequence) return true;
         }
         return false;

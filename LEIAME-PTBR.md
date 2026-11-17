@@ -32,6 +32,7 @@ mods ele aparece como **LOTM PTBR**.
 ## Cartas da Blasfêmia
 
 - Feitas na bancada com as 9 receitas de poção de um Caminho (Sequências 9 a 1), em qualquer ordem.
+  A Carta do Sol pede as receitas das Sequências 9 a 6 e as Fórmulas Completas das Sequências 5 a 1.
 - Só existe uma Carta de cada Caminho por mundo: uma segunda some (aviso na barra de ação). Se a
   verdadeira for destruída (explosão, lava, cacto, cair no vazio), pode ser feita de novo.
 - Clique direito mostra a receita da Sequência escolhida (e o ritual, se ela tiver um); agachado +
@@ -57,8 +58,12 @@ da Blasfêmia do Sol com aquela Sequência escolhida.
 - Sequência 1, Anjo Branco: reunir 100 fiéis (99 aldeões e você) com o Registro Sagrado, feito na
   bancada. Os fiéis também seguram a sanidade de Beyonders de Sequência 3 ou maior.
 
-Os pergaminhos de ritual (roxos) mostram só o ritual. Por enquanto eles só aparecem na aba do mod no
-modo criativo.
+Os pergaminhos de ritual (roxos) mostram só o ritual. Eles saem, raramente, nos baús junto da
+receita da mesma Sequência.
+
+**Fórmula Completa:** receita da poção + pergaminho do ritual da mesma Sequência, na bancada.
+Mostra a receita e o ritual lado a lado, serve de receita no Caldeirão de Preparo e vale como o
+pergaminho na hora do ritual.
 
 ## Correções de bugs
 
