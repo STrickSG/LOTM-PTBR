@@ -58,6 +58,7 @@ public record OpenIntrospectMenuPacket(int sequence, String pathway) implements 
                 player.openMenu(new IntrospectMenuProvider(sequence, pathway, digestionProgress, sanity), buf -> {
                     buf.writeInt(sequence);
                     buf.writeUtf(pathway);
+                    buf.writeInt(de.jakob.lotm.addons.rituals.Believers.count(player)); // âncoras (fiéis)
                 });
 
                 PacketHandler.sendToPlayer(player, new SyncIntrospectMenuPacket(sequence, pathway, sanity, TwilightAging.years(player)));

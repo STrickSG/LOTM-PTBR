@@ -102,6 +102,7 @@ public class IntrospectScreen extends AbstractContainerScreen<IntrospectMenu> {
     private static final ResourceLocation ICON_HONORIFIC = sprite("icon_honorific");
     private static final ResourceLocation ICON_ALLIES = sprite("icon_allies");
     private static final ResourceLocation ICON_APOTHEOSIS = sprite("icon_apotheosis");
+    private static final ResourceLocation ICON_ANCHORS = sprite("icon_anchors");
 
     // =====================================================================================
     //  Palette (text)
@@ -169,8 +170,9 @@ public class IntrospectScreen extends AbstractContainerScreen<IntrospectMenu> {
 
     private boolean showMissedActing = false;
     private boolean showAllies = false;
+    private boolean showAnchors = false;
 
-    private enum SidePanel {ABILITIES, QUESTS, ACTING, MISSED, ALLIES}
+    private enum SidePanel {ABILITIES, QUESTS, ACTING, MISSED, ALLIES, ANCHORS}
 
     private enum Tab {
         ABILITY_WHEEL,
@@ -715,6 +717,7 @@ public class IntrospectScreen extends AbstractContainerScreen<IntrospectMenu> {
             case ACTING -> showActing;
             case MISSED -> showMissedActing;
             case ALLIES -> showAllies;
+            case ANCHORS -> showAnchors;
         };
 
         showAbilities = false;
@@ -722,6 +725,7 @@ public class IntrospectScreen extends AbstractContainerScreen<IntrospectMenu> {
         showActing = false;
         showMissedActing = false;
         showAllies = false;
+        showAnchors = false;
         allyNameInput.setFocused(false);
 
         if (!wasOpen) {
@@ -731,6 +735,7 @@ public class IntrospectScreen extends AbstractContainerScreen<IntrospectMenu> {
                 case ACTING -> showActing = true;
                 case MISSED -> showMissedActing = true;
                 case ALLIES -> showAllies = true;
+                case ANCHORS -> showAnchors = true;
             }
         }
         updateButtonPositions();
@@ -796,6 +801,11 @@ public class IntrospectScreen extends AbstractContainerScreen<IntrospectMenu> {
         }
 
         addSideTab(LotmText.t("lotmcraft.text.allies", "Allies"), ICON_ALLIES, 185, showAllies, b -> togglePanel(SidePanel.ALLIES));
+
+        // Âncoras (fiéis): só quem pode ter fiéis, Sequência 3 ou maior
+        if (menu.getSequence() <= de.jakob.lotm.addons.rituals.Believers.MAX_SEQUENCE) {
+            addSideTab(LotmText.t("lotmcraft.text.anchors", "Anchors"), ICON_ANCHORS, 210, showAnchors, b -> togglePanel(SidePanel.ANCHORS));
+        }
 
         if (showAbilities) {
             addAbilityButtons(baseLeftPos);
@@ -1088,6 +1098,7 @@ public class IntrospectScreen extends AbstractContainerScreen<IntrospectMenu> {
         if (showActing) renderActingPanel(guiGraphics);
         if (showAllies) renderAlliesPanel(guiGraphics);
         if (showMissedActing) renderMissedActingPanel(guiGraphics);
+        if (showAnchors) renderAnchorsPanel(guiGraphics);
 
         RenderSystem.disableBlend();
     }
@@ -1480,6 +1491,27 @@ public class IntrospectScreen extends AbstractContainerScreen<IntrospectMenu> {
         g.drawString(this.font, "- ", panelX + 8, rowY + 2, 0xFFFFFFFF, false);
         g.drawString(this.font, Component.literal(name).withStyle(ChatFormatting.GOLD),
                 panelX + 8 + this.font.width("- "), rowY + 2, 0xFFCCCCCC, false);
+    }
+
+    // -------------------------------------------------------------- Anchors drawer
+
+    /** Âncoras: quantos fiéis seguram o jogador (só o número, sem o que o ritual pede). */
+    private void renderAnchorsPanel(GuiGraphics guiGraphics) {
+        int panelX = this.leftPos + this.imageWidth + 5;
+        int panelY = this.topPos;
+        int panelW = ACTING_PANEL_WIDTH;
+        int panelH = 52;
+
+        drawDrawer(guiGraphics, panelX, panelY, panelW, panelH);
+        heading(guiGraphics, Component.literal(LotmText.t("lotmcraft.text.anchors", "Anchors")), panelX + 5, panelY + 5);
+        drawTitleRule(guiGraphics, panelX, panelY, panelW);
+
+        Component number = Component.literal(String.valueOf(menu.getAnchors())).withStyle(ChatFormatting.GOLD, ChatFormatting.BOLD);
+        guiGraphics.pose().pushPose();
+        guiGraphics.pose().translate(panelX + panelW / 2f, panelY + 22, 0);
+        guiGraphics.pose().scale(2f, 2f, 1f);
+        guiGraphics.drawString(this.font, number, -this.font.width(number) / 2, 0, TEXT_HEADING, true);
+        guiGraphics.pose().popPose();
     }
 
     // -------------------------------------------------------------- Missed acting drawer

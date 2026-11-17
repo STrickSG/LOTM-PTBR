@@ -56,7 +56,10 @@ da Blasfêmia do Sol com aquela Sequência escolhida.
 - Sequência 2, Buscador da Luz: ligar a memória da sua justiça a um item de Anjo do Sol e deixá-lo
   à sua frente ao beber.
 - Sequência 1, Anjo Branco: reunir 100 fiéis (99 aldeões e você) com o Registro Sagrado, feito na
-  bancada. Os fiéis também seguram a sanidade de Beyonders de Sequência 3 ou maior.
+  bancada. Qualquer Beyonder de Sequência 3 ou maior pode reunir fiéis, e cada aldeão segue uma fé
+  só. A contagem "Fiéis: X/100" só aparece para o Sol na Sequência 2.
+- Âncoras: os fiéis seguram a sanidade de Beyonders de Sequência 3 ou maior. O número de âncoras
+  fica na aba **Âncoras** da Introspecção (só para Sequência 3 ou maior).
 
 Os pergaminhos de ritual (roxos) mostram só o ritual. Eles saem, raramente, nos baús junto da
 receita da mesma Sequência.

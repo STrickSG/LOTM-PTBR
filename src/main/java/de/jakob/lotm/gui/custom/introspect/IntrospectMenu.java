@@ -19,10 +19,17 @@ public class IntrospectMenu extends AbstractContainerMenu {
     private float digestionProgress;
     private float sanity;
     private float years;
+    /** Âncoras: fiéis do jogador (Registro Sagrado), contando ele mesmo */
+    private int anchors;
 
     // Client-side constructor
     public IntrospectMenu(int containerId, Inventory playerInventory, RegistryFriendlyByteBuf buf) {
         this(containerId, playerInventory, buf.readInt(), buf.readUtf(), 0.0f, 1.0f);
+        this.anchors = buf.isReadable() ? buf.readInt() : 0;
+    }
+
+    public int getAnchors() {
+        return anchors;
     }
 
     public void updateData(int sequence, String pathway, float digestionProgress, float sanity, float years) {
