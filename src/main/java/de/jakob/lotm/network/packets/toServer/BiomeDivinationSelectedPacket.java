@@ -1,5 +1,7 @@
 package de.jakob.lotm.network.packets.toServer;
 
+import de.jakob.lotm.util.LotmText;
+
 import de.jakob.lotm.LOTMCraft;
 import de.jakob.lotm.beyonders.abilities.common.DivinationAbility;
 import de.jakob.lotm.beyonders.abilities.darkness.ConcealmentAuthorityAbility;
@@ -95,12 +97,7 @@ public record BiomeDivinationSelectedPacket(String biomeId) implements CustomPac
                 }
                 biomeName = biomeName.replace('_', ' ');
 
-                player.sendSystemMessage(Component.literal(String.format(
-                        "§5You sense §d%s§5 to the §d%s§5, about §d%d blocks §5away...",
-                        biomeName,
-                        direction,
-                        distance
-                )));
+                player.sendSystemMessage(Component.translatableWithFallback("lotmcraft.text.divination_sense_direction_distance", "§5You sense §d%s§5 to the §d%s§5, about §d%s blocks §5away...", biomeName, LotmText.trc(direction), String.valueOf(distance)));
             });
         }, AsyncSearch.EXECUTOR);
     }

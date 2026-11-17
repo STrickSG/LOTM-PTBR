@@ -1,5 +1,7 @@
 package de.jakob.lotm.beyonders.abilities.door;
 
+import de.jakob.lotm.util.LotmText;
+
 import de.jakob.lotm.LOTMCraft;
 import de.jakob.lotm.beyonders.abilities.core.SelectableAbility;
 import de.jakob.lotm.dimension.ModDimensions;
@@ -57,7 +59,7 @@ public class PlayerTeleportationAbility extends SelectableAbility {
     @Override
     protected String[] getAllAbilityNames() {
         ArrayList<UUID> players = new ArrayList<>(onlinePlayers);
-        return players.stream().map(uuid -> namesForPlayer.getOrDefault(uuid, "Unknown Player")).toArray(String[]::new).clone();
+        return players.stream().map(uuid -> namesForPlayer.getOrDefault(uuid, LotmText.t("lotmcraft.text.unknown_player", "Unknown Player"))).toArray(String[]::new).clone();
     }
 
     @Override

@@ -1,5 +1,7 @@
 package de.jakob.lotm.beyonders.abilities.visionary;
 
+import de.jakob.lotm.util.LotmText;
+
 import de.jakob.lotm.LOTMCraft;
 import de.jakob.lotm.attachments.ModAttachments;
 import de.jakob.lotm.beyonders.abilities.core.SelectableAbility;
@@ -143,7 +145,7 @@ public class VirtualPersonaAbility extends SelectableAbility {
             var affectedBy = component.getAffectedBy(seq);
             var avatars = component.getAvatars();
 
-            StringBuilder affectsResultBuilder = new StringBuilder("Affects:");
+            StringBuilder affectsResultBuilder = new StringBuilder(LotmText.t("lotmcraft.text.persona_affects", "Affects:"));
             for(var obj : affects){
                 var dataOp = BeyonderData.playerMap.get(BeyonderData.playerMap.getKeyByName(obj));
                 if(dataOp.isEmpty()) continue;
@@ -154,17 +156,17 @@ public class VirtualPersonaAbility extends SelectableAbility {
                 var targetLoop = level.getPlayerByUUID(BeyonderData.playerMap.getKeyByName(obj));
                 if(targetLoop != null){
                     var pos = targetLoop.position();
-                    location = " Location: x = " + (int) pos.x + " y = " + (int) pos.y + " z = " + (int) pos.z;
+                    location = LotmText.f("lotmcraft.text.persona_location", " Location: x = %s y = %s z = %s", (int) pos.x, (int) pos.y, (int) pos.z);
                 }
 
                 affectsResultBuilder.append("\n").append(obj)
-                        .append(" --- Path: ").append(data.pathway())
+                        .append(LotmText.t("lotmcraft.text.persona_path", " --- Path: ")).append(data.pathway())
                         .append(" Seq: ").append(data.sequence())
                         .append(location);
             }
             var affectsResult = affectsResultBuilder.toString();
 
-            StringBuilder affectedByResultBuilder = new StringBuilder("Affected by:");
+            StringBuilder affectedByResultBuilder = new StringBuilder(LotmText.t("lotmcraft.text.persona_affected_by", "Affected by:"));
             for(var obj : affectedBy){
                 affectedByResultBuilder.append("\n").append(obj);
             }
@@ -172,7 +174,7 @@ public class VirtualPersonaAbility extends SelectableAbility {
 
             String avatarsResult = "";
             if(BeyonderData.getSequence(entity) <= 3) {
-                StringBuilder avatarsBuilder = new StringBuilder("Amount of avatars: " + component.getAvatarsSize() + "\nAvatars:");
+                StringBuilder avatarsBuilder = new StringBuilder(LotmText.f("lotmcraft.text.persona_avatars", "Amount of avatars: %s\nAvatars:", component.getAvatarsSize()));
                 for (var obj : avatars) {
                     AvatarEntity avatar = (AvatarEntity) serverLevel.getEntity(obj);
 
@@ -204,13 +206,13 @@ public class VirtualPersonaAbility extends SelectableAbility {
         var affectedBy = component.getAffectedBy(seq);
         var avatars = component.getAvatars();
 
-        StringBuilder affectsResultBuilder = new StringBuilder("Affects:");
+        StringBuilder affectsResultBuilder = new StringBuilder(LotmText.t("lotmcraft.text.persona_affects", "Affects:"));
         for(var obj : affects){
             affectsResultBuilder.append("\n").append(obj);
         }
         var affectsResult = affectsResultBuilder.toString();
 
-        StringBuilder affectedByResultBuilder = new StringBuilder("Affected by:");
+        StringBuilder affectedByResultBuilder = new StringBuilder(LotmText.t("lotmcraft.text.persona_affected_by", "Affected by:"));
         for(var obj : affectedBy){
             affectedByResultBuilder.append("\n").append(obj);
         }
@@ -218,7 +220,7 @@ public class VirtualPersonaAbility extends SelectableAbility {
 
         String avatarsResult = "";
         if(BeyonderData.getSequence(entity) <= 3) {
-            StringBuilder avatarsBuilder = new StringBuilder("Amount of avatars: " + component.getAvatarsSize() + "\nAvatars:");
+            StringBuilder avatarsBuilder = new StringBuilder(LotmText.f("lotmcraft.text.persona_avatars", "Amount of avatars: %s\nAvatars:", component.getAvatarsSize()));
             for (var obj : avatars) {
                 AvatarEntity avatar = (AvatarEntity) serverLevel.getEntity(obj);
 

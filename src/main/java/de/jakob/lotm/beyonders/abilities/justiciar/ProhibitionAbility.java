@@ -145,7 +145,7 @@ public class ProhibitionAbility extends SelectableAbility {
             EffectManager.playEffect(EffectIds.PROHIBITION, px, py, pz, serverLevel);
         }, null, serverLevel);
 
-        String typeName = type.displayName;
+        String typeName = LotmText.tr(type.displayName);
         Component message = Component.translatableWithFallback("lotmcraft.text.prohibition_declared", "§6⚖ §fProhibition declared: §e%s §6⚖", String.valueOf(typeName))
                 .withStyle(ChatFormatting.WHITE);
 
@@ -227,15 +227,15 @@ public class ProhibitionAbility extends SelectableAbility {
     }
 
     public enum ProhibitionType {
-        BEYONDER_ABILITIES(LotmText.t("lotmcraft.text.beyonder_abilities", "Beyonder Abilities")),
-        COMBAT(LotmText.t("lotmcraft.text.combat", "Combat")),
-        FLYING(LotmText.t("lotmcraft.text.flying", "Flying")),
-        ITEM_USE(LotmText.t("lotmcraft.text.item_use", "Item Use")),
-        PLAYERS(LotmText.t("lotmcraft.text.players", "Players")),
-        OUTSIDE_WORLD(LotmText.t("lotmcraft.text.outside_world", "Outside World")),
-        STAND_INS(LotmText.t("lotmcraft.text.stand_ins", "Stand-ins")),
-        MARIONETTE_INTERCHANGE(LotmText.t("lotmcraft.text.marionette_interchange", "Marionette Interchange")),
-        THEFT(LotmText.t("lotmcraft.text.theft", "Theft"));
+        BEYONDER_ABILITIES(LotmText.reg("lotmcraft.text.beyonder_abilities", "Beyonder Abilities")),
+        COMBAT(LotmText.reg("lotmcraft.text.combat", "Combat")),
+        FLYING(LotmText.reg("lotmcraft.text.flying", "Flying")),
+        ITEM_USE(LotmText.reg("lotmcraft.text.item_use", "Item Use")),
+        PLAYERS(LotmText.reg("lotmcraft.text.players", "Players")),
+        OUTSIDE_WORLD(LotmText.reg("lotmcraft.text.outside_world", "Outside World")),
+        STAND_INS(LotmText.reg("lotmcraft.text.stand_ins", "Stand-ins")),
+        MARIONETTE_INTERCHANGE(LotmText.reg("lotmcraft.text.marionette_interchange", "Marionette Interchange")),
+        THEFT(LotmText.reg("lotmcraft.text.theft", "Theft"));
 
         public final String displayName;
 

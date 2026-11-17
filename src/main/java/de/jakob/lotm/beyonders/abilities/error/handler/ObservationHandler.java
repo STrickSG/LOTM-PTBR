@@ -1,5 +1,7 @@
 package de.jakob.lotm.beyonders.abilities.error.handler;
 
+import de.jakob.lotm.util.LotmText;
+
 import de.jakob.lotm.LOTMCraft;
 import de.jakob.lotm.attachments.MarionetteComponent;
 import de.jakob.lotm.attachments.ModAttachments;
@@ -211,33 +213,33 @@ public class ObservationHandler {
         boolean beyonder = BeyonderData.isBeyonder(target);
 
         if (decryptionLevel >= 1) {
-            lines.add(beyonder ? "§bBeyonder" : "§7Not a Beyonder");
+            lines.add(beyonder ? "§bBeyonder" : LotmText.t("lotmcraft.text.observation_not_a_beyonder", "§7Not a Beyonder"));
         }
         if (decryptionLevel >= 2 && beyonder) {
-            lines.add("§3Sequence §f" + BeyonderData.getSequence(target));
+            lines.add(LotmText.t("lotmcraft.text.observation_sequence", "§3Sequence §f") + BeyonderData.getSequence(target));
         }
         if (decryptionLevel >= 3 && beyonder) {
             String pathway = BeyonderData.getPathway(target);
             String seqName = BeyonderData.getSequenceName(pathway, BeyonderData.getSequence(target));
-            lines.add("§3Pathway §f" + prettify(pathway) + " §8(" + prettify(seqName) + ")");
+            lines.add(LotmText.t("lotmcraft.text.observation_pathway", "§3Pathway §f") + prettify(pathway) + " §8(" + prettify(seqName) + ")");
         }
         if (decryptionLevel >= 4) {
             LivingEntity main = ErrorUtil.getMainBody(level, target);
             if (main == null) {
-                lines.add("§aTrue Body");
+                lines.add(LotmText.t("lotmcraft.text.observation_true_body", "§aTrue Body"));
             } else {
-                String kind = target instanceof AvatarEntity ? "Avatar" :
-                        target instanceof ControlBodyDouble ? "Abandoned Body" :
-                        target.getPersistentData().getBoolean("VoidSummoned") ? "Historical Projection" : "Marionette / Second Body";
-                lines.add("§cNot a true body §8(" + kind + ")");
+                String kind = target instanceof AvatarEntity ? LotmText.t("lotmcraft.text.observation_avatar", "Avatar") :
+                        target instanceof ControlBodyDouble ? LotmText.t("lotmcraft.text.observation_abandoned_body", "Abandoned Body") :
+                        target.getPersistentData().getBoolean("VoidSummoned") ? LotmText.t("lotmcraft.text.observation_historical_projection", "Historical Projection") : LotmText.t("lotmcraft.text.observation_marionette_second_body", "Marionette / Second Body");
+                lines.add(LotmText.t("lotmcraft.text.observation_not_true_body", "§cNot a true body §8(") + kind + ")");
             }
         }
         if (decryptionLevel >= 5) {
             String trueName = target instanceof ServerPlayer player ? player.getGameProfile().getName() : target.getType().getDescription().getString();
-            lines.add("§dTrue name §f" + trueName);
+            lines.add(LotmText.t("lotmcraft.text.observation_true_name", "§dTrue name §f") + trueName);
             if (target instanceof ServerPlayer player) {
                 BeyonderData.getHonorificName(player).ifPresent(name -> {
-                    if (!name.lines().isEmpty()) lines.add("§5Honorific §7" + String.join(" ", name.lines()));
+                    if (!name.lines().isEmpty()) lines.add(LotmText.t("lotmcraft.text.observation_honorific", "§5Honorific §7") + String.join(" ", name.lines()));
                 });
             }
         }

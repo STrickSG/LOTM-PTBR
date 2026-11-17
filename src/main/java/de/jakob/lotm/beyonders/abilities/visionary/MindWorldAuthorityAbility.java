@@ -1,5 +1,7 @@
 package de.jakob.lotm.beyonders.abilities.visionary;
 
+import de.jakob.lotm.util.LotmText;
+
 import de.jakob.lotm.beyonders.abilities.death.passives.AbsoluteDeathAbility;
 import de.jakob.lotm.LOTMCraft;
 import de.jakob.lotm.attachments.ModAttachments;
@@ -207,7 +209,7 @@ public class MindWorldAuthorityAbility extends SelectableAbility {
 
         var target = AbilityUtil.getTargetEntity(entity, 30, 1f, true, true);
         if(target == null){
-            StringBuilder resultBuilder = new StringBuilder("List of granted players:");
+            StringBuilder resultBuilder = new StringBuilder(LotmText.t("lotmcraft.text.mind_world_granted_players", "List of granted players:"));
             for(var obj : component.names){
                 resultBuilder.append("\n").append(obj);
             }

@@ -326,9 +326,7 @@ public class DeceitHandler {
                 int dx = config.fakeX - diviner.blockPosition().getX();
                 int dz = config.fakeZ - diviner.blockPosition().getZ();
                 int distance = (int) Math.sqrt(dx * dx + dz * dz);
-                diviner.sendSystemMessage(Component.literal(String.format(
-                        "§5You sense §d%s§5 at cords §d%d, %d, %d§5, about §d%d blocks §5away... their spirit feels like §dSequence %d§5.",
-                        targetName, config.fakeX, config.fakeY, config.fakeZ, distance, config.fakeSequence)));
+                diviner.sendSystemMessage(Component.translatableWithFallback("lotmcraft.text.divination_fake_cords_sequence", "§5You sense §d%s§5 at cords §d%s, %s, %s§5, about §d%s blocks §5away... their spirit feels like §dSequence %s§5.", String.valueOf(targetName), String.valueOf(config.fakeX), String.valueOf(config.fakeY), String.valueOf(config.fakeZ), String.valueOf(distance), String.valueOf(config.fakeSequence)));
             }
             case 1 -> {
                 ServerPlayer redirect = diviner.getServer().getPlayerList().getPlayerByName(config.redirectName);
@@ -336,9 +334,7 @@ public class DeceitHandler {
                 BlockPos pos = shown.blockPosition();
                 int dx = pos.getX() - diviner.blockPosition().getX();
                 int dz = pos.getZ() - diviner.blockPosition().getZ();
-                diviner.sendSystemMessage(Component.literal(String.format(
-                        "§5You sense §d%s§5 at cords §d%d, %d, %d§5, about §d%d blocks §5away...",
-                        targetName, pos.getX(), pos.getY(), pos.getZ(), (int) Math.sqrt(dx * dx + dz * dz))));
+                diviner.sendSystemMessage(Component.translatableWithFallback("lotmcraft.text.divination_cords", "§5You sense §d%s§5 at cords §d%s, %s, %s§5, about §d%s blocks §5away...", String.valueOf(targetName), String.valueOf(pos.getX()), String.valueOf(pos.getY()), String.valueOf(pos.getZ()), String.valueOf((int) Math.sqrt(dx * dx + dz * dz))));
             }
             default -> {
                 diviner.sendSystemMessage(Component.translatable("ability.lotmcraft.deceit.divination_higher").withStyle(ChatFormatting.DARK_RED));

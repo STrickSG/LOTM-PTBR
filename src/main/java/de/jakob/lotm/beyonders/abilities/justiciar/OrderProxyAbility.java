@@ -1,5 +1,7 @@
 package de.jakob.lotm.beyonders.abilities.justiciar;
 
+import de.jakob.lotm.util.LotmText;
+
 import de.jakob.lotm.LOTMCraft;
 import de.jakob.lotm.beyonders.abilities.core.AbilityUsedEvent;
 import de.jakob.lotm.beyonders.abilities.core.SelectableAbility;
@@ -166,7 +168,7 @@ public class OrderProxyAbility extends SelectableAbility {
             ParticleUtil.spawnSphereParticles(serverLevel, ParticleTypes.DUST_PLUME, pos.add(0, 1, 0), 3.0, 30);
 
             if (entity instanceof ServerPlayer sp) {
-                sp.sendSystemMessage(Component.translatable("ability.lotmcraft.order_proxy.prohibition_lifted", type.displayName)
+                sp.sendSystemMessage(Component.translatable("ability.lotmcraft.order_proxy.prohibition_lifted", LotmText.trc(type.displayName))
                         .withStyle(ChatFormatting.YELLOW));
             }
             return;
@@ -209,7 +211,7 @@ public class OrderProxyAbility extends SelectableAbility {
         EffectManager.playEffect(EffectIds.PROHIBITION, pos.x, pos.y, pos.z, serverLevel);
 
         broadcastToNearby(serverLevel, entity,
-                Component.translatable("ability.lotmcraft.order_proxy.prohibition_permanent", type.displayName)
+                Component.translatable("ability.lotmcraft.order_proxy.prohibition_permanent", LotmText.trc(type.displayName))
                         .withStyle(ChatFormatting.GOLD));
     }
 
@@ -230,7 +232,7 @@ public class OrderProxyAbility extends SelectableAbility {
             ParticleUtil.spawnSphereParticles(serverLevel, ParticleTypes.DUST_PLUME, pos.add(0, 1, 0), 2.5, 25);
 
             if (entity instanceof ServerPlayer sp) {
-                sp.sendSystemMessage(Component.translatable("ability.lotmcraft.order_proxy.law_lifted", type.displayName)
+                sp.sendSystemMessage(Component.translatable("ability.lotmcraft.order_proxy.law_lifted", LotmText.trc(type.displayName))
                         .withStyle(ChatFormatting.YELLOW));
             }
             return;
@@ -271,7 +273,7 @@ public class OrderProxyAbility extends SelectableAbility {
         }, null, serverLevel, () -> AbilityUtil.getTimeInArea(entity, casterLocation));
 
         broadcastToNearby(serverLevel, entity,
-                Component.translatable("ability.lotmcraft.order_proxy.law_active", type.displayName)
+                Component.translatable("ability.lotmcraft.order_proxy.law_active", LotmText.trc(type.displayName))
                         .withStyle(ChatFormatting.GOLD));
     }
 
@@ -311,9 +313,9 @@ public class OrderProxyAbility extends SelectableAbility {
     }
 
     public enum OrderProhibitionType {
-        RESURRECTING("Resurrecting"),
-        DYING("Dying"),
-        DEMIGODS("Demigods");
+        RESURRECTING(LotmText.reg("lotmcraft.text.order_resurrecting", "Resurrecting")),
+        DYING(LotmText.reg("lotmcraft.text.order_dying", "Dying")),
+        DEMIGODS(LotmText.reg("lotmcraft.text.order_demigods", "Demigods"));
 
         public final String displayName;
 
@@ -323,8 +325,8 @@ public class OrderProxyAbility extends SelectableAbility {
     }
 
     public enum LawType {
-        COMBAT("Combat"),
-        LOSING_CONTROL("Losing Control");
+        COMBAT(LotmText.reg("lotmcraft.text.order_combat", "Combat")),
+        LOSING_CONTROL(LotmText.reg("lotmcraft.text.order_losing_control", "Losing Control"));
 
         public final String displayName;
 

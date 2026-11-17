@@ -1,5 +1,7 @@
 package de.jakob.lotm.beyonders.abilities.visionary;
 
+import de.jakob.lotm.util.LotmText;
+
 import de.jakob.lotm.beyonders.abilities.abyss.passives.DevilBloodlines.DevilBloodlineAbilites.Corroder.BloodlineMindRotterAbility;
 import de.jakob.lotm.beyonders.abilities.core.ToggleAbility;
 import de.jakob.lotm.beyonders.abilities.visionary.handlers.VisionaryHandler;
@@ -116,17 +118,17 @@ public class TelepathyAbility extends ToggleAbility {
         StringBuilder sb = new StringBuilder();
 
         sb.append("§7[ §f").append(name).append(" §7]");
-        sb.append("  §7Sanity: ").append(sanityColor).append(sanityPercent).append("%");
+        sb.append("  §7" + LotmText.t("lotmcraft.text.telepathy_sanity", "Sanity: ")).append(sanityColor).append(sanityPercent).append("%");
 
         if (diff <= 0 && entitySeq <= 4) {
-            sb.append("  §7Pathway: §6").append(BeyonderData.getPathway(target));
+            sb.append("  §7" + LotmText.t("lotmcraft.text.telepathy_pathway", "Pathway: ") + "§6").append(BeyonderData.getPathway(target));
             sb.append("  §7Seq: §6").append(targetSeq);
 
             if (shouldRenderPlague) {
-                sb.append("  §c⚠ Plague§7: ")
+                sb.append("  §c⚠ " + LotmText.t("lotmcraft.text.telepathy_plague", "Plague") + "§7: ")
                         .append("§c").append(plague.getOwnerName())
                         .append(" §7(Seq §c").append(plague.getSequence()).append("§7")
-                        .append(", Stage §c").append(plague.getStage()).append("§7)");
+                        .append(LotmText.t("lotmcraft.text.telepathy_stage", ", Stage §c")).append(plague.getStage()).append("§7)");
             }
         }
 

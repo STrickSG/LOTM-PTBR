@@ -226,8 +226,12 @@ public class DevilWorshipAbility extends SelectableAbility {
     //missions
     public enum Kind { KILL_PLAYER, PROTECTION, LOOT }
     // One possible reward. percent is rolled separately for every entry if the mission succeeds
-    public record Loot(String label, int percent, Supplier<ItemStack> stack) {}
+    public record Loot(String label, int percent, Supplier<ItemStack> stack) {
+        public String label() { return LotmText.tr(label); }
+    }
     public record MissionDef(String title, String description, int failurePercent, int timerTicks, Kind kind, List<Loot> loot) {
+        public String title() { return LotmText.tr(title); }
+        public String description() { return LotmText.tr(description); }
         public boolean needsTarget() { return kind == Kind.KILL_PLAYER; }
         public String timerLabel() { return DevilWorshipAbility.timerLabel(timerTicks); }
     }
@@ -236,161 +240,165 @@ public class DevilWorshipAbility extends SelectableAbility {
         return (s / 60) + ":" + String.format("%02d", s % 60);
     }
     // A faction you can raid: its beyonder team, a church and a cathedral
-    public record Faction(String name, String deity, String teamName, MissionDef team, MissionDef church, MissionDef cathedral) {}
-    public static final MissionDef KILL_PLAYER_MISSION = new MissionDef(LotmText.t("lotmcraft.text.kill_a_player", "Kill a Player"), LotmText.t("lotmcraft.text.the_devil_hunts_a_chosen_player", "The Devil hunts a chosen player until one of you falls."), 0, 5 * 60 * 20, Kind.KILL_PLAYER, List.of());
-    public static final MissionDef PROTECTION_MISSION = new MissionDef(LotmText.t("lotmcraft.text.protection", "Protection"), LotmText.t("lotmcraft.text.the_devil_guards_you_for_the", "The Devil guards you for the whole duration."), 0, 10 * 60 * 20, Kind.PROTECTION, List.of());
+    public record Faction(String name, String deity, String teamName, MissionDef team, MissionDef church, MissionDef cathedral) {
+        public String name() { return LotmText.tr(name); }
+        public String deity() { return LotmText.tr(deity); }
+        public String teamName() { return LotmText.tr(teamName); }
+    }
+    public static final MissionDef KILL_PLAYER_MISSION = new MissionDef(LotmText.reg("lotmcraft.text.kill_a_player", "Kill a Player"), LotmText.reg("lotmcraft.text.the_devil_hunts_a_chosen_player", "The Devil hunts a chosen player until one of you falls."), 0, 5 * 60 * 20, Kind.KILL_PLAYER, List.of());
+    public static final MissionDef PROTECTION_MISSION = new MissionDef(LotmText.reg("lotmcraft.text.protection", "Protection"), LotmText.reg("lotmcraft.text.the_devil_guards_you_for_the", "The Devil guards you for the whole duration."), 0, 10 * 60 * 20, Kind.PROTECTION, List.of());
     // Shown when the faction is "None"
     public static final MissionDef ABANDONED_CATHEDRAL = raid(
-            LotmText.t("lotmcraft.text.raid_an_abandoned_cathedral", "Raid an Abandoned Cathedral"),
-            LotmText.t("lotmcraft.text.the_devil_searches_an_abandoned_cathedral", "The Devil searches an abandoned cathedral for anything the faithful left behind."),
+            LotmText.reg("lotmcraft.text.raid_an_abandoned_cathedral", "Raid an Abandoned Cathedral"),
+            LotmText.reg("lotmcraft.text.the_devil_searches_an_abandoned_cathedral", "The Devil searches an abandoned cathedral for anything the faithful left behind."),
             20, 6 * 60, List.of(
-                    new Loot(LotmText.t("lotmcraft.text.gold_ingots_x8", "Gold ingots x8"), 50, () -> new ItemStack(Items.GOLD_INGOT, 8)),
-                    new Loot(LotmText.t("lotmcraft.text.diamonds_x2", "Diamonds x2"), 30, () -> new ItemStack(Items.DIAMOND, 2)),
+                    new Loot(LotmText.reg("lotmcraft.text.gold_ingots_x8", "Gold ingots x8"), 50, () -> new ItemStack(Items.GOLD_INGOT, 8)),
+                    new Loot(LotmText.reg("lotmcraft.text.diamonds_x2", "Diamonds x2"), 30, () -> new ItemStack(Items.DIAMOND, 2)),
                     characteristic(10, any(9, 5)),
                     recipe(5, any(9, 5)),
                     subIngredient(30, any(9, 5))
             ));
     //Factions
     public static final List<Faction> FACTIONS = List.of(
-            new Faction(LotmText.t("lotmcraft.text.evernight_church", "Evernight Church"), "the Evernight Goddess", "Nighthawks",
-                    raid(LotmText.t("lotmcraft.text.raid_the_nighthawks", "Raid the Nighthawks"),
-                            LotmText.t("lotmcraft.text.the_devil_attacks_the_nighthawks", "The Devil attacks the Nighthawks."),
+            new Faction(LotmText.reg("lotmcraft.text.evernight_church", "Evernight Church"), "the Evernight Goddess", "Nighthawks",
+                    raid(LotmText.reg("lotmcraft.text.raid_the_nighthawks", "Raid the Nighthawks"),
+                            LotmText.reg("lotmcraft.text.the_devil_attacks_the_nighthawks", "The Devil attacks the Nighthawks."),
                             50, 10 * 60, List.of(
-                                    new Loot(LotmText.t("lotmcraft.text.diamonds_x1", "Diamonds x1"), 60, () -> new ItemStack(Items.DIAMOND, 1)),
+                                    new Loot(LotmText.reg("lotmcraft.text.diamonds_x1", "Diamonds x1"), 60, () -> new ItemStack(Items.DIAMOND, 1)),
                                     characteristic(60, pw("darkness", 9, 5), pw("death", 9, 6), pw("fool", 9, 7)),
                                     recipe(10, pw("darkness", 9, 6), pw("death", 9, 7), pw("fool", 9, 8)),
                                     subIngredient(30, pw("darkness", 9, 6), pw("death", 9, 7), pw("fool", 9, 8)),
                                     characteristic(30, any(9, 5))
                             )),
-                    raid(LotmText.t("lotmcraft.text.raid_a_church_of_the_evernight", "Raid a Church of the Evernight Goddess"),
-                            LotmText.t("lotmcraft.text.the_devil_storms_a_church_of", "The Devil storms a church of the Evernight Goddess and ransacks it."),
+                    raid(LotmText.reg("lotmcraft.text.raid_a_church_of_the_evernight", "Raid a Church of the Evernight Goddess"),
+                            LotmText.reg("lotmcraft.text.the_devil_storms_a_church_of", "The Devil storms a church of the Evernight Goddess and ransacks it."),
                             60, 15 * 60, List.of(
-                                    new Loot(LotmText.t("lotmcraft.text.diamonds_x2", "Diamonds x2"), 60, () -> new ItemStack(Items.DIAMOND, 2)),
+                                    new Loot(LotmText.reg("lotmcraft.text.diamonds_x2", "Diamonds x2"), 60, () -> new ItemStack(Items.DIAMOND, 2)),
                                     characteristic(30, pw("darkness", 9, 6), pw("death", 9, 7), pw("fool", 9, 8)),
                                     recipe(20, pw("darkness", 9, 6), pw("death", 9, 7), pw("fool", 9, 8)),
                                     subIngredient(80, pw("darkness", 9, 5), pw("death", 9, 6), pw("fool", 9, 7)),
                                     subIngredient(80, any(9, 5))
                             )),
-                    raid(LotmText.t("lotmcraft.text.raid_the_cathedral_of_the_evernight", "Raid the Cathedral of the Evernight Goddess"),
-                            LotmText.t("lotmcraft.text.the_devil_storms_a_cathedral_of", "The Devil storms a cathedral of the Evernight Goddess."),
+                    raid(LotmText.reg("lotmcraft.text.raid_the_cathedral_of_the_evernight", "Raid the Cathedral of the Evernight Goddess"),
+                            LotmText.reg("lotmcraft.text.the_devil_storms_a_cathedral_of", "The Devil storms a cathedral of the Evernight Goddess."),
                             75, 20 * 60,  List.of(
-                                    new Loot(LotmText.t("lotmcraft.text.diamonds_x4", "Diamonds x4"), 60, () -> new ItemStack(Items.DIAMOND, 4)),
+                                    new Loot(LotmText.reg("lotmcraft.text.diamonds_x4", "Diamonds x4"), 60, () -> new ItemStack(Items.DIAMOND, 4)),
                                     characteristic(30, pw("darkness", 9, 6), pw("death", 9, 7), pw("fool", 9, 8)),
                                     recipe(80, pw("darkness", 9, 5), pw("death", 9, 6), pw("fool", 9, 7)),
                                     subIngredient(50, pw("darkness", 9, 6), pw("death", 9, 7), pw("fool", 9, 8)),
                                     recipe(80, any(9, 5))
                             ))
             ),
-            new Faction(LotmText.t("lotmcraft.text.church_of_the_lord_of_storms", "Church of the Lord of Storms"), "the Lord of Storms", "Mandated Punishers",
-                    raid(LotmText.t("lotmcraft.text.raid_the_mandated_punishers", "Raid the Mandated Punishers"),
-                            LotmText.t("lotmcraft.text.the_devil_attacks_the_mandated_punishers", "The Devil attacks the Mandated Punishers."),
+            new Faction(LotmText.reg("lotmcraft.text.church_of_the_lord_of_storms", "Church of the Lord of Storms"), "the Lord of Storms", "Mandated Punishers",
+                    raid(LotmText.reg("lotmcraft.text.raid_the_mandated_punishers", "Raid the Mandated Punishers"),
+                            LotmText.reg("lotmcraft.text.the_devil_attacks_the_mandated_punishers", "The Devil attacks the Mandated Punishers."),
                             50, 15 * 60,  List.of(
-                                    new Loot(LotmText.t("lotmcraft.text.iron_ingot_x9", "Iron Ingot x9"), 60, () -> new ItemStack(Items.IRON_INGOT, 9)),
+                                    new Loot(LotmText.reg("lotmcraft.text.iron_ingot_x9", "Iron Ingot x9"), 60, () -> new ItemStack(Items.IRON_INGOT, 9)),
                                     characteristic(60, pw("tyrant", 9, 5), pw("visionary", 9, 6)),
                                     recipe(10, pw("tyrant", 9, 6), pw("visionary", 9, 7)),
                                     subIngredient(30, pw("tyrant", 9, 6), pw("visionary", 9, 7)),
                                     characteristic(30, any(9, 5))
                             )),
-                    raid(LotmText.t("lotmcraft.text.raid_a_church_of_the_lord", "Raid a Church of the Lord of Storms"),
-                            LotmText.t("lotmcraft.text.the_devil_storms_a_church_of_2", "The Devil storms a church of the Lord of Storms and ransacks it."),
+                    raid(LotmText.reg("lotmcraft.text.raid_a_church_of_the_lord", "Raid a Church of the Lord of Storms"),
+                            LotmText.reg("lotmcraft.text.the_devil_storms_a_church_of_2", "The Devil storms a church of the Lord of Storms and ransacks it."),
                             60, 20 * 60,   List.of(
-                                    new Loot(LotmText.t("lotmcraft.text.iron_ingot_x18", "Iron Ingot x18"), 60, () -> new ItemStack(Items.IRON_INGOT, 18)),
+                                    new Loot(LotmText.reg("lotmcraft.text.iron_ingot_x18", "Iron Ingot x18"), 60, () -> new ItemStack(Items.IRON_INGOT, 18)),
                                     characteristic(30, pw("tyrant", 9, 6), pw("visionary", 9, 7)),
                                     recipe(20, pw("tyrant", 9, 6), pw("visionary", 9, 7)),
                                     subIngredient(80, pw("tyrant", 9, 5), pw("visionary", 9, 6)),
                                     subIngredient(80, any(9, 5))
                             )),
-                    raid(LotmText.t("lotmcraft.text.raid_the_cathedral_of_the_lord", "Raid the Cathedral of the Lord of Storms"),
-                            LotmText.t("lotmcraft.text.the_devil_storms_a_cathedral_of_2", "The Devil storms a cathedral of the Lord of Storms."),
+                    raid(LotmText.reg("lotmcraft.text.raid_the_cathedral_of_the_lord", "Raid the Cathedral of the Lord of Storms"),
+                            LotmText.reg("lotmcraft.text.the_devil_storms_a_cathedral_of_2", "The Devil storms a cathedral of the Lord of Storms."),
                             75, 25 * 60, List.of(
-                                    new Loot(LotmText.t("lotmcraft.text.netherite_scrap_x2", "Netherite scrap x2"), 60, () -> new ItemStack(Items.NETHERITE_SCRAP, 2)),
+                                    new Loot(LotmText.reg("lotmcraft.text.netherite_scrap_x2", "Netherite scrap x2"), 60, () -> new ItemStack(Items.NETHERITE_SCRAP, 2)),
                                     characteristic(30, pw("tyrant", 9, 6), pw("visionary", 9, 7)),
                                     recipe(80, pw("tyrant", 9, 5), pw("visionary", 9, 6)),
                                     subIngredient(50, pw("tyrant", 9, 6), pw("visionary", 9, 7)),
                                     recipe(80, any(9, 5))
                             ))
             ),
-            new Faction(LotmText.t("lotmcraft.text.church_of_the_earth_mother", "Church of the Earth Mother"), "the Earth Mother", "Fertility Order",
-                    raid(LotmText.t("lotmcraft.text.raid_the_fertility_order", "Raid the Fertility Order"),
-                            LotmText.t("lotmcraft.text.the_devil_attacks_the_fertility_order", "The Devil attacks the Fertility Order."),
+            new Faction(LotmText.reg("lotmcraft.text.church_of_the_earth_mother", "Church of the Earth Mother"), "the Earth Mother", "Fertility Order",
+                    raid(LotmText.reg("lotmcraft.text.raid_the_fertility_order", "Raid the Fertility Order"),
+                            LotmText.reg("lotmcraft.text.the_devil_attacks_the_fertility_order", "The Devil attacks the Fertility Order."),
                             40, 15 * 60,  List.of(
-                                    new Loot(LotmText.t("lotmcraft.text.emerald_x4", "Emerald x4"), 60, () -> new ItemStack(Items.EMERALD, 4)),
+                                    new Loot(LotmText.reg("lotmcraft.text.emerald_x4", "Emerald x4"), 60, () -> new ItemStack(Items.EMERALD, 4)),
                                     characteristic(60, pw("mother", 9, 5)),
                                     recipe(10, pw("mother", 9, 6)),
                                     subIngredient(30, pw("mother", 9, 6)),
                                     characteristic(30, any(9, 5))
                             )),
-                    raid(LotmText.t("lotmcraft.text.raid_a_church_of_the_earth", "Raid a Church of the Earth Mother"),
-                            LotmText.t("lotmcraft.text.the_devil_storms_a_church_of_2", "The Devil storms a church of the Lord of Storms and ransacks it."),
+                    raid(LotmText.reg("lotmcraft.text.raid_a_church_of_the_earth", "Raid a Church of the Earth Mother"),
+                            LotmText.reg("lotmcraft.text.the_devil_storms_a_church_of_2", "The Devil storms a church of the Lord of Storms and ransacks it."),
                             50, 20 * 60,   List.of(
-                                    new Loot(LotmText.t("lotmcraft.text.emerald_x8", "Emerald x8"), 60, () -> new ItemStack(Items.EMERALD, 8)),
+                                    new Loot(LotmText.reg("lotmcraft.text.emerald_x8", "Emerald x8"), 60, () -> new ItemStack(Items.EMERALD, 8)),
                                     characteristic(30, pw("mother", 9, 6)),
                                     recipe(20, pw("mother", 9, 6)),
                                     subIngredient(80, pw("mother", 9, 5)),
                                     subIngredient(80, any(9, 5))
                             )),
-                    raid(LotmText.t("lotmcraft.text.raid_the_cathedral_of_the_earth", "Raid the Cathedral of the Earth Mother"),
-                            LotmText.t("lotmcraft.text.the_devil_storms_a_cathedral_of_2", "The Devil storms a cathedral of the Lord of Storms."),
+                    raid(LotmText.reg("lotmcraft.text.raid_the_cathedral_of_the_earth", "Raid the Cathedral of the Earth Mother"),
+                            LotmText.reg("lotmcraft.text.the_devil_storms_a_cathedral_of_2", "The Devil storms a cathedral of the Lord of Storms."),
                             65, 25 * 60, List.of(
-                                    new Loot(LotmText.t("lotmcraft.text.emerald_x16", "Emerald x16"), 60, () -> new ItemStack(Items.EMERALD, 16)),
+                                    new Loot(LotmText.reg("lotmcraft.text.emerald_x16", "Emerald x16"), 60, () -> new ItemStack(Items.EMERALD, 16)),
                                     characteristic(30, pw("mother", 9, 6)),
                                     recipe(80, pw("mother", 9, 5)),
                                     subIngredient(50, pw("mother", 9, 6)),
                                     recipe(80, any(9, 5))
                             ))
             ),
-            new Faction(LotmText.t("lotmcraft.text.church_of_the_eternal_blazing_sun", "Church of the Eternal Blazing Sun"), "the Eternal Blazing Sun", "Inquisition",
-                    raid(LotmText.t("lotmcraft.text.raid_the_inquisition", "Raid the Inquisition"),
-                            LotmText.t("lotmcraft.text.the_devil_attacks_the_inquisition", "The Devil attacks the Inquisition."),
+            new Faction(LotmText.reg("lotmcraft.text.church_of_the_eternal_blazing_sun", "Church of the Eternal Blazing Sun"), "the Eternal Blazing Sun", "Inquisition",
+                    raid(LotmText.reg("lotmcraft.text.raid_the_inquisition", "Raid the Inquisition"),
+                            LotmText.reg("lotmcraft.text.the_devil_attacks_the_inquisition", "The Devil attacks the Inquisition."),
                             60, 10 * 60,  List.of(
-                                    new Loot(LotmText.t("lotmcraft.text.gold_ingot_x10", "Gold Ingot x10"), 60, () -> new ItemStack(Items.GOLD_INGOT, 10)),
+                                    new Loot(LotmText.reg("lotmcraft.text.gold_ingot_x10", "Gold Ingot x10"), 60, () -> new ItemStack(Items.GOLD_INGOT, 10)),
                                     characteristic(60, pw("sun", 9, 5)),
                                     recipe(10, pw("sun", 9, 6)),
                                     subIngredient(30, pw("sun", 9, 6)),
                                     characteristic(30, any(9, 5))
                             )),
-                    raid(LotmText.t("lotmcraft.text.raid_a_church_of_the_eternal", "Raid a Church of the Eternal Blazing Sun"),
-                            LotmText.t("lotmcraft.text.the_devil_storms_a_church_of_2", "The Devil storms a church of the Lord of Storms and ransacks it."),
+                    raid(LotmText.reg("lotmcraft.text.raid_a_church_of_the_eternal", "Raid a Church of the Eternal Blazing Sun"),
+                            LotmText.reg("lotmcraft.text.the_devil_storms_a_church_of_2", "The Devil storms a church of the Lord of Storms and ransacks it."),
                             70, 15 * 60,   List.of(
-                                    new Loot(LotmText.t("lotmcraft.text.gold_ingot_x20", "Gold Ingot x20"), 60, () -> new ItemStack(Items.GOLD_INGOT, 20)),
+                                    new Loot(LotmText.reg("lotmcraft.text.gold_ingot_x20", "Gold Ingot x20"), 60, () -> new ItemStack(Items.GOLD_INGOT, 20)),
                                     characteristic(30, pw("sun", 9, 6)),
                                     recipe(20, pw("sun", 9, 6)),
                                     subIngredient(80, pw("sun", 9, 5)),
                                     subIngredient(80, any(9, 5))
                             )),
-                    raid(LotmText.t("lotmcraft.text.raid_the_cathedral_of_the_eternal", "Raid the Cathedral of the Eternal Blazing Sun"),
-                            LotmText.t("lotmcraft.text.the_devil_storms_a_cathedral_of_2", "The Devil storms a cathedral of the Lord of Storms."),
+                    raid(LotmText.reg("lotmcraft.text.raid_the_cathedral_of_the_eternal", "Raid the Cathedral of the Eternal Blazing Sun"),
+                            LotmText.reg("lotmcraft.text.the_devil_storms_a_cathedral_of_2", "The Devil storms a cathedral of the Lord of Storms."),
                             85, 20 * 60, List.of(
-                                    new Loot(LotmText.t("lotmcraft.text.gold_ingot_x30", "Gold Ingot x30"), 60, () -> new ItemStack(Items.GOLD_INGOT, 30)),
+                                    new Loot(LotmText.reg("lotmcraft.text.gold_ingot_x30", "Gold Ingot x30"), 60, () -> new ItemStack(Items.GOLD_INGOT, 30)),
                                     characteristic(30, pw("sun", 9, 6)),
                                     recipe(80, pw("sun", 9, 5)),
                                     subIngredient(50, pw("sun", 9, 6)),
                                     recipe(80, any(9, 5))
                             ))
             ),
-            new Faction(LotmText.t("lotmcraft.text.blood_sanctify_sect", "Blood Sanctify Sect"), "Dark Side of the Universe.", "The Butchers",
-                    raid(LotmText.t("lotmcraft.text.raid_the_butchers", "Raid The Butchers"),
-                            LotmText.t("lotmcraft.text.the_devil_attacks_the_butchers", "The Devil attacks the Butchers."),
+            new Faction(LotmText.reg("lotmcraft.text.blood_sanctify_sect", "Blood Sanctify Sect"), "Dark Side of the Universe.", "The Butchers",
+                    raid(LotmText.reg("lotmcraft.text.raid_the_butchers", "Raid The Butchers"),
+                            LotmText.reg("lotmcraft.text.the_devil_attacks_the_butchers", "The Devil attacks the Butchers."),
                             60, 15 * 60,  List.of(
-                                    new Loot(LotmText.t("lotmcraft.text.wither_skull_x1", "Wither Skull x1"), 60, () -> new ItemStack(Items.WITHER_SKELETON_SKULL, 1)),
+                                    new Loot(LotmText.reg("lotmcraft.text.wither_skull_x1", "Wither Skull x1"), 60, () -> new ItemStack(Items.WITHER_SKELETON_SKULL, 1)),
                                     characteristic(50, pw("abyss", 9, 5)),
                                     recipe(5, pw("abyss", 9, 6)),
                                     subIngredient(20, pw("abyss", 9, 6)),
                                     characteristic(20, any(9, 5))
                             )),
-                    raid(LotmText.t("lotmcraft.text.raid_a_external_blood_sanctify_sub", "Raid a External Blood Sanctify Sub-Sect"),
-                            LotmText.t("lotmcraft.text.the_devil_storms_the_external_blood", "The Devil storms the External Blood Sanctify Sub-Sect and ransacks it."),
+                    raid(LotmText.reg("lotmcraft.text.raid_a_external_blood_sanctify_sub", "Raid a External Blood Sanctify Sub-Sect"),
+                            LotmText.reg("lotmcraft.text.the_devil_storms_the_external_blood", "The Devil storms the External Blood Sanctify Sub-Sect and ransacks it."),
                             70, 20 * 60,   List.of(
-                                    new Loot(LotmText.t("lotmcraft.text.netherite_ingot_x1", "Netherite Ingot x1"), 50, () -> new ItemStack(Items.NETHERITE_INGOT, 1)),
+                                    new Loot(LotmText.reg("lotmcraft.text.netherite_ingot_x1", "Netherite Ingot x1"), 50, () -> new ItemStack(Items.NETHERITE_INGOT, 1)),
                                     characteristic(20, pw("sun", 9, 6)),
                                     recipe(10, pw("sun", 9, 6)),
                                     subIngredient(70, pw("sun", 9, 5)),
                                     subIngredient(70, any(9, 5))
                             )),
-                    raid(LotmText.t("lotmcraft.text.raid_one_of_the_main_family", "Raid one of the Main Family homes"),
-                            LotmText.t("lotmcraft.text.the_devil_storms_one_of_the", "The Devil storms one of the Main Family homes of the Blood Sanctify Sect."),
+                    raid(LotmText.reg("lotmcraft.text.raid_one_of_the_main_family", "Raid one of the Main Family homes"),
+                            LotmText.reg("lotmcraft.text.the_devil_storms_one_of_the", "The Devil storms one of the Main Family homes of the Blood Sanctify Sect."),
                             85, 25 * 60, List.of(
-                                    new Loot(LotmText.t("lotmcraft.text.template_x1", "Template x1"), 40, () -> new ItemStack(Items.NETHERITE_UPGRADE_SMITHING_TEMPLATE, 1)),
+                                    new Loot(LotmText.reg("lotmcraft.text.template_x1", "Template x1"), 40, () -> new ItemStack(Items.NETHERITE_UPGRADE_SMITHING_TEMPLATE, 1)),
                                     characteristic(20, pw("abyss", 9, 6)),
                                     recipe(70, pw("abyss", 9, 5)),
                                     subIngredient(40, pw("abyss", 9, 6)),

@@ -66,52 +66,37 @@ public final class NpcDesire {
             m.setLastHurtByMob(player);
         }
     }
-    private static final String[] EMERALD_REASONS = {
-            "\"I took out a loan from a man I should never have trusted, and the interest has eaten me alive. "
-                    + "Every week the debt grows, and his collectors are getting bolder. Pay it off and I can sleep again.\"",
-            "\"There's barely any food in my house. The harvest failed, the market prices have tripled, and "
-                    + "I've been skipping meals so my family can eat. I just need enough to get us through the season.\"",
-            "\"Call it greed if you like, but I want the wealth. I've watched the other villagers build "
-                    + "bigger homes and bigger stalls while I stay in the same shack. Emeralds are the only measure "
-                    + "anyone here respects, and I intend to have more of them.\"",
-            "\"Do you know what these travelers offer me? Six cod and one emerald for one cooked cod. "
-                    + "Six cod! They think I'm a fool, and I've been bleeding trade for months. "
-                    + "I need the emeralds to stay in business.\""
-    };
-    private static final String[] RECIPE_REASONS = {
-            "\"I've searched every ruin and every dusty shop for the next recipe and found nothing. "
-                    + "I can feel my body reaching its limit. If I don't find it soon, I'll hit the end of my road "
-                    + "and never get past it. Bring me the recipe and I'll buy back my own future.\"",
-            "\"Others from my pathway have started hunting me. They know I'm close to my next step and they "
-                    + "want to stop me, or take what I have. With the recipe I can advance properly. "
-                    + "Without it, I walk into my advancement unready and they'll be waiting.\"",
-            "\"The faction I belong to fears what I'm becoming. They smile at me, but they will never let me "
-                    + "advance. Every request for the recipe has been 'lost' or 'delayed'. I'll get it "
-                    + "myself, outside their reach, whatever the cost.\""
-    };
-    private static final String[] POTION_REASONS = {
-            "\"I'm being hunted. They've found my hiding places twice already and I won't survive a third time. "
-                    + "I need power, and I need it fast. Bring me the potion and I'll stop running.\"",
-            "\"My life is running out, and I can feel it. The potion would stretch my days, maybe by years. "
-                    + "I'm not ready to die, and I'll bargain away anything to avoid it, even my soul.\"",
-            "\"There's someone I have to kill, and I don't care what it takes. I won't tell you who or why. "
-                    + "The potion gives me the strength to finish it. Get it for me and the rest "
-                    + "isn't your concern.\""
-    };
-    private static final String[] KILL_REASONS = {
-            "\"A certain %s took the job I spent years working toward. I did everything right, "
-                    + "and they stepped in and took it. I can't live in the same village as the person who "
-                    + "took my dream. Make them go away.\"",
-            "\"A %s stole the one I loved. They knew how I felt and did it anyway, smiling the whole time. "
-                    + "I think about it every night. I want them gone.\"",
-            "\"I want to see that %s bleed. I won't pretend there's a noble reason. "
-                    + "I just want to watch it happen, and I'll pay for the privilege.\"",
-            "\"That %s has a spouse I can't stop thinking about. With them out of the way, "
-                    + "the road is clear. Don't ask me to explain it; just do it.\"",
-            "\"A %s keeps getting the trades that should be mine. Every traveler walks right past my door and "
-                    + "straight to theirs. At this rate I'll be out of business by winter, so "
-                    + "I want them out of the picture.\""
-    };
+    private static String[] EMERALD_REASONS() {
+        return new String[]{
+            LotmText.t("lotmcraft.text.npc_desire_emerald_reasons_1", "\"I took out a loan from a man I should never have trusted, and the interest has eaten me alive. Every week the debt grows, and his collectors are getting bolder. Pay it off and I can sleep again.\""),
+            LotmText.t("lotmcraft.text.npc_desire_emerald_reasons_2", "\"There's barely any food in my house. The harvest failed, the market prices have tripled, and I've been skipping meals so my family can eat. I just need enough to get us through the season.\""),
+            LotmText.t("lotmcraft.text.npc_desire_emerald_reasons_3", "\"Call it greed if you like, but I want the wealth. I've watched the other villagers build bigger homes and bigger stalls while I stay in the same shack. Emeralds are the only measure anyone here respects, and I intend to have more of them.\""),
+            LotmText.t("lotmcraft.text.npc_desire_emerald_reasons_4", "\"Do you know what these travelers offer me? Six cod and one emerald for one cooked cod. Six cod! They think I'm a fool, and I've been bleeding trade for months. I need the emeralds to stay in business.\"")
+        };
+    }
+    private static String[] RECIPE_REASONS() {
+        return new String[]{
+            LotmText.t("lotmcraft.text.npc_desire_recipe_reasons_1", "\"I've searched every ruin and every dusty shop for the next recipe and found nothing. I can feel my body reaching its limit. If I don't find it soon, I'll hit the end of my road and never get past it. Bring me the recipe and I'll buy back my own future.\""),
+            LotmText.t("lotmcraft.text.npc_desire_recipe_reasons_2", "\"Others from my pathway have started hunting me. They know I'm close to my next step and they want to stop me, or take what I have. With the recipe I can advance properly. Without it, I walk into my advancement unready and they'll be waiting.\""),
+            LotmText.t("lotmcraft.text.npc_desire_recipe_reasons_3", "\"The faction I belong to fears what I'm becoming. They smile at me, but they will never let me advance. Every request for the recipe has been 'lost' or 'delayed'. I'll get it myself, outside their reach, whatever the cost.\"")
+        };
+    }
+    private static String[] POTION_REASONS() {
+        return new String[]{
+            LotmText.t("lotmcraft.text.npc_desire_potion_reasons_1", "\"I'm being hunted. They've found my hiding places twice already and I won't survive a third time. I need power, and I need it fast. Bring me the potion and I'll stop running.\""),
+            LotmText.t("lotmcraft.text.npc_desire_potion_reasons_2", "\"My life is running out, and I can feel it. The potion would stretch my days, maybe by years. I'm not ready to die, and I'll bargain away anything to avoid it, even my soul.\""),
+            LotmText.t("lotmcraft.text.npc_desire_potion_reasons_3", "\"There's someone I have to kill, and I don't care what it takes. I won't tell you who or why. The potion gives me the strength to finish it. Get it for me and the rest isn't your concern.\"")
+        };
+    }
+    private static String[] KILL_REASONS() {
+        return new String[]{
+            LotmText.t("lotmcraft.text.npc_desire_kill_reasons_1", "\"A certain %s took the job I spent years working toward. I did everything right, and they stepped in and took it. I can't live in the same village as the person who took my dream. Make them go away.\""),
+            LotmText.t("lotmcraft.text.npc_desire_kill_reasons_2", "\"A %s stole the one I loved. They knew how I felt and did it anyway, smiling the whole time. I think about it every night. I want them gone.\""),
+            LotmText.t("lotmcraft.text.npc_desire_kill_reasons_3", "\"I want to see that %s bleed. I won't pretend there's a noble reason. I just want to watch it happen, and I'll pay for the privilege.\""),
+            LotmText.t("lotmcraft.text.npc_desire_kill_reasons_4", "\"That %s has a spouse I can't stop thinking about. With them out of the way, the road is clear. Don't ask me to explain it; just do it.\""),
+            LotmText.t("lotmcraft.text.npc_desire_kill_reasons_5", "\"A %s keeps getting the trades that should be mine. Every traveler walks right past my door and straight to theirs. At this rate I'll be out of business by winter, so I want them out of the picture.\"")
+        };
+    }
     private static String pick(RandomSource r, String[] a) { return a[r.nextInt(a.length)]; }
     public static Desire get(LivingEntity e) {
         CompoundTag data = e.getPersistentData();
@@ -142,11 +127,11 @@ public final class NpcDesire {
                 kind = Kind.ITEM;
                 item = "minecraft:emerald";
                 count = 40 * level;
-                reason = pick(r, EMERALD_REASONS);
+                reason = pick(r, EMERALD_REASONS());
             } else {
                 kind = Kind.KILL_VILLAGER;
                 prof = ownOrRandomProfession(v, r);
-                reason = String.format(pick(r, KILL_REASONS), professionName(prof));
+                reason = String.format(pick(r, KILL_REASONS()), professionName(prof));
             }
         } else if (isBeyonder(e)) {
             kind = Kind.ITEM;
@@ -155,23 +140,23 @@ public final class NpcDesire {
             String path = pathwayOf(e);
             if (seq == 0) {
                 item = FALLBACK_ITEM;
-                reason = "there is nothing left above them, only relics";
+                reason = LotmText.t("lotmcraft.text.npc_desire_nothing_above", "there is nothing left above them, only relics");
             } else if (seq >= 7) {                     // seq 9-7: potion
                 item = existingOrFallback(potionId(path, seq - 1));
-                reason = pick(r, POTION_REASONS);
+                reason = pick(r, POTION_REASONS());
                 String n = displayName(path, seq - 1);
-                if (n != null && !item.equals(FALLBACK_ITEM)) label = n + " Potion";
+                if (n != null && !item.equals(FALLBACK_ITEM)) label = LotmText.f("lotm.potion.named", "%s Potion", n);
             } else {                                   // seq 6 and stronger: recipe
                 item = existingOrFallback(recipeId(path, seq - 1));
-                reason = pick(r, RECIPE_REASONS);
+                reason = pick(r, RECIPE_REASONS());
                 String n = displayName(path, seq - 1);
-                if (n != null && !item.equals(FALLBACK_ITEM)) label = n + " Recipe";
+                if (n != null && !item.equals(FALLBACK_ITEM)) label = LotmText.f("lotm.potion_recipe.named", "%s Potion Recipe", n);
             }
         } else {
             kind = Kind.ITEM;
             item = "minecraft:iron_ingot";
             count = 4 + r.nextInt(13);
-            reason = "they simply want something solid in their hands";
+            reason = LotmText.t("lotmcraft.text.npc_desire_something_solid", "they simply want something solid in their hands");
         }
         d.putBoolean("has", true);
         d.putString("kind", kind.name());

@@ -700,9 +700,9 @@ public class IntrospectScreen extends AbstractContainerScreen<IntrospectMenu> {
     private String abbreviateKeybind(String keybind) {
         if (keybind.startsWith("Button ")) return "B" + keybind.substring(7);
         if (keybind.equalsIgnoreCase("Not Bound") || keybind.equalsIgnoreCase("Unbound")) return "-";
-        if (keybind.equalsIgnoreCase("Middle Mouse Button")) return "MMB";
-        if (keybind.equalsIgnoreCase("Left Mouse Button")) return "LMB";
-        if (keybind.equalsIgnoreCase("Right Mouse Button")) return "RMB";
+        if (keybind.equalsIgnoreCase("Middle Mouse Button") || keybind.equalsIgnoreCase(net.minecraft.client.resources.language.I18n.get("key.mouse.middle"))) return "MMB";
+        if (keybind.equalsIgnoreCase("Left Mouse Button") || keybind.equalsIgnoreCase(net.minecraft.client.resources.language.I18n.get("key.mouse.left"))) return "LMB";
+        if (keybind.equalsIgnoreCase("Right Mouse Button") || keybind.equalsIgnoreCase(net.minecraft.client.resources.language.I18n.get("key.mouse.right"))) return "RMB";
         if (keybind.length() > 5) return keybind.substring(0, 4) + "…";
         return keybind;
     }

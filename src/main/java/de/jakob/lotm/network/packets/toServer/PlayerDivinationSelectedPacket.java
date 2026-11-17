@@ -1,5 +1,7 @@
 package de.jakob.lotm.network.packets.toServer;
 
+import de.jakob.lotm.util.LotmText;
+
 import de.jakob.lotm.LOTMCraft;
 import de.jakob.lotm.beyonders.abilities.darkness.ConcealmentAuthorityAbility;
 import de.jakob.lotm.beyonders.abilities.door.DimensionSightAbility;
@@ -187,30 +189,13 @@ public record PlayerDivinationSelectedPacket(UUID selectedPlayerUuid, PlayerSele
                 player.sendSystemMessage(Component.translatableWithFallback("lotmcraft.text.divination_failed", "§cDivination failed"));
                 return;
             }
-            player.sendSystemMessage(Component.literal(String.format(
-                    "§5You sense §d%s§5 to the §d%s§5",
-                    targetPlayer.getGameProfile().getName(),
-                    getDirection(dx, dz)
-            )));
+            player.sendSystemMessage(Component.translatableWithFallback("lotmcraft.text.divination_sense_direction", "§5You sense §d%s§5 to the §d%s§5", targetPlayer.getGameProfile().getName(), LotmText.trc(getDirection(dx, dz))));
 
         } else if(divinationDifference < 10) {
-            player.sendSystemMessage(Component.literal(String.format(
-                    "§5You sense §d%s§5 to the §d%s§5, about §d%d blocks §5away...",
-                    targetPlayer.getGameProfile().getName(),
-                    getDirection(dx, dz),
-                    distance
-            )));
+            player.sendSystemMessage(Component.translatableWithFallback("lotmcraft.text.divination_sense_direction_distance", "§5You sense §d%s§5 to the §d%s§5, about §d%s blocks §5away...", targetPlayer.getGameProfile().getName(), LotmText.trc(getDirection(dx, dz)), String.valueOf(distance)));
         }
         else if (divinationDifference >= 10) {
-            player.sendSystemMessage(Component.literal(String.format(
-                    "§5You sense §d%s§5 to the §d%s§5 at cords §d%d, %d, %d§5, about §d%d blocks §5away...",
-                    targetPlayer.getGameProfile().getName(),
-                    getDirection(dx, dz),
-                    targetPlayer.blockPosition().getX(),
-                    targetPlayer.blockPosition().getY(),
-                    targetPlayer.blockPosition().getZ(),
-                    distance
-            )));
+            player.sendSystemMessage(Component.translatableWithFallback("lotmcraft.text.divination_sense_direction_cords", "§5You sense §d%s§5 to the §d%s§5 at cords §d%s, %s, %s§5, about §d%s blocks §5away...", targetPlayer.getGameProfile().getName(), LotmText.trc(getDirection(dx, dz)), String.valueOf(targetPlayer.blockPosition().getX()), String.valueOf(targetPlayer.blockPosition().getY()), String.valueOf(targetPlayer.blockPosition().getZ()), String.valueOf(distance)));
         }     // Trigger MetaAwareness passive if target has it
     }
 

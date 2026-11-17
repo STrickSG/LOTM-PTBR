@@ -135,7 +135,7 @@ public class ContractBuilderScreen extends Screen {
             int x = 0;
             int rowY = ry;
             for (ContractTermKind kind : g.kinds()) {
-                int w = Math.min(areaW, Math.max(40, this.font.width(kind.label) + 12));
+                int w = Math.min(areaW, Math.max(40, this.font.width(LotmText.tr(kind.label)) + 12));
                 if (x > 0 && x + w > areaW) {
                     x = 0;
                     rowY += TERM_H + GAP;
@@ -157,10 +157,10 @@ public class ContractBuilderScreen extends Screen {
         // TERM BUTTONS
         for (Slot s : slots) {
             ContractTermKind kind = s.kind();
-            this.addRenderableWidget(new BoneButton(pageX + labelW + s.x(), gridTop + s.y(), s.w(), TERM_H, kind.label, b -> onTermClicked(kind)));
+            this.addRenderableWidget(new BoneButton(pageX + labelW + s.x(), gridTop + s.y(), s.w(), TERM_H, LotmText.tr(kind.label), b -> onTermClicked(kind)));
         }
         // ACTION BUTTONS (small, one centered row)
-        String[] labels = {"Sign as A", "Sign as B", "Leave Blank", "Undo", "Clear"};
+        String[] labels = {LotmText.t("lotmcraft.text.contract_sign_as_a", "Sign as A"), LotmText.t("lotmcraft.text.contract_sign_as_b", "Sign as B"), LotmText.t("lotmcraft.text.contract_leave_blank", "Leave Blank"), LotmText.t("lotmcraft.text.contract_undo", "Undo"), LotmText.t("lotmcraft.text.contract_clear", "Clear")};
         Runnable[] actions = {() -> submit(1), () -> submit(2), () -> submit(0), this::undo, this::clearAll};
         int[] widths = new int[labels.length];
         int rowW = 0;

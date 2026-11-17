@@ -1,5 +1,7 @@
 package de.jakob.lotm.attachments;
 
+import de.jakob.lotm.util.LotmText;
+
 import de.jakob.lotm.entity.custom.AvatarEntity;
 import de.jakob.lotm.gamerule.ModGameRules;
 import de.jakob.lotm.util.BeyonderData;
@@ -163,9 +165,7 @@ public class VirtualPersonaComponent {
 
     public String getGeneralInfo(int seq) {
         return new String(
-                "Slots: " + getUsedSlots() + "/" + getMaxPerSeq(seq)
-                        + "\nOn self: " + ownPersonasOnSelf
-                        + "\nHealth: " + health + "/" + maxHealth
+                LotmText.f("lotmcraft.text.persona_general_info", "Slots: %s/%s\nOn self: %s\nHealth: %s/%s", getUsedSlots(), getMaxPerSeq(seq), ownPersonasOnSelf, health, maxHealth)
         );
     }
 

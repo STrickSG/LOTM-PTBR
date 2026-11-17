@@ -1,5 +1,7 @@
 package de.jakob.lotm.network.packets.toServer;
 
+import de.jakob.lotm.util.LotmText;
+
 import de.jakob.lotm.LOTMCraft;
 import de.jakob.lotm.beyonders.abilities.common.DivinationAbility;
 import de.jakob.lotm.beyonders.abilities.darkness.ConcealmentAuthorityAbility;
@@ -75,7 +77,7 @@ public record StructureDivinationSelectedPacket(String structureId) implements C
 
             context.enqueueWork(() -> {
                 if (result == null) {
-                    player.sendSystemMessage(Component.literal(String.format("§cNo structure nearby in %d blocks", maxDistance)));
+                    player.sendSystemMessage(Component.translatableWithFallback("lotmcraft.text.no_structure_nearby_in_blocks", "§cNo structure nearby in %s blocks", String.valueOf(maxDistance)));
                     return;
                 }
 
@@ -101,12 +103,7 @@ public record StructureDivinationSelectedPacket(String structureId) implements C
                 }
                 structureName = structureName.replace('_', ' ');
 
-                player.sendSystemMessage(Component.literal(String.format(
-                        "§5You sense §d%s§5 to the §d%s§5, about §d%d blocks §5away...",
-                        structureName,
-                        direction,
-                        distance
-                )));
+                player.sendSystemMessage(Component.translatableWithFallback("lotmcraft.text.divination_sense_direction_distance", "§5You sense §d%s§5 to the §d%s§5, about §d%s blocks §5away...", structureName, LotmText.trc(direction), String.valueOf(distance)));
             });
         }, AsyncSearch.EXECUTOR);
     }

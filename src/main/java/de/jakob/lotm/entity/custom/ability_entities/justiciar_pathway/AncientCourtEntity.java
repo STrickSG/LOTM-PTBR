@@ -192,7 +192,7 @@ public class AncientCourtEntity extends Entity {
     }
 
     private void broadcastProhibition(ServerLevel serverLevel) {
-        Component msg = Component.translatableWithFallback("lotmcraft.text.ancient_court_of_judgment_is_prohibited", "[Ancient Court of Judgment] %s is Prohibited here.", String.valueOf(currentProhibition.displayName))
+        Component msg = Component.translatableWithFallback("lotmcraft.text.ancient_court_of_judgment_is_prohibited", "[Ancient Court of Judgment] %s is Prohibited here.", String.valueOf(LotmText.tr(currentProhibition.displayName)))
                 .withStyle(ChatFormatting.GOLD);
         serverLevel.getServer().getPlayerList().getPlayers().forEach(p -> {
             if (p.level().equals(serverLevel) && p.distanceTo(this) <= RADIUS) {
@@ -260,32 +260,32 @@ public class AncientCourtEntity extends Entity {
     // ── Prohibition type enum ─────────────────────────────────────────────────
 
     public enum CourtProhibitionType {
-        TELEPORTING(LotmText.t("lotmcraft.text.teleporting", "Teleporting")),
-        PROJECTILES(LotmText.t("lotmcraft.text.projectiles", "Projectiles")),
-        SLEEPING(LotmText.t("lotmcraft.text.sleeping", "Sleeping")),
-        MOVING(LotmText.t("lotmcraft.text.moving", "Moving")),
-        RUNNING(LotmText.t("lotmcraft.text.running", "Running")),
-        EATING(LotmText.t("lotmcraft.text.eating", "Eating")),
-        DRINKING(LotmText.t("lotmcraft.text.drinking", "Drinking")),
-        BUILDING(LotmText.t("lotmcraft.text.building", "Building")),
-        DESTRUCTION(LotmText.t("lotmcraft.text.destruction", "Destruction")),
-        EXPLOSIONS(LotmText.t("lotmcraft.text.explosions", "Explosions")),
-        FALL_DAMAGE(LotmText.t("lotmcraft.text.fall_damage", "Fall Damage")),
-        ESCAPING(LotmText.t("lotmcraft.text.escaping", "Escaping")),
-        SPEAKING(LotmText.t("lotmcraft.text.speaking", "Speaking")),
-        SWAPPING_ABILITIES(LotmText.t("lotmcraft.text.swapping_abilities", "Swapping Abilities")),
-        HEALING(LotmText.t("lotmcraft.text.healing", "Healing")),
-        REGENERATION(LotmText.t("lotmcraft.text.regeneration", "Regeneration")),
-        POSITIVE_EFFECTS(LotmText.t("lotmcraft.text.positive_effects", "Positive Effects")),
-        NEGATIVE_EFFECTS(LotmText.t("lotmcraft.text.negative_effects", "Negative Effects")),
-        HOSTILE_MOBS(LotmText.t("lotmcraft.text.hostile_mobs", "Hostile Mobs")),
-        MOBS(LotmText.t("lotmcraft.text.mobs", "Mobs")),
-        UNDEAD(LotmText.t("lotmcraft.text.undead_creatures", "Undead Creatures")),
-        INTERACTION(LotmText.t("lotmcraft.text.interaction", "Interaction")),
-        BLINKING(LotmText.t("lotmcraft.text.blinking", "Blinking")),
-        CONCEALMENT(LotmText.t("lotmcraft.text.concealment", "Concealment")),
-        SEALING(LotmText.t("lotmcraft.text.sealing", "Sealing")),
-        BREATHING(LotmText.t("lotmcraft.text.breathing", "Breathing"));
+        TELEPORTING(LotmText.reg("lotmcraft.text.teleporting", "Teleporting")),
+        PROJECTILES(LotmText.reg("lotmcraft.text.projectiles", "Projectiles")),
+        SLEEPING(LotmText.reg("lotmcraft.text.sleeping", "Sleeping")),
+        MOVING(LotmText.reg("lotmcraft.text.moving", "Moving")),
+        RUNNING(LotmText.reg("lotmcraft.text.running", "Running")),
+        EATING(LotmText.reg("lotmcraft.text.eating", "Eating")),
+        DRINKING(LotmText.reg("lotmcraft.text.drinking", "Drinking")),
+        BUILDING(LotmText.reg("lotmcraft.text.building", "Building")),
+        DESTRUCTION(LotmText.reg("lotmcraft.text.destruction", "Destruction")),
+        EXPLOSIONS(LotmText.reg("lotmcraft.text.explosions", "Explosions")),
+        FALL_DAMAGE(LotmText.reg("lotmcraft.text.fall_damage", "Fall Damage")),
+        ESCAPING(LotmText.reg("lotmcraft.text.escaping", "Escaping")),
+        SPEAKING(LotmText.reg("lotmcraft.text.speaking", "Speaking")),
+        SWAPPING_ABILITIES(LotmText.reg("lotmcraft.text.swapping_abilities", "Swapping Abilities")),
+        HEALING(LotmText.reg("lotmcraft.text.healing", "Healing")),
+        REGENERATION(LotmText.reg("lotmcraft.text.regeneration", "Regeneration")),
+        POSITIVE_EFFECTS(LotmText.reg("lotmcraft.text.positive_effects", "Positive Effects")),
+        NEGATIVE_EFFECTS(LotmText.reg("lotmcraft.text.negative_effects", "Negative Effects")),
+        HOSTILE_MOBS(LotmText.reg("lotmcraft.text.hostile_mobs", "Hostile Mobs")),
+        MOBS(LotmText.reg("lotmcraft.text.mobs", "Mobs")),
+        UNDEAD(LotmText.reg("lotmcraft.text.undead_creatures", "Undead Creatures")),
+        INTERACTION(LotmText.reg("lotmcraft.text.interaction", "Interaction")),
+        BLINKING(LotmText.reg("lotmcraft.text.blinking", "Blinking")),
+        CONCEALMENT(LotmText.reg("lotmcraft.text.concealment", "Concealment")),
+        SEALING(LotmText.reg("lotmcraft.text.sealing", "Sealing")),
+        BREATHING(LotmText.reg("lotmcraft.text.breathing", "Breathing"));
 
         public final String displayName;
 
