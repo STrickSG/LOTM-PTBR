@@ -29,6 +29,37 @@ mods ele aparece como **LOTM PTBR**.
 - Em servidor dedicado, as mensagens montadas no servidor que não passam por chave de tradução
   aparecem em inglês; em mundo de um jogador tudo aparece em português.
 
+## Cartas da Blasfêmia
+
+- Feitas na bancada com as 9 receitas de poção de um Caminho (Sequências 9 a 1), em qualquer ordem.
+- Só existe uma Carta de cada Caminho por mundo: uma segunda some (aviso na barra de ação). Se a
+  verdadeira for destruída (explosão, lava, cacto, cair no vazio), pode ser feita de novo.
+- Clique direito mostra a receita da Sequência escolhida (e o ritual, se ela tiver um); agachado +
+  clique direito troca a Sequência. No Caldeirão de Preparo serve como receita de qualquer
+  Sequência do Caminho.
+- Caminhos com Carta: Tolo, Porta, Erro, Sol, Tirano, Escuridão, Morte, Demônia, Sacerdote Vermelho,
+  Mãe, Abismo, Visionário, Roda da Fortuna e Ministro.
+
+## Rituais de avanço do Sol
+
+Sem o ritual, o avanço falha e você perde o controle (regra de jogo `applyRituals`). Para o ritual
+valer, é preciso ter no inventário, na hora de beber a poção, o pergaminho daquele ritual ou a Carta
+da Blasfêmia do Sol com aquela Sequência escolhida.
+
+- Sequência 5, Sacerdote da Luz: beber a poção em escuridão total, enterrado numa cápsula de gelo
+  compactado ou gelo azul (10 blocos em volta do corpo).
+- Sequência 4, Sem Sombra: agachado, usar um frasco de vidro vazio para guardar as próprias emoções
+  (Frasco de Emoções) e beber a poção com ele no inventário.
+- Sequência 3, Mentor da Justiça: escrever e assinar a sua justiça num livro, jurar por ela e
+  mantê-la por 3 dias do Minecraft.
+- Sequência 2, Buscador da Luz: ligar a memória da sua justiça a um item de Anjo do Sol e deixá-lo
+  à sua frente ao beber.
+- Sequência 1, Anjo Branco: reunir 100 fiéis (99 aldeões e você) com o Registro Sagrado, feito na
+  bancada. Os fiéis também seguram a sanidade de Beyonders de Sequência 3 ou maior.
+
+Os pergaminhos de ritual (roxos) mostram só o ritual. Por enquanto eles só aparecem na aba do mod no
+modo criativo.
+
 ## Correções de bugs
 
 Portadas da nossa versão (onde o criador ainda não tinha corrigido):

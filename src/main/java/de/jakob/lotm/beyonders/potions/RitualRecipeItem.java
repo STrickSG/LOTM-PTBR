@@ -42,7 +42,7 @@ public class RitualRecipeItem extends Item {
     @Override
     public @NotNull Component getName(@NotNull ItemStack stack) {
         String sequenceName = BeyonderData.pathwayInfos.get(pathway).sequenceNames()[sequence];
-        return Component.translatable("lotm.sequence." + sequenceName).append(" ").append(Component.translatable("lotm.advancement_ritual"))
-                .append(" (").append(Component.translatable("lotm.sequence")).append(" " + sequence + ")");
+        return Component.translatableWithFallback("lotm.advancement_ritual.item", "%s Advancement Ritual (Sequence %s)",
+                Component.translatable("lotm.sequence." + sequenceName), String.valueOf(sequence));
     }
 }

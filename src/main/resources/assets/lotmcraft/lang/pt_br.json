@@ -5322,5 +5322,6 @@
   "lotmcraft.ritual.sun.1.5": "• Beba a poção do Anjo Branco com 100 fiéis vivos (99 aldeões e você).",
   "lotmcraft.believers.not_worthy": "Você não pode usar isso agora.",
   "lotmcraft.ritual.unknown": "Você não conhece este ritual: é preciso ter o pergaminho do ritual, ou a Carta da Blasfêmia do Caminho com esta Sequência escolhida.",
-  "lotm.advancement_ritual.named": "Ritual de Avanço de %s"
+  "lotm.advancement_ritual.named": "Ritual de Avanço de %s",
+  "lotm.advancement_ritual.item": "Ritual de Avanço de %s (Sequência %s)"
 }
