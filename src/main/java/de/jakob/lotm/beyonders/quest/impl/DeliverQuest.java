@@ -20,6 +20,7 @@ import net.minecraft.world.phys.Vec3;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
+import de.jakob.lotm.util.LotmText;
 
 public class DeliverQuest extends Quest {
 
@@ -32,7 +33,7 @@ public class DeliverQuest extends Quest {
         BlockPos chestPos = createDeliveryChest(player.serverLevel(), player.blockPosition());
         if (chestPos == null) {
             QuestManager.discardQuest(player, id);
-            player.sendSystemMessage(Component.literal("Could not find delivery location for chest."));
+            player.sendSystemMessage(Component.translatableWithFallback("lotmcraft.text.could_not_find_delivery_location_for", "Could not find delivery location for chest."));
             return;
         }
 
@@ -95,7 +96,7 @@ public class DeliverQuest extends Quest {
 
         BlockPos pos = BlockPos.containing(location);
         return Component.translatable("lotm.quest.impl." + id + ".description")
-                .append(" Target: chest near" + " X=" + pos.getX() );
+                .append(LotmText.f("lotmcraft.text.target_chest_near_x", " Target: chest near X=%s", pos.getX()) );
     }
 
     private BlockPos createDeliveryChest(ServerLevel level, BlockPos origin) {

@@ -15,6 +15,7 @@ import net.minecraft.world.entity.npc.VillagerProfession;
 
 import java.util.ArrayList;
 import java.util.List;
+import de.jakob.lotm.util.LotmText;
 
 public final class NpcDesire {
     private NpcDesire() {}
@@ -25,7 +26,7 @@ public final class NpcDesire {
                 if (label != null && !label.isEmpty()) return count > 1 ? count + "x " + label : label;
                 return ContractData.describeTerm(ContractData.TermType.ITEM, itemId, count);
             }
-            return "the death of a level " + level + " " + professionName(profession) + " named " + targetName;
+            return LotmText.f("lotmcraft.text.the_death_of_a_level_named", "the death of a level %s %s named %s", level, professionName(profession), targetName);
         }
     }
     public static boolean isBeyonder(LivingEntity e) { return BeyonderData.isBeyonder(e); }
@@ -194,7 +195,7 @@ public final class NpcDesire {
     }
     public static String professionName(String key) {
         String path = key.contains(":") ? key.substring(key.indexOf(':') + 1) : key;
-        return path.isEmpty() ? "villager" : path.replace('_', ' ');
+        return path.isEmpty() ? LotmText.t("lotmcraft.text.villager", "villager") : path.replace('_', ' ');
     }
     public static void check(ServerPlayer player, LivingEntity target) {
         if (shouldAggro(target)) {
@@ -203,10 +204,10 @@ public final class NpcDesire {
         }
         Desire d = get(target);
         if (d == null) {
-            player.sendSystemMessage(Component.literal("They want nothing for their soul.").withColor(0x9932cc));
+            player.sendSystemMessage(Component.translatableWithFallback("lotmcraft.text.they_want_nothing_for_their_soul", "They want nothing for their soul.").withColor(0x9932cc));
             return;
         }
-        player.sendSystemMessage(Component.literal("They want " + d.demand() + " in exchange for their soul.").withColor(0x9932cc));
-        player.sendSystemMessage(Component.literal("Reason: " + d.reason()).withColor(0xCCCCCC));
+        player.sendSystemMessage(Component.translatableWithFallback("lotmcraft.text.they_want_in_exchange_for_their", "They want %s in exchange for their soul.", String.valueOf(d.demand())).withColor(0x9932cc));
+        player.sendSystemMessage(Component.translatableWithFallback("lotmcraft.text.reason", "Reason: %s", String.valueOf(d.reason())).withColor(0xCCCCCC));
     }
 }

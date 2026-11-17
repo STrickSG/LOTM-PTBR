@@ -11,12 +11,13 @@ import net.minecraft.network.chat.Component;
 
 import java.util.ArrayList;
 import java.util.List;
+import de.jakob.lotm.util.LotmText;
 
 public class DivinationMisleadScreen extends Screen {
     private static final int PANEL_WIDTH = 240;
     private static final int LIST_TOP = 36;
     private static final int ROW = 14;
-    private static final String REMOVE = "Remove";
+    private static final String REMOVE = LotmText.t("lotmcraft.text.remove", "Remove");
 
     private final List<String> lines;
     private EditBox target;
@@ -24,7 +25,7 @@ public class DivinationMisleadScreen extends Screen {
     private int scroll;
 
     public DivinationMisleadScreen(List<String> lines) {
-        super(Component.literal("Divination mislead"));
+        super(Component.translatableWithFallback("lotmcraft.text.divination_mislead", "Divination mislead"));
         this.lines = new ArrayList<>(lines);
     }
 
@@ -33,15 +34,15 @@ public class DivinationMisleadScreen extends Screen {
         int centerX = this.width / 2;
         int inputY = this.height - 78;
 
-        this.target = new EditBox(this.font, centerX - 100, inputY, 200, 20, Component.literal("Target"));
+        this.target = new EditBox(this.font, centerX - 100, inputY, 200, 20, Component.translatableWithFallback("lotmcraft.text.target_2", "Target"));
         this.target.setMaxLength(64);
         this.addRenderableWidget(this.target);
 
-        this.outcome = new EditBox(this.font, centerX - 100, inputY + 24, 200, 20, Component.literal("Outcome"));
+        this.outcome = new EditBox(this.font, centerX - 100, inputY + 24, 200, 20, Component.translatableWithFallback("lotmcraft.text.outcome", "Outcome"));
         this.outcome.setMaxLength(80);
         this.addRenderableWidget(this.outcome);
 
-        this.addRenderableWidget(Button.builder(Component.literal("Confirm"), this::onConfirm)
+        this.addRenderableWidget(Button.builder(Component.translatableWithFallback("lotmcraft.text.confirm", "Confirm"), this::onConfirm)
                 .bounds(centerX - 50, inputY + 48, 100, 20)
                 .build());
     }
@@ -53,9 +54,9 @@ public class DivinationMisleadScreen extends Screen {
         int listBottom = this.height - 104;
         int rows = Math.max(1, (listBottom - LIST_TOP) / ROW);
         int removeWidth = this.font.width(REMOVE);
-        graphics.drawString(this.font, "Divination mislead", left, 16, 0xFFC8B4FF, false);
+        graphics.drawString(this.font, LotmText.t("lotmcraft.text.divination_mislead", "Divination mislead"), left, 16, 0xFFC8B4FF, false);
         if (lines.isEmpty()) {
-            graphics.drawString(this.font, "Nothing is misled.", left, LIST_TOP, 0xFFAAAAAA, false);
+            graphics.drawString(this.font, LotmText.t("lotmcraft.text.nothing_is_misled", "Nothing is misled."), left, LIST_TOP, 0xFFAAAAAA, false);
         } else {
             int shown = Math.min(rows, lines.size() - scroll);
             for (int i = 0; i < shown; i++) {
@@ -65,7 +66,7 @@ public class DivinationMisleadScreen extends Screen {
                 graphics.drawString(this.font, REMOVE, left + PANEL_WIDTH - removeWidth, y, 0xFFFF6666, false);
             }
         }
-        graphics.drawString(this.font, "Player name, or x z. Outcome, or spirit.", left, this.height - 92, 0xFFFFFFFF, false);
+        graphics.drawString(this.font, LotmText.t("lotmcraft.text.player_name_or_x_z_outcome", "Player name, or x z. Outcome, or spirit."), left, this.height - 92, 0xFFFFFFFF, false);
     }
 
     @Override

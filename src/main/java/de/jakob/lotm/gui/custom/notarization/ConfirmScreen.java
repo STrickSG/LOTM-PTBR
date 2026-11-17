@@ -20,6 +20,7 @@ import net.minecraft.world.item.Item;
 import net.neoforged.neoforge.network.PacketDistributor;
 
 import java.util.List;
+import de.jakob.lotm.util.LotmText;
 
 public class ConfirmScreen extends AbstractContainerScreen<ConfirmMenu> {
     private static final ResourceLocation BG = ResourceLocation.fromNamespaceAndPath(LOTMCraft.MOD_ID, "textures/gui/notarization/confirm_bg.png");
@@ -64,7 +65,7 @@ public class ConfirmScreen extends AbstractContainerScreen<ConfirmMenu> {
         int x = leftPos, y = topPos;
         g.blit(BG, x, y, 0, 0, W, H, 256, 128);
 
-        Component t = Component.literal("Contract Offer");
+        Component t = Component.translatableWithFallback("lotmcraft.text.contract_offer", "Contract Offer");
         g.drawString(font, t, x + (W - font.width(t)) / 2, y + 11, 0xFFE9A0, true);
 
         int bx = x + 12, by = y + 28, bw = W - 24, bh = 40;
@@ -78,7 +79,7 @@ public class ConfirmScreen extends AbstractContainerScreen<ConfirmMenu> {
         for (int i = 0; i < Math.min(4, lines.size()); i++) g.drawString(font, lines.get(i), 0, i * 9, 0x3B2A14, false);
         g.pose().popPose();
 
-        Component w = Component.literal("Witnessed by " + menu.data().notary());
+        Component w = Component.translatableWithFallback("lotmcraft.text.witnessed_by", "Witnessed by %s", String.valueOf(menu.data().notary()));
         g.drawString(font, w, x + (W - font.width(w)) / 2, y + 71, 0x5A3510, false);
 
         int total = ContractRules.CONFIRM_TICKS;
@@ -86,11 +87,11 @@ public class ConfirmScreen extends AbstractContainerScreen<ConfirmMenu> {
         g.blit(WIDGETS, x + 16, y + 83, 0, 44, 160, 6, 256, 64);
         if (fill > 0) g.blit(WIDGETS, x + 16, y + 83, 0, 50, fill, 6, 256, 64);
         int secs = (remaining + 19) / 20;
-        Component tl = Component.literal("Time left: " + secs + "s");
+        Component tl = Component.translatableWithFallback("lotmcraft.text.time_left_s", "Time left: %ss", String.valueOf(secs));
         g.drawString(font, tl, x + (W - font.width(tl)) / 2, y + 91, secs <= 5 ? 0xA01810 : 0x3B2A14, false);
 
-        drawButton(g, x + ACCEPT_X, y + BTN_Y, 0, "Accept", inside(mx, my, x + ACCEPT_X, y + BTN_Y, BTN_W, BTN_H));
-        drawButton(g, x + DECLINE_X, y + BTN_Y, 80, "Decline", inside(mx, my, x + DECLINE_X, y + BTN_Y, BTN_W, BTN_H));
+        drawButton(g, x + ACCEPT_X, y + BTN_Y, 0, LotmText.t("lotmcraft.text.accept", "Accept"), inside(mx, my, x + ACCEPT_X, y + BTN_Y, BTN_W, BTN_H));
+        drawButton(g, x + DECLINE_X, y + BTN_Y, 80, LotmText.t("lotmcraft.text.decline", "Decline"), inside(mx, my, x + DECLINE_X, y + BTN_Y, BTN_W, BTN_H));
     }
 
     private void drawButton(GuiGraphics g, int x, int y, int u, String label, boolean hover) {

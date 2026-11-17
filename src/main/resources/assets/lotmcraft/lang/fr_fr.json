@@ -2762,5 +2762,9 @@
   "ability.lotmcraft.historical_void_summoning.summon_failed": "L'invocation a échoué",
   "ability.lotmcraft.historical_void_summoning.cannot_summon_sequence_zero": "Vous ne pouvez pas invoquer cela",
   "block.lotmcraft.spirit_portal": "Portail spirituel",
-  "biome.lotmcraft.spirit_world_patch": "Îlot du monde spirituel"
+  "biome.lotmcraft.spirit_world_patch": "Îlot du monde spirituel",
+  "lotm.potion_recipe.named": "%s Recette de Potion",
+  "lotm.pathway.named": "%s Voie",
+  "lotm.beyonder_characteristic.named": "%s Caractéristique Beyonder",
+  "lotm.potion.named": "%s Potion"
 }

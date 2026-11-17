@@ -13,6 +13,7 @@ import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.client.event.RenderLivingEvent;
 import org.joml.Matrix4f;
+import de.jakob.lotm.util.LotmText;
 
 @EventBusSubscriber(modid = LOTMCraft.MOD_ID, value = Dist.CLIENT)
 public final class RecognitionOverlayRenderer {
@@ -47,7 +48,7 @@ public final class RecognitionOverlayRenderer {
         float bob = (float) Math.sin(time * 0.12f + entity.getId() * 1.7f) * 0.8f;
 
         String path = ClientRecognitionCache.getPathway();
-        String pathFormatted = path.isEmpty() ? "Unknown" : path.substring(0, 1).toUpperCase() + path.substring(1);
+        String pathFormatted = path.isEmpty() ? LotmText.t("lotmcraft.text.unknown", "Unknown") : path.substring(0, 1).toUpperCase() + path.substring(1);
         int pathColor = HudTheme.withAlpha(HudTheme.pathwayColor(path.toLowerCase()), alpha);
         int brass = HudTheme.withAlpha(HudTheme.BRASS, alpha);
         int parchment = HudTheme.withAlpha(HudTheme.PARCHMENT, alpha);
@@ -55,7 +56,7 @@ public final class RecognitionOverlayRenderer {
 
         String name = font.plainSubstrByWidth(ClientRecognitionCache.getName(), MAX_NAME_WIDTH);
         String sep = "  |  ";
-        String seq = "Seq " + ClientRecognitionCache.getSequence();
+        String seq = LotmText.f("lotmcraft.text.seq_5", "Seq %s", ClientRecognitionCache.getSequence());
 
         float line2W = font.width(pathFormatted) + font.width(sep) + font.width(seq);
         float lineGap = font.lineHeight + 2;

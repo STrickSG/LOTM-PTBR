@@ -9,12 +9,12 @@ import java.util.List;
 
 public class DiscernmentSelectionGui extends ButtonListGui<Pair<String, Integer>>{
     public DiscernmentSelectionGui(List<Pair<String, Integer>> items) {
-        super(Component.literal("Select Pathway and Sequence"), items);
+        super(Component.translatableWithFallback("lotmcraft.text.select_pathway_and_sequence", "Select Pathway and Sequence"), items);
     }
 
     @Override
     protected Component getItemName(Pair<String, Integer> item) {
-        return Component.literal("Path: " + item.getFirst() + " Seq: " + item.getSecond());
+        return Component.translatableWithFallback("lotmcraft.text.path_seq", "Path: %s Seq: %s", String.valueOf(item.getFirst()), String.valueOf(item.getSecond()));
     }
 
     @Override

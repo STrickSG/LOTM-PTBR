@@ -104,7 +104,7 @@ public class FireArmorAbility extends ToggleAbility {
                 entity.level().playSound(null, entity.getX(), entity.getY(), entity.getZ(),
                         SoundEvents.FIRECHARGE_USE, SoundSource.PLAYERS, 1.0F, 0.7F);
                 FLAME_CLOAK_ACTIVE.add(entity.getUUID());
-                entity.sendSystemMessage(Component.literal("You are now shielded with fire, you are immune to the next " + plates.size() + " attacks").withStyle(ChatFormatting.GOLD));
+                entity.sendSystemMessage(Component.translatableWithFallback("lotmcraft.text.you_are_now_shielded_with_fire", "You are now shielded with fire, you are immune to the next %s attacks", String.valueOf(plates.size())).withStyle(ChatFormatting.GOLD));
             }
         }
     }
@@ -119,7 +119,7 @@ public class FireArmorAbility extends ToggleAbility {
             if (toughnessAttribute.hasModifier(TOUGHNESS_MODIFIER_ID)) {
                 toughnessAttribute.removeModifier(TOUGHNESS_MODIFIER_ID);
                 ARMOR_SHARDS=0;
-                entity.sendSystemMessage(Component.literal("Your armor has depleted, stay safe").withStyle(ChatFormatting.DARK_RED));
+                entity.sendSystemMessage(Component.translatableWithFallback("lotmcraft.text.your_armor_has_depleted_stay_safe", "Your armor has depleted, stay safe").withStyle(ChatFormatting.DARK_RED));
                 if(plates.isEmpty()) return;
                 for(FirePlateEntity firePlateEntity : plates) {
                     firePlateEntity.discard();
@@ -152,7 +152,7 @@ public class FireArmorAbility extends ToggleAbility {
         ARMOR_SHARDS-=COST;
         IN_IFRAME=true;
         event.getEntity().playSound(SoundEvents.BELL_RESONATE, 1.0F, 1.0F);
-        if (ARMOR_SHARDS > 0) event.getEntity().sendSystemMessage(Component.literal("Your fire armor protected you.").withStyle(ChatFormatting.RED));
+        if (ARMOR_SHARDS > 0) event.getEntity().sendSystemMessage(Component.translatableWithFallback("lotmcraft.text.your_fire_armor_protected_you", "Your fire armor protected you.").withStyle(ChatFormatting.RED));
         event.setCanceled(true);
         ServerScheduler.scheduleDelayed(20*IFRAME_DELAY, () -> IN_IFRAME=false);
         if(plates.isEmpty()) return;

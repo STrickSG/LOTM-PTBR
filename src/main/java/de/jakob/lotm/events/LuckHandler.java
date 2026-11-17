@@ -446,7 +446,7 @@ public class LuckHandler {
 
         if (entity instanceof ServerPlayer player)
             player.connection.send(new ClientboundSetActionBarTextPacket(
-                    Component.literal("You tripped!").withStyle(s -> s.withColor(0xA17234))
+                    Component.translatableWithFallback("lotmcraft.text.you_tripped", "You tripped!").withStyle(s -> s.withColor(0xA17234))
             ));
     }
 

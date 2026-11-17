@@ -35,6 +35,7 @@ import org.joml.Vector3f;
 
 import java.util.*;
 import java.util.concurrent.atomic.AtomicBoolean;
+import de.jakob.lotm.util.LotmText;
 
 public class FlameMasteryAbility extends SelectableAbility {
     private final HashSet<UUID> transformedEntities = new HashSet<>();
@@ -109,7 +110,7 @@ public class FlameMasteryAbility extends SelectableAbility {
             if (BeyonderData.getSpirituality(entity) <= 0) {
                 if (entity instanceof ServerPlayer player) {
                     player.connection.send(new ClientboundSetActionBarTextPacket(
-                            net.minecraft.network.chat.Component.literal("Your spirituality is exhausted.").withColor(0xFF422a2a)
+                            net.minecraft.network.chat.Component.literal(LotmText.t("lotmcraft.text.your_spirituality_is_exhausted", "Your spirituality is exhausted.")).withColor(0xFF422a2a)
                     ));
                 }
                 transformedEntities.remove(entityId);

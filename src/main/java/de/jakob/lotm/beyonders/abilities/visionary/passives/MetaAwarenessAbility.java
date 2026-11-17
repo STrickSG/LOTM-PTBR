@@ -29,6 +29,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
+import de.jakob.lotm.util.LotmText;
 
 @EventBusSubscriber(modid = LOTMCraft.MOD_ID)
 public class MetaAwarenessAbility extends PassiveAbility {
@@ -148,9 +149,9 @@ public class MetaAwarenessAbility extends PassiveAbility {
         // Use reflection-free approach: directly notify target
         target.sendSystemMessage(
                 Component.empty()
-                        .append(Component.literal("[Meta Awareness] ")
+                        .append(Component.translatableWithFallback("lotmcraft.text.meta_awareness", "[Meta Awareness] ")
                                 .withStyle(ChatFormatting.LIGHT_PURPLE))
-                        .append(msg.isEmpty()? "" : "Message: " + msg + "\n")
+                        .append(msg.isEmpty()? "" : LotmText.f("lotmcraft.text.message", "Message: %s\n", msg))
                         .append(HonorificNamesEventHandler.formNotification(sender))
         );
     }

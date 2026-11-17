@@ -69,6 +69,7 @@ import net.neoforged.neoforge.event.tick.PlayerTickEvent;
 import java.lang.reflect.Method;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
+import de.jakob.lotm.util.LotmText;
 
 @EventBusSubscriber(modid = LOTMCraft.MOD_ID)
 public class HistoricalVoidSummoningAbility extends SelectableAbility {
@@ -468,8 +469,8 @@ public class HistoricalVoidSummoningAbility extends SelectableAbility {
         };
 
         ItemStack deleteItem = new ItemStack(Items.BARRIER);
-        deleteItem.set(DataComponents.CUSTOM_NAME, Component.literal("Clear Entity Mode").withStyle(ChatFormatting.RED, ChatFormatting.BOLD));
-        deleteItem.set(DataComponents.LORE, new ItemLore(List.of(Component.literal("Click an entity after this to remove it from your records").withStyle(ChatFormatting.GRAY))));
+        deleteItem.set(DataComponents.CUSTOM_NAME, Component.translatableWithFallback("lotmcraft.text.clear_entity_mode", "Clear Entity Mode").withStyle(ChatFormatting.RED, ChatFormatting.BOLD));
+        deleteItem.set(DataComponents.LORE, new ItemLore(List.of(Component.translatableWithFallback("lotmcraft.text.click_an_entity_after_this_to", "Click an entity after this to remove it from your records").withStyle(ChatFormatting.GRAY))));
 
         CompoundTag deleteTag = new CompoundTag();
         deleteTag.putBoolean("isDeleteMode", true);
@@ -485,7 +486,7 @@ public class HistoricalVoidSummoningAbility extends SelectableAbility {
                 CompoundTag attachments = entityNBT.getCompound("neoforge:attachments");
                 CompoundTag beyonderAttachment = attachments.getCompound("lotmcraft:beyonder_component");
 
-                String pathway = "None Beyonder";
+                String pathway = LotmText.t("lotmcraft.text.none_beyonder", "None Beyonder");
                 int sequence = 10;
                 boolean isMarionette = false;
                 boolean hasWorm = false;
@@ -494,7 +495,7 @@ public class HistoricalVoidSummoningAbility extends SelectableAbility {
                     if (BeyonderData.pathwayInfos.containsKey(beyonderAttachment.getString("pathway"))) {
                         pathway = BeyonderData.pathwayInfos.get(beyonderAttachment.getString("pathway")).getSequenceName(9);
                     } else {
-                        pathway = "None Beyonder";
+                        pathway = LotmText.t("lotmcraft.text.none_beyonder", "None Beyonder");
                     }
                 }
 
@@ -989,7 +990,7 @@ public class HistoricalVoidSummoningAbility extends SelectableAbility {
         CustomData Data = stack.get(DataComponents.CUSTOM_DATA);
         if (BeyonderData.getSequence(player) <= 2 || (BeyonderData.getSequence(player) <= 3 && BeyonderData.getPathway(player).equals("fool"))) {
             if (Data != null && Data.contains("VoidSummonTime")) {
-                event.getToolTip().add(Component.literal("§7[Void Summoned]§r").withStyle(ChatFormatting.GRAY));
+                event.getToolTip().add(Component.translatableWithFallback("lotmcraft.text.void_summoned", "§7[Void Summoned]§r").withStyle(ChatFormatting.GRAY));
             }
         }
 

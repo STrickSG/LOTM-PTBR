@@ -8,7 +8,7 @@ import java.util.List;
 
 public class WanderingSelectionGui extends ButtonListGui<String> {
     public WanderingSelectionGui(List<String> dimensionIds) {
-        super(Component.literal("Select Dimension"), dimensionIds);
+        super(Component.translatableWithFallback("lotmcraft.text.select_dimension", "Select Dimension"), dimensionIds);
     }
 
     @Override

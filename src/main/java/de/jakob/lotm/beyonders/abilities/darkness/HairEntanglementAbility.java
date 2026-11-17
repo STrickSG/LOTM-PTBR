@@ -76,7 +76,7 @@ public class HairEntanglementAbility extends Ability {
 
         if(pacifiedEntities.contains(targetEntity.getUUID())) {
             if(entity instanceof ServerPlayer player) {
-                ClientboundSetActionBarTextPacket packet = new ClientboundSetActionBarTextPacket(Component.literal("Entity is already pacified.").withColor(0xFFff124d));
+                ClientboundSetActionBarTextPacket packet = new ClientboundSetActionBarTextPacket(Component.translatableWithFallback("lotmcraft.text.entity_is_already_pacified", "Entity is already pacified.").withColor(0xFFff124d));
                 player.connection.send(packet);
             }
             return;

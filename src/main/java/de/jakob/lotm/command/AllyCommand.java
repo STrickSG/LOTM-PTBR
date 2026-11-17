@@ -18,6 +18,7 @@ import net.minecraft.world.entity.Entity;
 import java.util.Collection;
 import java.util.List;
 import java.util.UUID;
+import de.jakob.lotm.util.LotmText;
 
 public class AllyCommand {
 
@@ -66,7 +67,7 @@ public class AllyCommand {
             } else {
                 String name = (allyInfo.playerName() != null && !allyInfo.playerName().isBlank())
                         ? allyInfo.playerName()
-                        : "Unknown";
+                        : LotmText.t("lotmcraft.text.unknown", "Unknown");
                 playerEntries.add(Component.literal(name).withColor(0x9E9E9E));
             }
         }

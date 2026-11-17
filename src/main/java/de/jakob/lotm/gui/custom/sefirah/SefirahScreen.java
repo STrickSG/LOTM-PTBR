@@ -27,6 +27,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
+import de.jakob.lotm.util.LotmText;
 
 public class SefirahScreen extends AbstractContainerScreen<SefirahMenu> {
     private ResourceLocation GUI_TEXTURE =
@@ -171,7 +172,7 @@ public class SefirahScreen extends AbstractContainerScreen<SefirahMenu> {
                 perksBgTopColor, perksBgBottomColor
         );
 
-        Component title = Component.literal("Perks").withStyle(ChatFormatting.BOLD);
+        Component title = Component.translatableWithFallback("lotmcraft.text.perks", "Perks").withStyle(ChatFormatting.BOLD);
         int titleWidth = ClientHandler.getMinecraftInstance().font.width(title);
         int titleX = perksX + (PERKS_PANEL_WIDTH - titleWidth) / 2;
         guiGraphics.drawString(ClientHandler.getMinecraftInstance().font, title, titleX, perksY + 4, perksAccentColor);
@@ -192,7 +193,7 @@ public class SefirahScreen extends AbstractContainerScreen<SefirahMenu> {
 
         guiGraphics.drawString(
                 ClientHandler.getMinecraftInstance().font,
-                Component.literal("Allies"),
+                Component.translatableWithFallback("lotmcraft.text.allies", "Allies"),
                 (width - imageWidth) / 2 + 8,
                 (height - imageHeight) / 2 + 8,
                 0xFFFFFF
@@ -200,7 +201,7 @@ public class SefirahScreen extends AbstractContainerScreen<SefirahMenu> {
 
         guiGraphics.drawString(
                 ClientHandler.getMinecraftInstance().font,
-                Component.literal("Sefirot Control: " + SefirahHandler.getSefirotProgress(ClientHandler.getPlayer())).withStyle(ChatFormatting.BOLD),
+                Component.translatableWithFallback("lotmcraft.text.sefirot_control", "Sefirot Control: %s", String.valueOf(SefirahHandler.getSefirotProgress(ClientHandler.getPlayer()))).withStyle(ChatFormatting.BOLD),
                 (width - imageWidth) / 2 + 8,
                 (height - imageHeight) / 2 + 20 + imageHeight - 120,
                 0xFFFFFF
@@ -278,13 +279,13 @@ public class SefirahScreen extends AbstractContainerScreen<SefirahMenu> {
             public AllyEntry(AllyComponent.AllyInfo info) {
                 this.info = info;
                 this.inviteButton = Button.builder(
-                                Component.literal("Invite"),
+                                Component.translatableWithFallback("lotmcraft.text.invite", "Invite"),
                                 btn -> onInvite.accept(info))
                         .bounds(0, 0, 50, 20)
                         .build();
 
                 this.kickButton = Button.builder(
-                                Component.literal("Kick"),
+                                Component.translatableWithFallback("lotmcraft.text.kick", "Kick"),
                                 btn -> onKick.accept(info))
                         .bounds(0, 0, 50, 20)
                         .build();
@@ -293,7 +294,7 @@ public class SefirahScreen extends AbstractContainerScreen<SefirahMenu> {
             @Override
             public void render(GuiGraphics guiGraphics, int index, int top, int left, int width, int height,
                                int mouseX, int mouseY, boolean hovering, float partialTick) {
-                String label = info.playerName() + (info.isPlayer() ? "" : " (offline)");
+                String label = info.playerName() + (info.isPlayer() ? "" : LotmText.t("lotmcraft.text.offline", " (offline)"));
                 guiGraphics.drawString(
                         ClientHandler.getMinecraftInstance().font,
                         label,

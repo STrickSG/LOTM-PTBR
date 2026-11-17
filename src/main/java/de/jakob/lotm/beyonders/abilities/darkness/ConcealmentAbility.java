@@ -59,6 +59,7 @@ import net.neoforged.neoforge.event.tick.PlayerTickEvent;
 
 import java.util.*;
 import java.util.regex.Pattern;
+import de.jakob.lotm.util.LotmText;
 
 @EventBusSubscriber(modid = LOTMCraft.MOD_ID)
 public class ConcealmentAbility extends SelectableAbility {
@@ -409,7 +410,7 @@ public class ConcealmentAbility extends SelectableAbility {
 
         if(thoughtconcealedEntities.contains(targetEntity.getUUID())) {
             if(entity instanceof ServerPlayer player) {
-                ClientboundSetActionBarTextPacket packet = new ClientboundSetActionBarTextPacket(Component.literal("Thoughts of the target are already concealed.").withColor(0xFFff124d));
+                ClientboundSetActionBarTextPacket packet = new ClientboundSetActionBarTextPacket(Component.translatableWithFallback("lotmcraft.text.thoughts_of_the_target_are_already", "Thoughts of the target are already concealed.").withColor(0xFFff124d));
                 player.connection.send(packet);
             }
             return;
@@ -514,7 +515,7 @@ public class ConcealmentAbility extends SelectableAbility {
         String trimmed = word.trim();
         if (trimmed.isEmpty() || trimmed.length() > 64) return;
         secrets.add(new Secret(player.getUUID(), BeyonderData.getSequence(player), player.level().dimension(), player.getX(), player.getZ(), trimmed));
-        bar(player, "That word is concealed.");
+        bar(player, LotmText.t("lotmcraft.text.that_word_is_concealed", "That word is concealed."));
     }
 
     public static void releaseSecret(ServerPlayer player, int index) {
@@ -524,7 +525,7 @@ public class ConcealmentAbility extends SelectableAbility {
             if (!secrets.get(i).caster.equals(player.getUUID())) continue;
             if (seen == index) {
                 secrets.remove(i);
-                bar(player, "That secret is revealed.");
+                bar(player, LotmText.t("lotmcraft.text.that_secret_is_revealed", "That secret is revealed."));
                 return;
             }
             seen++;
@@ -546,7 +547,7 @@ public class ConcealmentAbility extends SelectableAbility {
         if (!(level instanceof ServerLevel serverLevel)) return;
         LivingEntity target = AbilityUtil.getTargetEntity(entity, 16 * (int) Math.max(multiplier(entity) / 2, 1), 2);
         if (target == null) {
-            if (entity instanceof ServerPlayer player) bar(player, "No target in sight.");
+            if (entity instanceof ServerPlayer player) bar(player, LotmText.t("lotmcraft.text.no_target_in_sight", "No target in sight."));
             return;
         }
         int casterSeq = AbilityUtil.getSeqWithArt(entity, this);
@@ -560,9 +561,9 @@ public class ConcealmentAbility extends SelectableAbility {
         syncVeils(serverLevel.getServer());
         if (target instanceof ServerPlayer playerTarget) {
             playerTarget.getData(ModAttachments.FOG_COMPONENT.get()).concealFor(duration * 50L, playerTarget);
-            bar(playerTarget, "Darkness covers your eyes.");
+            bar(playerTarget, LotmText.t("lotmcraft.text.darkness_covers_your_eyes", "Darkness covers your eyes."));
         }
-        if (entity instanceof ServerPlayer player) bar(player, "They are concealed.");
+        if (entity instanceof ServerPlayer player) bar(player, LotmText.t("lotmcraft.text.they_are_concealed", "They are concealed."));
     }
 
     private void concealArea(Level level, LivingEntity entity, boolean ground) {
@@ -572,7 +573,7 @@ public class ConcealmentAbility extends SelectableAbility {
             boolean removed = veils.removeIf(veil -> veil.caster.equals(player.getUUID()) && veil.ground == ground);
             if (removed) {
                 syncVeils(player.server);
-                bar(player, "The concealment lifts.");
+                bar(player, LotmText.t("lotmcraft.text.the_concealment_lifts", "The concealment lifts."));
                 return;
             }
         }
@@ -580,7 +581,7 @@ public class ConcealmentAbility extends SelectableAbility {
         long until = ground ? ((ServerLevel) level).getServer().overworld().getGameTime() + GROUND_TICKS : Long.MAX_VALUE;
         veils.add(new Veil(player.getUUID(), level.dimension(), player.getX(), player.getY(), player.getZ(), radius, seq, ground, until));
         syncVeils(player.server);
-        bar(player, ground ? "The ground gives way." : "The area slips out of sight.");
+        bar(player, ground ? LotmText.t("lotmcraft.text.the_ground_gives_way", "The ground gives way.") : LotmText.t("lotmcraft.text.the_area_slips_out_of_sight", "The area slips out of sight."));
     }
 
     private void concealSecrets(LivingEntity entity) {
@@ -599,11 +600,11 @@ public class ConcealmentAbility extends SelectableAbility {
         if (target != null && hiddenFromHarm(target)) {
             Mark mark = concealedOthers.get(target.getUUID());
             if (mark != null && !canErase(player, seq, mark.caster, mark.casterSeq)) {
-                bar(player, "Their concealment holds.");
+                bar(player, LotmText.t("lotmcraft.text.their_concealment_holds", "Their concealment holds."));
                 return;
             }
             clearOthers(target);
-            bar(player, "Their concealment is gone.");
+            bar(player, LotmText.t("lotmcraft.text.their_concealment_is_gone", "Their concealment is gone."));
             return;
         }
         boolean erased = false;
@@ -630,9 +631,9 @@ public class ConcealmentAbility extends SelectableAbility {
             secretsLeft.remove();
             erased = true;
         }
-        if (erased) bar(player, "The concealment is erased.");
-        else if (held) bar(player, "Their concealment holds.");
-        else bar(player, "Nothing here is concealed.");
+        if (erased) bar(player, LotmText.t("lotmcraft.text.the_concealment_is_erased", "The concealment is erased."));
+        else if (held) bar(player, LotmText.t("lotmcraft.text.their_concealment_holds", "Their concealment holds."));
+        else bar(player, LotmText.t("lotmcraft.text.nothing_here_is_concealed", "Nothing here is concealed."));
     }
 
     private static boolean canErase(ServerPlayer player, int seq, UUID caster, int casterSeq) {
@@ -647,34 +648,34 @@ public class ConcealmentAbility extends SelectableAbility {
         }
         peaceful.add(player.getUUID());
         PsychologicalInvisibilityAbility.addInvisFromOtherSkills(player, BeyonderData.getSequence(player));
-        bar(player, "A quiet presence settles.");
+        bar(player, LotmText.t("lotmcraft.text.a_quiet_presence_settles", "A quiet presence settles."));
     }
 
     private static void endPeace(LivingEntity entity) {
         if (!peaceful.remove(entity.getUUID())) return;
         PsychologicalInvisibilityAbility.removeInvisFromOtherSkills(entity);
         entity.setInvisible(false);
-        if (entity instanceof ServerPlayer player) bar(player, "The quiet presence fades.");
+        if (entity instanceof ServerPlayer player) bar(player, LotmText.t("lotmcraft.text.the_quiet_presence_fades", "The quiet presence fades."));
     }
 
     private void possessProjection(LivingEntity entity) {
         if (!(entity instanceof ServerPlayer player) || player.getServer() == null) return;
         UUID npcId = pendingProjections.get(player.getUUID());
         if (npcId == null) {
-            bar(player, "No projection answers.");
+            bar(player, LotmText.t("lotmcraft.text.no_projection_answers", "No projection answers."));
             return;
         }
         BeyonderNPCEntity npc = findProjection(player.getServer(), npcId);
         if (npc == null || !npc.isAlive()) {
             pendingProjections.remove(player.getUUID());
-            bar(player, "No projection answers.");
+            bar(player, LotmText.t("lotmcraft.text.no_projection_answers", "No projection answers."));
             return;
         }
         if (npc.level() != player.level() && npc.level() instanceof ServerLevel npcLevel) {
             player.teleportTo(npcLevel, npc.getX(), npc.getY(), npc.getZ(), player.getYRot(), player.getXRot());
         }
         if (!ControllingUtils.startControlling(player, npc, true, true)) {
-            bar(player, "The projection does not answer.");
+            bar(player, LotmText.t("lotmcraft.text.the_projection_does_not_answer", "The projection does not answer."));
             return;
         }
         pendingProjections.remove(player.getUUID());
@@ -937,7 +938,7 @@ public class ConcealmentAbility extends SelectableAbility {
         veils.removeIf(veil -> {
             if (!veil.ground || veil.until > time) return false;
             ServerPlayer caster = level.getServer().getPlayerList().getPlayer(veil.caster);
-            if (caster != null) bar(caster, "The ground settles.");
+            if (caster != null) bar(caster, LotmText.t("lotmcraft.text.the_ground_settles", "The ground settles."));
             return true;
         });
         int concealedBefore = concealedOthers.size();

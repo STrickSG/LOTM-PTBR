@@ -29,7 +29,7 @@ public class CoordinateInputScreen extends Screen {
     private final String use;
     
     public CoordinateInputScreen(LivingEntity entity, String use) {
-        super(Component.literal("Enter Coordinates"));
+        super(Component.translatableWithFallback("lotmcraft.text.enter_coordinates", "Enter Coordinates"));
 
         this.entity = entity;
         this.use = use;
@@ -41,17 +41,17 @@ public class CoordinateInputScreen extends Screen {
         int centerY = this.height / 2;
 
         // X coordinate input
-        this.xBox = new EditBox(this.font, centerX - 60, centerY - 30, 120, 20, Component.literal("X - Coordinate"));
+        this.xBox = new EditBox(this.font, centerX - 60, centerY - 30, 120, 20, Component.translatableWithFallback("lotmcraft.text.x_coordinate", "X - Coordinate"));
         this.xBox.setMaxLength(10);
         this.addRenderableWidget(this.xBox);
 
         // Y coordinate input
-        this.yBox = new EditBox(this.font, centerX - 60, centerY - 5, 120, 20, Component.literal("Y - Coordinate"));
+        this.yBox = new EditBox(this.font, centerX - 60, centerY - 5, 120, 20, Component.translatableWithFallback("lotmcraft.text.y_coordinate", "Y - Coordinate"));
         this.yBox.setMaxLength(10);
         this.addRenderableWidget(this.yBox);
 
         // Z coordinate input
-        this.zBox = new EditBox(this.font, centerX - 60, centerY + 20, 120, 20, Component.literal("Z - Coordinate"));
+        this.zBox = new EditBox(this.font, centerX - 60, centerY + 20, 120, 20, Component.translatableWithFallback("lotmcraft.text.z_coordinate", "Z - Coordinate"));
         this.zBox.setMaxLength(10);
         this.addRenderableWidget(this.zBox);
 
@@ -62,12 +62,12 @@ public class CoordinateInputScreen extends Screen {
                     .withValues(levels)
                     .withInitialValue(entity.level().dimension())
                     .displayOnlyValue()
-                    .create(centerX - 60, centerY - 55, 120, 20, Component.literal("Dimension"));
+                    .create(centerX - 60, centerY - 55, 120, 20, Component.translatableWithFallback("lotmcraft.text.dimension", "Dimension"));
             this.addRenderableWidget(this.dimension);
         }
 
         // Confirm button
-        Button confirmButton = Button.builder(Component.literal("Confirm"), this::onConfirm)
+        Button confirmButton = Button.builder(Component.translatableWithFallback("lotmcraft.text.confirm", "Confirm"), this::onConfirm)
                 .bounds(centerX - 50, centerY + 50, 100, 20)
                 .build();
         this.addRenderableWidget(confirmButton);

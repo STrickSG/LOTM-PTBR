@@ -28,6 +28,7 @@ import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.event.tick.PlayerTickEvent;
 
 import java.util.*;
+import de.jakob.lotm.util.LotmText;
 
 @EventBusSubscriber(modid = LOTMCraft.MOD_ID)
 public class ParasitationAbility extends SelectableAbility {
@@ -94,7 +95,7 @@ public class ParasitationAbility extends SelectableAbility {
             return;
         };
         if (BloodlineFilthFlameSpiritAbility.shieldSpirit(BeyonderData.getSequence(player), player, target)) {
-            AbilityUtil.sendActionBar(player, Component.literal("§cTheir spirit burns you away!"));
+            AbilityUtil.sendActionBar(player, Component.translatableWithFallback("lotmcraft.text.their_spirit_burns_you_away", "§cTheir spirit burns you away!"));
             return;
         }
 
@@ -114,7 +115,7 @@ public class ParasitationAbility extends SelectableAbility {
         }
 
         if (!target.isAlive() || target.isRemoved()) {
-            AbilityUtil.sendActionBar(player, Component.literal("§cTarget evaded!"));
+            AbilityUtil.sendActionBar(player, Component.translatableWithFallback("lotmcraft.text.target_evaded", "§cTarget evaded!"));
             return;
         }
 
@@ -124,8 +125,8 @@ public class ParasitationAbility extends SelectableAbility {
         float chance = (lowerSeq ? 0.55f : 0.15f) + (silentWorms ? 0.2f : 0f);
         if (random.nextFloat() >= chance || userSeq > targetSeq) {
             AbilityUtil.sendActionBar(player, Component.literal(lowerSeq
-                    ? "§cControl failed!"
-                    : "§cControl failed — resistance too strong!"));
+                    ? LotmText.t("lotmcraft.text.control_failed", "§cControl failed!")
+                    : LotmText.t("lotmcraft.text.control_failed_resistance_too_strong", "§cControl failed — resistance too strong!")));
             return;
         }
 
@@ -259,7 +260,7 @@ public class ParasitationAbility extends SelectableAbility {
             return;
         }
         if (BloodlineFilthFlameSpiritAbility.shieldSpirit(BeyonderData.getSequence(player), player, target)) {
-            AbilityUtil.sendActionBar(player, Component.literal("§cTheir spirit burns you away!"));
+            AbilityUtil.sendActionBar(player, Component.translatableWithFallback("lotmcraft.text.their_spirit_burns_you_away", "§cTheir spirit burns you away!"));
             return;
         }
 

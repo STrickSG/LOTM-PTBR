@@ -33,7 +33,7 @@ public class BeyonderCommand {
                         // Execute on the command source (self)
                         CommandSourceStack source = context.getSource();
                         if (!(source.getEntity() instanceof LivingEntity livingEntity)) {
-                            source.sendFailure(Component.literal("Only living entities can use this command!"));
+                            source.sendFailure(Component.translatableWithFallback("lotmcraft.text.only_living_entities_can_use_this", "Only living entities can use this command!"));
                             return 0;
                         }
                         
@@ -49,7 +49,7 @@ public class BeyonderCommand {
                             var targetEntity = EntityArgument.getEntity(context, "target");
                             
                             if (!(targetEntity instanceof LivingEntity livingEntity)) {
-                                source.sendFailure(Component.literal("Target must be a living entity!"));
+                                source.sendFailure(Component.translatableWithFallback("lotmcraft.text.target_must_be_a_living_entity", "Target must be a living entity!"));
                                 return 0;
                             }
                             
@@ -68,7 +68,7 @@ public class BeyonderCommand {
         try {
             // Validate pathway exists in the list
             if (!BeyonderData.pathways.contains(pathway)) {
-                source.sendFailure(Component.literal("Invalid pathway: " + pathway));
+                source.sendFailure(Component.translatableWithFallback("lotmcraft.text.invalid_pathway", "Invalid pathway: %s", String.valueOf(pathway)));
                 return 0;
             }
             
@@ -88,8 +88,7 @@ public class BeyonderCommand {
 
                     if (data.sequence() != sequence || (!data.pathway().equals(pathway)
                             && !data.pathway().equals("none"))) {
-                        source.sendFailure(Component.literal(
-                                "Failed to advance due to insufficient amount of characteristics"));
+                        source.sendFailure(Component.translatableWithFallback("lotmcraft.text.failed_to_advance_due_to_insufficient", "Failed to advance due to insufficient amount of characteristics"));
                         return 0;
                     }
                 }
@@ -100,7 +99,7 @@ public class BeyonderCommand {
 
             // Send success message
             String targetName = target instanceof Player player ? player.getGameProfile().getName() : target.getDisplayName().getString();
-            source.sendSuccess(() -> Component.literal("Set " + targetName + " to " + pathway + " sequence " + sequence), true);
+            source.sendSuccess(() -> Component.translatableWithFallback("lotmcraft.text.set_to_sequence", "Set %s to %s sequence %s", String.valueOf(targetName), String.valueOf(pathway), String.valueOf(sequence)), true);
 
             // Audit log
             String executorName = source.getTextName();
@@ -112,7 +111,7 @@ public class BeyonderCommand {
 
             return 1; // Success
         } catch (Exception e) {
-            source.sendFailure(Component.literal("Failed to set beyonder data: " + e.getMessage()));
+            source.sendFailure(Component.translatableWithFallback("lotmcraft.text.failed_to_set_beyonder_data", "Failed to set beyonder data: %s", String.valueOf(e.getMessage())));
             return 0;
         }
     }

@@ -26,6 +26,7 @@ import net.neoforged.neoforge.event.ServerChatEvent;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
+import de.jakob.lotm.util.LotmText;
 
 @EventBusSubscriber(
         modid = LOTMCraft.MOD_ID
@@ -153,7 +154,7 @@ public class PsychologicalCueAbility extends ToggleAbility {
         }
 
         if(target instanceof ServerPlayer playerTarget)
-            MetaAwarenessAbility.sendWithMessage(player, playerTarget, "Tried to use cue");
+            MetaAwarenessAbility.sendWithMessage(player, playerTarget, LotmText.t("lotmcraft.text.tried_to_use_cue", "Tried to use cue"));
 
         int targetSeq = BeyonderData.getSequence(target);
         if(AbilityUtil.isTargetSignificantlyStronger(map.get(player.getUUID()), targetSeq)){

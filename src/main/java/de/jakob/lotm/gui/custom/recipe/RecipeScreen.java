@@ -9,6 +9,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.player.Inventory;
+import de.jakob.lotm.util.LotmText;
 
 public class RecipeScreen extends AbstractContainerScreen<RecipeMenu> {
     private static final ResourceLocation BACKGROUND =
@@ -97,8 +98,8 @@ public class RecipeScreen extends AbstractContainerScreen<RecipeMenu> {
         int tw = this.font.width(this.title);
         g.drawString(this.font, this.title, (PANEL_W - tw) / 2, 9, TITLE_COLOR, true);
 
-        drawCentered(g, "Supplementary Ingredients", 28);
-        drawCentered(g, "Main Ingredient", 129);
+        drawCentered(g, LotmText.t("lotmcraft.text.supplementary_ingredients", "Supplementary Ingredients"), 28);
+        drawCentered(g, LotmText.t("lotmcraft.text.main_ingredient", "Main Ingredient"), 129);
     }
 
     private void drawCentered(GuiGraphics g, String text, int y) {

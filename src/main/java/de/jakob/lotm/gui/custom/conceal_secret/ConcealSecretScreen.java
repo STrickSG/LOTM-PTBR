@@ -11,19 +11,20 @@ import net.minecraft.network.chat.Component;
 
 import java.util.ArrayList;
 import java.util.List;
+import de.jakob.lotm.util.LotmText;
 
 public class ConcealSecretScreen extends Screen {
     private static final int PANEL_WIDTH = 220;
     private static final int LIST_TOP = 36;
     private static final int ROW = 14;
-    private static final String REMOVE = "Remove";
+    private static final String REMOVE = LotmText.t("lotmcraft.text.remove", "Remove");
 
     private final List<String> secrets;
     private EditBox box;
     private int scroll;
 
     public ConcealSecretScreen(List<String> secrets) {
-        super(Component.literal("Concealed secrets"));
+        super(Component.translatableWithFallback("lotmcraft.text.concealed_secrets", "Concealed secrets"));
         this.secrets = new ArrayList<>(secrets);
     }
 
@@ -32,11 +33,11 @@ public class ConcealSecretScreen extends Screen {
         int centerX = this.width / 2;
         int inputY = this.height - 52;
 
-        this.box = new EditBox(this.font, centerX - 90, inputY, 180, 20, Component.literal("Secret"));
+        this.box = new EditBox(this.font, centerX - 90, inputY, 180, 20, Component.translatableWithFallback("lotmcraft.text.secret", "Secret"));
         this.box.setMaxLength(64);
         this.addRenderableWidget(this.box);
 
-        this.addRenderableWidget(Button.builder(Component.literal("Confirm"), this::onConfirm)
+        this.addRenderableWidget(Button.builder(Component.translatableWithFallback("lotmcraft.text.confirm", "Confirm"), this::onConfirm)
                 .bounds(centerX - 50, inputY + 26, 100, 20)
                 .build());
     }
@@ -50,9 +51,9 @@ public class ConcealSecretScreen extends Screen {
         int rows = Math.max(1, (listBottom - LIST_TOP) / ROW);
         int removeWidth = this.font.width(REMOVE);
 
-        graphics.drawString(this.font, "Concealed secrets", left, 16, 0xFFC8B4FF, false);
+        graphics.drawString(this.font, LotmText.t("lotmcraft.text.concealed_secrets", "Concealed secrets"), left, 16, 0xFFC8B4FF, false);
         if (secrets.isEmpty()) {
-            graphics.drawString(this.font, "Nothing is concealed.", left, LIST_TOP, 0xFFAAAAAA, false);
+            graphics.drawString(this.font, LotmText.t("lotmcraft.text.nothing_is_concealed", "Nothing is concealed."), left, LIST_TOP, 0xFFAAAAAA, false);
         } else {
             int shown = Math.min(rows, secrets.size() - scroll);
             for (int i = 0; i < shown; i++) {
@@ -62,7 +63,7 @@ public class ConcealSecretScreen extends Screen {
                 graphics.drawString(this.font, REMOVE, left + PANEL_WIDTH - removeWidth, y, 0xFFFF6666, false);
             }
         }
-        graphics.drawString(this.font, "Secret", left, this.height - 64, 0xFFFFFFFF, false);
+        graphics.drawString(this.font, LotmText.t("lotmcraft.text.secret", "Secret"), left, this.height - 64, 0xFFFFFFFF, false);
     }
 
     @Override

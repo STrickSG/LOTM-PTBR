@@ -61,7 +61,7 @@ public class ImprisonAbility extends Ability {
             cancelImprisonment(caster.getUUID());
             spawnReleaseEffect(serverLevel, caster.position());
             serverLevel.playSound(null, caster.blockPosition(), SoundEvents.BEACON_DEACTIVATE, SoundSource.PLAYERS, 1.0f, 0.7f);
-            AbilityUtil.sendActionBar(caster, Component.literal("§6⚖ §eImprisonment §7released §6⚖"));
+            AbilityUtil.sendActionBar(caster, Component.translatableWithFallback("lotmcraft.text.imprisonment_released", "§6⚖ §eImprisonment §7released §6⚖"));
             return;
         }
 
@@ -85,7 +85,7 @@ public class ImprisonAbility extends Ability {
         spawnImprisonEffect(serverLevel, target);
         serverLevel.playSound(null, target.blockPosition(), SoundEvents.ENDER_DRAGON_GROWL, SoundSource.PLAYERS, 1.2f, 1.1f);
         serverLevel.playSound(null, target.blockPosition(), SoundEvents.BEACON_ACTIVATE, SoundSource.PLAYERS, 0.8f, 0.4f);
-        AbilityUtil.sendActionBar(caster, Component.literal("§6⚖ §e" + target.getType().getDescription().getString() + " §fimprisoned §6⚖"));
+        AbilityUtil.sendActionBar(caster, Component.translatableWithFallback("lotmcraft.text.imprisoned", "§6⚖ §e%s §fimprisoned §6⚖", String.valueOf(target.getType().getDescription().getString())));
 
         UUID velTaskId = ServerScheduler.scheduleRepeating(0, 5, -1, () -> {
             if (TheCorroderAbility.isCorroding(targetId)) { releaseTarget(targetId); return; }
@@ -127,7 +127,7 @@ public class ImprisonAbility extends Ability {
                 cancelImprisonment(caster.getUUID());
                 spawnReleaseEffect(serverLevel, caster.position());
                 serverLevel.playSound(null, caster.blockPosition(), SoundEvents.BEACON_DEACTIVATE, SoundSource.PLAYERS, 1.0f, 0.5f);
-                AbilityUtil.sendActionBar(caster, Component.literal("§c✗ §fInsufficient spirituality — imprisonment collapsed"));
+                AbilityUtil.sendActionBar(caster, Component.translatableWithFallback("lotmcraft.text.insufficient_spirituality_imprisonment_collapsed", "§c✗ §fInsufficient spirituality — imprisonment collapsed"));
                 return;
             }
             BeyonderData.incrementSpirituality(caster, -300);
@@ -138,7 +138,7 @@ public class ImprisonAbility extends Ability {
                 if (data[0].equals(targetId)) {
                     cancelImprisonment(casterId);
                     spawnReleaseEffect(serverLevel, caster.position());
-                    AbilityUtil.sendActionBar(caster, Component.literal("§6⚖ §eImprisonment §7has ended §6⚖"));
+                    AbilityUtil.sendActionBar(caster, Component.translatableWithFallback("lotmcraft.text.imprisonment_has_ended", "§6⚖ §eImprisonment §7has ended §6⚖"));
                 }
                 return IMPRISON_DATA.get(casterId);
             });

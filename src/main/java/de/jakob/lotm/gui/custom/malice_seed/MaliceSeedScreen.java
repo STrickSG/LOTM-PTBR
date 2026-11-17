@@ -14,6 +14,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
+import de.jakob.lotm.util.LotmText;
 
 public class MaliceSeedScreen extends AbstractContainerScreen<MaliceSeedMenu> {
     private static final int PANEL_MARGIN = 24;
@@ -108,7 +109,7 @@ public class MaliceSeedScreen extends AbstractContainerScreen<MaliceSeedMenu> {
         guiGraphics.fill(leftPos, topPos, leftPos + imageWidth, topPos + imageHeight, 0xF014141C);
         guiGraphics.renderOutline(leftPos, topPos, imageWidth, imageHeight, 0xFF655078);
         guiGraphics.drawCenteredString(font, title, leftPos + imageWidth / 2, topPos + 10, 0xFFE4C8FF);
-        guiGraphics.drawString(font, "Seeded targets: " + menu.getSeeds().size(), listLeft, topPos + 26, 0xFFAAAAAA, false);
+        guiGraphics.drawString(font, LotmText.f("lotmcraft.text.seeded_targets", "Seeded targets: %s", menu.getSeeds().size()), listLeft, topPos + 26, 0xFFAAAAAA, false);
         guiGraphics.enableScissor(listLeft, listTop, listRight, listBottom);
         List<SeedInfo> seeds = menu.getSeeds();
         if (seeds.isEmpty()) {guiGraphics.drawCenteredString(font, Component.translatable("gui.lotm.malice_seed.none"), leftPos + imageWidth / 2, listTop + 30, 0xFFAAAAAA);}
@@ -127,7 +128,7 @@ public class MaliceSeedScreen extends AbstractContainerScreen<MaliceSeedMenu> {
                 }
                 if (!name.equals(seed.hostName()) && name.length() > 3) {name = name.substring(0, name.length() - 3) + "...";}
                 guiGraphics.drawString(font, name, listLeft + 6, rowY + 5, 0xFFFFFFFF, false);
-                guiGraphics.drawString(font, "Phase " + seed.phase(), listLeft + 6, rowY + 27, 0xFFD6B8FF, false);
+                guiGraphics.drawString(font, LotmText.f("lotmcraft.text.phase", "Phase %s", seed.phase()), listLeft + 6, rowY + 27, 0xFFD6B8FF, false);
                 // Progress toward the next phase.
                 int barX = listLeft + 65;
                 int barY = rowY + 29;

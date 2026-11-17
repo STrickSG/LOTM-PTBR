@@ -25,6 +25,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import de.jakob.lotm.util.LotmText;
 
 public class PathwaySelectionScreen extends AbstractContainerScreen<PathwaySelectionMenu> {
     private static ResourceLocation sprite(String name) {
@@ -251,7 +252,7 @@ public class PathwaySelectionScreen extends AbstractContainerScreen<PathwaySelec
     private void renderTitle(GuiGraphics g) {
         int plateW = 190;
         g.blitSprite(SPR_NAMEPLATE, (PANEL_W - plateW) / 2, 14, plateW, 20);
-        Component title = Component.literal("Choose Your Path").withStyle(ChatFormatting.BOLD);
+        Component title = Component.translatableWithFallback("lotmcraft.text.choose_your_path", "Choose Your Path").withStyle(ChatFormatting.BOLD);
         g.drawString(this.font, title, (PANEL_W - this.font.width(title)) / 2, 20, TEXT_HEADING, true);
 
         g.blitSprite(SPR_DIVIDER, 14, 37, PANEL_W - 28, 5);
@@ -322,7 +323,7 @@ public class PathwaySelectionScreen extends AbstractContainerScreen<PathwaySelec
             }
         }
         if (names.isEmpty()) return "";
-        return "Adjacent paths: " + String.join(", ", names);
+        return LotmText.f("lotmcraft.text.adjacent_paths", "Adjacent paths: %s", String.join(", ", names));
     }
 
     private int focusIndex(int lx, int ly) {
@@ -344,7 +345,7 @@ public class PathwaySelectionScreen extends AbstractContainerScreen<PathwaySelec
             drawCentered(g, "?", fx + frameSize / 2, fy + frameSize / 2 - 4, TEXT_DIM, true);
 
             g.blitSprite(SPR_NAMEPLATE, LEFT_X, 124, LEFT_W, 18);
-            drawCentered(g, "Select a pathway", LEFT_X + LEFT_W / 2, 129, TEXT_DIM, false);
+            drawCentered(g, LotmText.t("lotmcraft.text.select_a_pathway", "Select a pathway"), LEFT_X + LEFT_W / 2, 129, TEXT_DIM, false);
             return;
         }
 
@@ -366,10 +367,10 @@ public class PathwaySelectionScreen extends AbstractContainerScreen<PathwaySelec
 
         if (info == null) return;
 
-        heading(g, "Begins as", LEFT_X + 4, 148);
+        heading(g, LotmText.t("lotmcraft.text.begins_as", "Begins as"), LEFT_X + 4, 148);
         g.drawString(this.font, fit(info.getSequenceName(START_SEQUENCE), LEFT_W - 6), LEFT_X + 4, 158, argb, true);
 
-        heading(g, "Ascends to", LEFT_X + 4, 170);
+        heading(g, LotmText.t("lotmcraft.text.ascends_to", "Ascends to"), LEFT_X + 4, 170);
         g.drawString(this.font, fit(info.getSequenceName(0), LEFT_W - 6), LEFT_X + 4, 180, argb, true);
     }
 
@@ -392,13 +393,13 @@ public class PathwaySelectionScreen extends AbstractContainerScreen<PathwaySelec
         String label;
         int color;
         if (!enabled) {
-            label = "Select a pathway";
+            label = LotmText.t("lotmcraft.text.select_a_pathway", "Select a pathway");
             color = 0xFF6E6C78;
         } else if (confirming) {
             PathwayInfos info = BeyonderData.pathwayInfos.get(pathways.get(selected));
             String name = info != null ? info.getName() : pathways.get(selected);
             int rgb = accentOf(pathways.get(selected));
-            label = "Confirm: " + name + "?";
+            label = LotmText.f("lotmcraft.text.confirm_2", "Confirm: %s?", name);
             color = 0xFF000000 | rgb;
 
             float pulse = 0.6f + 0.2f * Mth.sin(animTicks() * 0.15f);
@@ -406,13 +407,13 @@ public class PathwaySelectionScreen extends AbstractContainerScreen<PathwaySelec
             g.blitSprite(SPR_TAB_GLOW_THIN, CONFIRM_X, CONFIRM_Y, CONFIRM_W, CONFIRM_H);
             resetTint();
         } else {
-            label = "Walk this Path";
+            label = LotmText.t("lotmcraft.text.walk_this_path", "Walk this Path");
             color = hovered ? 0xFFFFFFFF : TEXT_NORMAL;
         }
 
         drawCentered(g, fit(label, CONFIRM_W - 12), CONFIRM_X + CONFIRM_W / 2, CONFIRM_Y + 6, color, true);
 
-        g.drawString(this.font, "Esc to cancel", 16, CONFIRM_Y + 6, TEXT_DIM, false);
+        g.drawString(this.font, LotmText.t("lotmcraft.text.esc_to_cancel", "Esc to cancel"), 16, CONFIRM_Y + 6, TEXT_DIM, false);
     }
 
     @Override

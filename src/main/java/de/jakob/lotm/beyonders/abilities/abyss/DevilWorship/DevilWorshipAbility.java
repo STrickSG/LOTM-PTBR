@@ -54,6 +54,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Supplier;
 
 import static de.jakob.lotm.entity.custom.BeyonderNPCEntity.getRandomBeyonderSkin;
+import de.jakob.lotm.util.LotmText;
 
 public class DevilWorshipAbility extends SelectableAbility {
     public static final int TARGET_RANGE = 30;
@@ -147,28 +148,28 @@ public class DevilWorshipAbility extends SelectableAbility {
             return;
         }
         if (!isValidTribute(target)) {
-            say(player, "The Devils are not interested this offering They wish for the blood  of Villagers, Pillagers, Piglins, Beyonder's.", 0xFF124D);
+            say(player, LotmText.t("lotmcraft.text.the_devils_are_not_interested_this", "The Devils are not interested this offering They wish for the blood  of Villagers, Pillagers, Piglins, Beyonder's."), 0xFF124D);
             return;
         }
         long now = player.level().getGameTime();
         long remaining = Data.cooldownRemaining(player, now);
         if (remaining > 0) {
-            say(player, "The Devils will not listen yet. Try again in " + formatTicks(remaining) + ".", 0xFF124D);
+            say(player, LotmText.f("lotmcraft.text.the_devils_will_not_listen_yet", "The Devils will not listen yet. Try again in %s.", formatTicks(remaining)), 0xFF124D);
             return;
         }
         Data.setPreferred(player, typeId(target));
         Data.setPleasure(player, 0f);
         Data.setLastSelect(player, now);
-        say(player, "You offer the Devils a new tribute: " + target.getType().getDescription().getString() + ". Their attention vanishes.", 0x9932CC);
+        say(player, LotmText.f("lotmcraft.text.you_offer_the_devils_a_new", "You offer the Devils a new tribute: %s. Their attention vanishes.", target.getType().getDescription().getString()), 0x9932CC);
     }
     private static void sendStatus(ServerPlayer player) {
         String preferred = Data.preferred(player);
         if (preferred.isEmpty()) {
-            say(player, "You have chosen no tribute. Look at a mob and use Select Mob.", 0x9932CC);
+            say(player, LotmText.t("lotmcraft.text.you_have_chosen_no_tribute_look", "You have chosen no tribute. Look at a mob and use Select Mob."), 0x9932CC);
             return;
         }
         long remaining = Data.cooldownRemaining(player, player.level().getGameTime());
-        say(player, "Tribute: " + displayName(preferred) + " | Devil pleasure: " + Math.round(Data.pleasure(player)) + "% | Swap available " + (remaining > 0 ? "in " + formatTicks(remaining) : "now"), 0x9932CC);
+        say(player, LotmText.f("lotmcraft.text.tribute_devil_pleasure_swap_available", "Tribute: %s | Devil pleasure: %s%% | Swap available %s", displayName(preferred), Math.round(Data.pleasure(player)), (remaining > 0 ? LotmText.f("lotmcraft.text.in", "in %s", formatTicks(remaining)) : LotmText.t("lotmcraft.text.now", "now"))), 0x9932CC);
     }
     //summon devil
     private static void openSummonMenu(ServerPlayer player) {
@@ -190,21 +191,21 @@ public class DevilWorshipAbility extends SelectableAbility {
             mission = MISSIONS.get(missionIndex);
         }
         if (Data.pleasure(player) < 100f) {
-            say(player, "The Devils are not pleased enough to answer (" + Math.round(Data.pleasure(player)) + "%).", 0xFF124D);
+            say(player, LotmText.f("lotmcraft.text.the_devils_are_not_pleased_enough", "The Devils are not pleased enough to answer (%s%%).", Math.round(Data.pleasure(player))), 0xFF124D);
             return;
         }
         if (hasPendingOrActive(player.getUUID())) {
-            say(player, "A Devil's projection still lingers. You cannot call another yet.", 0xFF124D);
+            say(player, LotmText.t("lotmcraft.text.a_devil_s_projection_still_lingers", "A Devil's projection still lingers. You cannot call another yet."), 0xFF124D);
             return;
         }
         UUID target = null;
         if (mission.needsTarget()) {
             try {
                 ServerPlayer t = player.server.getPlayerList().getPlayer(UUID.fromString(targetUuid));
-                if (t == null || t == player) { say(player, "That player cannot be found.", 0xFF124D); return; }
+                if (t == null || t == player) { say(player, LotmText.t("lotmcraft.text.that_player_cannot_be_found", "That player cannot be found."), 0xFF124D); return; }
                 target = t.getUUID();
             } catch (IllegalArgumentException e) {
-                say(player, "That player cannot be found.", 0xFF124D);
+                say(player, LotmText.t("lotmcraft.text.that_player_cannot_be_found", "That player cannot be found."), 0xFF124D);
                 return;
             }
         }
@@ -218,7 +219,7 @@ public class DevilWorshipAbility extends SelectableAbility {
         }
         boolean escaped = player.getRandom().nextInt(100) < ESCAPE_CHANCE[idx];
         PENDING.put(player.getUUID(), new PendingSummon(player.getUUID(), mission, target, player.server.getTickCount(), DEVIL_SEQUENCE[idx], escaped));
-        say(player, "The Devils stir. One will answer in " + (SUMMON_DELAY_TICKS / 20) + " seconds.", 0x9932CC);
+        say(player, LotmText.f("lotmcraft.text.the_devils_stir_one_will_answer", "The Devils stir. One will answer in %s seconds.", SUMMON_DELAY_TICKS / 20), 0x9932CC);
         notifyResponders(player);
     }
 
@@ -236,160 +237,160 @@ public class DevilWorshipAbility extends SelectableAbility {
     }
     // A faction you can raid: its beyonder team, a church and a cathedral
     public record Faction(String name, String deity, String teamName, MissionDef team, MissionDef church, MissionDef cathedral) {}
-    public static final MissionDef KILL_PLAYER_MISSION = new MissionDef("Kill a Player", "The Devil hunts a chosen player until one of you falls.", 0, 5 * 60 * 20, Kind.KILL_PLAYER, List.of());
-    public static final MissionDef PROTECTION_MISSION = new MissionDef("Protection", "The Devil guards you for the whole duration.", 0, 10 * 60 * 20, Kind.PROTECTION, List.of());
+    public static final MissionDef KILL_PLAYER_MISSION = new MissionDef(LotmText.t("lotmcraft.text.kill_a_player", "Kill a Player"), LotmText.t("lotmcraft.text.the_devil_hunts_a_chosen_player", "The Devil hunts a chosen player until one of you falls."), 0, 5 * 60 * 20, Kind.KILL_PLAYER, List.of());
+    public static final MissionDef PROTECTION_MISSION = new MissionDef(LotmText.t("lotmcraft.text.protection", "Protection"), LotmText.t("lotmcraft.text.the_devil_guards_you_for_the", "The Devil guards you for the whole duration."), 0, 10 * 60 * 20, Kind.PROTECTION, List.of());
     // Shown when the faction is "None"
     public static final MissionDef ABANDONED_CATHEDRAL = raid(
-            "Raid an Abandoned Cathedral",
-            "The Devil searches an abandoned cathedral for anything the faithful left behind.",
+            LotmText.t("lotmcraft.text.raid_an_abandoned_cathedral", "Raid an Abandoned Cathedral"),
+            LotmText.t("lotmcraft.text.the_devil_searches_an_abandoned_cathedral", "The Devil searches an abandoned cathedral for anything the faithful left behind."),
             20, 6 * 60, List.of(
-                    new Loot("Gold ingots x8", 50, () -> new ItemStack(Items.GOLD_INGOT, 8)),
-                    new Loot("Diamonds x2", 30, () -> new ItemStack(Items.DIAMOND, 2)),
+                    new Loot(LotmText.t("lotmcraft.text.gold_ingots_x8", "Gold ingots x8"), 50, () -> new ItemStack(Items.GOLD_INGOT, 8)),
+                    new Loot(LotmText.t("lotmcraft.text.diamonds_x2", "Diamonds x2"), 30, () -> new ItemStack(Items.DIAMOND, 2)),
                     characteristic(10, any(9, 5)),
                     recipe(5, any(9, 5)),
                     subIngredient(30, any(9, 5))
             ));
     //Factions
     public static final List<Faction> FACTIONS = List.of(
-            new Faction("Evernight Church", "the Evernight Goddess", "Nighthawks",
-                    raid("Raid the Nighthawks",
-                            "The Devil attacks the Nighthawks.",
+            new Faction(LotmText.t("lotmcraft.text.evernight_church", "Evernight Church"), "the Evernight Goddess", "Nighthawks",
+                    raid(LotmText.t("lotmcraft.text.raid_the_nighthawks", "Raid the Nighthawks"),
+                            LotmText.t("lotmcraft.text.the_devil_attacks_the_nighthawks", "The Devil attacks the Nighthawks."),
                             50, 10 * 60, List.of(
-                                    new Loot("Diamonds x1", 60, () -> new ItemStack(Items.DIAMOND, 1)),
+                                    new Loot(LotmText.t("lotmcraft.text.diamonds_x1", "Diamonds x1"), 60, () -> new ItemStack(Items.DIAMOND, 1)),
                                     characteristic(60, pw("darkness", 9, 5), pw("death", 9, 6), pw("fool", 9, 7)),
                                     recipe(10, pw("darkness", 9, 6), pw("death", 9, 7), pw("fool", 9, 8)),
                                     subIngredient(30, pw("darkness", 9, 6), pw("death", 9, 7), pw("fool", 9, 8)),
                                     characteristic(30, any(9, 5))
                             )),
-                    raid("Raid a Church of the Evernight Goddess",
-                            "The Devil storms a church of the Evernight Goddess and ransacks it.",
+                    raid(LotmText.t("lotmcraft.text.raid_a_church_of_the_evernight", "Raid a Church of the Evernight Goddess"),
+                            LotmText.t("lotmcraft.text.the_devil_storms_a_church_of", "The Devil storms a church of the Evernight Goddess and ransacks it."),
                             60, 15 * 60, List.of(
-                                    new Loot("Diamonds x2", 60, () -> new ItemStack(Items.DIAMOND, 2)),
+                                    new Loot(LotmText.t("lotmcraft.text.diamonds_x2", "Diamonds x2"), 60, () -> new ItemStack(Items.DIAMOND, 2)),
                                     characteristic(30, pw("darkness", 9, 6), pw("death", 9, 7), pw("fool", 9, 8)),
                                     recipe(20, pw("darkness", 9, 6), pw("death", 9, 7), pw("fool", 9, 8)),
                                     subIngredient(80, pw("darkness", 9, 5), pw("death", 9, 6), pw("fool", 9, 7)),
                                     subIngredient(80, any(9, 5))
                             )),
-                    raid("Raid the Cathedral of the Evernight Goddess",
-                            "The Devil storms a cathedral of the Evernight Goddess.",
+                    raid(LotmText.t("lotmcraft.text.raid_the_cathedral_of_the_evernight", "Raid the Cathedral of the Evernight Goddess"),
+                            LotmText.t("lotmcraft.text.the_devil_storms_a_cathedral_of", "The Devil storms a cathedral of the Evernight Goddess."),
                             75, 20 * 60,  List.of(
-                                    new Loot("Diamonds x4", 60, () -> new ItemStack(Items.DIAMOND, 4)),
+                                    new Loot(LotmText.t("lotmcraft.text.diamonds_x4", "Diamonds x4"), 60, () -> new ItemStack(Items.DIAMOND, 4)),
                                     characteristic(30, pw("darkness", 9, 6), pw("death", 9, 7), pw("fool", 9, 8)),
                                     recipe(80, pw("darkness", 9, 5), pw("death", 9, 6), pw("fool", 9, 7)),
                                     subIngredient(50, pw("darkness", 9, 6), pw("death", 9, 7), pw("fool", 9, 8)),
                                     recipe(80, any(9, 5))
                             ))
             ),
-            new Faction("Church of the Lord of Storms", "the Lord of Storms", "Mandated Punishers",
-                    raid("Raid the Mandated Punishers",
-                            "The Devil attacks the Mandated Punishers.",
+            new Faction(LotmText.t("lotmcraft.text.church_of_the_lord_of_storms", "Church of the Lord of Storms"), "the Lord of Storms", "Mandated Punishers",
+                    raid(LotmText.t("lotmcraft.text.raid_the_mandated_punishers", "Raid the Mandated Punishers"),
+                            LotmText.t("lotmcraft.text.the_devil_attacks_the_mandated_punishers", "The Devil attacks the Mandated Punishers."),
                             50, 15 * 60,  List.of(
-                                    new Loot("Iron Ingot x9", 60, () -> new ItemStack(Items.IRON_INGOT, 9)),
+                                    new Loot(LotmText.t("lotmcraft.text.iron_ingot_x9", "Iron Ingot x9"), 60, () -> new ItemStack(Items.IRON_INGOT, 9)),
                                     characteristic(60, pw("tyrant", 9, 5), pw("visionary", 9, 6)),
                                     recipe(10, pw("tyrant", 9, 6), pw("visionary", 9, 7)),
                                     subIngredient(30, pw("tyrant", 9, 6), pw("visionary", 9, 7)),
                                     characteristic(30, any(9, 5))
                             )),
-                    raid("Raid a Church of the Lord of Storms",
-                            "The Devil storms a church of the Lord of Storms and ransacks it.",
+                    raid(LotmText.t("lotmcraft.text.raid_a_church_of_the_lord", "Raid a Church of the Lord of Storms"),
+                            LotmText.t("lotmcraft.text.the_devil_storms_a_church_of_2", "The Devil storms a church of the Lord of Storms and ransacks it."),
                             60, 20 * 60,   List.of(
-                                    new Loot("Iron Ingot x18", 60, () -> new ItemStack(Items.IRON_INGOT, 18)),
+                                    new Loot(LotmText.t("lotmcraft.text.iron_ingot_x18", "Iron Ingot x18"), 60, () -> new ItemStack(Items.IRON_INGOT, 18)),
                                     characteristic(30, pw("tyrant", 9, 6), pw("visionary", 9, 7)),
                                     recipe(20, pw("tyrant", 9, 6), pw("visionary", 9, 7)),
                                     subIngredient(80, pw("tyrant", 9, 5), pw("visionary", 9, 6)),
                                     subIngredient(80, any(9, 5))
                             )),
-                    raid("Raid the Cathedral of the Lord of Storms",
-                            "The Devil storms a cathedral of the Lord of Storms.",
+                    raid(LotmText.t("lotmcraft.text.raid_the_cathedral_of_the_lord", "Raid the Cathedral of the Lord of Storms"),
+                            LotmText.t("lotmcraft.text.the_devil_storms_a_cathedral_of_2", "The Devil storms a cathedral of the Lord of Storms."),
                             75, 25 * 60, List.of(
-                                    new Loot("Netherite scrap x2", 60, () -> new ItemStack(Items.NETHERITE_SCRAP, 2)),
+                                    new Loot(LotmText.t("lotmcraft.text.netherite_scrap_x2", "Netherite scrap x2"), 60, () -> new ItemStack(Items.NETHERITE_SCRAP, 2)),
                                     characteristic(30, pw("tyrant", 9, 6), pw("visionary", 9, 7)),
                                     recipe(80, pw("tyrant", 9, 5), pw("visionary", 9, 6)),
                                     subIngredient(50, pw("tyrant", 9, 6), pw("visionary", 9, 7)),
                                     recipe(80, any(9, 5))
                             ))
             ),
-            new Faction("Church of the Earth Mother", "the Earth Mother", "Fertility Order",
-                    raid("Raid the Fertility Order",
-                            "The Devil attacks the Fertility Order.",
+            new Faction(LotmText.t("lotmcraft.text.church_of_the_earth_mother", "Church of the Earth Mother"), "the Earth Mother", "Fertility Order",
+                    raid(LotmText.t("lotmcraft.text.raid_the_fertility_order", "Raid the Fertility Order"),
+                            LotmText.t("lotmcraft.text.the_devil_attacks_the_fertility_order", "The Devil attacks the Fertility Order."),
                             40, 15 * 60,  List.of(
-                                    new Loot("Emerald x4", 60, () -> new ItemStack(Items.EMERALD, 4)),
+                                    new Loot(LotmText.t("lotmcraft.text.emerald_x4", "Emerald x4"), 60, () -> new ItemStack(Items.EMERALD, 4)),
                                     characteristic(60, pw("mother", 9, 5)),
                                     recipe(10, pw("mother", 9, 6)),
                                     subIngredient(30, pw("mother", 9, 6)),
                                     characteristic(30, any(9, 5))
                             )),
-                    raid("Raid a Church of the Earth Mother",
-                            "The Devil storms a church of the Lord of Storms and ransacks it.",
+                    raid(LotmText.t("lotmcraft.text.raid_a_church_of_the_earth", "Raid a Church of the Earth Mother"),
+                            LotmText.t("lotmcraft.text.the_devil_storms_a_church_of_2", "The Devil storms a church of the Lord of Storms and ransacks it."),
                             50, 20 * 60,   List.of(
-                                    new Loot("Emerald x8", 60, () -> new ItemStack(Items.EMERALD, 8)),
+                                    new Loot(LotmText.t("lotmcraft.text.emerald_x8", "Emerald x8"), 60, () -> new ItemStack(Items.EMERALD, 8)),
                                     characteristic(30, pw("mother", 9, 6)),
                                     recipe(20, pw("mother", 9, 6)),
                                     subIngredient(80, pw("mother", 9, 5)),
                                     subIngredient(80, any(9, 5))
                             )),
-                    raid("Raid the Cathedral of the Earth Mother",
-                            "The Devil storms a cathedral of the Lord of Storms.",
+                    raid(LotmText.t("lotmcraft.text.raid_the_cathedral_of_the_earth", "Raid the Cathedral of the Earth Mother"),
+                            LotmText.t("lotmcraft.text.the_devil_storms_a_cathedral_of_2", "The Devil storms a cathedral of the Lord of Storms."),
                             65, 25 * 60, List.of(
-                                    new Loot("Emerald x16", 60, () -> new ItemStack(Items.EMERALD, 16)),
+                                    new Loot(LotmText.t("lotmcraft.text.emerald_x16", "Emerald x16"), 60, () -> new ItemStack(Items.EMERALD, 16)),
                                     characteristic(30, pw("mother", 9, 6)),
                                     recipe(80, pw("mother", 9, 5)),
                                     subIngredient(50, pw("mother", 9, 6)),
                                     recipe(80, any(9, 5))
                             ))
             ),
-            new Faction("Church of the Eternal Blazing Sun", "the Eternal Blazing Sun", "Inquisition",
-                    raid("Raid the Inquisition",
-                            "The Devil attacks the Inquisition.",
+            new Faction(LotmText.t("lotmcraft.text.church_of_the_eternal_blazing_sun", "Church of the Eternal Blazing Sun"), "the Eternal Blazing Sun", "Inquisition",
+                    raid(LotmText.t("lotmcraft.text.raid_the_inquisition", "Raid the Inquisition"),
+                            LotmText.t("lotmcraft.text.the_devil_attacks_the_inquisition", "The Devil attacks the Inquisition."),
                             60, 10 * 60,  List.of(
-                                    new Loot("Gold Ingot x10", 60, () -> new ItemStack(Items.GOLD_INGOT, 10)),
+                                    new Loot(LotmText.t("lotmcraft.text.gold_ingot_x10", "Gold Ingot x10"), 60, () -> new ItemStack(Items.GOLD_INGOT, 10)),
                                     characteristic(60, pw("sun", 9, 5)),
                                     recipe(10, pw("sun", 9, 6)),
                                     subIngredient(30, pw("sun", 9, 6)),
                                     characteristic(30, any(9, 5))
                             )),
-                    raid("Raid a Church of the Eternal Blazing Sun",
-                            "The Devil storms a church of the Lord of Storms and ransacks it.",
+                    raid(LotmText.t("lotmcraft.text.raid_a_church_of_the_eternal", "Raid a Church of the Eternal Blazing Sun"),
+                            LotmText.t("lotmcraft.text.the_devil_storms_a_church_of_2", "The Devil storms a church of the Lord of Storms and ransacks it."),
                             70, 15 * 60,   List.of(
-                                    new Loot("Gold Ingot x20", 60, () -> new ItemStack(Items.GOLD_INGOT, 20)),
+                                    new Loot(LotmText.t("lotmcraft.text.gold_ingot_x20", "Gold Ingot x20"), 60, () -> new ItemStack(Items.GOLD_INGOT, 20)),
                                     characteristic(30, pw("sun", 9, 6)),
                                     recipe(20, pw("sun", 9, 6)),
                                     subIngredient(80, pw("sun", 9, 5)),
                                     subIngredient(80, any(9, 5))
                             )),
-                    raid("Raid the Cathedral of the Eternal Blazing Sun",
-                            "The Devil storms a cathedral of the Lord of Storms.",
+                    raid(LotmText.t("lotmcraft.text.raid_the_cathedral_of_the_eternal", "Raid the Cathedral of the Eternal Blazing Sun"),
+                            LotmText.t("lotmcraft.text.the_devil_storms_a_cathedral_of_2", "The Devil storms a cathedral of the Lord of Storms."),
                             85, 20 * 60, List.of(
-                                    new Loot("Gold Ingot x30", 60, () -> new ItemStack(Items.GOLD_INGOT, 30)),
+                                    new Loot(LotmText.t("lotmcraft.text.gold_ingot_x30", "Gold Ingot x30"), 60, () -> new ItemStack(Items.GOLD_INGOT, 30)),
                                     characteristic(30, pw("sun", 9, 6)),
                                     recipe(80, pw("sun", 9, 5)),
                                     subIngredient(50, pw("sun", 9, 6)),
                                     recipe(80, any(9, 5))
                             ))
             ),
-            new Faction("Blood Sanctify Sect", "Dark Side of the Universe.", "The Butchers",
-                    raid("Raid The Butchers",
-                            "The Devil attacks the Butchers.",
+            new Faction(LotmText.t("lotmcraft.text.blood_sanctify_sect", "Blood Sanctify Sect"), "Dark Side of the Universe.", "The Butchers",
+                    raid(LotmText.t("lotmcraft.text.raid_the_butchers", "Raid The Butchers"),
+                            LotmText.t("lotmcraft.text.the_devil_attacks_the_butchers", "The Devil attacks the Butchers."),
                             60, 15 * 60,  List.of(
-                                    new Loot("Wither Skull x1", 60, () -> new ItemStack(Items.WITHER_SKELETON_SKULL, 1)),
+                                    new Loot(LotmText.t("lotmcraft.text.wither_skull_x1", "Wither Skull x1"), 60, () -> new ItemStack(Items.WITHER_SKELETON_SKULL, 1)),
                                     characteristic(50, pw("abyss", 9, 5)),
                                     recipe(5, pw("abyss", 9, 6)),
                                     subIngredient(20, pw("abyss", 9, 6)),
                                     characteristic(20, any(9, 5))
                             )),
-                    raid("Raid a External Blood Sanctify Sub-Sect",
-                            "The Devil storms the External Blood Sanctify Sub-Sect and ransacks it.",
+                    raid(LotmText.t("lotmcraft.text.raid_a_external_blood_sanctify_sub", "Raid a External Blood Sanctify Sub-Sect"),
+                            LotmText.t("lotmcraft.text.the_devil_storms_the_external_blood", "The Devil storms the External Blood Sanctify Sub-Sect and ransacks it."),
                             70, 20 * 60,   List.of(
-                                    new Loot("Netherite Ingot x1", 50, () -> new ItemStack(Items.NETHERITE_INGOT, 1)),
+                                    new Loot(LotmText.t("lotmcraft.text.netherite_ingot_x1", "Netherite Ingot x1"), 50, () -> new ItemStack(Items.NETHERITE_INGOT, 1)),
                                     characteristic(20, pw("sun", 9, 6)),
                                     recipe(10, pw("sun", 9, 6)),
                                     subIngredient(70, pw("sun", 9, 5)),
                                     subIngredient(70, any(9, 5))
                             )),
-                    raid("Raid one of the Main Family homes",
-                            "The Devil storms one of the Main Family homes of the Blood Sanctify Sect.",
+                    raid(LotmText.t("lotmcraft.text.raid_one_of_the_main_family", "Raid one of the Main Family homes"),
+                            LotmText.t("lotmcraft.text.the_devil_storms_one_of_the", "The Devil storms one of the Main Family homes of the Blood Sanctify Sect."),
                             85, 25 * 60, List.of(
-                                    new Loot("Template x1", 40, () -> new ItemStack(Items.NETHERITE_UPGRADE_SMITHING_TEMPLATE, 1)),
+                                    new Loot(LotmText.t("lotmcraft.text.template_x1", "Template x1"), 40, () -> new ItemStack(Items.NETHERITE_UPGRADE_SMITHING_TEMPLATE, 1)),
                                     characteristic(20, pw("abyss", 9, 6)),
                                     recipe(70, pw("abyss", 9, 5)),
                                     subIngredient(40, pw("abyss", 9, 6)),
@@ -414,9 +415,9 @@ public class DevilWorshipAbility extends SelectableAbility {
     private static MissionDef raid(String title, String description, int failurePercent, int timerSeconds, List<Loot> loot) {return new MissionDef(title, description, failurePercent, timerSeconds * 20, Kind.LOOT, loot);}
     private static String rewardWord(Reward reward) {
         return switch (reward) {
-            case CHARACTERISTIC -> "characteristic";
-            case RECIPE -> "recipe";
-            case SUB_INGREDIENT -> "sub-ingredient";
+            case CHARACTERISTIC -> LotmText.t("lotmcraft.text.characteristic", "characteristic");
+            case RECIPE -> LotmText.t("lotmcraft.text.recipe", "recipe");
+            case SUB_INGREDIENT -> LotmText.t("lotmcraft.text.sub_ingredient", "sub-ingredient");
         };
     }
     // Builds a Seek mission for the chosen reward, pathway (null = any) and sequence
@@ -424,8 +425,8 @@ public class DevilWorshipAbility extends SelectableAbility {
         boolean chosen = pathway != null;
         PathwayRange range = chosen ? pw(pathway, sequence, sequence) : any(sequence, sequence);
         String what = rewardWord(reward);
-        String title = "Seek: " + (chosen ? prettyPathway(pathway) + " " : "") + what + " (Sequence " + sequence + ")";
-        return new MissionDef(title, "The Devil searches for a " + (chosen ? prettyPathway(pathway) + " " : "") + what + " of Sequence " + sequence + ".", seekFailurePercent(sequence, chosen), seekTimerTicks(sequence, chosen), Kind.LOOT, List.of(new Loot(label(what, range), 100, () -> randomReward(reward, range))));
+        String title = LotmText.f("lotmcraft.text.seek_sequence", "Seek: %s%s (Sequence %s)", (chosen ? prettyPathway(pathway) + " " : ""), what, sequence);
+        return new MissionDef(title, LotmText.f("lotmcraft.text.the_devil_searches_for_a_of", "The Devil searches for a %s%s of Sequence %s.", (chosen ? prettyPathway(pathway) + " " : ""), what, sequence), seekFailurePercent(sequence, chosen), seekTimerTicks(sequence, chosen), Kind.LOOT, List.of(new Loot(label(what, range), 100, () -> randomReward(reward, range))));
     }
     //loot helpers
     public enum Reward {
@@ -443,9 +444,9 @@ public class DevilWorshipAbility extends SelectableAbility {
     private static PathwayRange any(int from, int to) {
         return new PathwayRange(null, from, to);
     }
-    private static Loot characteristic(int percent, PathwayRange... ranges) {return new Loot(label("characteristic", ranges), percent, () -> randomReward(Reward.CHARACTERISTIC, ranges));}
-    private static Loot recipe(int percent, PathwayRange... ranges) {return new Loot(label("recipe", ranges), percent, () -> randomReward(Reward.RECIPE, ranges));}
-    private static Loot subIngredient(int percent, PathwayRange... ranges) {return new Loot(label("sub-ingredient", ranges), percent, () -> randomReward(Reward.SUB_INGREDIENT, ranges));}
+    private static Loot characteristic(int percent, PathwayRange... ranges) {return new Loot(label(LotmText.t("lotmcraft.text.characteristic", "characteristic"), ranges), percent, () -> randomReward(Reward.CHARACTERISTIC, ranges));}
+    private static Loot recipe(int percent, PathwayRange... ranges) {return new Loot(label(LotmText.t("lotmcraft.text.recipe", "recipe"), ranges), percent, () -> randomReward(Reward.RECIPE, ranges));}
+    private static Loot subIngredient(int percent, PathwayRange... ranges) {return new Loot(label(LotmText.t("lotmcraft.text.sub_ingredient", "sub-ingredient"), ranges), percent, () -> randomReward(Reward.SUB_INGREDIENT, ranges));}
     public static List<String> availablePathways() {return BeyonderData.implementedPathways.stream().sorted().toList();}
     private static ItemStack randomReward(Reward type, PathwayRange... ranges) {
         PathwayRange[] pool = ranges.length == 0 ? new PathwayRange[]{any(9, 5)} : ranges;
@@ -474,11 +475,11 @@ public class DevilWorshipAbility extends SelectableAbility {
         if (ranges.length == 0) ranges = new PathwayRange[]{any(9, 5)};
         if (ranges.length == 1) {
             PathwayRange range = ranges[0];
-            return "Random " + (range.pathway() == null ? "" : prettyPathway(range.pathway()) + " ") + what + " (Sequence " + sequenceText(range) + (range.pathway() == null ? ", any pathway" : "") + ")";
+            return LotmText.f("lotmcraft.text.random_sequence", "Random %s%s (Sequence %s%s)", (range.pathway() == null ? "" : prettyPathway(range.pathway()) + " "), what, sequenceText(range), (range.pathway() == null ? LotmText.t("lotmcraft.text.any_pathway", ", any pathway") : ""));
         }
         List<String> parts = new ArrayList<>();
         for (PathwayRange range : ranges) {parts.add((range.pathway() == null ? "Any" : prettyPathway(range.pathway())) + " " + sequenceText(range));}
-        return "Random " + what + " (" + String.join(", ", parts) + ")";
+        return LotmText.f("lotmcraft.text.random", "Random %s (%s)", what, String.join(", ", parts));
     }
     private static String sequenceText(PathwayRange range) {return range.weakest() == range.strongest() ? String.valueOf(range.weakest()) : range.weakest() + "-" + range.strongest();}
     public static String prettyPathway(String pathway) {
@@ -598,8 +599,8 @@ public class DevilWorshipAbility extends SelectableAbility {
     private static void notifyResponders(ServerPlayer owner) {
         for (ServerPlayer other : owner.server.getPlayerList().getPlayers()) {
             if (other == owner || canHear(other, owner)) continue;
-            String where = other.level() == owner.level() ? "to the " + direction(other, owner) + " (" + Math.round(other.distanceTo(owner)) + " blocks)" : "in another dimension";
-            say(other, "You feel a Devil Worship ritual " + where + ". Use Projection within " + (SUMMON_DELAY_TICKS / 20) + " seconds to answer it.", 0xB22222);
+            String where = other.level() == owner.level() ? LotmText.f("lotmcraft.text.to_the_blocks", "to the %s (%s blocks)", direction(other, owner), Math.round(other.distanceTo(owner))) : LotmText.t("lotmcraft.text.in_another_dimension", "in another dimension");
+            say(other, LotmText.f("lotmcraft.text.you_feel_a_devil_worship_ritual", "You feel a Devil Worship ritual %s. Use Projection within %s seconds to answer it.", where, SUMMON_DELAY_TICKS / 20), 0xB22222);
         }
     }
     private static String direction(ServerPlayer from, ServerPlayer to) {
@@ -625,7 +626,7 @@ public class DevilWorshipAbility extends SelectableAbility {
     private static void toggleTakeover(ServerPlayer responder, ActiveMission m) {
         BeyonderNPCEntity devil = findDevil(responder.server, m);
         if (devil == null) {
-            say(responder, "Your projection is still on its way.", 0xB22222);
+            say(responder, LotmText.t("lotmcraft.text.your_projection_is_still_on_its", "Your projection is still on its way."), 0xB22222);
             return;
         }
         if (isControlledByResponder(responder.server, m)) {
@@ -634,21 +635,21 @@ public class DevilWorshipAbility extends SelectableAbility {
             // The original Devil was discarded by ControllingUtils.
             // Spawn a replacement so the mission can continue.
             BeyonderNPCEntity replacement = respawnControlledDevil(responder.server, m);
-            if (replacement == null) say(responder, "You release your projection, but it cannot reform.", 0xFF124D);
-            else say(responder, "You release your projection. It reforms nearby.", 0xB22222);
+            if (replacement == null) say(responder, LotmText.t("lotmcraft.text.you_release_your_projection_but_it", "You release your projection, but it cannot reform."), 0xFF124D);
+            else say(responder, LotmText.t("lotmcraft.text.you_release_your_projection_it_reforms", "You release your projection. It reforms nearby."), 0xB22222);
             return;
         }
         m.responderControlling = false;
         if (ControllingUtils.isControlling(responder)) {
-            say(responder, "You are already controlling something else.", 0xFF124D);
+            say(responder, LotmText.t("lotmcraft.text.you_are_already_controlling_something_else", "You are already controlling something else."), 0xFF124D);
             return;
         }
         if (!ControllingUtils.startControlling(responder, devil, false, true)) {
-            say(responder, "You cannot take over your projection.", 0xFF124D);
+            say(responder, LotmText.t("lotmcraft.text.you_cannot_take_over_your_projection", "You cannot take over your projection."), 0xFF124D);
             return;
         }
         m.responderControlling = true;
-        say(responder, "You take over your projection. Use Projection again to release it.", 0xFFD700);
+        say(responder, LotmText.t("lotmcraft.text.you_take_over_your_projection_use", "You take over your projection. Use Projection again to release it."), 0xFFD700);
     }
     public static void castProjection(ServerPlayer responder) {
         ActiveMission mine = activeMissionAnsweredBy(responder.getUUID());
@@ -658,7 +659,7 @@ public class DevilWorshipAbility extends SelectableAbility {
         }
         for (PendingSummon p : PENDING.values()) {
             if (responder.getUUID().equals(p.responder)) {
-                say(responder, "Your projection is already on its way.", 0xB22222);
+                say(responder, LotmText.t("lotmcraft.text.your_projection_is_already_on_its", "Your projection is already on its way."), 0xB22222);
                 return;
             }
         }
@@ -675,13 +676,13 @@ public class DevilWorshipAbility extends SelectableAbility {
             if (best == null || dist < bestDist) { best = p; bestOwner = owner; bestDist = dist; }
         }
         if (best == null) {
-            say(responder, "You hear no Devil Worship ritual that still awaits an answer.", 0xFF124D);
+            say(responder, LotmText.t("lotmcraft.text.you_hear_no_devil_worship_ritual", "You hear no Devil Worship ritual that still awaits an answer."), 0xFF124D);
             return;
         }
         best.responder = responder.getUUID();
         long left = Math.max(0, (SUMMON_DELAY_TICKS - (now - best.startTick)) / 20);
-        say(responder, "Your projection slips into the ritual. It will answer in " + left + " seconds.", 0xB22222);
-        say(bestOwner, "The ritual trembles as another presence reaches for it...", 0x9932CC);
+        say(responder, LotmText.f("lotmcraft.text.your_projection_slips_into_the_ritual", "Your projection slips into the ritual. It will answer in %s seconds.", left), 0xB22222);
+        say(bestOwner, LotmText.t("lotmcraft.text.the_ritual_trembles_as_another_presence", "The ritual trembles as another presence reaches for it..."), 0x9932CC);
     }
     public static float digestBoostPercent(int answerSeq, int rolledSeq) {return Math.max(0f, DIGEST_BOOST_MAX_PERCENT - Math.abs(answerSeq - rolledSeq) * DIGEST_LOSS_PER_SEQ);}
     private static void addDigestion(ServerPlayer player, float percent) {BeyonderData.digest(player, percent / 100f, false);}
@@ -692,16 +693,16 @@ public class DevilWorshipAbility extends SelectableAbility {
         UUID responderId = responder == null ? null : responder.getUUID();
         int seq = responder != null ? BeyonderData.getSequence(responder) : p.rolledSeq;
         long now = server.getTickCount();
-        say(owner, "A projection of a Sequence " + seq + " Devil answers your call.", 0x9932CC);
+        say(owner, LotmText.f("lotmcraft.text.a_projection_of_a_sequence_devil", "A projection of a Sequence %s Devil answers your call.", seq), 0x9932CC);
         if (p.escaped) {
-            say(owner, "The Devil breaks free of your control and turns on you!", 0xFF124D);
+            say(owner, LotmText.t("lotmcraft.text.the_devil_breaks_free_of_your", "The Devil breaks free of your control and turns on you!"), 0xFF124D);
             spawnDevil(server, owner, p, seq, responderId);
             return;
         }
         // Mission failure is rolled here
         int failurePercent = Math.max(0, p.mission.failurePercent() - successBonus(seq));
         boolean failed = owner.getRandom().nextInt(100) < failurePercent;
-        say(owner, "The Devil accepts your mission: " + p.mission.title() + ".", 0xFFD700);
+        say(owner, LotmText.f("lotmcraft.text.the_devil_accepts_your_mission", "The Devil accepts your mission: %s.", p.mission.title()), 0xFFD700);
         if (p.mission.kind() == Kind.PROTECTION) {
             spawnDevil(server, owner, p, seq, responderId); // guards you in person
             return;
@@ -709,7 +710,7 @@ public class DevilWorshipAbility extends SelectableAbility {
         // LOOT and KILL_PLAYER: the Devil departs and the timer starts.
         ActiveMission m = new ActiveMission(owner.getUUID(), null, null, p.mission, p.target, now + p.mission.timerTicks(), false, failed, responderId, seq, p.rolledSeq);
         ACTIVE.put(m.id, m);
-        say(owner, "The Devil departs. It will report back in " + p.mission.timerLabel() + ".", 0x9932CC);
+        say(owner, LotmText.f("lotmcraft.text.the_devil_departs_it_will_report", "The Devil departs. It will report back in %s.", p.mission.timerLabel()), 0x9932CC);
     }
     private static BeyonderNPCEntity createDevil(ServerLevel level, int seq, Vec3 pos, UUID ownerId) {
         BeyonderNPCEntity devil = new BeyonderNPCEntity(ModEntities.BEYONDER_NPC.get(), level, false, getRandomBeyonderSkin(), "abyss", seq, false, false);
@@ -738,7 +739,7 @@ public class DevilWorshipAbility extends SelectableAbility {
         boolean failed = !p.escaped && owner.getRandom().nextInt(100) < failurePercent;
         ActiveMission m = new ActiveMission(owner.getUUID(), devil.getUUID(), level.dimension(), p.mission, p.target, server.getTickCount() + lifetime, p.escaped, failed, responder, seq, p.rolledSeq);
         ACTIVE.put(m.id, m);
-        if (!p.escaped) tellResponder(server, responder, "Your projection has arrived. Use Projection again to take it over.");
+        if (!p.escaped) tellResponder(server, responder, LotmText.t("lotmcraft.text.your_projection_has_arrived_use_projection", "Your projection has arrived. Use Projection again to take it over."));
     }
     private static boolean startHunt(MinecraftServer server, ServerPlayer owner, ActiveMission m, long now) {
         ServerPlayer target = m.target == null ? null : server.getPlayerList().getPlayer(m.target);
@@ -751,9 +752,9 @@ public class DevilWorshipAbility extends SelectableAbility {
         m.dimension = level.dimension();
         m.hunting = true;
         m.endTick = now + KILL_HUNT_TICKS;
-        if (owner != null) say(owner, "The Devil has found its prey.", 0x9932CC);
-        say(target, "A Devil's shadow has found you!", 0xFF124D);
-        tellResponder(server, m.responder, "Your projection has found its prey. Use Projection again to take it over.");
+        if (owner != null) say(owner, LotmText.t("lotmcraft.text.the_devil_has_found_its_prey", "The Devil has found its prey."), 0x9932CC);
+        say(target, LotmText.t("lotmcraft.text.a_devil_s_shadow_has_found", "A Devil's shadow has found you!"), 0xFF124D);
+        tellResponder(server, m.responder, LotmText.t("lotmcraft.text.your_projection_has_found_its_prey", "Your projection has found its prey. Use Projection again to take it over."));
         return true;
     }
     private static BeyonderNPCEntity findDevil(MinecraftServer server, ActiveMission m) {
@@ -823,10 +824,10 @@ public class DevilWorshipAbility extends SelectableAbility {
         }
         if (devil != null) devil.discard(); // its beyonder data is cleared in Events.onDevilLeave
         if (owner != null) {
-            if (m.escaped) say(owner, "The rogue Devil's projection fades.", 0x9932CC);
-            else if (m.failed || !success) say(owner, "The Devil fails its task and withdraws from " + m.mission.title(), 0xFF124D);
+            if (m.escaped) say(owner, LotmText.t("lotmcraft.text.the_rogue_devil_s_projection_fades", "The rogue Devil's projection fades."), 0x9932CC);
+            else if (m.failed || !success) say(owner, LotmText.f("lotmcraft.text.the_devil_fails_its_task_and", "The Devil fails its task and withdraws from %s", m.mission.title()), 0xFF124D);
             else if (m.mission.kind() == Kind.LOOT) deliverLoot(owner, m.mission);
-            else say(owner, "The Devil completes its task and withdraws from " + m.mission.title(), 0xFFD700);
+            else say(owner, LotmText.f("lotmcraft.text.the_devil_completes_its_task_and", "The Devil completes its task and withdraws from %s", m.mission.title()), 0xFFD700);
         }
         if (success && !m.failed && !m.escaped && m.responder != null) {
             ServerPlayer responder = server.getPlayerList().getPlayer(m.responder);
@@ -834,7 +835,7 @@ public class DevilWorshipAbility extends SelectableAbility {
                 float boost = digestBoostPercent(m.answerSeq, m.rolledSeq);
                 if (boost > 0f) {
                     addDigestion(responder, boost);
-                    say(responder, "Your projection succeeded. Digestion boost earned: " + String.format("%.1f", boost) + "%.", 0xFFD700);
+                    say(responder, LotmText.f("lotmcraft.text.your_projection_succeeded_digestion_boost_earned", "Your projection succeeded. Digestion boost earned: %s%%.", String.format("%.1f", boost)), 0xFFD700);
                 }
             }
         }
@@ -848,8 +849,8 @@ public class DevilWorshipAbility extends SelectableAbility {
             got.add(stack.getHoverName().getString() + (stack.getCount() > 1 ? " x" + stack.getCount() : ""));
             if (!owner.getInventory().add(stack)) owner.drop(stack, false);
         }
-        if (got.isEmpty()) {say(owner, "The Devil returns from " + mission.title() + " empty-handed.", 0xFF124D);}
-        else {say(owner, "The Devil returns from " + mission.title() + " with: " + String.join(", ", got) + ".", 0xFFD700);}
+        if (got.isEmpty()) {say(owner, LotmText.f("lotmcraft.text.the_devil_returns_from_empty_handed", "The Devil returns from %s empty-handed.", mission.title()), 0xFF124D);}
+        else {say(owner, LotmText.f("lotmcraft.text.the_devil_returns_from_with", "The Devil returns from %s with: %s.", mission.title(), String.join(", ", got)), 0xFFD700);}
     }
     //helpers
     private static void say(ServerPlayer player, String text, int color) { player.sendSystemMessage(Component.literal(text).withColor(color)); }
@@ -937,10 +938,10 @@ public class DevilWorshipAbility extends SelectableAbility {
             float before = Data.pleasure(killer);
             float after = Math.min(100f, before + 100f / getKillsForFull(dead));
             Data.setPleasure(killer, after);
-            if (after >= 100f && before < 100f) {say(killer, "The Devils have accepted your offering. Open Summon Devil to call one...", 0xFFD700);}
-            else if (before < 25f && after >= 25f) {say(killer, "A Devil senses the blood split..", 0xFFa3070c);}
-            else if (before < 50f && after >= 50f) {say(killer, "The Devil watches with glee. Continue your offering...", 0xFFa3070c);}
-            else if (before < 75f && after >= 75f) {say(killer, "The Devil has seen what you are. It is pleased you no longer hide it...", 0xFFa3070c);}
+            if (after >= 100f && before < 100f) {say(killer, LotmText.t("lotmcraft.text.the_devils_have_accepted_your_offering", "The Devils have accepted your offering. Open Summon Devil to call one..."), 0xFFD700);}
+            else if (before < 25f && after >= 25f) {say(killer, LotmText.t("lotmcraft.text.a_devil_senses_the_blood_split", "A Devil senses the blood split.."), 0xFFa3070c);}
+            else if (before < 50f && after >= 50f) {say(killer, LotmText.t("lotmcraft.text.the_devil_watches_with_glee_continue", "The Devil watches with glee. Continue your offering..."), 0xFFa3070c);}
+            else if (before < 75f && after >= 75f) {say(killer, LotmText.t("lotmcraft.text.the_devil_has_seen_what_you", "The Devil has seen what you are. It is pleased you no longer hide it..."), 0xFFa3070c);}
         }
     }
 }

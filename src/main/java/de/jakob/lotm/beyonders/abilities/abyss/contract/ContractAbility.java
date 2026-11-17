@@ -78,12 +78,12 @@ public class ContractAbility extends SelectableAbility {
         data.setPartyBName(partyB.getName().getString());
         pendingProposals.put(partyB.getUUID(), new PendingProposal(partyA.getUUID(), data));
         partyB.sendSystemMessage(Component.literal("══════════════════════════════").withColor(0x9932cc));
-        partyB.sendSystemMessage(Component.literal("       CONTRACT REQUEST").withColor(0xFFa3070c));
-        partyB.sendSystemMessage(Component.literal(partyA.getName().getString() + " wants you to accept:").withColor(0xFFa3070c));
+        partyB.sendSystemMessage(Component.translatableWithFallback("lotmcraft.text.contract_request", "       CONTRACT REQUEST").withColor(0xFFa3070c));
+        partyB.sendSystemMessage(Component.translatableWithFallback("lotmcraft.text.wants_you_to_accept", "%s wants you to accept:", String.valueOf(partyA.getName().getString())).withColor(0xFFa3070c));
         partyB.sendSystemMessage(Component.literal(data.describe()).withColor(0xFFa3070c));
-        partyB.sendSystemMessage(Component.literal("Type 'accept' or 'decline'").withColor(0xFFa3070c));
+        partyB.sendSystemMessage(Component.translatableWithFallback("lotmcraft.text.type_accept_or_decline", "Type 'accept' or 'decline'").withColor(0xFFa3070c));
         partyB.sendSystemMessage(Component.literal("══════════════════════════════").withColor(0x9932cc));
-        if (!caster.getUUID().equals(partyB.getUUID())) {AbilityUtil.sendActionBar(caster, Component.literal("Proposal sent to " + partyB.getName().getString() + ".").withColor(0x9932cc));
+        if (!caster.getUUID().equals(partyB.getUUID())) {AbilityUtil.sendActionBar(caster, Component.translatableWithFallback("lotmcraft.text.proposal_sent_to", "Proposal sent to %s.", String.valueOf(partyB.getName().getString())).withColor(0x9932cc));
         }
     }
     @SubscribeEvent(priority = EventPriority.HIGHEST, receiveCanceled = true)
@@ -104,7 +104,7 @@ public class ContractAbility extends SelectableAbility {
         if (proposal == null) {return;}
         ServerPlayer caster = target.server.getPlayerList().getPlayer(proposal.casterUUID());
         if (caster == null) {
-            AbilityUtil.sendActionBar(target, Component.literal("The caster is no longer online.").withColor(0xFFff124d));
+            AbilityUtil.sendActionBar(target, Component.translatableWithFallback("lotmcraft.text.the_caster_is_no_longer_online", "The caster is no longer online.").withColor(0xFFff124d));
             return;
         }
         ContractData data = proposal.data();
@@ -125,8 +125,8 @@ public class ContractAbility extends SelectableAbility {
             else {data.setKillerName(data.partyBName());}
             var contractItem = ContractItem.create(data);
             if (!caster.getInventory().add(contractItem)) {caster.drop(contractItem, false);}
-            AbilityUtil.sendActionBar(caster, Component.literal("Contract formed.").withColor(0xFFa3070c));
-            AbilityUtil.sendActionBar(target, Component.literal("Contract formed.").withColor(0xFFa3070c));
+            AbilityUtil.sendActionBar(caster, Component.translatableWithFallback("lotmcraft.text.contract_formed", "Contract formed.").withColor(0xFFa3070c));
+            AbilityUtil.sendActionBar(target, Component.translatableWithFallback("lotmcraft.text.contract_formed", "Contract formed.").withColor(0xFFa3070c));
             return;
         }
         boolean soulForSoul = data.termAType() == ContractData.TermType.SOUL && data.termBType() == ContractData.TermType.SOUL;
@@ -135,7 +135,7 @@ public class ContractAbility extends SelectableAbility {
             if (soulOwner == null) {return;}
             if (SoulOwnershipRegistry.isSoulBound(soulOwner)) {
                 ServerPlayer owner = target.server.getPlayerList().getPlayer(soulOwner);
-                if (owner != null) {AbilityUtil.sendActionBar(owner, Component.literal("Your Soul Belongs to the Abyss").withColor(0xFFa3070c));}
+                if (owner != null) {AbilityUtil.sendActionBar(owner, Component.translatableWithFallback("lotmcraft.text.your_soul_belongs_to_the_abyss", "Your Soul Belongs to the Abyss").withColor(0xFFa3070c));}
                 return;
             }
             if (!data.isLifeDeathContract()){SoulOwnershipRegistry.bind(soulOwner);}
@@ -150,7 +150,7 @@ public class ContractAbility extends SelectableAbility {
             if (soulOwner == null) {return;}
             if (SoulOwnershipRegistry.isSoulBound(soulOwner)) {
                 ServerPlayer owner = target.server.getPlayerList().getPlayer(soulOwner);
-                if (owner != null) {AbilityUtil.sendActionBar(owner, Component.literal("Your Soul Belongs to the Abyss").withColor(0xFFa3070c));}
+                if (owner != null) {AbilityUtil.sendActionBar(owner, Component.translatableWithFallback("lotmcraft.text.your_soul_belongs_to_the_abyss", "Your Soul Belongs to the Abyss").withColor(0xFFa3070c));}
                 return;
             }
             if (!data.isLifeDeathContract())SoulOwnershipRegistry.bind(soulOwner);
@@ -163,7 +163,7 @@ public class ContractAbility extends SelectableAbility {
         if (data.isIou()) {
             UUID soulOwner = caster.getUUID();
             if (SoulOwnershipRegistry.isSoulBound(soulOwner)) {
-                AbilityUtil.sendActionBar(caster, Component.literal("Your Soul Belongs to the Abyss").withColor(0xFFa3070c));
+                AbilityUtil.sendActionBar(caster, Component.translatableWithFallback("lotmcraft.text.your_soul_belongs_to_the_abyss", "Your Soul Belongs to the Abyss").withColor(0xFFa3070c));
                 return;
             }
             SoulOwnershipRegistry.bind(soulOwner);
@@ -171,8 +171,8 @@ public class ContractAbility extends SelectableAbility {
         var contractItem = ContractItem.create(data);
         ServerPlayer recipient = data.isIou() ? target : caster;
         if (!recipient.getInventory().add(contractItem)) {recipient.drop(contractItem, false);}
-        AbilityUtil.sendActionBar(caster, Component.literal("Contract formed.").withColor(0x9932cc));
-        AbilityUtil.sendActionBar(target, Component.literal("Contract formed.").withColor(0x9932cc));
+        AbilityUtil.sendActionBar(caster, Component.translatableWithFallback("lotmcraft.text.contract_formed", "Contract formed.").withColor(0x9932cc));
+        AbilityUtil.sendActionBar(target, Component.translatableWithFallback("lotmcraft.text.contract_formed", "Contract formed.").withColor(0x9932cc));
         if (data.termAType() == ContractData.TermType.RELEASE_SOUL || data.termBType() == ContractData.TermType.RELEASE_SOUL) {
             String releaseTargetName = data.releaseTargetName();
             if (releaseTargetName != null && !releaseTargetName.isBlank()) {
@@ -189,28 +189,28 @@ public class ContractAbility extends SelectableAbility {
         }
         ServerPlayer caster = target.server.getPlayerList().getPlayer(proposal.casterUUID());
         if (caster != null) {
-            AbilityUtil.sendActionBar(caster, Component.literal(target.getName().getString() + " declined.").withColor(0xFFa3070c));
+            AbilityUtil.sendActionBar(caster, Component.translatableWithFallback("lotmcraft.text.declined", "%s declined.", String.valueOf(target.getName().getString())).withColor(0xFFa3070c));
         }
     }
     private void destroyUnsignedContract(ServerPlayer player) {
         ItemStack stack = player.getMainHandItem();
         if (!(stack.getItem() instanceof ContractItem)) {
-            AbilityUtil.sendActionBar(player, Component.literal("You must hold a contract in your main hand.").withColor(0xFFa3070c));
+            AbilityUtil.sendActionBar(player, Component.translatableWithFallback("lotmcraft.text.you_must_hold_a_contract_in", "You must hold a contract in your main hand.").withColor(0xFFa3070c));
             return;
         }
         ContractData data = ContractItem.readData(stack);
         // Both parties must not have signed yet.
         if (data.hasBothParties()) {
-            AbilityUtil.sendActionBar(player, Component.literal("A signed contract cannot be destroyed this way.").withColor(0xFFa3070c));
+            AbilityUtil.sendActionBar(player, Component.translatableWithFallback("lotmcraft.text.a_signed_contract_cannot_be_destroyed", "A signed contract cannot be destroyed this way.").withColor(0xFFa3070c));
             return;
         }
         stack.shrink(1);
-        AbilityUtil.sendActionBar(player, Component.literal("The unsigned contract dissolves.").withColor(0xFFa3070c));
+        AbilityUtil.sendActionBar(player, Component.translatableWithFallback("lotmcraft.text.the_unsigned_contract_dissolves", "The unsigned contract dissolves.").withColor(0xFFa3070c));
     }
     private void checkDesire(ServerPlayer player) {
         LivingEntity target = getTargetLivingEntity(player);
         if (target == null || target instanceof Player) {
-            AbilityUtil.sendActionBar(player, Component.literal("You must look at a non-player creature.").withColor(0xFFa3070c));
+            AbilityUtil.sendActionBar(player, Component.translatableWithFallback("lotmcraft.text.you_must_look_at_a_non", "You must look at a non-player creature.").withColor(0xFFa3070c));
             return;
         }
         NpcDesire.check(player, target);

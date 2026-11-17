@@ -226,7 +226,7 @@ public class JusticeLanguageAbility extends SelectableAbility {
         ParticleUtil.spawnCircleParticles(serverLevel, DUST_GOLD, caster.position().add(0, 0.1, 0), 0.7, 16);
         ParticleUtil.spawnSphereParticles(serverLevel, DUST_PALE, caster.position().add(0, 1, 0), 0.8, 12);
 
-        AbilityUtil.sendActionBar(caster, Component.literal("§6⚖ §eNext strike §fwill §eFlog §6⚖"));
+        AbilityUtil.sendActionBar(caster, Component.translatableWithFallback("lotmcraft.text.next_strike_will_flog", "§6⚖ §eNext strike §fwill §eFlog §6⚖"));
 
         if (caster instanceof ServerPlayer sp) {
             sp.sendSystemMessage(Component.translatable("ability.lotmcraft.justice_language.flog_prepared")
@@ -273,6 +273,6 @@ public class JusticeLanguageAbility extends SelectableAbility {
             ParticleUtil.spawnParticles(serverLevel, DUST_RED, target.position().add(0, 1, 0), 6, 0.4);
         }, serverLevel, () -> target.isAlive());
 
-        AbilityUtil.sendActionBar(attacker, Component.literal("§6⚖ §eFlog §fapplied §6⚖"));
+        AbilityUtil.sendActionBar(attacker, Component.translatableWithFallback("lotmcraft.text.flog_applied", "§6⚖ §eFlog §fapplied §6⚖"));
     }
 }

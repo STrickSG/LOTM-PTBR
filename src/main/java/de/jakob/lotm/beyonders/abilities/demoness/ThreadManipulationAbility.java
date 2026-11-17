@@ -221,7 +221,7 @@ public class ThreadManipulationAbility extends SelectableAbility {
         boolean alreadyBound = targetEntity != null && boundEntities.contains(targetEntity.getUUID());
         if(targetEntity == null || alreadyBound) {
             if(alreadyBound && entity instanceof ServerPlayer player) {
-                ClientboundSetActionBarTextPacket packet = new ClientboundSetActionBarTextPacket(Component.literal("Entity is already bound by your threads.").withColor(0xFFaa42f5));
+                ClientboundSetActionBarTextPacket packet = new ClientboundSetActionBarTextPacket(Component.translatableWithFallback("lotmcraft.text.entity_is_already_bound_by_your", "Entity is already bound by your threads.").withColor(0xFFaa42f5));
                 player.connection.send(packet);
             }
             for(Vec3 anchor : anchors) {

@@ -17,6 +17,7 @@ import net.neoforged.neoforge.event.ServerChatEvent;
 import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
+import de.jakob.lotm.util.LotmText;
 
 @EventBusSubscriber(modid = LOTMCraft.MOD_ID)
 public class ContractAssignmentHandler {
@@ -29,17 +30,17 @@ public class ContractAssignmentHandler {
         String role;
         if (preview.getPartyA() == null) {
             preview.setPartyAName(target.getName().getString());
-            role = "Party A";
+            role = LotmText.t("lotmcraft.text.party_a", "Party A");
         } else {
             preview.setPartyBName(target.getName().getString());
-            role = "Party B";
+            role = LotmText.t("lotmcraft.text.party_b", "Party B");
         }
         target.sendSystemMessage(Component.literal("══════════════════════════════").withColor(0xFFa3070c));
-        target.sendSystemMessage(Component.literal(caster.getName().getString() + " wants to bind you to a contract as " + role + ":").withColor(0xFFa3070c));
+        target.sendSystemMessage(Component.translatableWithFallback("lotmcraft.text.wants_to_bind_you_to_a", "%s wants to bind you to a contract as %s:", String.valueOf(caster.getName().getString()), String.valueOf(role)).withColor(0xFFa3070c));
         target.sendSystemMessage(Component.literal(preview.describe()).withColor(0xCCCCCC));
-        target.sendSystemMessage(Component.literal("Type 'I accept' or 'I decline'").withColor(0xFFa3070c));
+        target.sendSystemMessage(Component.translatableWithFallback("lotmcraft.text.type_i_accept_or_i_decline", "Type 'I accept' or 'I decline'").withColor(0xFFa3070c));
         target.sendSystemMessage(Component.literal("══════════════════════════════").withColor(0xFFa3070c));
-        AbilityUtil.sendActionBar(caster, Component.literal("Request sent to " + target.getName().getString() + ".").withColor(0xFFa3070c));
+        AbilityUtil.sendActionBar(caster, Component.translatableWithFallback("lotmcraft.text.request_sent_to", "Request sent to %s.", String.valueOf(target.getName().getString())).withColor(0xFFa3070c));
     }
 
     @SubscribeEvent(priority = EventPriority.HIGH, receiveCanceled = true)
@@ -56,13 +57,13 @@ public class ContractAssignmentHandler {
             event.setCanceled(true);
             pending.remove(target.getUUID());
             ServerPlayer caster = target.server.getPlayerList().getPlayer(req.casterUUID());
-            if (caster != null) AbilityUtil.sendActionBar(caster, Component.literal(target.getName().getString() + " declined.").withColor(0xFFff124d));
+            if (caster != null) AbilityUtil.sendActionBar(caster, Component.translatableWithFallback("lotmcraft.text.declined", "%s declined.", String.valueOf(target.getName().getString())).withColor(0xFFff124d));
         }
     }
     private static void resolveAccept(ServerPlayer target, PendingRequest req) {
         ServerPlayer caster = target.server.getPlayerList().getPlayer(req.casterUUID());
         if (caster == null) {
-            AbilityUtil.sendActionBar(target, Component.literal("The broker is no longer online.").withColor(0xFFff124d));
+            AbilityUtil.sendActionBar(target, Component.translatableWithFallback("lotmcraft.text.the_broker_is_no_longer_online", "The broker is no longer online.").withColor(0xFFff124d));
             return;
         }
         for (ItemStack stack : caster.getInventory().items) {
@@ -79,14 +80,14 @@ public class ContractAssignmentHandler {
             }
             if (data.hasBothParties()) {
                 ContractFinalizer.activate(data);
-                AbilityUtil.sendActionBar(caster, Component.literal("Contract formed.").withColor(0xFFa3070c));
-                AbilityUtil.sendActionBar(target, Component.literal("Contract formed.").withColor(0xFFa3070c));
+                AbilityUtil.sendActionBar(caster, Component.translatableWithFallback("lotmcraft.text.contract_formed", "Contract formed.").withColor(0xFFa3070c));
+                AbilityUtil.sendActionBar(target, Component.translatableWithFallback("lotmcraft.text.contract_formed", "Contract formed.").withColor(0xFFa3070c));
             }
-            else {AbilityUtil.sendActionBar(caster, Component.literal(target.getName().getString() + " has joined. One role remains.").withColor(0xFFa3070c));}
+            else {AbilityUtil.sendActionBar(caster, Component.translatableWithFallback("lotmcraft.text.has_joined_one_role_remains", "%s has joined. One role remains.", String.valueOf(target.getName().getString())).withColor(0xFFa3070c));}
             ContractItem.writeData(stack, data);
             return;
         }
-        AbilityUtil.sendActionBar(target, Component.literal("That contract could no longer be found.").withColor(0xFFa3070c));
+        AbilityUtil.sendActionBar(target, Component.translatableWithFallback("lotmcraft.text.that_contract_could_no_longer_be", "That contract could no longer be found.").withColor(0xFFa3070c));
     }
 
     public static void assignNpc(ServerPlayer caster, LivingEntity npc, UUID contractUUID) {
@@ -100,7 +101,7 @@ public class ContractAssignmentHandler {
             NpcContractHandler.sign(caster, npc, stack, data);
             return;
         }
-        AbilityUtil.sendActionBar(caster, Component.literal("That contract could no longer be found.").withColor(0xFFa3070c));
+        AbilityUtil.sendActionBar(caster, Component.translatableWithFallback("lotmcraft.text.that_contract_could_no_longer_be", "That contract could no longer be found.").withColor(0xFFa3070c));
     }
 
 }

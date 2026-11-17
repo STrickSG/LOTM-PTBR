@@ -19,6 +19,7 @@ import net.minecraft.world.entity.player.Inventory;
 
 import java.util.List;
 import java.util.Random;
+import de.jakob.lotm.util.LotmText;
 
 public class HonorificNamesScreen extends AbstractContainerScreen<HonorificNamesMenu> {
 
@@ -112,7 +113,7 @@ public class HonorificNamesScreen extends AbstractContainerScreen<HonorificNames
         if (menu.getSequence() < 4) {
             this.addRenderableWidget(new MysticButton(
                     leftPos + W - PADDING - 80, topPos + TITLE_H + OWN_NAME_H - 20, 80, 16,
-                    Component.literal("Set Name"),
+                    Component.translatableWithFallback("lotmcraft.text.set_name", "Set Name"),
                     btn -> Minecraft.getInstance().setScreen(
                             new SetHonorificNameScreen(menu.getPathway(), menu.getSequence()))));
         }
@@ -130,12 +131,12 @@ public class HonorificNamesScreen extends AbstractContainerScreen<HonorificNames
 
             this.addRenderableWidget(new MysticButton(
                     leftPos + PADDING + 8, entryY + 22, 108, 16,
-                    Component.literal("Send Message"),
+                    Component.translatableWithFallback("lotmcraft.text.send_message", "Send Message"),
                     btn -> respondToPrayer(btnIdx, false)));
 
             this.addRenderableWidget(new MysticButton(
                     leftPos + PADDING + 8 + 112, entryY + 22, 108, 16,
-                    Component.literal("Teleport"),
+                    Component.translatableWithFallback("lotmcraft.text.teleport", "Teleport"),
                     btn -> respondToPrayer(btnIdx, true)));
         }
 
@@ -299,7 +300,7 @@ public class HonorificNamesScreen extends AbstractContainerScreen<HonorificNames
     }
 
     private void renderTitle(GuiGraphics gfx) {
-        String titleStr = "Honorific Name";
+        String titleStr = LotmText.t("lotmcraft.text.honorific_name", "Honorific Name");
         int cx = (W - font.width(titleStr)) / 2;
         for (int i = 0; i < titleStr.length(); i++) {
             String ch = String.valueOf(titleStr.charAt(i));
@@ -313,17 +314,17 @@ public class HonorificNamesScreen extends AbstractContainerScreen<HonorificNames
 
     private void renderOwnNameSection(GuiGraphics gfx) {
         int sectionY = TITLE_H + 6;
-        gfx.drawString(font, "Your Honorific Name:", PADDING, sectionY, COL_LABEL, false);
+        gfx.drawString(font, LotmText.t("lotmcraft.text.your_honorific_name", "Your Honorific Name:"), PADDING, sectionY, COL_LABEL, false);
 
         HonorificName name = menu.getOwnName();
         if (name.isEmpty()) {
-            String hint = "Not set \u2014 click \"Set Name\" to set it";
+            String hint = LotmText.t("lotmcraft.text.not_set_click_set_name_to", "Not set — click \"Set Name\" to set it");
             gfx.drawString(font, hint, PADDING + 2, sectionY + 14, 0xFF7C7CA8, false);
         } else {
             int lineY = sectionY + 14;
             List<String> lines = name.lines();
             for (int i = 0; i < lines.size(); i++) {
-                String lineLabel = "  Line " + (i + 1) + ":  ";
+                String lineLabel = LotmText.f("lotmcraft.text.line", "  Line %s:  ", (i + 1));
                 gfx.drawString(font, lineLabel, PADDING + 2, lineY, 0xFF8070B8, false);
                 gfx.drawString(font, lines.get(i), PADDING + 2 + font.width(lineLabel), lineY, COL_TEXT, true);
                 lineY += 11;
@@ -339,12 +340,12 @@ public class HonorificNamesScreen extends AbstractContainerScreen<HonorificNames
 
     private void renderPendingPrayersSection(GuiGraphics gfx) {
         int sectionLabelY = TITLE_H + OWN_NAME_H + DIVIDER_H;
-        gfx.drawString(font, "Pending Prayers:", PADDING, sectionLabelY, COL_LABEL, false);
+        gfx.drawString(font, LotmText.t("lotmcraft.text.pending_prayers", "Pending Prayers:"), PADDING, sectionLabelY, COL_LABEL, false);
 
         List<PendingPrayer> prayers = menu.getPendingPrayers();
 
         if (prayers.isEmpty()) {
-            String msg = "No prayers...";
+            String msg = LotmText.t("lotmcraft.text.no_prayers", "No prayers...");
             float breathe = (float) (Math.sin(time * 0.06f) * 0.5 + 0.5);
             int col = lerpColor(0xFF4A4A72, 0xFF8A82C0, breathe);
             gfx.drawString(font, msg, (W - font.width(msg)) / 2, sectionLabelY + 40, col, false);
@@ -361,8 +362,7 @@ public class HonorificNamesScreen extends AbstractContainerScreen<HonorificNames
             PendingPrayer prayer = prayers.get(idx);
             int entryRelY = listTop + i * PRAYER_ENTRY_H;
 
-            String nameLine = prayer.senderName()
-                    + "  [" + prayer.senderPathway() + " / Seq " + prayer.senderSequence() + "]";
+            String nameLine = LotmText.f("lotmcraft.text.seq", "%s  [%s / Seq %s]", prayer.senderName(), prayer.senderPathway(), prayer.senderSequence());
             nameLine = font.plainSubstrByWidth(nameLine, CARD_W - 16);
             gfx.drawString(font, nameLine, PADDING + 8, entryRelY + 2, COL_GOLD, true);
 

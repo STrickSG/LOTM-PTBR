@@ -91,11 +91,11 @@ public class ChainOfCommandAbility extends SelectableAbility {
         AtomicBoolean done = new AtomicBoolean(false);
         if(!CohortUtil.isAlleviation(player)) {
             CohortUtil.setAlleviation(player, true);
-            player.sendSystemMessage(Component.literal("Damage Alleviation has been activated").withStyle(ChatFormatting.GREEN));
+            player.sendSystemMessage(Component.translatableWithFallback("lotmcraft.text.damage_alleviation_has_been_activated", "Damage Alleviation has been activated").withStyle(ChatFormatting.GREEN));
             done.set(false);
         } else {
             CohortUtil.setAlleviation(player, false);
-            player.sendSystemMessage(Component.literal("Damage Alleviation has been deactivated").withStyle(ChatFormatting.RED));
+            player.sendSystemMessage(Component.translatableWithFallback("lotmcraft.text.damage_alleviation_has_been_deactivated", "Damage Alleviation has been deactivated").withStyle(ChatFormatting.RED));
             done.set(true);
         }
 
@@ -117,12 +117,12 @@ public class ChainOfCommandAbility extends SelectableAbility {
         AtomicBoolean done = new AtomicBoolean(false);
         if(!CohortUtil.isFocus(player)) {
             CohortUtil.setFocus(player, true);
-            player.sendSystemMessage(Component.literal("Damage Focus has been activated").withStyle(ChatFormatting.GREEN));
+            player.sendSystemMessage(Component.translatableWithFallback("lotmcraft.text.damage_focus_has_been_activated", "Damage Focus has been activated").withStyle(ChatFormatting.GREEN));
             done.set(false);
 
         } else {
             CohortUtil.setFocus(player, false);
-            player.sendSystemMessage(Component.literal("Damage Focus has been deactivated").withStyle(ChatFormatting.RED));
+            player.sendSystemMessage(Component.translatableWithFallback("lotmcraft.text.damage_focus_has_been_deactivated", "Damage Focus has been deactivated").withStyle(ChatFormatting.RED));
             done.set(true);
         }
 
@@ -167,7 +167,7 @@ public class ChainOfCommandAbility extends SelectableAbility {
             TeamComponent team = player.getData(ModAttachments.TEAM_COMPONENT.get());
             if(!CohortUtil.getALlPlayers(player).isEmpty()) {
                 if (!team.leaderUUID().equals(player.getStringUUID())) {
-                    player.sendSystemMessage(Component.literal("you are not the leader of this team").withStyle(ChatFormatting.RED));
+                    player.sendSystemMessage(Component.translatableWithFallback("lotmcraft.text.you_are_not_the_leader_of", "you are not the leader of this team").withStyle(ChatFormatting.RED));
                     return;
                 }
             }
@@ -250,22 +250,22 @@ public static void onAttacking(LivingIncomingDamageEvent event) {
         TeamComponent team = player.getData(ModAttachments.TEAM_COMPONENT.get());
         if(both) {
             if (CohortUtil.getALlPlayers(player).isEmpty()) {
-                player.sendSystemMessage(Component.literal("You are not a part of a Red Priest Team").withStyle(ChatFormatting.RED));
+                player.sendSystemMessage(Component.translatableWithFallback("lotmcraft.text.you_are_not_a_part_of_2", "You are not a part of a Red Priest Team").withStyle(ChatFormatting.RED));
                 AbilityUtil.refund(player, this);
                 return true;
             }
             if (!team.leaderUUID().equals(player.getStringUUID())) {
-                player.sendSystemMessage(Component.literal("you are not the leader of this team").withStyle(ChatFormatting.RED));
+                player.sendSystemMessage(Component.translatableWithFallback("lotmcraft.text.you_are_not_the_leader_of", "you are not the leader of this team").withStyle(ChatFormatting.RED));
                 AbilityUtil.refund(player, this);
                 return true;
             }
         } else {
             if (CohortUtil.getAllMembers(player).isEmpty()) {
-                player.sendSystemMessage(Component.literal("You are not a part of a Red Priest Cohort").withStyle(ChatFormatting.RED));
+                player.sendSystemMessage(Component.translatableWithFallback("lotmcraft.text.you_are_not_a_part_of", "You are not a part of a Red Priest Cohort").withStyle(ChatFormatting.RED));
                 AbilityUtil.refund(player, this);
                 return true;
             } else if (!CohortUtil.getALlPlayers(player).isEmpty() && !team.leaderUUID().equals(player.getStringUUID())) {
-                player.sendSystemMessage(Component.literal("you are not the leader of this team").withStyle(ChatFormatting.RED));
+                player.sendSystemMessage(Component.translatableWithFallback("lotmcraft.text.you_are_not_the_leader_of", "you are not the leader of this team").withStyle(ChatFormatting.RED));
                 AbilityUtil.refund(player, this);
                 return true;
             }

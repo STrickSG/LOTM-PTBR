@@ -246,8 +246,8 @@ public class DeathDivineKingdomEntity extends Entity {
 
                 if (target instanceof ServerPlayer targetPlayer) {
                     Component msg = newCount > 0
-                            ? Component.literal("☠ Divine Kingdom: " + newCount + "s ☠").withColor(0xFF334f23)
-                            : Component.literal("☠ Divine Kingdom: 0s ☠").withColor(0xFF334f23);
+                            ? Component.translatableWithFallback("lotmcraft.text.divine_kingdom_s", "☠ Divine Kingdom: %ss ☠", String.valueOf(newCount)).withColor(0xFF334f23)
+                            : Component.translatableWithFallback("lotmcraft.text.divine_kingdom_0s", "☠ Divine Kingdom: 0s ☠").withColor(0xFF334f23);
                     AbilityUtil.sendActionBar(targetPlayer, msg);
                 }
 

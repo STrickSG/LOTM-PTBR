@@ -19,6 +19,7 @@ import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nullable;
+import de.jakob.lotm.util.LotmText;
 
 public class SkinMaskItem extends Item {
 
@@ -46,17 +47,17 @@ public class SkinMaskItem extends Item {
     public @NotNull Component getName(@NotNull ItemStack stack) {
         String shape = getShape(stack);
         if (shape == null) return super.getName(stack);
-        if (shape.contains("beyonder_npc")) return Component.literal("Skin Mask: Beyonder NPC");
+        if (shape.contains("beyonder_npc")) return Component.translatableWithFallback("lotmcraft.text.skin_mask_beyonder_npc", "Skin Mask: Beyonder NPC");
         // Player masks.
         if (shape.startsWith("player:")) {
             String[] parts = shape.split(":");
-            return Component.literal("Skin Mask: " + (parts.length > 1 ? parts[1] : "Player"));
+            return Component.translatableWithFallback("lotmcraft.text.skin_mask", "Skin Mask: %s", String.valueOf((parts.length > 1 ? parts[1] : LotmText.t("lotmcraft.text.player", "Player"))));
         }
         // Regular entity masks.
         ResourceLocation id = ResourceLocation.tryParse(shape);
         if (id != null) {
             EntityType<?> type = BuiltInRegistries.ENTITY_TYPE.getOptional(id).orElse(null);
-            if (type != null) return Component.literal("Skin Mask: ").append(type.getDescription());
+            if (type != null) return Component.translatableWithFallback("lotmcraft.text.skin_mask_2", "Skin Mask: ").append(type.getDescription());
         }
         return super.getName(stack);
     }
@@ -71,7 +72,7 @@ public class SkinMaskItem extends Item {
         serverPlayer.getPersistentData().putBoolean(BloodlineSkinshifterAbility.MASK_FORM_TAG, true);
         serverPlayer.getPersistentData().putBoolean(BloodlineSkinshifterAbility.MASK_UPGRADED_TAG, isUpgraded(stack));
         serverPlayer.getPersistentData().putFloat(BloodlineSkinshifterAbility.MASK_DAMAGE_TAG, 0f);
-        serverPlayer.displayClientMessage(Component.literal("You put on the skin mask."), true);
+        serverPlayer.displayClientMessage(Component.translatableWithFallback("lotmcraft.text.you_put_on_the_skin_mask", "You put on the skin mask."), true);
         // One-time use
         if (!serverPlayer.getAbilities().instabuild) {
             stack.shrink(1);

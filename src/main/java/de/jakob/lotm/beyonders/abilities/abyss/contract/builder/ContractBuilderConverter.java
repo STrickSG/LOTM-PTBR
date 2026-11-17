@@ -9,17 +9,18 @@ import net.minecraft.server.level.ServerPlayer;
 
 import java.util.List;
 import java.util.UUID;
+import de.jakob.lotm.util.LotmText;
 
 public class ContractBuilderConverter {
 
     public static void submit(ServerPlayer caster, List<BuilderToken> tokens, int signMode) {
         if (tokens.isEmpty()) {
-            AbilityUtil.sendActionBar(caster, Component.literal("The contract is empty.").withColor(0xFFff124d));
+            AbilityUtil.sendActionBar(caster, Component.translatableWithFallback("lotmcraft.text.the_contract_is_empty", "The contract is empty.").withColor(0xFFff124d));
             return;
         }
         Result result = match(tokens);
         if (result == null) {
-            AbilityUtil.sendActionBar(caster, Component.literal("The Abyss cannot find any shape in this.").withColor(0xFFff124d));
+            AbilityUtil.sendActionBar(caster, Component.translatableWithFallback("lotmcraft.text.the_abyss_cannot_find_any_shape", "The Abyss cannot find any shape in this.").withColor(0xFFff124d));
             return;
         }
         ContractData data = result.data;
@@ -36,7 +37,7 @@ public class ContractBuilderConverter {
 
         if (data.hasBothParties()) {
             if (!ContractFinalizer.activate(data)) {
-                AbilityUtil.sendActionBar(caster, Component.literal("The contract could not be formed.").withColor(0xFF124D));
+                AbilityUtil.sendActionBar(caster, Component.translatableWithFallback("lotmcraft.text.the_contract_could_not_be_formed", "The contract could not be formed.").withColor(0xFF124D));
                 return;
             }
         }
@@ -44,7 +45,7 @@ public class ContractBuilderConverter {
         if (!caster.getInventory().add(contractItem)) {
             caster.drop(contractItem, false);
         }
-        AbilityUtil.sendActionBar(caster, Component.literal(data.hasBothParties() ? "Contract formed." : "Contract created — right-click players to assign the open roles.").withColor(0x9932cc)
+        AbilityUtil.sendActionBar(caster, Component.literal(data.hasBothParties() ? LotmText.t("lotmcraft.text.contract_formed", "Contract formed.") : LotmText.t("lotmcraft.text.contract_created_right_click_players_to", "Contract created — right-click players to assign the open roles.")).withColor(0x9932cc)
         );
     }
     static Result match(List<BuilderToken> t) {

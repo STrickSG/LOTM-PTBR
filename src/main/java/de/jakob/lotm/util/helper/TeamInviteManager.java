@@ -22,19 +22,19 @@ public class TeamInviteManager {
         Minecraft mc = Minecraft.getInstance();
         if (mc.player == null) return;
 
-        Component acceptButton = Component.literal("[Accept]")
+        Component acceptButton = Component.translatableWithFallback("lotmcraft.text.accept_2", "[Accept]")
                 .withStyle(style -> style
                         .withColor(0x4CAF50)
                         .withClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND,
                                 "/lotm_accept_team " + leaderUUID)));
 
-        Component declineButton = Component.literal("[Decline]")
+        Component declineButton = Component.translatableWithFallback("lotmcraft.text.decline_2", "[Decline]")
                 .withStyle(style -> style
                         .withColor(0xF44336)
                         .withClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND,
                                 "/lotm_decline_team " + leaderUUID)));
 
-        Component message = Component.literal(leaderName + " has invited you to their team. ")
+        Component message = Component.translatableWithFallback("lotmcraft.text.has_invited_you_to_their_team", "%s has invited you to their team. ", String.valueOf(leaderName))
                 .append(acceptButton)
                 .append(Component.literal(" "))
                 .append(declineButton);

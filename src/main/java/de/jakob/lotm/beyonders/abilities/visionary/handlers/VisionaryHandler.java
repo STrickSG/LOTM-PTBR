@@ -14,6 +14,7 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.LivingEntity;
 
 import javax.annotation.Nullable;
+import de.jakob.lotm.util.LotmText;
 
 public class VisionaryHandler {
 
@@ -60,7 +61,7 @@ public class VisionaryHandler {
         if(target instanceof ServerPlayer targetPlayer && caster instanceof ServerPlayer entityPlayer){
             if(!(BeyonderData.getPathway(entityPlayer).equals("visionary") && seq < seqTarget)) {
                 if (skill != null)
-                    MetaAwarenessAbility.sendWithMessage(entityPlayer, targetPlayer, "Tried to use: " + skill.getId());
+                    MetaAwarenessAbility.sendWithMessage(entityPlayer, targetPlayer, LotmText.f("lotmcraft.text.tried_to_use", "Tried to use: %s", skill.getId()));
                 else
                     MetaAwarenessAbility.onDivined(entityPlayer, targetPlayer);
             }
@@ -92,7 +93,7 @@ public class VisionaryHandler {
         if(target instanceof ServerPlayer targetPlayer && caster instanceof ServerPlayer entityPlayer){
             if(!(BeyonderData.getPathway(entityPlayer).equals("visionary") && seq < seqTarget)) {
                 if (skill != null)
-                    MetaAwarenessAbility.sendWithMessage(entityPlayer, targetPlayer, "Tried to use: " + skill.getId());
+                    MetaAwarenessAbility.sendWithMessage(entityPlayer, targetPlayer, LotmText.f("lotmcraft.text.tried_to_use", "Tried to use: %s", skill.getId()));
                 else
                     MetaAwarenessAbility.onDivined(entityPlayer, targetPlayer);
             }

@@ -18,6 +18,7 @@ import net.neoforged.fml.common.EventBusSubscriber;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
+import de.jakob.lotm.util.LotmText;
 
 @EventBusSubscriber(modid = LOTMCraft.MOD_ID)
 public class SpiritualityTideAbility extends SelectableAbility {
@@ -55,19 +56,19 @@ public class SpiritualityTideAbility extends SelectableAbility {
         if (abilityIndex == 2) {
             darkness = 0;
             darknessOwner = player.getUUID();
-            AbilityUtil.sendActionBar(player, Component.literal("The tide returns.").withColor(0xFF3300b5));
+            AbilityUtil.sendActionBar(player, Component.translatableWithFallback("lotmcraft.text.the_tide_returns", "The tide returns.").withColor(0xFF3300b5));
             return;
         }
         int want = abilityIndex == 0 ? -1 : 1;
         if (darkness == want && player.getUUID().equals(darknessOwner)) {
             darkness = 0;
             darknessOwner = null;
-            AbilityUtil.sendActionBar(player, Component.literal("The tide stills.").withColor(0xFF3300b5));
+            AbilityUtil.sendActionBar(player, Component.translatableWithFallback("lotmcraft.text.the_tide_stills", "The tide stills.").withColor(0xFF3300b5));
             return;
         }
         darkness = want;
         darknessOwner = player.getUUID();
-        AbilityUtil.sendActionBar(player, Component.literal(want < 0 ? "The tide is held back." : "The tide runs faster.").withColor(0xFF3300b5));
+        AbilityUtil.sendActionBar(player, Component.literal(want < 0 ? LotmText.t("lotmcraft.text.the_tide_is_held_back", "The tide is held back.") : LotmText.t("lotmcraft.text.the_tide_runs_faster", "The tide runs faster.")).withColor(0xFF3300b5));
     }
 
     public static int tide() {
@@ -89,7 +90,7 @@ public class SpiritualityTideAbility extends SelectableAbility {
         if (ability.spiritualityCost(BeyonderData.getSequence(entity)) <= 0) return;
         event.setCanceled(true);
         if (entity instanceof ServerPlayer player) {
-            AbilityUtil.sendActionBar(player, Component.literal("Spirituality no longer drips into the world.").withColor(0xFF3300b5));
+            AbilityUtil.sendActionBar(player, Component.translatableWithFallback("lotmcraft.text.spirituality_no_longer_drips_into_the", "Spirituality no longer drips into the world.").withColor(0xFF3300b5));
         }
     }
 

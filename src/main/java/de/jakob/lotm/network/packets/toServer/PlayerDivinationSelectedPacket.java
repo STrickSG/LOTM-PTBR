@@ -82,7 +82,7 @@ public record PlayerDivinationSelectedPacket(UUID selectedPlayerUuid, PlayerSele
                 .getPlayer(packet.selectedPlayerUuid);
 
         if(targetPlayer == null){
-            player.sendSystemMessage(Component.literal("§cPlayer not found"));
+            player.sendSystemMessage(Component.translatableWithFallback("lotmcraft.text.player_not_found", "§cPlayer not found"));
             return;
         }
 
@@ -95,7 +95,7 @@ public record PlayerDivinationSelectedPacket(UUID selectedPlayerUuid, PlayerSele
         }
 
         if (!(player.level().dimension() == targetPlayer.level().dimension())) {
-            player.sendSystemMessage(Component.literal("§cPlayer not found"));
+            player.sendSystemMessage(Component.translatableWithFallback("lotmcraft.text.player_not_found", "§cPlayer not found"));
             return;
         }
 
@@ -128,7 +128,7 @@ public record PlayerDivinationSelectedPacket(UUID selectedPlayerUuid, PlayerSele
         }
 
         if (ConcealmentAuthorityAbility.undivinable(targetPlayer)) {
-            player.sendSystemMessage(Component.literal("§cDivination failed"));
+            player.sendSystemMessage(Component.translatableWithFallback("lotmcraft.text.divination_failed", "§cDivination failed"));
             return;
         }
 
@@ -143,7 +143,7 @@ public record PlayerDivinationSelectedPacket(UUID selectedPlayerUuid, PlayerSele
         if (de.jakob.lotm.beyonders.abilities.error.handler.DeceitHandler.handleDivination(player, targetPlayer)) return;
 
         if (targetPlayer == null || !(player.level().dimension() == targetPlayer.level().dimension())) {
-            player.sendSystemMessage(Component.literal("§cPlayer not found"));
+            player.sendSystemMessage(Component.translatableWithFallback("lotmcraft.text.player_not_found", "§cPlayer not found"));
             return;
         }
 
@@ -152,7 +152,7 @@ public record PlayerDivinationSelectedPacket(UUID selectedPlayerUuid, PlayerSele
 
         int divinationDifference = 3 + DivinationUtil.getDivinationPower(player) - DivinationUtil.getConcealmentPower(targetPlayer);
         if (divinationDifference <= 0){
-            player.sendSystemMessage(Component.literal("§cDivination failed"));
+            player.sendSystemMessage(Component.translatableWithFallback("lotmcraft.text.divination_failed", "§cDivination failed"));
             if(playerSequence < 4 && targetSequence > 3){
                 player.addEffect(new MobEffectInstance(ModEffects.LOOSING_CONTROL, 200, 2));
             }
@@ -178,13 +178,13 @@ public record PlayerDivinationSelectedPacket(UUID selectedPlayerUuid, PlayerSele
             };
 
         if (distance >= maxDistance) {
-            player.sendSystemMessage(Component.literal("§cPlayer is very far from you"));
+            player.sendSystemMessage(Component.translatableWithFallback("lotmcraft.text.player_is_very_far_from_you", "§cPlayer is very far from you"));
             return;
         }
 
         if (divinationDifference < 4){
             if(playerSequence < 4 && targetSequence > 3){
-                player.sendSystemMessage(Component.literal("§cDivination failed"));
+                player.sendSystemMessage(Component.translatableWithFallback("lotmcraft.text.divination_failed", "§cDivination failed"));
                 return;
             }
             player.sendSystemMessage(Component.literal(String.format(

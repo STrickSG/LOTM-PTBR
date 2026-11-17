@@ -29,18 +29,18 @@ public class DisableAbilityCommand {
                         Ability ability = abilityHandler.getById(abilityId);
 
                         if (ability == null) {
-                            source.sendFailure(Component.literal("Ability not found: " + abilityId));
+                            source.sendFailure(Component.translatableWithFallback("lotmcraft.text.ability_not_found", "Ability not found: %s", String.valueOf(abilityId)));
                             return 0;
                         }
 
                         if(abilityHandler.isDisabled(ability)) {
-                            source.sendFailure(Component.literal("Ability is already disabled: " + abilityId));
+                            source.sendFailure(Component.translatableWithFallback("lotmcraft.text.ability_is_already_disabled", "Ability is already disabled: %s", String.valueOf(abilityId)));
                             return 0;
                         }
 
                         abilityHandler.disableAbility(ability);
 
-                        source.sendSuccess(() -> Component.literal("Disabled ability: " + abilityId), true);
+                        source.sendSuccess(() -> Component.translatableWithFallback("lotmcraft.text.disabled_ability", "Disabled ability: %s", String.valueOf(abilityId)), true);
                         return 1; // Success
                     })
             )
@@ -51,7 +51,7 @@ public class DisableAbilityCommand {
         try {
             // Validate pathway exists in the list
             if (!BeyonderData.pathways.contains(pathway)) {
-                source.sendFailure(Component.literal("Invalid pathway: " + pathway));
+                source.sendFailure(Component.translatableWithFallback("lotmcraft.text.invalid_pathway", "Invalid pathway: %s", String.valueOf(pathway)));
                 return 0;
             }
             
@@ -66,8 +66,7 @@ public class DisableAbilityCommand {
 
                     if (data.sequence() != sequence || (!data.pathway().equals(pathway)
                             && !data.pathway().equals("none"))) {
-                        source.sendFailure(Component.literal(
-                                "Failed to advance due to insufficient amount of characteristics"));
+                        source.sendFailure(Component.translatableWithFallback("lotmcraft.text.failed_to_advance_due_to_insufficient", "Failed to advance due to insufficient amount of characteristics"));
                         return 0;
                     }
                 }
@@ -75,11 +74,11 @@ public class DisableAbilityCommand {
 
             // Send success message
             String targetName = target instanceof Player player ? player.getGameProfile().getName() : target.getDisplayName().getString();
-            source.sendSuccess(() -> Component.literal("Set " + targetName + " to " + pathway + " sequence " + sequence), true);
+            source.sendSuccess(() -> Component.translatableWithFallback("lotmcraft.text.set_to_sequence", "Set %s to %s sequence %s", String.valueOf(targetName), String.valueOf(pathway), String.valueOf(sequence)), true);
             
             return 1; // Success
         } catch (Exception e) {
-            source.sendFailure(Component.literal("Failed to set beyonder data: " + e.getMessage()));
+            source.sendFailure(Component.translatableWithFallback("lotmcraft.text.failed_to_set_beyonder_data", "Failed to set beyonder data: %s", String.valueOf(e.getMessage())));
             return 0;
         }
     }

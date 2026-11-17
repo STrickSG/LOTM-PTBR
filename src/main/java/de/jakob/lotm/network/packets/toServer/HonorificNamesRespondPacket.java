@@ -11,6 +11,7 @@ import net.minecraft.server.level.ServerPlayer;
 import net.neoforged.neoforge.network.handling.IPayloadContext;
 
 import java.util.UUID;
+import de.jakob.lotm.util.LotmText;
 
 /**
  * Sent by the client when the player responds to a pending prayer from the Honorific Names menu.
@@ -70,7 +71,7 @@ public record HonorificNamesRespondPacket(UUID senderUUID, boolean teleport) imp
                 // Queue message transfer: target's next chat message goes to sender
                 HonorificNamesEventHandler.isInTransferring.put(targetUUID, senderUUID);
                 target.sendSystemMessage(
-                        net.minecraft.network.chat.Component.literal("Your next message will be sent to " + sender.getName().getString() + ".")
+                        net.minecraft.network.chat.Component.literal(LotmText.f("lotmcraft.text.your_next_message_will_be_sent", "Your next message will be sent to %s.", sender.getName().getString()))
                                 .withStyle(net.minecraft.ChatFormatting.GREEN)
                 );
             }

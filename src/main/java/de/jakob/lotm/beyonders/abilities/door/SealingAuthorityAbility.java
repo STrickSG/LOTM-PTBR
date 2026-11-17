@@ -146,7 +146,7 @@ public class SealingAuthorityAbility extends SelectableAbility {
 
         ServerLevel serverLevel = (ServerLevel) level;
         if (NightmareAbility.occupies(serverLevel)) {
-            AbilityUtil.sendActionBar(entity, Component.literal("You cant seal a nightmare.").withColor(BeyonderData.pathwayInfos.get("door").color()));
+            AbilityUtil.sendActionBar(entity, Component.translatableWithFallback("lotmcraft.text.you_cant_seal_a_nightmare", "You cant seal a nightmare.").withColor(BeyonderData.pathwayInfos.get("door").color()));
             return;
         }
 

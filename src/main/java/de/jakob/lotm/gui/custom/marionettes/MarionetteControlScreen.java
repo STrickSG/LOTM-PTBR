@@ -29,6 +29,7 @@ import net.neoforged.neoforge.network.PacketDistributor;
 
 import java.util.List;
 import java.util.UUID;
+import de.jakob.lotm.util.LotmText;
 
 public class MarionetteControlScreen extends AbstractContainerScreen<MarionetteMenu> {
 
@@ -333,10 +334,10 @@ public class MarionetteControlScreen extends AbstractContainerScreen<MarionetteM
                 guiGraphics.drawString(font, displayName, left + 6, top + 5, 0xFFFFFF, false);
 
                 if (servant) {
-                    String line = isBeyonder ? niceName(pathway) + "  \u00B7  Seq " + sequence + "   " + servantDetail : servantDetail;
+                    String line = isBeyonder ? LotmText.f("lotmcraft.text.seq_3", "%s  ·  Seq %s   %s", niceName(pathway), sequence, servantDetail) : servantDetail;
                     guiGraphics.drawString(font, line, left + 6, top + 17, 0x9A9AA5, false);
                 } else if (isBeyonder) {
-                    String pathwayLine = niceName(pathway) + "  \u00B7  Seq " + sequence;
+                    String pathwayLine = LotmText.f("lotmcraft.text.seq_4", "%s  ·  Seq %s", niceName(pathway), sequence);
                     guiGraphics.drawString(font, pathwayLine, left + 6, top + 17, 0x9A9AA5, false);
                 }
 

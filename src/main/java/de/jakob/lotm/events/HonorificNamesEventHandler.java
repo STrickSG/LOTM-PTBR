@@ -174,13 +174,13 @@ public class HonorificNamesEventHandler {
                         BeyonderData.getSequence(sender),
                                 (int) sender.getX(), (int) sender.getY(), (int) sender.getZ())
                         .withStyle(ChatFormatting.GREEN))
-                .append(Component.literal("\n→ Open your ")
+                .append(Component.translatableWithFallback("lotmcraft.text.open_your", "\n→ Open your ")
                         .withStyle(ChatFormatting.DARK_GREEN))
-                .append(Component.literal("Honorific Names menu")
+                .append(Component.translatableWithFallback("lotmcraft.text.honorific_names_menu", "Honorific Names menu")
                         .withStyle(style -> style
                                 .withColor(ChatFormatting.GOLD)
                                 .withBold(true)))
-                .append(Component.literal(" in the Introspect screen to respond.")
+                .append(Component.translatableWithFallback("lotmcraft.text.in_the_introspect_screen_to_respond", " in the Introspect screen to respond.")
                         .withStyle(ChatFormatting.DARK_GREEN));
     }
 

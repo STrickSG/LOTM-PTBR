@@ -29,17 +29,17 @@ public class CharacteristicsStackCommand {
 
                                                     if (!(targetEntity instanceof LivingEntity livingEntity)
                                                             || !(BeyonderData.isBeyonder(livingEntity))) {
-                                                        source.sendFailure(Component.literal("Target must be a living beyonder entity!"));
+                                                        source.sendFailure(Component.translatableWithFallback("lotmcraft.text.target_must_be_a_living_beyonder", "Target must be a living beyonder entity!"));
                                                         return 0;
                                                     }
 
                                                     if(seq >= LOTMCraft.NON_BEYONDER_SEQ || seq < 1){
-                                                        source.sendFailure(Component.literal("Invalid sequence!"));
+                                                        source.sendFailure(Component.translatableWithFallback("lotmcraft.text.invalid_sequence", "Invalid sequence!"));
                                                         return 0;
                                                     }
 
                                                     if(stack < 0){
-                                                        source.sendFailure(Component.literal("Invalid stack value!"));
+                                                        source.sendFailure(Component.translatableWithFallback("lotmcraft.text.invalid_stack_value", "Invalid stack value!"));
                                                         return 0;
                                                     }
 
@@ -64,12 +64,12 @@ public class CharacteristicsStackCommand {
 
                             if (!(targetEntity instanceof LivingEntity livingEntity)
                                     || !(BeyonderData.isBeyonder(livingEntity))) {
-                                source.sendFailure(Component.literal("Target must be a living beyonder entity!"));
+                                source.sendFailure(Component.translatableWithFallback("lotmcraft.text.target_must_be_a_living_beyonder", "Target must be a living beyonder entity!"));
                                 return 0;
                             }
 
                             if(seq >= LOTMCraft.NON_BEYONDER_SEQ || seq < 1){
-                                source.sendFailure(Component.literal("Invalid sequence!"));
+                                source.sendFailure(Component.translatableWithFallback("lotmcraft.text.invalid_sequence", "Invalid sequence!"));
                                 return 0;
                             }
 
@@ -84,7 +84,7 @@ public class CharacteristicsStackCommand {
 
                                     if (!(targetEntity instanceof LivingEntity livingEntity)
                                             || !(BeyonderData.isBeyonder(livingEntity))) {
-                                        source.sendFailure(Component.literal("Target must be a living beyonder entity!"));
+                                        source.sendFailure(Component.translatableWithFallback("lotmcraft.text.target_must_be_a_living_beyonder", "Target must be a living beyonder entity!"));
                                         return 0;
                                     }
 
@@ -102,7 +102,7 @@ public class CharacteristicsStackCommand {
 
                                     if (!(targetEntity instanceof LivingEntity livingEntity)
                                             || !(BeyonderData.isBeyonder(livingEntity))) {
-                                        source.sendFailure(Component.literal("Target must be a living beyonder entity!"));
+                                        source.sendFailure(Component.translatableWithFallback("lotmcraft.text.target_must_be_a_living_beyonder", "Target must be a living beyonder entity!"));
                                         return 0;
                                     }
 
@@ -124,7 +124,7 @@ public class CharacteristicsStackCommand {
 
                             if (!(targetEntity instanceof LivingEntity livingEntity)
                                     || !(BeyonderData.isBeyonder(livingEntity))) {
-                                source.sendFailure(Component.literal("Target must be a living beyonder entity!"));
+                                source.sendFailure(Component.translatableWithFallback("lotmcraft.text.target_must_be_a_living_beyonder", "Target must be a living beyonder entity!"));
                                 return 0;
                             }
 

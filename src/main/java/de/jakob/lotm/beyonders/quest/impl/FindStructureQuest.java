@@ -14,6 +14,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.levelgen.structure.Structure;
 
 import java.util.*;
+import de.jakob.lotm.util.LotmText;
 
 public class FindStructureQuest extends Quest {
 
@@ -35,7 +36,7 @@ public class FindStructureQuest extends Quest {
     @Override
     public void startQuest(ServerPlayer player) {
         String target = selectNewTargetStructure(player);
-        player.sendSystemMessage(Component.literal("Target structure selected: " + toDisplayName(target)));
+        player.sendSystemMessage(Component.translatableWithFallback("lotmcraft.text.target_structure_selected", "Target structure selected: %s", String.valueOf(toDisplayName(target))));
     }
 
     @Override
@@ -67,7 +68,7 @@ public class FindStructureQuest extends Quest {
         }
 
         return Component.translatable("lotm.quest.impl." + id + ".description")
-                .append(" Target: " + toDisplayName(targetStructure));
+                .append(LotmText.f("lotmcraft.text.target", " Target: %s", toDisplayName(targetStructure)));
     }
 
 

@@ -8,6 +8,7 @@ import net.minecraft.network.FriendlyByteBuf;
 
 import java.util.LinkedList;
 import java.util.List;
+import de.jakob.lotm.util.LotmText;
 
 public record HonorificName(LinkedList<String> lines) {
     static public final String NBT_LINES = "honorific_name_lines";
@@ -74,12 +75,8 @@ public record HonorificName(LinkedList<String> lines) {
 
     public String getAllInfo(){
         return !lines.isEmpty()?
-                ("\n  Line 1: " + lines.get(0)
-                + "\n  Line 2: " + lines.get(1)
-                + "\n  Line 3: " + lines.get(2)
-                + ((lines.size() >= 4) ? ("\n  Line 4: " + lines.get(3)) : "")
-                + ((lines.size() == 5) ? ("\n  Line 5: " + lines.get(4)) : ""))
-                : "None";
+                (LotmText.f("lotmcraft.text.line_1_line_2_line_3", "\n  Line 1: %s\n  Line 2: %s\n  Line 3: %s%s%s", lines.get(0), lines.get(1), lines.get(2), ((lines.size() >= 4) ? (LotmText.f("lotmcraft.text.line_4", "\n  Line 4: %s", lines.get(3))) : ""), ((lines.size() == 5) ? (LotmText.f("lotmcraft.text.line_5", "\n  Line 5: %s", lines.get(4))) : "")))
+                : LotmText.t("lotmcraft.text.none", "None");
     }
 
     public CompoundTag toNBT(){

@@ -37,6 +37,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Random;
+import de.jakob.lotm.util.LotmText;
 
 public class HelpBeyonderQuest extends Quest {
 
@@ -54,7 +55,7 @@ public class HelpBeyonderQuest extends Quest {
     @Override
     public void startQuest(ServerPlayer player) {
         spawnEnemies(player);
-        player.sendSystemMessage(net.minecraft.network.chat.Component.literal("Help fend off the enemy wave!"));
+        player.sendSystemMessage(net.minecraft.network.chat.Component.literal(LotmText.t("lotmcraft.text.help_fend_off_the_enemy_wave", "Help fend off the enemy wave!")));
     }
 
     @Override

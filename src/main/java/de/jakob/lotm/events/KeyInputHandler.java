@@ -403,14 +403,14 @@ public class KeyInputHandler {
 
         if (!de.jakob.lotm.util.helper.ClientTeamData.hasTeam()) {
             mc.player.displayClientMessage(
-                    Component.literal("You are not part of a Red Priest's team.").withStyle(ChatFormatting.RED), true);
+                    Component.translatableWithFallback("lotmcraft.text.you_are_not_part_of_a", "You are not part of a Red Priest's team.").withStyle(ChatFormatting.RED), true);
             return;
         }
 
         List<String> sharedAbilities = AbilityWheelClientData.getSharedWheelAbilities();
         if (sharedAbilities.isEmpty()) {
             mc.player.displayClientMessage(
-                    Component.literal("No abilities have been added to the shared wheel yet.").withStyle(ChatFormatting.YELLOW), true);
+                    Component.translatableWithFallback("lotmcraft.text.no_abilities_have_been_added_to", "No abilities have been added to the shared wheel yet.").withStyle(ChatFormatting.YELLOW), true);
             return;
         }
 

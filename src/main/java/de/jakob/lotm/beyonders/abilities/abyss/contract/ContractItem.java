@@ -67,11 +67,11 @@ public class ContractItem extends Item {
         //NPC CONTRACTS
         if (data.isNpcContract()) {
             if (!serverPlayer.getUUID().equals(data.getPartyA())) {
-                AbilityUtil.sendActionBar(serverPlayer, Component.literal("This bargain is not yours.").withColor(0xFFa3070c));
+                AbilityUtil.sendActionBar(serverPlayer, Component.translatableWithFallback("lotmcraft.text.this_bargain_is_not_yours", "This bargain is not yours.").withColor(0xFFa3070c));
                 return InteractionResultHolder.fail(stack);
             }
             if (!data.areAllTermsFulfilled()) {
-                AbilityUtil.sendActionBar(serverPlayer, Component.literal("The bargain is not yet sealed.").withColor(0xFFa3070c));
+                AbilityUtil.sendActionBar(serverPlayer, Component.translatableWithFallback("lotmcraft.text.the_bargain_is_not_yet_sealed", "The bargain is not yet sealed.").withColor(0xFFa3070c));
                 return InteractionResultHolder.fail(stack);
             }
             UUID npcUUID = data.getPartyB();
@@ -84,7 +84,7 @@ public class ContractItem extends Item {
             // If the creature is still alive, its soul is consumed with it.
             LivingEntity npc = NpcContractHandler.find(Objects.requireNonNull(serverPlayer.getServer()), npcUUID);
             if (npc != null && npc.isAlive()) {ContractSoulHandler.consumeSoul(serverPlayer, npcUUID);}
-            AbilityUtil.sendActionBar(serverPlayer, Component.literal("You consume their soul.").withColor(0xFFa3070c));
+            AbilityUtil.sendActionBar(serverPlayer, Component.translatableWithFallback("lotmcraft.text.you_consume_their_soul", "You consume their soul.").withColor(0xFFa3070c));
             return InteractionResultHolder.success(stack);
         }
         // LIFE / DEATH CONTRACTS, Handled completely here for Party A and Party B anyone else falls through to the intruder logic below.
@@ -92,7 +92,7 @@ public class ContractItem extends Item {
         boolean isPartyB = serverPlayer.getUUID().equals(data.getPartyB());
         if (data.isLifeDeathContract() && (isOwner || isPartyB)) {
             if (!data.lifeDeathExpired()) {
-                AbilityUtil.sendActionBar(serverPlayer, Component.literal("The life-bond is still active.").withColor(0x9932cc));
+                AbilityUtil.sendActionBar(serverPlayer, Component.translatableWithFallback("lotmcraft.text.the_life_bond_is_still_active", "The life-bond is still active.").withColor(0x9932cc));
                 return InteractionResultHolder.fail(stack);
             }
             // Find which term holds the fulfilled soul
@@ -108,7 +108,7 @@ public class ContractItem extends Item {
             data.setActive(false);
             writeData(stack, data);
             stack.shrink(1);
-            AbilityUtil.sendActionBar(serverPlayer, Component.literal("The soul is claimed by the contract.").withColor(0xFFa3070c));
+            AbilityUtil.sendActionBar(serverPlayer, Component.translatableWithFallback("lotmcraft.text.the_soul_is_claimed_by_the", "The soul is claimed by the contract.").withColor(0xFFa3070c));
             return InteractionResultHolder.success(stack);
         }
 
@@ -119,9 +119,9 @@ public class ContractItem extends Item {
             if (strongEnough) {
                 voidContract(data, (ServerLevel) level);
                 stack.shrink(stack.getCount());
-                AbilityUtil.sendActionBar(serverPlayer, Component.literal("The contract unravels.").withColor(0xFFa3070c));
+                AbilityUtil.sendActionBar(serverPlayer, Component.translatableWithFallback("lotmcraft.text.the_contract_unravels", "The contract unravels.").withColor(0xFFa3070c));
             }
-            else {AbilityUtil.sendActionBar(serverPlayer, Component.literal("You lack the strength to unmake this.").withColor(0xFFa3070c));}
+            else {AbilityUtil.sendActionBar(serverPlayer, Component.translatableWithFallback("lotmcraft.text.you_lack_the_strength_to_unmake", "You lack the strength to unmake this.").withColor(0xFFa3070c));}
             return InteractionResultHolder.success(stack);
         }
         // PARTY A: curse
@@ -142,7 +142,7 @@ public class ContractItem extends Item {
         if (data.termAType() == ContractData.TermType.SOUL && data.termAFulfilled() && otherTermsFulfilled(data) && !data.isComplete()) {
             ServerPlayer owner = Objects.requireNonNull(level.getServer()).getPlayerList().getPlayer(data.getPartyB());
             if (owner == null) {
-                AbilityUtil.sendActionBar(serverPlayer, Component.literal("The Abyss Rejects your offer.").withColor(0xFFa3070c));
+                AbilityUtil.sendActionBar(serverPlayer, Component.translatableWithFallback("lotmcraft.text.the_abyss_rejects_your_offer", "The Abyss Rejects your offer.").withColor(0xFFa3070c));
                 return InteractionResultHolder.fail(stack);
             }
             ContractSoulHandler.consumeSoul(serverPlayer, data.getPartyB());
@@ -155,7 +155,7 @@ public class ContractItem extends Item {
         if (data.isKillContract() && data.termAType() == ContractData.TermType.SOUL) {
             UUID killerUUID = data.isKillerPartyA() ? data.getPartyA() : data.getPartyB();
             if (!serverPlayer.getUUID().equals(killerUUID)) {
-                AbilityUtil.sendActionBar(serverPlayer, Component.literal("Only the contracted killer can claim this soul.").withColor(0xFFa3070c));
+                AbilityUtil.sendActionBar(serverPlayer, Component.translatableWithFallback("lotmcraft.text.only_the_contracted_killer_can_claim", "Only the contracted killer can claim this soul.").withColor(0xFFa3070c));
                 return InteractionResultHolder.fail(stack);
             }
             ContractSoulHandler.consumeSoul(serverPlayer, data.getPartyB());
@@ -168,7 +168,7 @@ public class ContractItem extends Item {
             // Preserve the existing ownership behavior for other contracts.
             UUID soulOwnerUUID = data.getSoulOwner(true);
             if (!serverPlayer.getUUID().equals(soulOwnerUUID)) {
-                AbilityUtil.sendActionBar(serverPlayer, Component.literal("This is not your soul to offer.").withColor(0xFFa3070c));
+                AbilityUtil.sendActionBar(serverPlayer, Component.translatableWithFallback("lotmcraft.text.this_is_not_your_soul_to", "This is not your soul to offer.").withColor(0xFFa3070c));
                 return InteractionResultHolder.fail(stack);
             }
         }
@@ -216,20 +216,20 @@ public class ContractItem extends Item {
         else if (holderUUID.equals(data.getPartyB()) && data.termBType() == ContractData.TermType.SOUL && data.termBFulfilled()) victimUUID = data.getPartyA();
         if (victimUUID == null) return;
         if (!BeyonderData.isBeyonder(holder) || !"abyss".equals(BeyonderData.getPathway(holder)) || BeyonderData.getSequence(holder) > 3) {
-            AbilityUtil.sendActionBar(holder, Component.literal("You lack the voice to reach them yet.").withColor(0xFFa3070c));
+            AbilityUtil.sendActionBar(holder, Component.translatableWithFallback("lotmcraft.text.you_lack_the_voice_to_reach", "You lack the voice to reach them yet.").withColor(0xFFa3070c));
             return;
         }
         long now = level.getGameTime();
         long cooldownTicks = 20L * 30;
         if (now - data.curseLastUseGameTime() < cooldownTicks) {
-            AbilityUtil.sendActionBar(holder, Component.literal("The curse is still cooling.").withColor(0xFFff124d));
+            AbilityUtil.sendActionBar(holder, Component.translatableWithFallback("lotmcraft.text.the_curse_is_still_cooling", "The curse is still cooling.").withColor(0xFFff124d));
             return;
         }
         ServerPlayer victim = level.getServer().getPlayerList().getPlayer(victimUUID);
         if (victim == null) return;
         victim.addEffect(new MobEffectInstance(MobEffects.CONFUSION, 20 * 5, 0, false, false));
         victim.hurt(victim.damageSources().magic(), 4f);
-        AbilityUtil.sendActionBar(victim, Component.literal("A voice from nowhere curses you.").withColor(0xFFa3070c));
+        AbilityUtil.sendActionBar(victim, Component.translatableWithFallback("lotmcraft.text.a_voice_from_nowhere_curses_you", "A voice from nowhere curses you.").withColor(0xFFa3070c));
         data.setCurseLastUseGameTime(now);
         writeData(stack, data);
     }
@@ -245,8 +245,8 @@ public class ContractItem extends Item {
         var server = level.getServer();
         ServerPlayer partyA = server.getPlayerList().getPlayer(data.getPartyA());
         ServerPlayer partyB = server.getPlayerList().getPlayer(data.getPartyB());
-        if (partyA != null) AbilityUtil.sendActionBar(partyA, Component.literal("Your contract has been voided.").withColor(0xFFa3070c));
-        if (partyB != null) AbilityUtil.sendActionBar(partyB, Component.literal("Your contract has been voided.").withColor(0xFFa3070c));
+        if (partyA != null) AbilityUtil.sendActionBar(partyA, Component.translatableWithFallback("lotmcraft.text.your_contract_has_been_voided", "Your contract has been voided.").withColor(0xFFa3070c));
+        if (partyB != null) AbilityUtil.sendActionBar(partyB, Component.translatableWithFallback("lotmcraft.text.your_contract_has_been_voided", "Your contract has been voided.").withColor(0xFFa3070c));
     }
     private static void handleSoulOnVoid(UUID uuid, ContractData data, ServerLevel level) {
         boolean isHolderA = uuid.equals(data.getPartyA()) && data.termAType() == ContractData.TermType.SOUL;
@@ -285,7 +285,7 @@ public class ContractItem extends Item {
                 SoulOwnershipRegistry.release(soulOwnerUUID);
                 d.setComplete(true);
                 d.setActive(false);
-                AbilityUtil.sendActionBar(releaseCaster, Component.literal("Both obligations are fulfilled. The contract dissolves.").withColor(0xFFa3070c));
+                AbilityUtil.sendActionBar(releaseCaster, Component.translatableWithFallback("lotmcraft.text.both_obligations_are_fulfilled_the_contract", "Both obligations are fulfilled. The contract dissolves.").withColor(0xFFa3070c));
             }
             return;
         }

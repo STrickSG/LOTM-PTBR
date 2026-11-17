@@ -18,6 +18,7 @@ import java.util.IdentityHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
+import de.jakob.lotm.util.LotmText;
 
 public class ContractBuilderScreen extends Screen {
     private static final int MARGIN = 14;
@@ -76,7 +77,7 @@ public class ContractBuilderScreen extends Screen {
 
     private final List<int[]> skin = new ArrayList<>();
 
-    public ContractBuilderScreen() {super(Component.literal("Contract Builder"));}
+    public ContractBuilderScreen() {super(Component.translatableWithFallback("lotmcraft.text.contract_builder", "Contract Builder"));}
 
     @Override
     public void tick() {
@@ -89,15 +90,15 @@ public class ContractBuilderScreen extends Screen {
     // GROUPS
     private List<Group> buildGroups() {
         List<Group> groups = new ArrayList<>();
-        groups.add(new Group("Parties", List.of(
+        groups.add(new Group(LotmText.t("lotmcraft.text.parties", "Parties"), List.of(
                 ContractTermKind.PARTY_A, ContractTermKind.PARTY_B)));
-        groups.add(new Group("Actions", List.of(
+        groups.add(new Group(LotmText.t("lotmcraft.text.actions", "Actions"), List.of(
                 ContractTermKind.GIVES, ContractTermKind.GETS, ContractTermKind.RETURNS,
                 ContractTermKind.KILLS, ContractTermKind.BIND_LIFE_DEATH)));
-        groups.add(new Group("Connectors", List.of(
+        groups.add(new Group(LotmText.t("lotmcraft.text.connectors", "Connectors"), List.of(
                 ContractTermKind.FOR, ContractTermKind.FROM, ContractTermKind.TO,
                 ContractTermKind.UNTIL, ContractTermKind.PASSES)));
-        groups.add(new Group("Things", List.of(
+        groups.add(new Group(LotmText.t("lotmcraft.text.things", "Things"), List.of(
                 ContractTermKind.SOUL, ContractTermKind.RESOURCE, ContractTermKind.DIGEST,
                 ContractTermKind.AMOUNT, ContractTermKind.VICTIM, ContractTermKind.ENTITY_TYPE,
                 ContractTermKind.TIME_UNIT)));
@@ -108,7 +109,7 @@ public class ContractBuilderScreen extends Screen {
             for (Group g : groups) if (g.kinds().contains(k)) { found = true; break; }
             if (!found) other.add(k);
         }
-        if (!other.isEmpty()) groups.add(new Group("Other", other));
+        if (!other.isEmpty()) groups.add(new Group(LotmText.t("lotmcraft.text.other", "Other"), other));
         return groups;
     }
     // INIT / LAYOUT
@@ -434,13 +435,13 @@ public class ContractBuilderScreen extends Screen {
         g.renderOutline(pageX, pageY, pageW, pageH, 0xFF4A3A5A);
         // The watching eye
         drawEye(g, pageX + 46, pageY + pageH - 30, t, mouseX, mouseY);
-        g.drawCenteredString(this.font, "~ CONTRACT ~", pageX + pageW / 2, pageY + 13, BLOOD);
+        g.drawCenteredString(this.font, LotmText.t("lotmcraft.text.contract", "~ CONTRACT ~"), pageX + pageW / 2, pageY + 13, BLOOD);
         // Contract text
         int textTop = pageY + 36;
         int textBottom = pageY + pageH - 10;
         List<Word> words = buildWords();
         if (words.isEmpty()) {
-            g.drawString(this.font, "Your contract will appear here...", pageX + 14, textTop, 0x88301A10, false);
+            g.drawString(this.font, LotmText.t("lotmcraft.text.your_contract_will_appear_here", "Your contract will appear here..."), pageX + 14, textTop, 0x88301A10, false);
             maxContractScrollOffset = 0;
         } else {
             List<List<Placed>> lines = layout(words, pageW - 28);

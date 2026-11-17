@@ -12,6 +12,7 @@ import net.minecraft.network.chat.Component;
 
 import java.util.LinkedList;
 import java.util.List;
+import de.jakob.lotm.util.LotmText;
 
 public class SetHonorificNameScreen extends Screen {
 
@@ -30,7 +31,7 @@ public class SetHonorificNameScreen extends Screen {
     private String errorMessage = "";
 
     public SetHonorificNameScreen(String pathway, int sequence) {
-        super(Component.literal("Set Honorific Name"));
+        super(Component.translatableWithFallback("lotmcraft.text.set_honorific_name", "Set Honorific Name"));
         this.pathway = pathway;
         this.sequence = sequence;
         this.lineCount = requiredLineCount(sequence);
@@ -54,22 +55,22 @@ public class SetHonorificNameScreen extends Screen {
             EditBox box = new EditBox(this.font,
                     centerX - 130, startY + i * 30,
                     260, 20,
-                    Component.literal("Line " + (i + 1)));
+                    Component.translatableWithFallback("lotmcraft.text.line_2", "Line %s", String.valueOf((i + 1))));
             box.setMaxLength(HonorificName.MAX_LENGTH - 1);
-            box.setHint(Component.literal("Line " + (i + 1)));
+            box.setHint(Component.translatableWithFallback("lotmcraft.text.line_2", "Line %s", String.valueOf((i + 1))));
             this.addRenderableWidget(box);
             lineBoxes.add(box);
         }
 
         int confirmY = startY + lineCount * 30 + 8;
         this.addRenderableWidget(
-                Button.builder(Component.literal("Confirm"), btn -> onConfirm())
+                Button.builder(Component.translatableWithFallback("lotmcraft.text.confirm", "Confirm"), btn -> onConfirm())
                         .bounds(centerX - 58, confirmY, 112, 20)
                         .build()
         );
 
         this.addRenderableWidget(
-                Button.builder(Component.literal("Cancel"), btn -> onClose())
+                Button.builder(Component.translatableWithFallback("lotmcraft.text.cancel", "Cancel"), btn -> onClose())
                         .bounds(centerX - 58, confirmY + 26, 112, 20)
                         .build()
         );
@@ -80,24 +81,24 @@ public class SetHonorificNameScreen extends Screen {
         for (EditBox box : lineBoxes) {
             String value = box.getValue().trim();
             if (value.isEmpty()) {
-                errorMessage = "All lines must be filled in.";
+                errorMessage = LotmText.t("lotmcraft.text.all_lines_must_be_filled_in", "All lines must be filled in.");
                 return;
             }
             lines.add(value);
         }
 
         if (sequence >= 4) {
-            errorMessage = "You must be sequence 3 or higher to utilize honorific name.";
+            errorMessage = LotmText.t("lotmcraft.text.you_must_be_sequence_3_or", "You must be sequence 3 or higher to utilize honorific name.");
             return;
         }
 
         if (lines.stream().distinct().count() != lines.size()) {
-            errorMessage = "Each line must be different.";
+            errorMessage = LotmText.t("lotmcraft.text.each_line_must_be_different", "Each line must be different.");
             return;
         }
 
         if (!HonorificName.validate(pathway, lines)) {
-            errorMessage = "Each line must contain at least one required word (see hints above).";
+            errorMessage = LotmText.t("lotmcraft.text.each_line_must_contain_at_least", "Each line must contain at least one required word (see hints above).");
             return;
         }
 
@@ -123,7 +124,7 @@ public class SetHonorificNameScreen extends Screen {
         gfx.vLine(panelLeft,      panelTop,        panelBottom,     COL_DIVIDER);
         gfx.vLine(panelRight - 1, panelTop,        panelBottom,     COL_DIVIDER);
 
-        gfx.drawCenteredString(font, "Set Honorific Name", centerX, panelTop + 8, COL_TITLE);
+        gfx.drawCenteredString(font, LotmText.t("lotmcraft.text.set_honorific_name", "Set Honorific Name"), centerX, panelTop + 8, COL_TITLE);
 
         int divY = panelTop + 20;
         gfx.hLine(centerX - 80, centerX + 80, divY, COL_DIVIDER);
@@ -134,7 +135,7 @@ public class SetHonorificNameScreen extends Screen {
         List<String> requiredWords = HonorificName.getMustHaveWords(pathway);
         if (!requiredWords.isEmpty()) {
             int maxWidth = Math.min(this.width - 40, 400);
-            gfx.drawCenteredString(font, "Required words (at least one per line):", centerX, divY + 17, COL_HINT);
+            gfx.drawCenteredString(font, LotmText.t("lotmcraft.text.required_words_at_least_one_per", "Required words (at least one per line):"), centerX, divY + 17, COL_HINT);
             String wordsStr = String.join(", ", requiredWords);
             if (font.width(wordsStr) > maxWidth) {
                 int truncIndex = Math.max(0, Math.min(

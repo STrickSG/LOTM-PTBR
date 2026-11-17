@@ -48,7 +48,7 @@ public record StructureDivinationSelectedPacket(String structureId) implements C
         ResourceLocation structureKey = ResourceLocation.tryParse(packet.structureId());
 
         if (structureKey == null) {
-            player.sendSystemMessage(Component.literal("§cInvalid structure id"));
+            player.sendSystemMessage(Component.translatableWithFallback("lotmcraft.text.invalid_structure_id", "§cInvalid structure id"));
             return;
         }
 

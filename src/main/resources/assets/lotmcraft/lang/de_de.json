@@ -2766,5 +2766,9 @@
   "ability.lotmcraft.historical_void_summoning.summon_failed": "Herbeirufen fehlgeschlagen",
   "ability.lotmcraft.historical_void_summoning.cannot_summon_sequence_zero": "Du kannst dies nicht herbeirufen",
   "block.lotmcraft.spirit_portal": "Geisterportal",
-  "biome.lotmcraft.spirit_world_patch": "Fleck der Geisterwelt"
+  "biome.lotmcraft.spirit_world_patch": "Fleck der Geisterwelt",
+  "lotm.potion_recipe.named": "%s Trankrezept",
+  "lotm.pathway.named": "%s Weg",
+  "lotm.beyonder_characteristic.named": "%s Beyonder-Merkmal",
+  "lotm.potion.named": "%s Trank"
 }

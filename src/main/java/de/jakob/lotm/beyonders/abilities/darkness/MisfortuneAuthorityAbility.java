@@ -31,6 +31,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
 import java.util.concurrent.ThreadLocalRandom;
+import de.jakob.lotm.util.LotmText;
 
 @EventBusSubscriber(modid = LOTMCraft.MOD_ID)
 public class MisfortuneAuthorityAbility extends SelectableAbility {
@@ -106,10 +107,10 @@ public class MisfortuneAuthorityAbility extends SelectableAbility {
 
     private void nationDoom(LivingEntity entity) {
         if (!(entity instanceof ServerPlayer player)) return;
-        if (doom.remove(player.getUUID())) bar(player, "The nation's doom lifts.");
+        if (doom.remove(player.getUUID())) bar(player, LotmText.t("lotmcraft.text.the_nation_s_doom_lifts", "The nation's doom lifts."));
         else {
             doom.add(player.getUUID());
-            bar(player, "The nation's doom settles.");
+            bar(player, LotmText.t("lotmcraft.text.the_nation_s_doom_settles", "The nation's doom settles."));
         }
     }
 
@@ -117,24 +118,24 @@ public class MisfortuneAuthorityAbility extends SelectableAbility {
         if (!(entity instanceof ServerPlayer player) || !(level instanceof ServerLevel serverLevel)) return;
         if (nation.remove(player.getUUID())) {
             nextDisaster.remove(player.getUUID());
-            bar(player, "The nation of misfortune fades.");
+            bar(player, LotmText.t("lotmcraft.text.the_nation_of_misfortune_fades", "The nation of misfortune fades."));
             return;
         }
         nation.add(player.getUUID());
         nextDisaster.put(player.getUUID(), serverLevel.getGameTime() + DISASTER_TICKS);
-        bar(player, "A nation of misfortune rises.");
+        bar(player, LotmText.t("lotmcraft.text.a_nation_of_misfortune_rises", "A nation of misfortune rises."));
     }
 
     private void aura(Level level, LivingEntity entity) {
         if (!(entity instanceof ServerPlayer player) || !(level instanceof ServerLevel serverLevel)) return;
         if (catastrophe.remove(player.getUUID())) {
             nextCatastrophe.remove(player.getUUID());
-            bar(player, "The aura of catastrophe fades.");
+            bar(player, LotmText.t("lotmcraft.text.the_aura_of_catastrophe_fades", "The aura of catastrophe fades."));
             return;
         }
         catastrophe.add(player.getUUID());
         nextCatastrophe.put(player.getUUID(), serverLevel.getGameTime() + DISASTER_TICKS);
-        bar(player, "An aura of catastrophe settles.");
+        bar(player, LotmText.t("lotmcraft.text.an_aura_of_catastrophe_settles", "An aura of catastrophe settles."));
     }
 
     @SubscribeEvent
@@ -148,17 +149,17 @@ public class MisfortuneAuthorityAbility extends SelectableAbility {
         if (player.tickCount % 100 == 0) {
             if (dooming && !pay(player)) {
                 doom.remove(id);
-                bar(player, "The nation's doom lifts.");
+                bar(player, LotmText.t("lotmcraft.text.the_nation_s_doom_lifts", "The nation's doom lifts."));
             }
             if (misfortunate && !pay(player)) {
                 nation.remove(id);
                 nextDisaster.remove(id);
-                bar(player, "The nation of misfortune fades.");
+                bar(player, LotmText.t("lotmcraft.text.the_nation_of_misfortune_fades", "The nation of misfortune fades."));
             }
             if (catastrophic && !pay(player)) {
                 catastrophe.remove(id);
                 nextCatastrophe.remove(id);
-                bar(player, "The aura of catastrophe fades.");
+                bar(player, LotmText.t("lotmcraft.text.the_aura_of_catastrophe_fades", "The aura of catastrophe fades."));
             }
             dooming = doom.contains(id);
             misfortunate = nation.contains(id);

@@ -12,6 +12,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 
 import java.util.*;
+import de.jakob.lotm.util.LotmText;
 
 public class KillPlayerQuest extends Quest {
 
@@ -37,7 +38,7 @@ public class KillPlayerQuest extends Quest {
 
         if (possibleTargets.isEmpty()) {
             QuestManager.discardQuest(player, id);
-            player.sendSystemMessage(Component.literal("No valid player target found for this mission."));
+            player.sendSystemMessage(Component.translatableWithFallback("lotmcraft.text.no_valid_player_target_found_for", "No valid player target found for this mission."));
             return;
         }
 
@@ -46,11 +47,11 @@ public class KillPlayerQuest extends Quest {
 
         ServerPlayer targetOnline = player.server.getPlayerList().getPlayer(targetUuid);
         if (targetOnline != null) {
-            player.sendSystemMessage(Component.literal("Target selected: " + targetOnline.getName().getString()));
+            player.sendSystemMessage(Component.translatableWithFallback("lotmcraft.text.target_selected", "Target selected: %s", String.valueOf(targetOnline.getName().getString())));
         } else {
             Optional<StoredData> data = BeyonderData.playerMap.get(targetUuid);
             String name = data.isPresent() ? data.get().trueName() : targetUuid.toString();
-            player.sendSystemMessage(Component.literal("Target selected: " + name + " (offline)"));
+            player.sendSystemMessage(Component.translatableWithFallback("lotmcraft.text.target_selected_offline", "Target selected: %s (offline)", String.valueOf(name)));
         }
     }
 
@@ -108,7 +109,7 @@ public class KillPlayerQuest extends Quest {
             targetName = data.map(StoredData::trueName).orElse(targetUuid.toString());
         }
 
-        return Component.translatable("lotm.quest.impl." + id + ".description").append(" Target: " + targetName);
+        return Component.translatable("lotm.quest.impl." + id + ".description").append(LotmText.f("lotmcraft.text.target", " Target: %s", targetName));
     }
 
 

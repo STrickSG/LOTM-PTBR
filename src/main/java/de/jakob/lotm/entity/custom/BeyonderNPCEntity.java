@@ -402,7 +402,7 @@ public class BeyonderNPCEntity extends PathfinderMob {
         if (hasTrades()) {
             serverPlayer.openMenu(new net.minecraft.world.SimpleMenuProvider(
                     (windowId, inv, p) -> new BeyonderTradeMenu(windowId, inv, this.getId()),
-                    net.minecraft.network.chat.Component.literal("Trades")
+                    net.minecraft.network.chat.Component.translatableWithFallback("lotmcraft.text.trades", "Trades")
             ), buf -> buf.writeVarInt(this.getId()));
             return InteractionResult.SUCCESS;
         }

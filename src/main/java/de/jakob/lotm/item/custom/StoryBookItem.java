@@ -40,7 +40,7 @@ public class StoryBookItem extends Item {
         tag.putString(KEY_TARGET_NAME, target.getName().getString());
         stack.set(DataComponents.CUSTOM_DATA, CustomData.of(tag));
         stack.set(DataComponents.CUSTOM_NAME,
-                Component.literal("Story of " + target.getName().getString())
+                Component.translatableWithFallback("lotmcraft.text.story_of", "Story of %s", String.valueOf(target.getName().getString()))
                         .withStyle(ChatFormatting.LIGHT_PURPLE));
         return stack;
     }

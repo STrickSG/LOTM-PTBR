@@ -47,7 +47,7 @@ public final class ConfirmPrompter {
     public static void open(ServerPlayer p, Contract c, long now) {
         ConfirmData data = ConfirmData.from(c, now);
         p.openMenu(new SimpleMenuProvider((id, inv, pl) -> new ConfirmMenu(id, data, c.id),
-                Component.literal("Contract Offer")), data::write);
+                Component.translatableWithFallback("lotmcraft.text.contract_offer", "Contract Offer")), data::write);
     }
 
     @SubscribeEvent
@@ -60,7 +60,7 @@ public final class ConfirmPrompter {
             long now = p.server.overworld().getGameTime();
             for (Contract c : new ArrayList<>(PendingAccess.pending().values()))
                 if (PendingAccess.needsAnswer(c, p.getUUID())) { open(p, c, now); return 1; }
-            ctx.getSource().sendFailure(Component.literal("No contract is waiting for your answer."));
+            ctx.getSource().sendFailure(Component.translatableWithFallback("lotmcraft.text.no_contract_is_waiting_for_your", "No contract is waiting for your answer."));
             return 0;
         }));
     }

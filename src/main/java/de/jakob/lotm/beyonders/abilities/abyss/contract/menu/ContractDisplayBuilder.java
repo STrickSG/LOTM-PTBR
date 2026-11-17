@@ -3,6 +3,7 @@ package de.jakob.lotm.beyonders.abilities.abyss.contract.menu;
 import de.jakob.lotm.beyonders.abilities.abyss.contract.ContractData;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
+import de.jakob.lotm.util.LotmText;
 
 public final class ContractDisplayBuilder {
 
@@ -20,7 +21,7 @@ public final class ContractDisplayBuilder {
     }
     // STANDARD
     private static ContractDisplay buildStandard(ContractData data, String status) {
-        ContractDisplay.Builder builder = ContractDisplay.builder(Component.literal("[Contract] " + status).withStyle(ChatFormatting.GOLD));
+        ContractDisplay.Builder builder = ContractDisplay.builder(Component.translatableWithFallback("lotmcraft.text.contract_2", "[Contract] %s", String.valueOf(status)).withStyle(ChatFormatting.GOLD));
         String termB = describeTransfer(data, false);
         String termA = describeTransfer(data, true);
         if (termB != null) {
@@ -33,43 +34,43 @@ public final class ContractDisplayBuilder {
             builder.line(Component.literal(termA));
             builder.line(statusLine(data.termAFulfilled()));
         }
-        if (termB == null && termA == null) {builder.line(Component.literal("No obligations").withStyle(ChatFormatting.GRAY));}
+        if (termB == null && termA == null) {builder.line(Component.translatableWithFallback("lotmcraft.text.no_obligations", "No obligations").withStyle(ChatFormatting.GRAY));}
         return builder.build();
     }
     // KILL
     private static ContractDisplay buildKill(ContractData data, String status) {
-        ContractDisplay.Builder builder = ContractDisplay.builder(Component.literal("[Killing Contract] " + status).withStyle(ChatFormatting.GOLD));
-        String killer = data.isKillerPartyA() ? safeName(data.partyAName(), "Party A") : safeName(data.partyBName(), "Party B");
-        String victim = safeName(data.victimName(), "Unknown");
-        builder.line(Component.literal(killer + " kills " + victim));
-        builder.line(Component.literal("Status: ").append(Component.literal(data.killPaidOut() ? "Kill Complete" : "Pending Kill").withStyle(data.killPaidOut() ? ChatFormatting.GREEN : ChatFormatting.YELLOW)));
+        ContractDisplay.Builder builder = ContractDisplay.builder(Component.translatableWithFallback("lotmcraft.text.killing_contract_2", "[Killing Contract] %s", String.valueOf(status)).withStyle(ChatFormatting.GOLD));
+        String killer = data.isKillerPartyA() ? safeName(data.partyAName(), LotmText.t("lotmcraft.text.party_a", "Party A")) : safeName(data.partyBName(), LotmText.t("lotmcraft.text.party_b", "Party B"));
+        String victim = safeName(data.victimName(), LotmText.t("lotmcraft.text.unknown", "Unknown"));
+        builder.line(Component.translatableWithFallback("lotmcraft.text.kills_2", "%s kills %s", String.valueOf(killer), String.valueOf(victim)));
+        builder.line(Component.translatableWithFallback("lotmcraft.text.status", "Status: ").append(Component.literal(data.killPaidOut() ? LotmText.t("lotmcraft.text.kill_complete", "Kill Complete") : LotmText.t("lotmcraft.text.pending_kill", "Pending Kill")).withStyle(data.killPaidOut() ? ChatFormatting.GREEN : ChatFormatting.YELLOW)));
         if (data.termAType() != ContractData.TermType.NONE) {
             builder.blank();
-            String payer = data.isKillerPartyA() ? safeName(data.partyBName(), "Party B") : safeName(data.partyAName(), "Party A");
+            String payer = data.isKillerPartyA() ? safeName(data.partyBName(), LotmText.t("lotmcraft.text.party_b", "Party B")) : safeName(data.partyAName(), LotmText.t("lotmcraft.text.party_a", "Party A"));
             String reward = describeKillReward(data);
-            builder.line(Component.literal("Paid by: " + payer).withStyle(ChatFormatting.AQUA));
-            builder.line(Component.literal("Reward: " + reward));
-            builder.line(Component.literal("Payment: ").append(Component.literal(data.termAFulfilled() ? "Paid" : "Pending").withStyle(data.termAFulfilled() ? ChatFormatting.GREEN : ChatFormatting.YELLOW)));
+            builder.line(Component.translatableWithFallback("lotmcraft.text.paid_by", "Paid by: %s", String.valueOf(payer)).withStyle(ChatFormatting.AQUA));
+            builder.line(Component.translatableWithFallback("lotmcraft.text.reward", "Reward: %s", String.valueOf(reward)));
+            builder.line(Component.translatableWithFallback("lotmcraft.text.payment", "Payment: ").append(Component.literal(data.termAFulfilled() ? LotmText.t("lotmcraft.text.paid_2", "Paid") : LotmText.t("lotmcraft.text.pending", "Pending")).withStyle(data.termAFulfilled() ? ChatFormatting.GREEN : ChatFormatting.YELLOW)));
         } else {
             builder.blank();
-            builder.line(Component.literal("No payment").withStyle(ChatFormatting.GRAY));
+            builder.line(Component.translatableWithFallback("lotmcraft.text.no_payment", "No payment").withStyle(ChatFormatting.GRAY));
         }
         return builder.build();
     }
 
     private static String describeKillReward(ContractData data) {
-        String payer = data.isKillerPartyA() ? safeName(data.partyBName(), "Party B") : safeName(data.partyAName(), "Party A");
-        String killer = data.isKillerPartyA() ? safeName(data.partyAName(), "Party A") : safeName(data.partyBName(), "Party B");
+        String payer = data.isKillerPartyA() ? safeName(data.partyBName(), LotmText.t("lotmcraft.text.party_b", "Party B")) : safeName(data.partyAName(), LotmText.t("lotmcraft.text.party_a", "Party A"));
+        String killer = data.isKillerPartyA() ? safeName(data.partyAName(), LotmText.t("lotmcraft.text.party_a", "Party A")) : safeName(data.partyBName(), LotmText.t("lotmcraft.text.party_b", "Party B"));
         String reward = describeTerm(data, true, payer, killer);
         return payer + " → " + killer + ": " + reward;
     }
     // LIFE / DEATH
     private static ContractDisplay buildLifeDeath(ContractData data, String status) {
-        ContractDisplay.Builder builder = ContractDisplay.builder(Component.literal("[Life-or-Death Contract] " + status).withStyle(ChatFormatting.GOLD));
-        String partyA = safeName(data.partyAName(), "Party A");
-        String partyB = safeName(data.partyBName(), "Party B");
+        ContractDisplay.Builder builder = ContractDisplay.builder(Component.translatableWithFallback("lotmcraft.text.life_or_death_contract", "[Life-or-Death Contract] %s", String.valueOf(status)).withStyle(ChatFormatting.GOLD));
+        String partyA = safeName(data.partyAName(), LotmText.t("lotmcraft.text.party_a", "Party A"));
+        String partyB = safeName(data.partyBName(), LotmText.t("lotmcraft.text.party_b", "Party B"));
         builder.line(Component.literal(partyA + " ↔ " + partyB));
-        builder.line(Component.literal("Linked lives").withStyle(ChatFormatting.LIGHT_PURPLE));
+        builder.line(Component.translatableWithFallback("lotmcraft.text.linked_lives", "Linked lives").withStyle(ChatFormatting.LIGHT_PURPLE));
 
         String termB = describeLifeDeathTransfer(data, false);
         String termA = describeLifeDeathTransfer(data, true);
@@ -88,7 +89,7 @@ public final class ContractDisplayBuilder {
         }
         if (termA == null && termB == null) {
             builder.blank();
-            builder.line(Component.literal("No exchange").withStyle(ChatFormatting.GRAY));
+            builder.line(Component.translatableWithFallback("lotmcraft.text.no_exchange", "No exchange").withStyle(ChatFormatting.GRAY));
         }
         builder.blank();
         builder.line(Component.literal(formatDuration(data.lifeDeathDurationTicks())).withStyle(ChatFormatting.GRAY));
@@ -99,15 +100,15 @@ public final class ContractDisplayBuilder {
     private static String describeTransfer(ContractData data, boolean termA) {
         ContractData.TermType type = termA ? data.termAType() : data.termBType();
         if (type == ContractData.TermType.NONE) {return null;}
-        String recipient = termA ? safeName(data.partyAName(), "Party A") : safeName(data.partyBName(), "Party B");
+        String recipient = termA ? safeName(data.partyAName(), LotmText.t("lotmcraft.text.party_a", "Party A")) : safeName(data.partyBName(), LotmText.t("lotmcraft.text.party_b", "Party B"));
         String description;
         if (type == ContractData.TermType.SOUL) {
             boolean ownerIsPartyA = termA ? data.termASoulOwnerIsPartyA() : data.termBSoulOwnerIsPartyA();
-            String owner = ownerIsPartyA ? safeName(data.partyAName(), "Party A") : safeName(data.partyBName(), "Party B");
-            description = owner + "'s Soul";
+            String owner = ownerIsPartyA ? safeName(data.partyAName(), LotmText.t("lotmcraft.text.party_a", "Party A")) : safeName(data.partyBName(), LotmText.t("lotmcraft.text.party_b", "Party B"));
+            description = LotmText.f("lotmcraft.text.s_soul_2", "%s's Soul", owner);
             return owner + " → " + recipient + ": " + description;
         }
-        String sender = termA ? safeName(data.partyBName(), "Party B") : safeName(data.partyAName(), "Party A");
+        String sender = termA ? safeName(data.partyBName(), LotmText.t("lotmcraft.text.party_b", "Party B")) : safeName(data.partyAName(), LotmText.t("lotmcraft.text.party_a", "Party A"));
         description = describeTerm(data, termA, sender, recipient);
         return sender + " → " + recipient + ": " + description;
     }
@@ -119,12 +120,12 @@ public final class ContractDisplayBuilder {
         }
         if (type == ContractData.TermType.SOUL) {
             boolean ownerIsPartyA = termA ? data.termASoulOwnerIsPartyA() : data.termBSoulOwnerIsPartyA();
-            String owner = ownerIsPartyA ? safeName(data.partyAName(), "Party A") : safeName(data.partyBName(), "Party B");
-            String recipient = ownerIsPartyA ? safeName(data.partyBName(), "Party B") : safeName(data.partyAName(), "Party A");
-            return owner + "'s Soul → " + recipient;
+            String owner = ownerIsPartyA ? safeName(data.partyAName(), LotmText.t("lotmcraft.text.party_a", "Party A")) : safeName(data.partyBName(), LotmText.t("lotmcraft.text.party_b", "Party B"));
+            String recipient = ownerIsPartyA ? safeName(data.partyBName(), LotmText.t("lotmcraft.text.party_b", "Party B")) : safeName(data.partyAName(), LotmText.t("lotmcraft.text.party_a", "Party A"));
+            return LotmText.f("lotmcraft.text.s_soul", "%s's Soul → %s", owner, recipient);
         }
-        String sender = termA ? safeName(data.partyBName(), "Party B") : safeName(data.partyAName(), "Party A");
-        String recipient = termA ? safeName(data.partyAName(), "Party A") : safeName(data.partyBName(), "Party B");
+        String sender = termA ? safeName(data.partyBName(), LotmText.t("lotmcraft.text.party_b", "Party B")) : safeName(data.partyAName(), LotmText.t("lotmcraft.text.party_a", "Party A"));
+        String recipient = termA ? safeName(data.partyAName(), LotmText.t("lotmcraft.text.party_a", "Party A")) : safeName(data.partyBName(), LotmText.t("lotmcraft.text.party_b", "Party B"));
         return sender + " → " + recipient + ": " + describeTerm(data, termA, sender, recipient);
     }
     // TERM DESCRIPTION
@@ -135,44 +136,44 @@ public final class ContractDisplayBuilder {
         return switch (type) {
             case ITEM -> count + "x " + ContractData.prettify(item);
 
-            case DIGEST -> count + "% digestion progress";
+            case DIGEST -> LotmText.f("lotmcraft.text.digestion_progress", "%s%% digestion progress", count);
             case SOUL -> {
                 boolean ownerIsPartyA = termA ? data.termASoulOwnerIsPartyA() : data.termBSoulOwnerIsPartyA();
-                String owner = ownerIsPartyA ? safeName(data.partyAName(), "Party A") : safeName(data.partyBName(), "Party B");
-                yield owner + "'s Soul";
+                String owner = ownerIsPartyA ? safeName(data.partyAName(), LotmText.t("lotmcraft.text.party_a", "Party A")) : safeName(data.partyBName(), LotmText.t("lotmcraft.text.party_b", "Party B"));
+                yield LotmText.f("lotmcraft.text.s_soul_2", "%s's Soul", owner);
             }
-            case RELEASE_SOUL -> "the soul of " + item;
-            case NONE -> "nothing";
+            case RELEASE_SOUL -> LotmText.f("lotmcraft.text.the_soul_of", "the soul of %s", item);
+            case NONE -> LotmText.t("lotmcraft.text.nothing", "nothing");
         };
     }
     // STATUS
 
     private static String getStatus(ContractData data) {
-        if (!data.isActive() && data.isComplete()) {return "Fulfilled";}
-        if (!data.isActive()) {return "Void";}
-        return "Active";
+        if (!data.isActive() && data.isComplete()) {return LotmText.t("lotmcraft.text.fulfilled_2", "Fulfilled");}
+        if (!data.isActive()) {return LotmText.t("lotmcraft.text.void", "Void");}
+        return LotmText.t("lotmcraft.text.active", "Active");
     }
 
     private static Component statusLine(boolean fulfilled) {
-        return Component.literal(fulfilled ? "Fulfilled" : "Pending").withStyle(fulfilled ? ChatFormatting.GREEN : ChatFormatting.YELLOW);
+        return Component.literal(fulfilled ? LotmText.t("lotmcraft.text.fulfilled_2", "Fulfilled") : LotmText.t("lotmcraft.text.pending", "Pending")).withStyle(fulfilled ? ChatFormatting.GREEN : ChatFormatting.YELLOW);
     }
     // DURATION
     private static String formatDuration(long ticks) {
-        if (ticks < 0) {return "No expiry";}
+        if (ticks < 0) {return LotmText.t("lotmcraft.text.no_expiry", "No expiry");}
         long seconds = ticks / 20;
         if (seconds % 86400 == 0) {
             long days = seconds / 86400;
-            return "Expires in " + days + (days == 1 ? " day" : " days");
+            return LotmText.f("lotmcraft.text.expires_in", "Expires in %s%s", days, (days == 1 ? LotmText.t("lotmcraft.text.day", " day") : LotmText.t("lotmcraft.text.days", " days")));
         }
         if (seconds % 3600 == 0) {
             long hours = seconds / 3600;
-            return "Expires in " + hours + (hours == 1 ? " hour" : " hours");
+            return LotmText.f("lotmcraft.text.expires_in", "Expires in %s%s", hours, (hours == 1 ? LotmText.t("lotmcraft.text.hour", " hour") : LotmText.t("lotmcraft.text.hours", " hours")));
         }
         if (seconds % 60 == 0) {
             long minutes = seconds / 60;
-            return "Expires in " + minutes + (minutes == 1 ? " minute" : " minutes");
+            return LotmText.f("lotmcraft.text.expires_in", "Expires in %s%s", minutes, (minutes == 1 ? LotmText.t("lotmcraft.text.minute", " minute") : LotmText.t("lotmcraft.text.minutes", " minutes")));
         }
-        return "Expires in " + seconds + (seconds == 1 ? " second" : " seconds");
+        return LotmText.f("lotmcraft.text.expires_in", "Expires in %s%s", seconds, (seconds == 1 ? LotmText.t("lotmcraft.text.second", " second") : LotmText.t("lotmcraft.text.seconds", " seconds")));
     }
     // UTIL
     private static String safeName(String name, String fallback) {

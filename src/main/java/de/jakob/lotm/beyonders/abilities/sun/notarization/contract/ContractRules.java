@@ -1,4 +1,6 @@
 package de.jakob.lotm.beyonders.abilities.sun.notarization.contract;
+import de.jakob.lotm.util.LotmText;
+
 
 public final class ContractRules {
     private ContractRules() {}
@@ -16,8 +18,8 @@ public final class ContractRules {
     public static final int MENU_TIMEOUT_TICKS = 20 * 120;
 
     public static String formatDuration(int s) {
-        if (s >= 3600 && s % 3600 == 0) { int h = s / 3600; return h + (h == 1 ? " hour" : " hours"); }
-        if (s >= 60 && s % 60 == 0) { int m = s / 60; return m + (m == 1 ? " minute" : " minutes"); }
-        return s + (s == 1 ? " second" : " seconds");
+        if (s >= 3600 && s % 3600 == 0) { int h = s / 3600; return h + (h == 1 ? LotmText.t("lotmcraft.text.hour", " hour") : LotmText.t("lotmcraft.text.hours", " hours")); }
+        if (s >= 60 && s % 60 == 0) { int m = s / 60; return m + (m == 1 ? LotmText.t("lotmcraft.text.minute", " minute") : LotmText.t("lotmcraft.text.minutes", " minutes")); }
+        return s + (s == 1 ? LotmText.t("lotmcraft.text.second", " second") : LotmText.t("lotmcraft.text.seconds", " seconds"));
     }
 }

@@ -36,7 +36,7 @@ public class CopiedAbilitiesCommand {
                                 .executes(context -> {
                                     CommandSourceStack source = context.getSource();
                                     if (!(source.getEntity() instanceof LivingEntity livingEntity)) {
-                                        source.sendFailure(Component.literal("Only living entities can use this command!"));
+                                        source.sendFailure(Component.translatableWithFallback("lotmcraft.text.only_living_entities_can_use_this", "Only living entities can use this command!"));
                                         return 0;
                                     }
                                     String abilityId = StringArgumentType.getString(context, "ability_id");
@@ -48,7 +48,7 @@ public class CopiedAbilitiesCommand {
                                             var targetEntity = EntityArgument.getEntity(context, "target");
 
                                             if (!(targetEntity instanceof LivingEntity livingEntity)) {
-                                                source.sendFailure(Component.literal("Target must be a living entity!"));
+                                                source.sendFailure(Component.translatableWithFallback("lotmcraft.text.target_must_be_a_living_entity", "Target must be a living entity!"));
                                                 return 0;
                                             }
 
@@ -64,7 +64,7 @@ public class CopiedAbilitiesCommand {
                                 .executes(context -> {
                                     CommandSourceStack source = context.getSource();
                                     if (!(source.getEntity() instanceof LivingEntity livingEntity)) {
-                                        source.sendFailure(Component.literal("Only living entities can use this command!"));
+                                        source.sendFailure(Component.translatableWithFallback("lotmcraft.text.only_living_entities_can_use_this", "Only living entities can use this command!"));
                                         return 0;
                                     }
                                     String abilityId = StringArgumentType.getString(context, "ability_id");
@@ -77,7 +77,7 @@ public class CopiedAbilitiesCommand {
                                             var targetEntity = EntityArgument.getEntity(context, "target");
 
                                             if (!(targetEntity instanceof LivingEntity livingEntity)) {
-                                                source.sendFailure(Component.literal("Target must be a living entity!"));
+                                                source.sendFailure(Component.translatableWithFallback("lotmcraft.text.target_must_be_a_living_entity", "Target must be a living entity!"));
                                                 return 0;
                                             }
 
@@ -93,7 +93,7 @@ public class CopiedAbilitiesCommand {
     private static int executeAddAbility(CommandSourceStack source, LivingEntity target, String abilityId) {
         try {
             if (LOTMCraft.abilityHandler.getById(abilityId) == null) {
-                source.sendFailure(Component.literal("Unknown ability ID: " + abilityId));
+                source.sendFailure(Component.translatableWithFallback("lotmcraft.text.unknown_ability_id", "Unknown ability ID: %s", String.valueOf(abilityId)));
                 return 0;
             }
 
@@ -107,10 +107,10 @@ public class CopiedAbilitiesCommand {
             CopiedAbilityHelper.addAbility(target, data);
 
             String targetName = target instanceof ServerPlayer player ? player.getGameProfile().getName() : target.getDisplayName().getString();
-            source.sendSuccess(() -> Component.literal("Added copied ability '" + abilityId + "' to " + targetName), true);
+            source.sendSuccess(() -> Component.translatableWithFallback("lotmcraft.text.added_copied_ability_to", "Added copied ability '%s' to %s", String.valueOf(abilityId), String.valueOf(targetName)), true);
             return 1;
         } catch (Exception e) {
-            source.sendFailure(Component.literal("Failed to add ability: " + e.getMessage()));
+            source.sendFailure(Component.translatableWithFallback("lotmcraft.text.failed_to_add_ability", "Failed to add ability: %s", String.valueOf(e.getMessage())));
             return 0;
         }
     }
@@ -120,11 +120,11 @@ public class CopiedAbilitiesCommand {
             CopiedAbilityHelper.removeAbilityID(target, abilityId);
             String targetName = target instanceof ServerPlayer player ? player.getGameProfile().getName() : target.getDisplayName().getString();
 
-            source.sendSuccess(() -> Component.literal("Removed copied ability '" + abilityId + "' from " + targetName), true);
+            source.sendSuccess(() -> Component.translatableWithFallback("lotmcraft.text.removed_copied_ability_from", "Removed copied ability '%s' from %s", String.valueOf(abilityId), String.valueOf(targetName)), true);
             return 1;
 
         } catch (Exception e) {
-            source.sendFailure(Component.literal("Failed to remove ability: " + e.getMessage()));
+            source.sendFailure(Component.translatableWithFallback("lotmcraft.text.failed_to_remove_ability", "Failed to remove ability: %s", String.valueOf(e.getMessage())));
             return 0;
         }
     }

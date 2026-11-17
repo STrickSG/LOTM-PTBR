@@ -65,7 +65,7 @@ public class DesireControlAbility extends SelectableAbility {
         LivingEntity target = AbilityUtil.getTargetEntity(entity, 25, 2.0f);
 
         if (target == null) {
-            AbilityUtil.sendActionBar(entity, Component.literal("No target found").withColor(0xFF6699));
+            AbilityUtil.sendActionBar(entity, Component.translatableWithFallback("lotmcraft.text.no_target_found", "No target found").withColor(0xFF6699));
             return;
         }
 

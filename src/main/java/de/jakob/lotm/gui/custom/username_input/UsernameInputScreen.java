@@ -11,7 +11,7 @@ public class UsernameInputScreen extends Screen {
     private final LivingEntity entity;
 
     public UsernameInputScreen(LivingEntity entity) {
-        super(Component.literal("Enter username you want to change to"));
+        super(Component.translatableWithFallback("lotmcraft.text.enter_username_you_want_to_change", "Enter username you want to change to"));
 
         this.entity = entity;
     }

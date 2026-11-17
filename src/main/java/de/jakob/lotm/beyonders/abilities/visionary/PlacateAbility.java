@@ -197,11 +197,7 @@ public class PlacateAbility extends SelectableAbility {
         }
 
         for (var obj : list){
-            player.sendSystemMessage(Component.literal(
-                    "Trigger: " + obj.trigger().getType()
-                    + ", action: " + obj.trigger().getActionType()
-                    + " set by " + BeyonderData.playerMap.get(obj.casterId()).map(data -> data.trueName()).orElse("?")
-            ));
+            player.sendSystemMessage(Component.translatableWithFallback("lotmcraft.text.trigger_action_set_by", "Trigger: %s, action: %s set by %s", String.valueOf(obj.trigger().getType()), String.valueOf(obj.trigger().getActionType()), String.valueOf(BeyonderData.playerMap.get(obj.casterId()).map(data -> data.trueName()).orElse("?"))));
         }
     }
 

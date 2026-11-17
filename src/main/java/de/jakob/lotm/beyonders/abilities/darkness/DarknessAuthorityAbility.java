@@ -33,6 +33,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import de.jakob.lotm.util.LotmText;
 
 @EventBusSubscriber(modid = LOTMCraft.MOD_ID)
 public class DarknessAuthorityAbility extends SelectableAbility {
@@ -79,7 +80,7 @@ public class DarknessAuthorityAbility extends SelectableAbility {
     private void pour(ServerLevel level, ServerPlayer player, boolean destination) {
         DarknessPourEntity pour = new DarknessPourEntity(level, player.getX(), player.getY(), player.getZ(), player, destination);
         level.addFreshEntity(pour);
-        bar(player, destination ? "All things meet their destination." : "Darkness pours.");
+        bar(player, destination ? LotmText.t("lotmcraft.text.all_things_meet_their_destination", "All things meet their destination.") : LotmText.t("lotmcraft.text.darkness_pours", "Darkness pours."));
     }
 
     private void slumber(ServerLevel level, ServerPlayer player) {
@@ -95,7 +96,7 @@ public class DarknessAuthorityAbility extends SelectableAbility {
             lifted = true;
         }
         if (lifted) {
-            bar(player, "Eternal slumber lifts.");
+            bar(player, LotmText.t("lotmcraft.text.eternal_slumber_lifts", "Eternal slumber lifts."));
             return;
         }
         BlockPos center = target.blockPosition();
@@ -116,7 +117,7 @@ public class DarknessAuthorityAbility extends SelectableAbility {
         slumbers.add(new Slumber(level, target, center, replaced, level.getGameTime() + 20L * 15));
         clearMind(target);
         level.sendParticles(DUST, center.getX() + 0.5, center.getY(), center.getZ() + 0.5, 40, 1.2, 0.2, 1.2, 0.01);
-        bar(player, "Eternal slumber takes them.");
+        bar(player, LotmText.t("lotmcraft.text.eternal_slumber_takes_them", "Eternal slumber takes them."));
     }
 
     @SubscribeEvent

@@ -369,7 +369,7 @@ public abstract class Ability {
         if(!hasAbility(entity, false) && hasToHaveAbility && !isCopied) return false;
         if (!(this instanceof BloodlinePhantomAbility) && BloodlinePhantomAbility.blocksAbilities(entity)) {
             if (entity instanceof ServerPlayer player) {
-                AbilityUtil.sendActionBar(player, Component.literal("You can't use abilities in Phantom form.").withColor(0xBFA7FF));
+                AbilityUtil.sendActionBar(player, Component.translatableWithFallback("lotmcraft.text.you_can_t_use_abilities_in", "You can't use abilities in Phantom form.").withColor(0xBFA7FF));
             }
             return false;
         }

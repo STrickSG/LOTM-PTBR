@@ -74,7 +74,7 @@ public class UniquenessCommand {
 
     private static int checkHolder(CommandSourceStack source, String pathway) {
         if (!BeyonderData.implementedPathways.contains(pathway)) {
-            source.sendFailure(Component.literal("Unknown or unimplemented pathway: " + pathway));
+            source.sendFailure(Component.translatableWithFallback("lotmcraft.text.unknown_or_unimplemented_pathway", "Unknown or unimplemented pathway: %s", String.valueOf(pathway)));
             return 0;
         }
 
@@ -93,16 +93,14 @@ public class UniquenessCommand {
 
         if (holders.isEmpty()) {
             if (entityExists) {
-                source.sendSuccess(() -> Component.literal("The " + pathway + " uniqueness is currently in the world (not held by any player)."), false);
+                source.sendSuccess(() -> Component.translatableWithFallback("lotmcraft.text.the_uniqueness_is_currently_in_the", "The %s uniqueness is currently in the world (not held by any player).", String.valueOf(pathway)), false);
             } else {
-                source.sendSuccess(() -> Component.literal("The " + pathway + " uniqueness is not currently in the world and not held by any player."), false);
+                source.sendSuccess(() -> Component.translatableWithFallback("lotmcraft.text.the_uniqueness_is_not_currently_in", "The %s uniqueness is not currently in the world and not held by any player.", String.valueOf(pathway)), false);
             }
         } else {
             for (ServerPlayer holder : holders) {
                 int killCount = holder.getData(ModAttachments.UNIQUENESS_COMPONENT).getKillCount();
-                source.sendSuccess(() -> Component.literal(
-                        holder.getName().getString() + " holds the " + pathway + " uniqueness. Kill count: " + killCount
-                ), false);
+                source.sendSuccess(() -> Component.translatableWithFallback("lotmcraft.text.holds_the_uniqueness_kill_count", "%s holds the %s uniqueness. Kill count: %s", String.valueOf(holder.getName().getString()), String.valueOf(pathway), String.valueOf(killCount)), false);
             }
         }
 
@@ -111,7 +109,7 @@ public class UniquenessCommand {
 
     private static int removeUniqueness(CommandSourceStack source, String pathway) {
         if (!BeyonderData.implementedPathways.contains(pathway)) {
-            source.sendFailure(Component.literal("Unknown or unimplemented pathway: " + pathway));
+            source.sendFailure(Component.translatableWithFallback("lotmcraft.text.unknown_or_unimplemented_pathway", "Unknown or unimplemented pathway: %s", String.valueOf(pathway)));
             return 0;
         }
 
@@ -123,7 +121,7 @@ public class UniquenessCommand {
                 .toList();
 
         if (holders.isEmpty()) {
-            source.sendFailure(Component.literal("No online player currently holds the " + pathway + " uniqueness."));
+            source.sendFailure(Component.translatableWithFallback("lotmcraft.text.no_online_player_currently_holds_the", "No online player currently holds the %s uniqueness.", String.valueOf(pathway)));
             return 0;
         }
 
@@ -133,7 +131,7 @@ public class UniquenessCommand {
             comp.setUniquenessPathway("");
             BeyonderData.playerMap.setUniqueness(holder, "none");
             PacketHandler.syncUniquenessToPlayer(holder);
-            source.sendSuccess(() -> Component.literal("Removed uniqueness from " + holder.getName().getString()), false);
+            source.sendSuccess(() -> Component.translatableWithFallback("lotmcraft.text.removed_uniqueness_from", "Removed uniqueness from %s", String.valueOf(holder.getName().getString())), false);
         }
 
         return 1;

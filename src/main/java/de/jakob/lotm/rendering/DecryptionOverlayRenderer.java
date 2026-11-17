@@ -24,6 +24,7 @@ import net.neoforged.neoforge.client.gui.VanillaGuiLayers;
 import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
+import de.jakob.lotm.util.LotmText;
 
 @OnlyIn(Dist.CLIENT)
 @EventBusSubscriber(modid = LOTMCraft.MOD_ID, value = Dist.CLIENT)
@@ -249,12 +250,12 @@ public class DecryptionOverlayRenderer {
         int level = ErrorClientState.decryptionLevel;
         float fraction = level >= 5 ? 1f : ErrorClientState.decryptionFraction;
 
-        g.drawString(font, "DECRYPTION", x, y, TEXT_DIM, false);
+        g.drawString(font, LotmText.t("lotmcraft.text.decryption", "DECRYPTION"), x, y, TEXT_DIM, false);
         String count = level + "/5";
         int countX = x + w - font.width(count);
         g.drawString(font, count, countX, y, level >= 5 ? ACCENT : TEXT, false);
 
-        int pipsX = x + font.width("DECRYPTION") + 6;
+        int pipsX = x + font.width(LotmText.t("lotmcraft.text.decryption", "DECRYPTION")) + 6;
         int pipsW = countX - 6 - pipsX;
         int gap = 2;
         int pipW = (pipsW - gap * 4) / 5;
@@ -287,7 +288,7 @@ public class DecryptionOverlayRenderer {
             return;
         }
 
-        String label = "STEALABLE";
+        String label = LotmText.t("lotmcraft.text.stealable", "STEALABLE");
         g.drawString(font, label, centerX - font.width(label) / 2, y, TEXT_DIM, true);
         y += 11;
 

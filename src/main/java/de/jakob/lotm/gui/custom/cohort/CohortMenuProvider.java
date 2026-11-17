@@ -12,6 +12,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.HashMap;
 import java.util.List;
+import de.jakob.lotm.util.LotmText;
 
 public class CohortMenuProvider implements MenuProvider {
 
@@ -22,7 +23,7 @@ public class CohortMenuProvider implements MenuProvider {
 
     @Override
     public @NotNull Component getDisplayName() {
-        return Component.translatable("lotm.cohort_menu").append(" ("+this.members.size() + " members)").withStyle(ChatFormatting.BOLD, ChatFormatting.RED);
+        return Component.translatable("lotm.cohort_menu").append(LotmText.f("lotmcraft.text.members", " (%s members)", this.members.size())).withStyle(ChatFormatting.BOLD, ChatFormatting.RED);
     }
 
     @Override

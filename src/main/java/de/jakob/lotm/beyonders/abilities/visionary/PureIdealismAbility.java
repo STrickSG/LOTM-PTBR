@@ -60,7 +60,7 @@ public class PureIdealismAbility extends SelectableAbility {
         int entitySeq = AbilityUtil.getSeqWithArt(entity, this);
         String path = BeyonderData.getPathway(entity);
         if(!path.equals("visionary")){
-            AbilityUtil.sendActionBar(entity, Component.literal("You have to be from visionary pathway!").withColor(0xFFff124d));
+            AbilityUtil.sendActionBar(entity, Component.translatableWithFallback("lotmcraft.text.you_have_to_be_from_visionary", "You have to be from visionary pathway!").withColor(0xFFff124d));
             return;
         }
 
@@ -127,9 +127,7 @@ public class PureIdealismAbility extends SelectableAbility {
         preMeditation.put(entity.getUUID(), Pair.of(path, seq));
 
         player.sendSystemMessage(
-                Component.literal(
-                        "Gathered role: sequence " + seq + " of " + path + " pathway" +
-                                "\nMeditation will take: " + getMeditationDuration(BeyonderData.getSequence(entity), seq) + " sec")
+                Component.translatableWithFallback("lotmcraft.text.gathered_role_sequence_of_pathway_meditation", "Gathered role: sequence %s of %s pathway\nMeditation will take: %s sec", String.valueOf(seq), String.valueOf(path), String.valueOf(getMeditationDuration(BeyonderData.getSequence(entity), seq)))
                         .withColor(0xf5c56c));
     }
 

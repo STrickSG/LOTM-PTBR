@@ -130,11 +130,11 @@ public class BeyonderData {
 
     public static String getSequenceName(String pathway, int sequence) {
         if(!pathwayInfos.containsKey(pathway))
-            return "Unknown";
+            return LotmText.t("lotmcraft.text.unknown", "Unknown");
 
         PathwayInfos infos = pathwayInfos.get(pathway);
         if(sequence == LOTMCraft.NON_BEYONDER_SEQ || sequence >= infos.sequenceNames().length)
-            return "Unknown";
+            return LotmText.t("lotmcraft.text.unknown", "Unknown");
 
         return infos.getSequenceName(sequence);
     }

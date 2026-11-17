@@ -29,6 +29,7 @@ import org.joml.Vector3f;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArrayList;
+import de.jakob.lotm.util.LotmText;
 
 public class ProhibitionAbility extends SelectableAbility {
 
@@ -145,7 +146,7 @@ public class ProhibitionAbility extends SelectableAbility {
         }, null, serverLevel);
 
         String typeName = type.displayName;
-        Component message = Component.literal("§6⚖ §fProhibition declared: §e" + typeName + " §6⚖")
+        Component message = Component.translatableWithFallback("lotmcraft.text.prohibition_declared", "§6⚖ §fProhibition declared: §e%s §6⚖", String.valueOf(typeName))
                 .withStyle(ChatFormatting.WHITE);
 
         serverLevel.getServer().getPlayerList().getPlayers().forEach(p -> {
@@ -226,15 +227,15 @@ public class ProhibitionAbility extends SelectableAbility {
     }
 
     public enum ProhibitionType {
-        BEYONDER_ABILITIES("Beyonder Abilities"),
-        COMBAT("Combat"),
-        FLYING("Flying"),
-        ITEM_USE("Item Use"),
-        PLAYERS("Players"),
-        OUTSIDE_WORLD("Outside World"),
-        STAND_INS("Stand-ins"),
-        MARIONETTE_INTERCHANGE("Marionette Interchange"),
-        THEFT("Theft");
+        BEYONDER_ABILITIES(LotmText.t("lotmcraft.text.beyonder_abilities", "Beyonder Abilities")),
+        COMBAT(LotmText.t("lotmcraft.text.combat", "Combat")),
+        FLYING(LotmText.t("lotmcraft.text.flying", "Flying")),
+        ITEM_USE(LotmText.t("lotmcraft.text.item_use", "Item Use")),
+        PLAYERS(LotmText.t("lotmcraft.text.players", "Players")),
+        OUTSIDE_WORLD(LotmText.t("lotmcraft.text.outside_world", "Outside World")),
+        STAND_INS(LotmText.t("lotmcraft.text.stand_ins", "Stand-ins")),
+        MARIONETTE_INTERCHANGE(LotmText.t("lotmcraft.text.marionette_interchange", "Marionette Interchange")),
+        THEFT(LotmText.t("lotmcraft.text.theft", "Theft"));
 
         public final String displayName;
 

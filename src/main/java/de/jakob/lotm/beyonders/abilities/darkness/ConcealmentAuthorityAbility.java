@@ -44,6 +44,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
 import java.util.regex.Pattern;
+import de.jakob.lotm.util.LotmText;
 
 @EventBusSubscriber(modid = LOTMCraft.MOD_ID)
 public class ConcealmentAuthorityAbility extends SelectableAbility {
@@ -117,9 +118,9 @@ public class ConcealmentAuthorityAbility extends SelectableAbility {
             if (!undivinable(diviner.getServer().getPlayerList().getPlayer(rule.caster))) continue;
             if (rule.spirit) {
                 forceSpiritVision(diviner);
-                return "§5Spirit vision swallows the divination.";
+                return LotmText.t("lotmcraft.text.spirit_vision_swallows_the_divination", "§5Spirit vision swallows the divination.");
             }
-            return "§5You sense §d" + rule.outcome + "§5";
+            return LotmText.f("lotmcraft.text.you_sense", "§5You sense §d%s§5", rule.outcome);
         }
         return null;
     }
@@ -135,9 +136,9 @@ public class ConcealmentAuthorityAbility extends SelectableAbility {
             if (dx * dx + dz * dz > (long) NEAR * NEAR) continue;
             if (rule.spirit) {
                 forceSpiritVision(diviner);
-                return "§5Spirit vision swallows the divination.";
+                return LotmText.t("lotmcraft.text.spirit_vision_swallows_the_divination", "§5Spirit vision swallows the divination.");
             }
-            return "§5You sense §d" + rule.outcome + "§5";
+            return LotmText.f("lotmcraft.text.you_sense", "§5You sense §d%s§5", rule.outcome);
         }
         return null;
     }
@@ -177,13 +178,13 @@ public class ConcealmentAuthorityAbility extends SelectableAbility {
                 double x = Double.parseDouble(parts[0]);
                 double z = Double.parseDouble(parts[1]);
                 rules.add(new Rule(player.getUUID(), trimmed, true, player.serverLevel().dimension(), x, z, result, spirit));
-                bar(player, "The divination is bent.");
+                bar(player, LotmText.t("lotmcraft.text.the_divination_is_bent", "The divination is bent."));
                 return;
             } catch (NumberFormatException ignored) {
             }
         }
         rules.add(new Rule(player.getUUID(), trimmed, false, null, 0, 0, result, spirit));
-        bar(player, "The divination is bent.");
+        bar(player, LotmText.t("lotmcraft.text.the_divination_is_bent", "The divination is bent."));
     }
 
     public static void releaseRule(ServerPlayer player, int index) {
@@ -192,7 +193,7 @@ public class ConcealmentAuthorityAbility extends SelectableAbility {
             if (!rules.get(i).caster.equals(player.getUUID())) continue;
             if (seen == index) {
                 rules.remove(i);
-                bar(player, "That mislead fades.");
+                bar(player, LotmText.t("lotmcraft.text.that_mislead_fades", "That mislead fades."));
                 return;
             }
             seen++;
@@ -231,10 +232,10 @@ public class ConcealmentAuthorityAbility extends SelectableAbility {
 //Door conceal name uses it
     public static void concealName(LivingEntity entity) {
         if (!(entity instanceof ServerPlayer player)) return;
-        if (hiddenNames.remove(player.getUUID())) bar(player, "The name can be written again.");
+        if (hiddenNames.remove(player.getUUID())) bar(player, LotmText.t("lotmcraft.text.the_name_can_be_written_again", "The name can be written again."));
         else {
             hiddenNames.add(player.getUUID());
-            bar(player, "The name will not be written.");
+            bar(player, LotmText.t("lotmcraft.text.the_name_will_not_be_written", "The name will not be written."));
         }
     }
 
@@ -350,8 +351,8 @@ public class ConcealmentAuthorityAbility extends SelectableAbility {
         long now = owner.serverLevel().getGameTime();
         if (now - told.getOrDefault(owner.getUUID(), 0L) < 60) return;
         told.put(owner.getUUID(), now);
-        String who = writer == null ? "Someone" : writer.getGameProfile().getName();
-        owner.sendSystemMessage(Component.literal(who + " tried to write your name.").withColor(0xFF3300b5));
+        String who = writer == null ? LotmText.t("lotmcraft.text.someone", "Someone") : writer.getGameProfile().getName();
+        owner.sendSystemMessage(Component.translatableWithFallback("lotmcraft.text.tried_to_write_your_name", "%s tried to write your name.", String.valueOf(who)).withColor(0xFF3300b5));
     }
 
     private static void pray(ServerPlayer owner, ServerPlayer writer) {

@@ -56,6 +56,7 @@ import org.joml.Vector3f;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicReference;
+import de.jakob.lotm.util.LotmText;
 
 @EventBusSubscriber(modid = LOTMCraft.MOD_ID)
 public class NightmareAbility extends SelectableAbility {
@@ -131,7 +132,7 @@ public class NightmareAbility extends SelectableAbility {
 
         if(!inNightmare(entity)) {
             if(entity instanceof ServerPlayer player) {
-                ClientboundSetActionBarTextPacket packet = new ClientboundSetActionBarTextPacket(Component.literal("You need to create a Nightmare first.").withColor(0xFFff124d));
+                ClientboundSetActionBarTextPacket packet = new ClientboundSetActionBarTextPacket(Component.translatableWithFallback("lotmcraft.text.you_need_to_create_a_nightmare", "You need to create a Nightmare first.").withColor(0xFFff124d));
                 player.connection.send(packet);
             }
             return;
@@ -140,7 +141,7 @@ public class NightmareAbility extends SelectableAbility {
         Vec3 targetLoc = getTargetBlock(entity, 8).getCenter().add(0, 1, 0);
         if(!isBlockInRadius(targetLoc, entity.getUUID())) {
             if(entity instanceof ServerPlayer player) {
-                ClientboundSetActionBarTextPacket packet = new ClientboundSetActionBarTextPacket(Component.literal("You cant teleport outside the nightmare.").withColor(0xFFff124d));
+                ClientboundSetActionBarTextPacket packet = new ClientboundSetActionBarTextPacket(Component.translatableWithFallback("lotmcraft.text.you_cant_teleport_outside_the_nightmare", "You cant teleport outside the nightmare.").withColor(0xFFff124d));
                 player.connection.send(packet);
             }
             return;
@@ -159,7 +160,7 @@ public class NightmareAbility extends SelectableAbility {
 
         if(!inNightmare(entity)) {
             if(entity instanceof ServerPlayer player) {
-                ClientboundSetActionBarTextPacket packet = new ClientboundSetActionBarTextPacket(Component.literal("You need to create a Nightmare first.").withColor(0xFFff124d));
+                ClientboundSetActionBarTextPacket packet = new ClientboundSetActionBarTextPacket(Component.translatableWithFallback("lotmcraft.text.you_need_to_create_a_nightmare", "You need to create a Nightmare first.").withColor(0xFFff124d));
                 player.connection.send(packet);
             }
             return;
@@ -168,7 +169,7 @@ public class NightmareAbility extends SelectableAbility {
         Vec3 targetLoc = AbilityUtil.getTargetLocation(entity, baseDistance, 2);
         if(!isBlockInRadius(targetLoc, entity.getUUID())) {
             if(entity instanceof ServerPlayer player) {
-                ClientboundSetActionBarTextPacket packet = new ClientboundSetActionBarTextPacket(Component.literal("You cant attack outside the nightmare.").withColor(0xFFff124d));
+                ClientboundSetActionBarTextPacket packet = new ClientboundSetActionBarTextPacket(Component.translatableWithFallback("lotmcraft.text.you_cant_attack_outside_the_nightmare", "You cant attack outside the nightmare.").withColor(0xFFff124d));
                 player.connection.send(packet);
             }
             return;
@@ -205,7 +206,7 @@ public class NightmareAbility extends SelectableAbility {
 
         if(!inNightmare(entity)) {
             if(entity instanceof ServerPlayer player) {
-                ClientboundSetActionBarTextPacket packet = new ClientboundSetActionBarTextPacket(Component.literal("You need to create a Nightmare first.").withColor(0xFFff124d));
+                ClientboundSetActionBarTextPacket packet = new ClientboundSetActionBarTextPacket(Component.translatableWithFallback("lotmcraft.text.you_need_to_create_a_nightmare", "You need to create a Nightmare first.").withColor(0xFFff124d));
                 player.connection.send(packet);
             }
             return;
@@ -255,7 +256,7 @@ public class NightmareAbility extends SelectableAbility {
 
         if(!inNightmare(entity)) {
             if(entity instanceof ServerPlayer player) {
-                ClientboundSetActionBarTextPacket packet = new ClientboundSetActionBarTextPacket(Component.literal("You need to create a Nightmare first.").withColor(0xFFff124d));
+                ClientboundSetActionBarTextPacket packet = new ClientboundSetActionBarTextPacket(Component.translatableWithFallback("lotmcraft.text.you_need_to_create_a_nightmare", "You need to create a Nightmare first.").withColor(0xFFff124d));
                 player.connection.send(packet);
             }
             return;
@@ -265,7 +266,7 @@ public class NightmareAbility extends SelectableAbility {
         BlockState state = level.getBlockState(targetLoc);
         if(!isBlockInRadius(targetLoc.getCenter(), entity.getUUID()) || state.getCollisionShape(level, targetLoc).isEmpty()) {
             if(entity instanceof ServerPlayer player) {
-                ClientboundSetActionBarTextPacket packet = new ClientboundSetActionBarTextPacket(Component.literal("Select a solid block inside the nightmare.").withColor(0xFFff124d));
+                ClientboundSetActionBarTextPacket packet = new ClientboundSetActionBarTextPacket(Component.translatableWithFallback("lotmcraft.text.select_a_solid_block_inside_the", "Select a solid block inside the nightmare.").withColor(0xFFff124d));
                 player.connection.send(packet);
             }
             return;
@@ -382,16 +383,16 @@ public class NightmareAbility extends SelectableAbility {
             if (otherSeq == playerSeq) same.add(entry.getKey());
         }
         if (!same.isEmpty()) {
-            bar(caster, "Both nightmares are broken.");
+            bar(caster, LotmText.t("lotmcraft.text.both_nightmares_are_broken", "Both nightmares are broken."));
             for (UUID id : same) {
                 LivingEntity other = find(server, id);
-                if (other instanceof ServerPlayer player && player != caster) bar(player, "Both nightmares are broken.");
+                if (other instanceof ServerPlayer player && player != caster) bar(player, LotmText.t("lotmcraft.text.both_nightmares_are_broken", "Both nightmares are broken."));
                 stopNightmare(id);
             }
             return;
         }
         if (dreamOf(caster.getUUID()) != null) {
-            bar(caster, "You are already dreaming.");
+            bar(caster, LotmText.t("lotmcraft.text.you_are_already_dreaming", "You are already dreaming."));
             return;
         }
 
@@ -406,7 +407,7 @@ public class NightmareAbility extends SelectableAbility {
         }
         pool.removeIf(candidate -> candidate instanceof NightmareBodyEntity || candidate instanceof ControlBodyDouble);
         if (pool.isEmpty()) {
-            bar(caster, "No target in sight.");
+            bar(caster, LotmText.t("lotmcraft.text.no_target_in_sight", "No target in sight."));
             return;
         }
 
@@ -429,13 +430,13 @@ public class NightmareAbility extends SelectableAbility {
             pulled.add(candidate);
         }
         if (pulled.isEmpty()) {
-            bar(caster, tooStrong ? "Their spirituality is too high." : dreaming ? "They are already dreaming." : "No target in sight.");
+            bar(caster, tooStrong ? LotmText.t("lotmcraft.text.their_spirituality_is_too_high", "Their spirituality is too high.") : dreaming ? LotmText.t("lotmcraft.text.they_are_already_dreaming", "They are already dreaming.") : LotmText.t("lotmcraft.text.no_target_in_sight", "No target in sight."));
             return;
         }
 
         ServerLevel maze = server.getLevel(ModDimensions.DREAM_MAZE_DIMENSION_KEY);
         if (maze == null) {
-            bar(caster, "The dream has nowhere to open.");
+            bar(caster, LotmText.t("lotmcraft.text.the_dream_has_nowhere_to_open", "The dream has nowhere to open."));
             return;
         }
 

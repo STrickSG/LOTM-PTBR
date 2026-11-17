@@ -19,6 +19,7 @@ import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.event.tick.ServerTickEvent;
 
 import java.util.UUID;
+import de.jakob.lotm.util.LotmText;
 
 @EventBusSubscriber(modid = LOTMCraft.MOD_ID)
 public class LifeDeathHandler {
@@ -57,7 +58,7 @@ public class LifeDeathHandler {
                 //terms done start the link right away
                 data.setLifeDeathStartGameTime(now);
                 ContractItem.writeData(stack, data);
-                notifyParties(server, data, "The life-bond has begun.", 0x9932CC);
+                notifyParties(server, data, LotmText.t("lotmcraft.text.the_life_bond_has_begun", "The life-bond has begun."), 0x9932CC);
             }
         }
     }
@@ -124,7 +125,7 @@ public class LifeDeathHandler {
         }
         data.setLifeDeathExpired(true);
         data.setComplete(true);
-        notifyParties(server, data, "The life-bond has ended.", 0x9932CC);
+        notifyParties(server, data, LotmText.t("lotmcraft.text.the_life_bond_has_ended", "The life-bond has ended."), 0x9932CC);
         if (data.hasAnySoulTerm()) {ContractItem.writeData(stack, data);}
         else {
             data.setActive(false);

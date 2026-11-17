@@ -2762,5 +2762,9 @@
   "biome.lotmcraft.spirit_world_patch": "Parcela del mundo espiritual",
   "item.lotmcraft.mother_uniqueness": "Unicidad de la Madre",
   "item.lotmcraft.demoness_uniqueness": "Unicidad de la Demonesa",
-  "item.lotmcraft.justiciar_uniqueness": "Unicidad del Justiciero"
+  "item.lotmcraft.justiciar_uniqueness": "Unicidad del Justiciero",
+  "lotm.potion_recipe.named": "%s Receta de Poción",
+  "lotm.pathway.named": "%s Vía",
+  "lotm.beyonder_characteristic.named": "%s Característica de Beyonder",
+  "lotm.potion.named": "%s Poción"
 }

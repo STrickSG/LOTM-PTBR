@@ -27,8 +27,7 @@ public class KillCountCommand {
                         killCount.setKillCount(amount);
                         PacketHandler.sendToPlayer(target, new SyncKillCountPacket(amount));
 
-                        context.getSource().sendSuccess(() -> Component.literal(
-                                "Set kill count of " + target.getName().getString() + " to " + amount), true);
+                        context.getSource().sendSuccess(() -> Component.translatableWithFallback("lotmcraft.text.set_kill_count_of_to", "Set kill count of %s to %s", String.valueOf(target.getName().getString()), String.valueOf(amount)), true);
                         return 1;
                     })
                 )

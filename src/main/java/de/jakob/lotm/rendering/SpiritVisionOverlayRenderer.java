@@ -26,6 +26,7 @@ import net.neoforged.neoforge.client.gui.VanillaGuiLayers;
 import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
+import de.jakob.lotm.util.LotmText;
 
 @EventBusSubscriber(modid = LOTMCraft.MOD_ID, value = Dist.CLIENT)
 public class SpiritVisionOverlayRenderer {
@@ -80,7 +81,7 @@ public class SpiritVisionOverlayRenderer {
                     || (ClientBeyonderCache.getPathway(mc.player.getUUID()).equals("visionary") && ClientBeyonderCache.getSequence(mc.player.getUUID()) < ClientBeyonderCache.getSequence(entity.getUUID()))
                     || AbilityUtil.isTargetSignificantlyStronger(ClientBeyonderCache.getSequence(entity.getUUID()), ClientBeyonderCache.getSequence(mc.player.getUUID()))) {
 
-                name = name + " (Shape Shifting)";
+                name = LotmText.f("lotmcraft.text.shape_shifting", "%s (Shape Shifting)", name);
                 maxHealth = entity.getMaxHealth();
                 health = entity.getHealth();
             }

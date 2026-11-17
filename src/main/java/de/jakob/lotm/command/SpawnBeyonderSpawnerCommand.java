@@ -154,13 +154,12 @@ public class SpawnBeyonderSpawnerCommand {
     ) {
         try {
             if (hasQuest && hasTrades) {
-                source.sendFailure(Component.literal("Cannot have both hasQuest and hasTrades set to true!"));
+                source.sendFailure(Component.translatableWithFallback("lotmcraft.text.cannot_have_both_hasquest_and_hastrades", "Cannot have both hasQuest and hasTrades set to true!"));
                 return 0;
             }
 
             if (sequenceMax >= 0 && sequenceMax < sequenceMin) {
-                source.sendFailure(Component.literal(
-                        "sequenceMax (" + sequenceMax + ") must be >= sequenceMin (" + sequenceMin + ")!"));
+                source.sendFailure(Component.translatableWithFallback("lotmcraft.text.sequencemax_must_be_sequencemin", "sequenceMax (%s) must be >= sequenceMin (%s)!", String.valueOf(sequenceMax), String.valueOf(sequenceMin)));
                 return 0;
             }
 
@@ -168,8 +167,7 @@ public class SpawnBeyonderSpawnerCommand {
             if (pathway.equalsIgnoreCase("random")) {
                 resolvedPathway = ""; // entity handles random selection
             } else if (!BeyonderData.pathways.contains(pathway)) {
-                source.sendFailure(Component.literal("Unknown pathway: " + pathway
-                        + ". Use \"random\" for a random pathway."));
+                source.sendFailure(Component.translatableWithFallback("lotmcraft.text.unknown_pathway_use_random_for_a", "Unknown pathway: %s. Use \"random\" for a random pathway.", String.valueOf(pathway)));
                 return 0;
             }
 
@@ -201,17 +199,11 @@ public class SpawnBeyonderSpawnerCommand {
                     : "sequence " + sequenceMin;
             String pathwayDisplay = resolvedPathway.isBlank() ? "random" : resolvedPathway;
 
-            source.sendSuccess(() -> Component.literal(
-                    "Placed BeyonderSpawner at (" + (int)x + ", " + (int)y + ", " + (int)z + "):\n"
-                    + "  Radius: " + triggerRadius + " | Required player seq ≤ " + minSequence + "\n"
-                    + "  Pathway: " + pathwayDisplay + " | " + seqDisplay + "\n"
-                    + "  Quest=" + hasQuest + " Trades=" + hasTrades
-                    + " Animation=" + spawnAnimation
-            ), false);
+            source.sendSuccess(() -> Component.translatableWithFallback("lotmcraft.text.placed_beyonderspawner_at_radius_required_player", "Placed BeyonderSpawner at (%s, %s, %s):\n  Radius: %s | Required player seq ≤ %s\n  Pathway: %s | %s\n  Quest=%s Trades=%s Animation=%s", String.valueOf((int)x), String.valueOf((int)y), String.valueOf((int)z), String.valueOf(triggerRadius), String.valueOf(minSequence), String.valueOf(pathwayDisplay), String.valueOf(seqDisplay), String.valueOf(hasQuest), String.valueOf(hasTrades), String.valueOf(spawnAnimation)), false);
 
             return 1;
         } catch (Exception e) {
-            source.sendFailure(Component.literal("Failed to place BeyonderSpawner: " + e.getMessage()));
+            source.sendFailure(Component.translatableWithFallback("lotmcraft.text.failed_to_place_beyonderspawner", "Failed to place BeyonderSpawner: %s", String.valueOf(e.getMessage())));
             return 0;
         }
     }

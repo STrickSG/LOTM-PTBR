@@ -18,6 +18,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Random;
+import de.jakob.lotm.util.LotmText;
 
 public class DevilWorshipScreen extends Screen {
     private enum Page { LIST, SEEK_TYPE, SEEK_CONFIG, FACTIONS, FACTION_OPTIONS, TARGET, DETAIL }
@@ -111,7 +112,7 @@ public class DevilWorshipScreen extends Screen {
     private int seekSequence = DevilWorshipAbility.SEEK_MAX_SEQ;
     public static void open(int pleasure, String tribute, List<DevilWorshipNetwork.PlayerEntry> players, List<String> pathways) {Minecraft.getInstance().setScreen(new DevilWorshipScreen(pleasure, tribute, players, pathways));}
     private DevilWorshipScreen(int pleasure, String tribute, List<DevilWorshipNetwork.PlayerEntry> players, List<String> pathways) {
-        super(Component.literal("Summon Devil"));
+        super(Component.translatableWithFallback("lotmcraft.text.summon_devil", "Summon Devil"));
         this.pleasure = pleasure;
         this.tribute = tribute;
         this.players = players;
@@ -301,7 +302,7 @@ public class DevilWorshipScreen extends Screen {
         switch (page) {
             case LIST -> {
                 if (pleasure >= 100) {
-                    add(cx - 180, y, 360, "Seek a Characteristic, Recipe or Ingredient", "The Devil searches the world for what you ask for. Stronger sequences and chosen pathways take longer.", () -> goTo(Page.SEEK_TYPE));
+                    add(cx - 180, y, 360, LotmText.t("lotmcraft.text.seek_a_characteristic_recipe_or_ingredient", "Seek a Characteristic, Recipe or Ingredient"), LotmText.t("lotmcraft.text.the_devil_searches_the_world_for", "The Devil searches the world for what you ask for. Stronger sequences and chosen pathways take longer."), () -> goTo(Page.SEEK_TYPE));
                     y += 22;
                     DevilWorshipAbility.MissionDef kill = DevilWorshipAbility.KILL_PLAYER_MISSION;
                     missionButton(cx, y, kill, () -> {
@@ -317,29 +318,29 @@ public class DevilWorshipScreen extends Screen {
                     });
                     y += 22;
 
-                    add(cx - 180, y, 360, "Raid a Faction", "Send the Devil against a faction's beyonder team, church or cathedral.", () -> goTo(Page.FACTIONS));
+                    add(cx - 180, y, 360, LotmText.t("lotmcraft.text.raid_a_faction", "Raid a Faction"), LotmText.t("lotmcraft.text.send_the_devil_against_a_faction", "Send the Devil against a faction's beyonder team, church or cathedral."), () -> goTo(Page.FACTIONS));
                     y += 22;
                 }
-                add(cx - 60, Math.max(y + 8, 130), 120, "Close", null, this::onClose);
+                add(cx - 60, Math.max(y + 8, 130), 120, LotmText.t("lotmcraft.text.close", "Close"), null, this::onClose);
             }
             case SEEK_TYPE -> {
-                add(cx - 120, y, 240, "Characteristic", null, () -> startSeek(DevilWorshipAbility.Reward.CHARACTERISTIC));
+                add(cx - 120, y, 240, LotmText.t("lotmcraft.text.characteristic_2", "Characteristic"), null, () -> startSeek(DevilWorshipAbility.Reward.CHARACTERISTIC));
                 y += 24;
-                add(cx - 120, y, 240, "Recipe", null, () -> startSeek(DevilWorshipAbility.Reward.RECIPE));
+                add(cx - 120, y, 240, LotmText.t("lotmcraft.text.recipe_2", "Recipe"), null, () -> startSeek(DevilWorshipAbility.Reward.RECIPE));
                 y += 24;
-                add(cx - 120, y, 240, "Ingredient", "A sub-ingredient. Main ingredients are never found this way.",
+                add(cx - 120, y, 240, LotmText.t("lotmcraft.text.ingredient", "Ingredient"), LotmText.t("lotmcraft.text.a_sub_ingredient_main_ingredients_are", "A sub-ingredient. Main ingredients are never found this way."),
                         () -> startSeek(DevilWorshipAbility.Reward.SUB_INGREDIENT));
                 y += 24;
-                add(cx - 120, y + 8, 240, "Back", null, () -> goBack(Page.LIST));
+                add(cx - 120, y + 8, 240, LotmText.t("lotmcraft.text.back", "Back"), null, () -> goBack(Page.LIST));
             }
             case SEEK_CONFIG -> {
                 // Pathway row and sequence row. The labels are drawn in render() so the arrows don't need a rebuild.
                 add(cx - 150, 96, 20, "<", null, () -> cyclePathway(-1));
                 add(cx + 130, 96, 20, ">", null, () -> cyclePathway(1));
-                add(cx - 150, 124, 20, "<", "Weaker (takes less time)", () -> changeSequence(1));
-                add(cx + 130, 124, 20, ">", "Stronger (takes longer)", () -> changeSequence(-1));
-                eyeButtons.add(add(cx - 120, 186, 240, "Begin", null, this::confirmSeek));
-                add(cx - 120, 210, 240, "Back", null, () -> goBack(Page.SEEK_TYPE));
+                add(cx - 150, 124, 20, "<", LotmText.t("lotmcraft.text.weaker_takes_less_time", "Weaker (takes less time)"), () -> changeSequence(1));
+                add(cx + 130, 124, 20, ">", LotmText.t("lotmcraft.text.stronger_takes_longer", "Stronger (takes longer)"), () -> changeSequence(-1));
+                eyeButtons.add(add(cx - 120, 186, 240, LotmText.t("lotmcraft.text.begin", "Begin"), null, this::confirmSeek));
+                add(cx - 120, 210, 240, LotmText.t("lotmcraft.text.back", "Back"), null, () -> goBack(Page.SEEK_TYPE));
             }
             case FACTIONS -> {
                 for (DevilWorshipAbility.Faction faction : DevilWorshipAbility.FACTIONS) {
@@ -349,13 +350,13 @@ public class DevilWorshipScreen extends Screen {
                     });
                     y += 24;
                 }
-                add(cx - 120, y, 240, "None", "An abandoned cathedral with no faction.", () -> {
+                add(cx - 120, y, 240, LotmText.t("lotmcraft.text.none", "None"), LotmText.t("lotmcraft.text.an_abandoned_cathedral_with_no_faction", "An abandoned cathedral with no faction."), () -> {
                     selectedIndex = DevilWorshipAbility.MISSIONS.indexOf(DevilWorshipAbility.ABANDONED_CATHEDRAL);
                     detailBack = Page.FACTIONS;
                     goTo(Page.DETAIL);
                 });
                 y += 24;
-                add(cx - 120, y + 8, 240, "Back", null, () -> goBack(Page.LIST));
+                add(cx - 120, y + 8, 240, LotmText.t("lotmcraft.text.back", "Back"), null, () -> goBack(Page.LIST));
             }
             case FACTION_OPTIONS -> {
                 if (selectedFaction != null) {
@@ -368,21 +369,21 @@ public class DevilWorshipScreen extends Screen {
                         y += 24;
                     }
                 }
-                add(cx - 120, y + 8, 240, "Back", null, () -> goBack(Page.FACTIONS));
+                add(cx - 120, y + 8, 240, LotmText.t("lotmcraft.text.back", "Back"), null, () -> goBack(Page.FACTIONS));
             }
             case TARGET -> {
                 for (DevilWorshipNetwork.PlayerEntry entry : players) {
                     eyeButtons.add(add(cx - 120, y, 240, entry.name(), null, () -> confirmFixed(entry.uuid())));
                     y += 24;
                 }
-                add(cx - 120, y + 8, 240, "Back", null, () -> goBack(Page.LIST));
+                add(cx - 120, y + 8, 240, LotmText.t("lotmcraft.text.back", "Back"), null, () -> goBack(Page.LIST));
             }
             case DETAIL -> {
                 DevilWorshipAbility.MissionDef def = selected();
                 int lootLines = def == null ? 1 : Math.max(1, def.loot().size());
                 int buttonsY = 108 + lootLines * 12 + 12;
-                eyeButtons.add(add(cx - 120, buttonsY, 240, "Begin", null, () -> confirmFixed("")));
-                add(cx - 120, buttonsY + 24, 240, "Back", null, () -> goBack(detailBack));
+                eyeButtons.add(add(cx - 120, buttonsY, 240, LotmText.t("lotmcraft.text.begin", "Begin"), null, () -> confirmFixed("")));
+                add(cx - 120, buttonsY + 24, 240, LotmText.t("lotmcraft.text.back", "Back"), null, () -> goBack(detailBack));
             }
         }
     }
@@ -425,9 +426,9 @@ public class DevilWorshipScreen extends Screen {
     }
     private String rewardName() {
         return switch (seekReward) {
-            case CHARACTERISTIC -> "Characteristic";
-            case RECIPE -> "Recipe";
-            case SUB_INGREDIENT -> "Ingredient";
+            case CHARACTERISTIC -> LotmText.t("lotmcraft.text.characteristic_2", "Characteristic");
+            case RECIPE -> LotmText.t("lotmcraft.text.recipe_2", "Recipe");
+            case SUB_INGREDIENT -> LotmText.t("lotmcraft.text.ingredient", "Ingredient");
         };
     }
     private void drawStrokes(GuiGraphics g, float t) {
@@ -662,34 +663,34 @@ public class DevilWorshipScreen extends Screen {
         DevilWorshipAbility.MissionDef def = selected();
         switch (page) {
             case TARGET -> {
-                g.drawCenteredString(font, "Choose the player the Devil will hunt", cx, 40, 0xFFD700);
+                g.drawCenteredString(font, LotmText.t("lotmcraft.text.choose_the_player_the_devil_will", "Choose the player the Devil will hunt"), cx, 40, 0xFFD700);
                 g.drawCenteredString(font, DevilWorshipAbility.KILL_PLAYER_MISSION.title(), cx, 56, 0xCCCCCC);
             }
-            case SEEK_TYPE -> g.drawCenteredString(font, "What should the Devil seek?", cx, 40, 0xFFD700);
+            case SEEK_TYPE -> g.drawCenteredString(font, LotmText.t("lotmcraft.text.what_should_the_devil_seek", "What should the Devil seek?"), cx, 40, 0xFFD700);
             case SEEK_CONFIG -> {
-                g.drawCenteredString(font, "Seek a " + rewardName(), cx, 40, 0xFFD700);
-                g.drawCenteredString(font, "Choose a pathway and a sequence", cx, 56, 0xCCCCCC);
+                g.drawCenteredString(font, LotmText.f("lotmcraft.text.seek_a", "Seek a %s", rewardName()), cx, 40, 0xFFD700);
+                g.drawCenteredString(font, LotmText.t("lotmcraft.text.choose_a_pathway_and_a_sequence", "Choose a pathway and a sequence"), cx, 56, 0xCCCCCC);
                 boolean pathwayChosen = seekPathwayIndex >= 0;
-                String pathwayText = pathwayChosen ? DevilWorshipAbility.prettyPathway(pathways.get(seekPathwayIndex)) : "Any pathway";
-                g.drawCenteredString(font, "Pathway: " + pathwayText, cx, 102, 0xFFFFFF);
-                g.drawCenteredString(font, "Sequence: " + seekSequence, cx, 130, 0xFFFFFF);
+                String pathwayText = pathwayChosen ? DevilWorshipAbility.prettyPathway(pathways.get(seekPathwayIndex)) : LotmText.t("lotmcraft.text.any_pathway_2", "Any pathway");
+                g.drawCenteredString(font, LotmText.f("lotmcraft.text.pathway", "Pathway: %s", pathwayText), cx, 102, 0xFFFFFF);
+                g.drawCenteredString(font, LotmText.f("lotmcraft.text.sequence", "Sequence: %s", seekSequence), cx, 130, 0xFFFFFF);
                 int ticksNeeded = DevilWorshipAbility.seekTimerTicks(seekSequence, pathwayChosen);
-                g.drawCenteredString(font, "Time: " + DevilWorshipAbility.timerLabel(ticksNeeded), cx, 156, 0xCCCCCC);
-                g.drawCenteredString(font, "Stronger sequences and chosen pathways take longer.", cx, 170, 0x9932CC);
+                g.drawCenteredString(font, LotmText.f("lotmcraft.text.time", "Time: %s", DevilWorshipAbility.timerLabel(ticksNeeded)), cx, 156, 0xCCCCCC);
+                g.drawCenteredString(font, LotmText.t("lotmcraft.text.stronger_sequences_and_chosen_pathways_take", "Stronger sequences and chosen pathways take longer."), cx, 170, 0x9932CC);
             }
-            case FACTIONS -> g.drawCenteredString(font, "Choose a faction to raid", cx, 40, 0xFFD700);
+            case FACTIONS -> g.drawCenteredString(font, LotmText.t("lotmcraft.text.choose_a_faction_to_raid", "Choose a faction to raid"), cx, 40, 0xFFD700);
             case FACTION_OPTIONS -> {
                 g.drawCenteredString(font, selectedFaction == null ? "" : selectedFaction.name(), cx, 40, 0xFFD700);
-                g.drawCenteredString(font, "Choose what to raid", cx, 56, 0xCCCCCC);
+                g.drawCenteredString(font, LotmText.t("lotmcraft.text.choose_what_to_raid", "Choose what to raid"), cx, 56, 0xCCCCCC);
             }
             case DETAIL -> {
                 if (def != null) {
                     g.drawCenteredString(font, def.title(), cx, 30, 0xFFD700);
-                    g.drawCenteredString(font, "Time: " + def.timerLabel(), cx, 50, 0xCCCCCC);
-                    g.drawCenteredString(font, "Possible loot", cx, 76, 0x9932CC);
+                    g.drawCenteredString(font, LotmText.f("lotmcraft.text.time", "Time: %s", def.timerLabel()), cx, 50, 0xCCCCCC);
+                    g.drawCenteredString(font, LotmText.t("lotmcraft.text.possible_loot", "Possible loot"), cx, 76, 0x9932CC);
                     int y = 96;
                     if (def.loot().isEmpty()) {
-                        g.drawCenteredString(font, "No loot has been set up for this yet.", cx, y, 0x888888);
+                        g.drawCenteredString(font, LotmText.t("lotmcraft.text.no_loot_has_been_set_up", "No loot has been set up for this yet."), cx, y, 0x888888);
                     }
                     for (DevilWorshipAbility.Loot loot : def.loot()) {
                         g.drawCenteredString(font, loot.label() + "  -  " + loot.percent() + "%", cx, y, 0xCCCCCC);
@@ -698,15 +699,15 @@ public class DevilWorshipScreen extends Screen {
                 }
             }
             default -> {
-                g.drawCenteredString(font, "Summon Devil", cx, 20, 0xFFD700);
-                g.drawCenteredString(font, tribute.isEmpty() ? "No tribute chosen" : "Tribute: " + tribute, cx, 36, 0xCCCCCC);
+                g.drawCenteredString(font, LotmText.t("lotmcraft.text.summon_devil", "Summon Devil"), cx, 20, 0xFFD700);
+                g.drawCenteredString(font, tribute.isEmpty() ? LotmText.t("lotmcraft.text.no_tribute_chosen", "No tribute chosen") : LotmText.f("lotmcraft.text.tribute", "Tribute: %s", tribute), cx, 36, 0xCCCCCC);
                 int barW = 200, x = cx - barW / 2, y = 52;
                 g.fill(x - 1, y - 1, x + barW + 1, y + 13, 0xFF555555);
                 g.fill(x, y, x + barW, y + 12, 0xFF222222);
                 g.fill(x, y, x + barW * Math.min(100, pleasure) / 100, y + 12, 0xFFB22222);
                 g.drawCenteredString(font, pleasure + "%", cx, y + 2, 0xFFFFFF);
-                if (pleasure < 100) g.drawCenteredString(font, "The Devils are not pleased enough to answer yet.", cx, 76, 0xFF6666);
-                else g.drawCenteredString(font, "Choose what the Devil will be summoned for", cx, 76, 0x9932CC);
+                if (pleasure < 100) g.drawCenteredString(font, LotmText.t("lotmcraft.text.the_devils_are_not_pleased_enough_2", "The Devils are not pleased enough to answer yet."), cx, 76, 0xFF6666);
+                else g.drawCenteredString(font, LotmText.t("lotmcraft.text.choose_what_the_devil_will_be", "Choose what the Devil will be summoned for"), cx, 76, 0x9932CC);
             }
         }
         super.render(g, mouseX, mouseY, partialTick);

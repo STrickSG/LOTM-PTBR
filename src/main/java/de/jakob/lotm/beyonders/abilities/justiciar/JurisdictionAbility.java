@@ -28,6 +28,7 @@ import org.joml.Vector3f;
 import java.util.*;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.atomic.AtomicBoolean;
+import de.jakob.lotm.util.LotmText;
 
 public class JurisdictionAbility extends Ability {
 
@@ -69,7 +70,7 @@ public class JurisdictionAbility extends Ability {
             ACTIVE_ZONES.remove(zone);
 
             serverLevel.playSound(null, entity.blockPosition(), SoundEvents.BEACON_DEACTIVATE, SoundSource.PLAYERS, 1.0f, 0.6f);
-            AbilityUtil.sendActionBar(entity, Component.literal("§6⚖ §eJurisdiction §7dismissed §6⚖"));
+            AbilityUtil.sendActionBar(entity, Component.translatableWithFallback("lotmcraft.text.jurisdiction_dismissed", "§6⚖ §eJurisdiction §7dismissed §6⚖"));
             NeoForge.EVENT_BUS.post(new AbilityUsedEvent(serverLevel, entity.position(), entity, this, interactionFlags, 0, 0));
             return;
         }
@@ -80,7 +81,7 @@ public class JurisdictionAbility extends Ability {
 
         serverLevel.playSound(null, entity.blockPosition(), SoundEvents.BEACON_ACTIVATE, SoundSource.PLAYERS, 1.0f, 0.5f);
         serverLevel.playSound(null, entity.blockPosition(), SoundEvents.TOTEM_USE, SoundSource.PLAYERS, 0.6f, 0.4f);
-        AbilityUtil.sendActionBar(entity, Component.literal("§6⚖ §eJurisdiction §festablished §6⚖"));
+        AbilityUtil.sendActionBar(entity, Component.translatableWithFallback("lotmcraft.text.jurisdiction_established", "§6⚖ §eJurisdiction §festablished §6⚖"));
 
         spawnEstablishEffect(serverLevel, entity.position(), radius);
         startZoneTasks(zone, entity);
@@ -169,24 +170,20 @@ public class JurisdictionAbility extends Ability {
 
                         if (inside && !zone.inside.contains(id)) {
                             zone.inside.add(id);
-                            owner.sendSystemMessage(Component.literal(
-                                    "§6⚖ §e" + e.getName().getString() + " §fhas entered your §eJurisdiction §6⚖"
-                            ));
+                            owner.sendSystemMessage(Component.translatableWithFallback("lotmcraft.text.has_entered_your_jurisdiction", "§6⚖ §e%s §fhas entered your §eJurisdiction §6⚖", String.valueOf(e.getName().getString())));
                             zone.level.playSound(null, owner.blockPosition(), SoundEvents.EXPERIENCE_ORB_PICKUP, SoundSource.PLAYERS, 0.4f, 1.5f);
 
                             if(owner instanceof ServerPlayer ownerServer && e instanceof ServerPlayer eServer)
-                                MetaAwarenessAbility.sendWithMessage(ownerServer, eServer, "You are under effect of " + this.getId());
+                                MetaAwarenessAbility.sendWithMessage(ownerServer, eServer, LotmText.f("lotmcraft.text.you_are_under_effect_of", "You are under effect of %s", this.getId()));
                         }
 
                         if (!inside && zone.inside.contains(id)) {
                             zone.inside.remove(id);
-                            owner.sendSystemMessage(Component.literal(
-                                    "§6⚖ §e" + e.getName().getString() + " §fhas left your §eJurisdiction §6⚖"
-                            ));
+                            owner.sendSystemMessage(Component.translatableWithFallback("lotmcraft.text.has_left_your_jurisdiction", "§6⚖ §e%s §fhas left your §eJurisdiction §6⚖", String.valueOf(e.getName().getString())));
                             zone.level.playSound(null, owner.blockPosition(), SoundEvents.EXPERIENCE_ORB_PICKUP, SoundSource.PLAYERS, 0.4f, 0.8f);
 
                             if(owner instanceof ServerPlayer ownerServer && e instanceof ServerPlayer eServer)
-                                MetaAwarenessAbility.sendWithMessage(ownerServer, eServer, "You are no longer under effect of " + this.getId());
+                                MetaAwarenessAbility.sendWithMessage(ownerServer, eServer, LotmText.f("lotmcraft.text.you_are_no_longer_under_effect", "You are no longer under effect of %s", this.getId()));
                         }
                     }
 

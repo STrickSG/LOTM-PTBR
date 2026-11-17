@@ -121,13 +121,13 @@ public class RequiemAbility extends SelectableAbility {
         if(targetEntity == null)
             return;
         if (BloodlineFilthFlameSpiritAbility.shieldSpirit(AbilityUtil.getSeqWithArt(entity, this), entity, targetEntity)) {
-            AbilityUtil.sendActionBar(entity, Component.literal("Their spirit burns your requiem away!").withColor(0xB5651D));
+            AbilityUtil.sendActionBar(entity, Component.translatableWithFallback("lotmcraft.text.their_spirit_burns_your_requiem_away", "Their spirit burns your requiem away!").withColor(0xB5651D));
             return;
         }
 
         if(pacifiedEntities.contains(targetEntity.getUUID())) {
             if(entity instanceof ServerPlayer player) {
-                ClientboundSetActionBarTextPacket packet = new ClientboundSetActionBarTextPacket(Component.literal("Entity is already pacified.").withColor(0xFFff124d));
+                ClientboundSetActionBarTextPacket packet = new ClientboundSetActionBarTextPacket(Component.translatableWithFallback("lotmcraft.text.entity_is_already_pacified", "Entity is already pacified.").withColor(0xFFff124d));
                 player.connection.send(packet);
             }
             return;

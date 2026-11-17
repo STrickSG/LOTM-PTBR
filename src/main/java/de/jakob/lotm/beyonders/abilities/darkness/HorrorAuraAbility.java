@@ -193,7 +193,7 @@ public class HorrorAuraAbility extends ToggleAbility {
         if (event.getEntity().getRandom().nextFloat() >= Math.min(0.75f, seconds / 16f)) return;
         event.setCanceled(true);
         if (event.getEntity() instanceof ServerPlayer player) {
-            AbilityUtil.sendActionBar(player, Component.literal("The horror twists the ability.").withColor(0xFF3300b5));
+            AbilityUtil.sendActionBar(player, Component.translatableWithFallback("lotmcraft.text.the_horror_twists_the_ability", "The horror twists the ability.").withColor(0xFF3300b5));
             PacketHandler.sendToPlayer(player, new CameraShakePacket(6f, 16));
         }
     }

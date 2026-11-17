@@ -20,7 +20,7 @@ public class AgeCommand {
                                     ServerPlayer target = EntityArgument.getPlayer(context, "target");
                                     float years = FloatArgumentType.getFloat(context, "years");
                                     TwilightAging.setAge(target, years);
-                                    context.getSource().sendSuccess(() -> Component.literal("Set age of " + target.getName().getString() + " to " + years), true);
+                                    context.getSource().sendSuccess(() -> Component.translatableWithFallback("lotmcraft.text.set_age_of_to", "Set age of %s to %s", String.valueOf(target.getName().getString()), String.valueOf(years)), true);
                                     return 1;
                                 }))));
     }

@@ -12,6 +12,7 @@ import net.neoforged.neoforge.event.tick.ServerTickEvent;
 
 import java.util.HashMap;
 import java.util.Map;
+import de.jakob.lotm.util.LotmText;
 
 @EventBusSubscriber(modid = "lotmcraft")
 public class UniquenessProximityHandler {
@@ -69,15 +70,15 @@ public class UniquenessProximityHandler {
 
         // Determine message based on proximity
         if (distance <= 50) {
-            message = "You feel the uniqueness VERY strongly nearby... It's almost within reach!";
+            message = LotmText.t("lotmcraft.text.you_feel_the_uniqueness_very_strongly", "You feel the uniqueness VERY strongly nearby... It's almost within reach!");
         } else if (distance <= 100) {
-            message = "You feel the uniqueness strongly nearby. It draws closer...";
+            message = LotmText.t("lotmcraft.text.you_feel_the_uniqueness_strongly_nearby", "You feel the uniqueness strongly nearby. It draws closer...");
         } else if (distance <= 200) {
-            message = "You sense the uniqueness is nearby...";
+            message = LotmText.t("lotmcraft.text.you_sense_the_uniqueness_is_nearby", "You sense the uniqueness is nearby...");
         } else if (distance <= 350) {
-            message = "You faintly feel the uniqueness in this world...";
+            message = LotmText.t("lotmcraft.text.you_faintly_feel_the_uniqueness_in", "You faintly feel the uniqueness in this world...");
         } else {
-            message = "You vaguely sense your uniqueness exists somewhere in this realm...";
+            message = LotmText.t("lotmcraft.text.you_vaguely_sense_your_uniqueness_exists", "You vaguely sense your uniqueness exists somewhere in this realm...");
         }
 
         player.sendSystemMessage(

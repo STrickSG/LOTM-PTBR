@@ -22,6 +22,7 @@ import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Queue;
+import de.jakob.lotm.util.LotmText;
 
 @EventBusSubscriber(modid = LOTMCraft.MOD_ID, value = Dist.CLIENT)
 public class FxWarmup {
@@ -73,7 +74,7 @@ public class FxWarmup {
         private int settle = 0;
         private boolean closed = false;
 
-        public WarmupScreen() { super(Component.literal("Loading effects")); }
+        public WarmupScreen() { super(Component.translatableWithFallback("lotmcraft.text.loading_effects", "Loading effects")); }
 
         @Override
         public void tick() {
@@ -116,8 +117,8 @@ public class FxWarmup {
         @Override
         public void render(GuiGraphics g, int mx, int my, float pt) {
             super.render(g, mx, my, pt);
-            g.drawCenteredString(font, "Pre-Loading heavy effects to reduce lag when they play...", width / 2, height / 2, 0xFFFFFF);
-            g.drawCenteredString(font, "Skip this screen by disabling the gamerule preLoadEffects", width / 2, height / 2 + 10, 0xFFFFFF);
+            g.drawCenteredString(font, LotmText.t("lotmcraft.text.pre_loading_heavy_effects_to_reduce", "Pre-Loading heavy effects to reduce lag when they play..."), width / 2, height / 2, 0xFFFFFF);
+            g.drawCenteredString(font, LotmText.t("lotmcraft.text.skip_this_screen_by_disabling_the", "Skip this screen by disabling the gamerule preLoadEffects"), width / 2, height / 2 + 10, 0xFFFFFF);
         }
 
         @Override public boolean shouldCloseOnEsc() { return false; }

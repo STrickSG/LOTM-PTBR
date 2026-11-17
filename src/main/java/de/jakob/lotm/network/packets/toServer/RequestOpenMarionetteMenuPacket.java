@@ -38,7 +38,7 @@ public record RequestOpenMarionetteMenuPacket() implements CustomPacketPayload {
         context.enqueueWork(() -> {
             if (!(context.player() instanceof ServerPlayer serverPlayer)) return;
             if(ControllingUtils.isControlling(serverPlayer)) {
-                AbilityUtil.sendActionBar(serverPlayer, Component.literal("You cannot open the marionette menu while controlling a marionette.").withColor(0xFF0000));
+                AbilityUtil.sendActionBar(serverPlayer, Component.translatableWithFallback("lotmcraft.text.you_cannot_open_the_marionette_menu", "You cannot open the marionette menu while controlling a marionette.").withColor(0xFF0000));
                 return;
             }
             ServerLevel level = serverPlayer.serverLevel();

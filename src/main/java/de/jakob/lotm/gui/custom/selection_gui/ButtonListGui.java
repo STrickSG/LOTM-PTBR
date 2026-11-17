@@ -35,7 +35,7 @@ public abstract class ButtonListGui<T> extends Screen {
         // search box
         this.search = new EditBox(font, x, y, panelWidth, 20, Component.empty());
         this.search.setResponder(s -> updateList());
-        this.search.setHint(Component.literal("Search..."));
+        this.search.setHint(Component.translatableWithFallback("lotmcraft.text.search", "Search..."));
         addRenderableWidget(search);
         setInitialFocus(search);
 
@@ -75,7 +75,7 @@ public abstract class ButtonListGui<T> extends Screen {
 
         @Override
         public void updateWidgetNarration(NarrationElementOutput output) {
-            output.add(NarratedElementType.TITLE, Component.literal("Selection List"));
+            output.add(NarratedElementType.TITLE, Component.translatableWithFallback("lotmcraft.text.selection_list", "Selection List"));
         }
 
         public void update(List<T> items) {

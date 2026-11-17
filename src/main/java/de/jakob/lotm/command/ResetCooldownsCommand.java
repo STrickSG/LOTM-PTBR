@@ -23,13 +23,13 @@ public class ResetCooldownsCommand {
                         var targetEntity = EntityArgument.getEntity(context, "target");
 
                         if (!(targetEntity instanceof Player player)) {
-                            source.sendFailure(Component.literal("Target must be a player!"));
+                            source.sendFailure(Component.translatableWithFallback("lotmcraft.text.target_must_be_a_player", "Target must be a player!"));
                             return 0;
                         }
 
                         player.getData(ModAttachments.COOLDOWN_COMPONENT).removeAllCooldowns();
                         AbilityCooldownComponent.syncToClient(player);
-                        source.sendSuccess(() -> Component.literal("Reset cooldowns for " + player.getName().getString()), true);
+                        source.sendSuccess(() -> Component.translatableWithFallback("lotmcraft.text.reset_cooldowns_for", "Reset cooldowns for %s", String.valueOf(player.getName().getString())), true);
                         return 1;
                     })
                 )

@@ -52,10 +52,10 @@ public class PendingBuilderAssignment {
         ServerPlayer b = p.assignedB();
         if (p.needsA() && a == null) {
             a = target;
-            AbilityUtil.sendActionBar(caster, Component.literal("Party A set to " + target.getName().getString()).withColor(0x9932cc));
+            AbilityUtil.sendActionBar(caster, Component.translatableWithFallback("lotmcraft.text.party_a_set_to", "Party A set to %s", String.valueOf(target.getName().getString())).withColor(0x9932cc));
         } else if (p.needsB() && b == null) {
             b = target;
-            AbilityUtil.sendActionBar(caster, Component.literal("Party B set to " + target.getName().getString()).withColor(0x9932cc));
+            AbilityUtil.sendActionBar(caster, Component.translatableWithFallback("lotmcraft.text.party_b_set_to", "Party B set to %s", String.valueOf(target.getName().getString())).withColor(0x9932cc));
         } else return;
         if (a != null && b != null) {
             pending.remove(caster.getUUID());

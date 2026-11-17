@@ -31,6 +31,7 @@ import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.event.entity.living.LivingDeathEvent;
 
 import java.util.UUID;
+import de.jakob.lotm.util.LotmText;
 
 @EventBusSubscriber(modid = LOTMCraft.MOD_ID)
 public class NpcContractHandler {
@@ -45,59 +46,59 @@ public class NpcContractHandler {
     public static boolean canAccept(ServerPlayer player, LivingEntity npc, ContractData data) {
         if (NpcDesire.shouldAggro(npc)) {
             NpcDesire.aggro(npc, player);
-            msg(player, "They will not bargain. They attack!", 0xFF124D);
+            msg(player, LotmText.t("lotmcraft.text.they_will_not_bargain_they_attack", "They will not bargain. They attack!"), 0xFF124D);
             return false;
         }
         if (!player.getUUID().equals(data.getPartyA()) || data.getPartyB() != null) {
-            msg(player, "Only the contract's Party A can offer it to a creature.", 0xFF124D);
+            msg(player, LotmText.t("lotmcraft.text.only_the_contract_s_party_a", "Only the contract's Party A can offer it to a creature."), 0xFF124D);
             return false;
         }
         boolean isKill = data.isKillContract();
         String kind = data.contractKind();
         if (kind != null && !kind.isEmpty() && !kind.equals("STANDARD") && !isKill) {
-            msg(player, "They cannot understand this kind of contract.", 0xFF124D);
+            msg(player, LotmText.t("lotmcraft.text.they_cannot_understand_this_kind_of", "They cannot understand this kind of contract."), 0xFF124D);
             return false;
         }
         boolean soulA = data.termAType() == ContractData.TermType.SOUL && !data.termASoulOwnerIsPartyA();
         boolean soulB = data.termBType() == ContractData.TermType.SOUL && !data.termBSoulOwnerIsPartyA();
         if (soulA == soulB) {
-            msg(player, "The contract must claim exactly their soul.", 0xFF124D);
+            msg(player, LotmText.t("lotmcraft.text.the_contract_must_claim_exactly_their", "The contract must claim exactly their soul."), 0xFF124D);
             return false;
         }
         boolean paymentIsA = !soulA;
         ContractData.TermType paymentType = paymentIsA ? data.termAType() : data.termBType();
         if (paymentType != ContractData.TermType.NONE && paymentType != ContractData.TermType.ITEM) {
-            msg(player, "They will only accept items for their soul.", 0xFF124D);
+            msg(player, LotmText.t("lotmcraft.text.they_will_only_accept_items_for", "They will only accept items for their soul."), 0xFF124D);
             return false;
         }
         if (SoulOwnershipRegistry.isSoulBound(npc.getUUID())) {
-            msg(player, "Their soul already belongs to the Abyss.", 0xFF124D);
+            msg(player, LotmText.t("lotmcraft.text.their_soul_already_belongs_to_the", "Their soul already belongs to the Abyss."), 0xFF124D);
             return false;
         }
         NpcDesire.Desire desire = NpcDesire.get(npc);
         boolean killDesire = desire != null && desire.kind() == NpcDesire.Kind.KILL_VILLAGER;
         if (isKill && !killDesire) {
-            msg(player, "They have no blood to ask for.", 0xFF124D);
+            msg(player, LotmText.t("lotmcraft.text.they_have_no_blood_to_ask", "They have no blood to ask for."), 0xFF124D);
             return false;
         }
 
         if (killDesire) {
             String want = desire.targetName();
             if (!isKill) {
-                msg(player, "They want blood: " + desire.demand() + ".", 0xFF124D);
-                player.sendSystemMessage(Component.literal("Reason: " + desire.reason()).withColor(0xFFa3070c));
+                msg(player, LotmText.f("lotmcraft.text.they_want_blood", "They want blood: %s.", desire.demand()), 0xFF124D);
+                player.sendSystemMessage(Component.translatableWithFallback("lotmcraft.text.reason", "Reason: %s", String.valueOf(desire.reason())).withColor(0xFFa3070c));
                 return false;
             }
             if (!data.isKillerPartyA() || "PLAYER".equals(data.victimEntityType())) {
-                msg(player, "You must be the killer, and the victim cannot be a player.", 0xFFa3070c);
+                msg(player, LotmText.t("lotmcraft.text.you_must_be_the_killer_and", "You must be the killer, and the victim cannot be a player."), 0xFFa3070c);
                 return false;
             }
             if (!data.victimName().equalsIgnoreCase(want)) {
-                msg(player, "They want " + want + " dead, not " + data.victimName() + ".", 0xFFa3070c);
+                msg(player, LotmText.f("lotmcraft.text.they_want_dead_not", "They want %s dead, not %s.", want, data.victimName()), 0xFFa3070c);
                 return false;
             }
             if (paymentType != ContractData.TermType.NONE) {
-                msg(player, "They want blood, not trinkets.", 0xFFa3070c);
+                msg(player, LotmText.t("lotmcraft.text.they_want_blood_not_trinkets", "They want blood, not trinkets."), 0xFFa3070c);
                 return false;
             }
         } else if (desire != null) {
@@ -105,8 +106,8 @@ public class NpcContractHandler {
             int paymentCount = paymentIsA ? data.termACount() : data.termBCount();
             boolean correct = paymentType == ContractData.TermType.ITEM && desire.itemId().equals(paymentItem) && paymentCount >= desire.count();
             if (!correct) {
-                msg(player, "They want " + desire.demand() + ".", 0xFF124D);
-                player.sendSystemMessage(Component.literal("Reason: " + desire.reason()).withColor(0xFFa3070c));
+                msg(player, LotmText.f("lotmcraft.text.they_want", "They want %s.", desire.demand()), 0xFF124D);
+                player.sendSystemMessage(Component.translatableWithFallback("lotmcraft.text.reason", "Reason: %s", String.valueOf(desire.reason())).withColor(0xFFa3070c));
                 return false;
             }
         }
@@ -118,7 +119,7 @@ public class NpcContractHandler {
         if (desire != null && desire.kind() == NpcDesire.Kind.KILL_VILLAGER) {
             killTarget = spawnTarget(player.serverLevel(), player.blockPosition(), desire.profession(), desire.level(), desire.targetName());
             if (killTarget == null) {
-                msg(player, "The Abyss cannot find their victim right now. Try elsewhere.", 0xFFa3070c);
+                msg(player, LotmText.t("lotmcraft.text.the_abyss_cannot_find_their_victim", "The Abyss cannot find their victim right now. Try elsewhere."), 0xFFa3070c);
                 return;
             }
             data.setNpcKillTarget(killTarget.getUUID());
@@ -137,8 +138,8 @@ public class NpcContractHandler {
         data.setSoulPathway(NpcDesire.pathwayOf(npc));
         data.setSoulSequence(NpcDesire.seqOf(npc));
         ContractItem.writeData(stack, data);
-        msg(player, "They accept.", 0x9932cc);
-        if (killTarget != null) player.sendSystemMessage(Component.literal("Kill " + desire.targetName() + ", a level " + desire.level() + " " + NpcDesire.professionName(desire.profession()) + ", somewhere Nearby.").withColor(0xFFa3070c));
+        msg(player, LotmText.t("lotmcraft.text.they_accept", "They accept."), 0x9932cc);
+        if (killTarget != null) player.sendSystemMessage(Component.translatableWithFallback("lotmcraft.text.kill_a_level_somewhere_nearby", "Kill %s, a level %s %s, somewhere Nearby.", String.valueOf(desire.targetName()), String.valueOf(desire.level()), String.valueOf(NpcDesire.professionName(desire.profession()))).withColor(0xFFa3070c));
         if (process(player, data)) ContractItem.writeData(stack, data);
     }
     public static boolean process(ServerPlayer player, ContractData data) {
@@ -174,7 +175,7 @@ public class NpcContractHandler {
             if (owner == null || SoulOwnershipRegistry.isSoulBound(owner)) return changed;
             SoulOwnershipRegistry.bind(owner);
             if (soulIsA) data.setTermAFulfilled(true); else data.setTermBFulfilled(true);
-            msg(player, "The bargain is sealed. Right-click the contract to claim their soul.", 0xFFa3070c);
+            msg(player, LotmText.t("lotmcraft.text.the_bargain_is_sealed_right_click", "The bargain is sealed. Right-click the contract to claim their soul."), 0xFFa3070c);
             changed = true;
         }
         return changed;
@@ -244,13 +245,13 @@ public class NpcContractHandler {
                         data.setKillPaidOut(true);
                         process(sp, data);
                         ContractItem.writeData(stack, data);
-                        msg(holder, "The debt of blood is paid.", 0xFFa3070c);
+                        msg(holder, LotmText.t("lotmcraft.text.the_debt_of_blood_is_paid", "The debt of blood is paid."), 0xFFa3070c);
                     } else {
                         Villager repl = spawnTarget(holder.serverLevel(), holder.blockPosition(), data.npcKillProfession(), data.npcKillLevel(),data.victimName());
                         if (repl != null) {
                             data.setNpcKillTarget(repl.getUUID());
                             ContractItem.writeData(stack, data);
-                            holder.sendSystemMessage(Component.literal("Their victim is gone. Another waits: " + repl.getName().getString() + ", within 100 blocks.").withColor(0xFFa3070c));
+                            holder.sendSystemMessage(Component.translatableWithFallback("lotmcraft.text.their_victim_is_gone_another_waits", "Their victim is gone. Another waits: %s, within 100 blocks.", String.valueOf(repl.getName().getString())).withColor(0xFFa3070c));
                         }
                     }
                     continue;
@@ -261,7 +262,7 @@ public class NpcContractHandler {
                 if (data.areAllTermsFulfilled()) continue;
                 SoulOwnershipRegistry.release(dead.getUUID());
                 inventory.setItem(i, ItemStack.EMPTY);
-                msg(holder, "Your contract dies with its other party.", 0xFF124D);
+                msg(holder, LotmText.t("lotmcraft.text.your_contract_dies_with_its_other", "Your contract dies with its other party."), 0xFF124D);
             }
         }
     }

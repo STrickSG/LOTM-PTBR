@@ -37,15 +37,15 @@ public class RitualEffectHandlerEvent {
 
                 timestamp.put(player.getUUID(), System.currentTimeMillis());
 
-                player.sendSystemMessage(Component.literal("You have completed the ritual!" +
-                                "\nYou have " + FAIL_TIME + " seconds to drink the potion.\n")
+                player.sendSystemMessage(Component.translatableWithFallback("lotmcraft.text.you_have_completed_the_ritual",
+                                "You have completed the ritual!\nYou have %s seconds to drink the potion.\n", String.valueOf(FAIL_TIME))
                         .withStyle(ChatFormatting.GREEN));
             }
             else{
                 var saved = timestamp.get(player.getUUID());
 
                 if(System.currentTimeMillis() >= saved + (FAIL_TIME*1000)){
-                    player.sendSystemMessage(Component.literal("The effect of ritual has faded!")
+                    player.sendSystemMessage(Component.translatableWithFallback("lotmcraft.text.the_effect_of_ritual_has_faded", "The effect of ritual has faded!")
                             .withStyle(ChatFormatting.RED));
 
                     timestamp.remove(player.getUUID());
@@ -68,7 +68,7 @@ public class RitualEffectHandlerEvent {
     public static void removeRitualWithMessage(ServerPlayer player){
         var component = player.getData(ModAttachments.RITUALS.get());
 
-        player.sendSystemMessage(Component.literal("The effect of ritual has faded!")
+        player.sendSystemMessage(Component.translatableWithFallback("lotmcraft.text.the_effect_of_ritual_has_faded", "The effect of ritual has faded!")
                 .withStyle(ChatFormatting.RED));
 
         component.setCompleted(false);

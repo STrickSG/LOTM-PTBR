@@ -196,7 +196,7 @@ public class PuppeteeringAbility extends SelectableAbility {
             } else {
                 entitiesBeingManipulated.remove(entity.getUUID());
             }
-            AbilityUtil.sendActionBar(entity, Component.literal("Their spirit burns your threads away!").withColor(0xB5651D));
+            AbilityUtil.sendActionBar(entity, Component.translatableWithFallback("lotmcraft.text.their_spirit_burns_your_threads_away", "Their spirit burns your threads away!").withColor(0xB5651D));
             return;
         }
         if (LOTMCraft.abilityHandler.getById("divination_ability").hasAbility(target, false) || targetSequence < BeyonderData.getSequence(entity)) {

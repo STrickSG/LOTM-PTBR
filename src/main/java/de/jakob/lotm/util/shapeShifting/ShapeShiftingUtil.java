@@ -26,6 +26,7 @@ import net.neoforged.neoforge.event.tick.PlayerTickEvent;
 import net.neoforged.neoforge.network.PacketDistributor;
 
 import java.util.List;
+import de.jakob.lotm.util.LotmText;
 
 @EventBusSubscriber(modid = LOTMCraft.MOD_ID)
 public class ShapeShiftingUtil {
@@ -62,11 +63,11 @@ public class ShapeShiftingUtil {
             float widthDifference = Math.abs(entityWidth - playerWidth) / playerWidth;
 
             if (sequence >= 6 && (!isPlayerModel)) {
-                player.sendSystemMessage(Component.literal("§fYou Can't Change Your Shape To This Entity §b"));
+                player.sendSystemMessage(Component.translatableWithFallback("lotmcraft.text.you_can_t_change_your_shape", "§fYou Can't Change Your Shape To This Entity §b"));
                 return;
             } else if (sequence >= 5) {
                 if (heightDifference > 0.25 || widthDifference > 0.25) {
-                    player.sendSystemMessage(Component.literal("§fYou Can't Change Your Shape To This Entity §b"));
+                    player.sendSystemMessage(Component.translatableWithFallback("lotmcraft.text.you_can_t_change_your_shape", "§fYou Can't Change Your Shape To This Entity §b"));
                     return;
                 }
             }
@@ -172,7 +173,7 @@ public class ShapeShiftingUtil {
         ServerPlayer targetPlayer = player.getServer().getPlayerList().getPlayerByName(targetName);
 
         if (targetPlayer != null) {
-            MetaAwarenessAbility.sendWithMessage(player, targetPlayer, "Somebody Shape Shifted into you");
+            MetaAwarenessAbility.sendWithMessage(player, targetPlayer, LotmText.t("lotmcraft.text.somebody_shape_shifted_into_you", "Somebody Shape Shifted into you"));
         }
     }
 

@@ -110,7 +110,7 @@ public class EyeOfOrderAbility extends ToggleAbility {
         if (BeyonderData.getSpirituality(entity) <= 0) {
             if (entity instanceof ServerPlayer player) {
                 player.connection.send(new ClientboundSetActionBarTextPacket(
-                        Component.literal("Your spirituality is exhausted.").withColor(0xFF422a2a)
+                        Component.translatableWithFallback("lotmcraft.text.your_spirituality_is_exhausted", "Your spirituality is exhausted.").withColor(0xFF422a2a)
                 ));
             }
 

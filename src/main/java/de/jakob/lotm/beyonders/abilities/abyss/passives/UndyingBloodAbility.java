@@ -169,7 +169,7 @@ public class UndyingBloodAbility extends PassiveAbility {
             ParticleUtil.spawnSphereParticles(level, BLOOD_DUST, player.position().add(0, player.getBbHeight() / 2, 0), 2.5, 120);
             level.playSound(null, player.blockPosition(), SoundEvents.WARDEN_HEARTBEAT, player.getSoundSource(), 2f, 0.6f);
         }
-        AbilityUtil.sendActionBar(player, Component.literal("Reborn from your own blood. -" + percent(player, cost) + "% blood").withColor(0xB01818));
+        AbilityUtil.sendActionBar(player, Component.translatableWithFallback("lotmcraft.text.reborn_from_your_own_blood_blood", "Reborn from your own blood. -%s%% blood", String.valueOf(percent(player, cost))).withColor(0xB01818));
     }
     //events
     @EventBusSubscriber(modid = LOTMCraft.MOD_ID)

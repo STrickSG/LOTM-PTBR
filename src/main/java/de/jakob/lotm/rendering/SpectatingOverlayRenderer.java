@@ -21,6 +21,7 @@ import net.neoforged.neoforge.client.event.RegisterGuiLayersEvent;
 import net.neoforged.neoforge.client.gui.VanillaGuiLayers;
 
 import java.util.*;
+import de.jakob.lotm.util.LotmText;
 
 @EventBusSubscriber(modid = LOTMCraft.MOD_ID, value = Dist.CLIENT)
 public class SpectatingOverlayRenderer {
@@ -188,7 +189,7 @@ public class SpectatingOverlayRenderer {
     }
 
     private static String getAttributeName(Holder<Attribute> attribute) {
-        if (attribute == null) return "Unknown Attribute";
+        if (attribute == null) return LotmText.t("lotmcraft.text.unknown_attribute", "Unknown Attribute");
         String regName = attribute.getRegisteredName();
         String path = regName.contains(":") ? regName.substring(regName.indexOf(":") + 1) : regName;
         return Component.translatable("attribute.name." + path).getString();

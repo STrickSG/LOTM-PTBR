@@ -112,7 +112,7 @@ public class ReincarnationAbility extends PassiveAbility {
         if (player.level() instanceof ServerLevel serverLevel) {
             BlockPos safePos = findSafeTeleportPos(serverLevel, player.getRandom(), player.blockPosition());
             if (safePos == null) {
-                player.sendSystemMessage(Component.literal("[Reincarnation] Could not find a safe teleport position — staying in place.").withStyle(ChatFormatting.RED));
+                player.sendSystemMessage(Component.translatableWithFallback("lotmcraft.text.reincarnation_could_not_find_a_safe", "[Reincarnation] Could not find a safe teleport position — staying in place.").withStyle(ChatFormatting.RED));
             }
             if (safePos != null) {
                 final BlockPos destination = safePos;

@@ -22,6 +22,7 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import de.jakob.lotm.util.LotmText;
 
 public class CompressionAbility extends SelectableAbility {
 
@@ -96,7 +97,7 @@ public class CompressionAbility extends SelectableAbility {
         if(BeyonderData.getSequence(entity) <= 2 && CHARGES<3) CHARGES=setCharges(entity, 3);
         else if(BeyonderData.getSequence(entity) <= 6 && CHARGES<1) CHARGES=setCharges(entity, 1);
         MutableComponent text = Component.translatable("lotm.charges").append(": " + CHARGES).withStyle(ChatFormatting.DARK_RED);
-        if( CHARGES >= MAX ) text.append(" - MAX - ").withStyle(ChatFormatting.DARK_RED);
+        if( CHARGES >= MAX ) text.append(LotmText.t("lotmcraft.text.max", " - MAX - ")).withStyle(ChatFormatting.DARK_RED);
         player.displayClientMessage(text, true);
     }
 
@@ -109,14 +110,14 @@ public class CompressionAbility extends SelectableAbility {
         level.playSound(null, startPos.x,startPos.y,startPos.z, SoundEvents.BLAZE_HURT, entity.getSoundSource(), 1.0f, 1.0f);
         int CHARGES = getCharges(entity);
         if(CHARGES >= MAX) {
-            entity.sendSystemMessage(Component.literal("You have the maximum amount of charges").withStyle(ChatFormatting.RED));
+            entity.sendSystemMessage(Component.translatableWithFallback("lotmcraft.text.you_have_the_maximum_amount_of", "You have the maximum amount of charges").withStyle(ChatFormatting.RED));
             return;
         }
         CHARGES = setCharges(entity, CHARGES+1);
-        if(CHARGES == 3) entity.sendSystemMessage(Component.literal("You have unlocked the giant fireball").withStyle(ChatFormatting.YELLOW));
-        if(CHARGES == 6) entity.sendSystemMessage(Component.literal("Giant fireball have been enhanced").withStyle(ChatFormatting.GOLD));
-        if(CHARGES == 9) entity.sendSystemMessage(Component.literal("Giant fireball is getting greater").withStyle(ChatFormatting.RED));
-        if(CHARGES == 12) entity.sendSystemMessage(Component.literal("Giant fireball has reached its max potential").withStyle(ChatFormatting.DARK_RED));
+        if(CHARGES == 3) entity.sendSystemMessage(Component.translatableWithFallback("lotmcraft.text.you_have_unlocked_the_giant_fireball", "You have unlocked the giant fireball").withStyle(ChatFormatting.YELLOW));
+        if(CHARGES == 6) entity.sendSystemMessage(Component.translatableWithFallback("lotmcraft.text.giant_fireball_have_been_enhanced", "Giant fireball have been enhanced").withStyle(ChatFormatting.GOLD));
+        if(CHARGES == 9) entity.sendSystemMessage(Component.translatableWithFallback("lotmcraft.text.giant_fireball_is_getting_greater", "Giant fireball is getting greater").withStyle(ChatFormatting.RED));
+        if(CHARGES == 12) entity.sendSystemMessage(Component.translatableWithFallback("lotmcraft.text.giant_fireball_has_reached_its_max", "Giant fireball has reached its max potential").withStyle(ChatFormatting.DARK_RED));
         BeyonderData.reduceSpirituality(entity, dynamicSpirituality.get(Seq)*0.60f);
 
     }
@@ -127,7 +128,7 @@ public class CompressionAbility extends SelectableAbility {
         int Seq = BeyonderData.getSequence(entity);
         int CHARGES =  getCharges(entity);
         if( CHARGES == 0 ) {
-            entity.sendSystemMessage(Component.literal("You have no charges").withStyle(ChatFormatting.RED));
+            entity.sendSystemMessage(Component.translatableWithFallback("lotmcraft.text.you_have_no_charges", "You have no charges").withStyle(ChatFormatting.RED));
             return;
         }
         Vec3 startPos = VectorUtil.getRelativePosition(entity.getEyePosition().add(entity.getLookAngle().normalize()), entity.getLookAngle().normalize(), 0, random.nextDouble(1, 2.85f), random.nextDouble(-.1, .6));

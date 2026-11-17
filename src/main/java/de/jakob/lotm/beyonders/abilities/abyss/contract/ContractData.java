@@ -3,6 +3,7 @@ package de.jakob.lotm.beyonders.abilities.abyss.contract;
 import net.minecraft.nbt.CompoundTag;
 
 import java.util.UUID;
+import de.jakob.lotm.util.LotmText;
 
 public class ContractData {
     // TERM TYPES
@@ -279,12 +280,12 @@ public class ContractData {
     public String describe() {
         if ("KILL".equals(contractKind())) {
             String status;
-            if (isComplete()) {status = " (Fulfilled)";}
-            else if (killPaidOut() && termAFulfilled()) {status = " (Kill Complete - Payment Complete)";}
-            else if (killPaidOut()) {status = " (Kill Complete - Payment Pending)";}
-            else if (termAFulfilled()) {status = " (Payment Complete - Kill Pending)";}
-            else {status = " (Pending Kill and Payment)";}
-            return killerName() + " kills " + victimName() + status + "\nPaid by " + payerName() + ": " + describeTerm(termAType(), termAItem(), termACount()) + (termAFulfilled() ? " (Paid)" : " (Unpaid)");
+            if (isComplete()) {status = LotmText.t("lotmcraft.text.fulfilled", " (Fulfilled)");}
+            else if (killPaidOut() && termAFulfilled()) {status = LotmText.t("lotmcraft.text.kill_complete_payment_complete", " (Kill Complete - Payment Complete)");}
+            else if (killPaidOut()) {status = LotmText.t("lotmcraft.text.kill_complete_payment_pending", " (Kill Complete - Payment Pending)");}
+            else if (termAFulfilled()) {status = LotmText.t("lotmcraft.text.payment_complete_kill_pending", " (Payment Complete - Kill Pending)");}
+            else {status = LotmText.t("lotmcraft.text.pending_kill_and_payment", " (Pending Kill and Payment)");}
+            return LotmText.f("lotmcraft.text.kills_paid_by", "%s kills %s%s\nPaid by %s: %s%s", killerName(), victimName(), status, payerName(), describeTerm(termAType(), termAItem(), termACount()), (termAFulfilled() ? LotmText.t("lotmcraft.text.paid", " (Paid)") : LotmText.t("lotmcraft.text.unpaid", " (Unpaid)")));
         }
         StringBuilder sb = new StringBuilder();
         if (isLifeDeathContract()) {
@@ -298,19 +299,19 @@ public class ContractData {
             if (!sb.isEmpty()) sb.append("\n");
             sb.append(partyBName()).append(" → ").append(partyAName()).append(": ").append(describeTermFull(true));
         }
-        return sb.isEmpty() ? "No terms" : sb.toString();
+        return sb.isEmpty() ? LotmText.t("lotmcraft.text.no_terms", "No terms") : sb.toString();
     }
     public static String describeTerm(TermType type, String item, int count) {
         return switch (type) {
-            case SOUL -> "their soul";
-            case RELEASE_SOUL -> "the soul of " + item;
+            case SOUL -> LotmText.t("lotmcraft.text.their_soul", "their soul");
+            case RELEASE_SOUL -> LotmText.f("lotmcraft.text.the_soul_of", "the soul of %s", item);
             case ITEM -> count + "x " + prettify(item);
-            case NONE -> "nothing";
-            case DIGEST -> count + "% digestion progress";
+            case NONE -> LotmText.t("lotmcraft.text.nothing", "nothing");
+            case DIGEST -> LotmText.f("lotmcraft.text.digestion_progress", "%s%% digestion progress", count);
         };
     }
     public static String prettify(String itemId) {
-        if (itemId == null || itemId.isBlank()) {return "Unknown";}
+        if (itemId == null || itemId.isBlank()) {return LotmText.t("lotmcraft.text.unknown", "Unknown");}
         String path = itemId.contains(":") ? itemId.substring(itemId.indexOf(':') + 1) : itemId;
         String[] words = path.split("_");
         StringBuilder sb = new StringBuilder();

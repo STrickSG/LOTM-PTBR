@@ -152,7 +152,7 @@ CorruptingVoiceAbility extends ToggleAbility {
                     ParticleUtil.spawnParticles(serverLevel, DARK_DUST, target.getEyePosition(), 15, 0.4, 0.4, 0.4, 0.08);
                     ParticleUtil.spawnParticles(serverLevel, ParticleTypes.SMOKE, target.getEyePosition(), 10, 0.3, 0.3, 0.3, 0.05);});
         int heartsDealt = (int) (damage / 2f);
-        AbilityUtil.sendActionBar(player, Component.translatable("ability.lotmcraft.corrupting_voice.triggered").append(Component.literal(charCount + " chars — " + heartsDealt + " ♥")).withColor(0x6600cc));
+        AbilityUtil.sendActionBar(player, Component.translatable("ability.lotmcraft.corrupting_voice.triggered").append(Component.translatableWithFallback("lotmcraft.text.chars", "%s chars — %s ♥", String.valueOf(charCount), String.valueOf(heartsDealt))).withColor(0x6600cc));
     }
 
     private static void applyRandomNegativeEffects(LivingEntity entity) {

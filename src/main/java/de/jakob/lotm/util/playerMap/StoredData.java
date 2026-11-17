@@ -8,6 +8,7 @@ import net.minecraft.world.phys.Vec3;
 
 import java.util.Arrays;
 import java.util.LinkedList;
+import de.jakob.lotm.util.LotmText;
 
 public record StoredData(String pathway, Integer sequence, HonorificName honorificName,
                          String trueName,
@@ -43,33 +44,16 @@ public record StoredData(String pathway, Integer sequence, HonorificName honorif
     // ── helpers ──────────────────────────────────────────────────────────────
 
     public String getShortInfo() {
-        return "Path: " + pathway + " -- Seq: " + sequence + " -- TN: " + trueName;
+        return LotmText.f("lotmcraft.text.path_seq_tn", "Path: %s -- Seq: %s -- TN: %s", pathway, sequence, trueName);
     }
 
     public String getAllInfo() {
-        return "Name: " + trueName
-                + "\n--- Path: " + pathway
-                + "\n--- Seq: " + sequence
-                + "\n--- Honorific Name: " + honorificName.getAllInfo()
-                + "\n--- Logout Position: " + (int) lastPosition.x + " " + (int) lastPosition.y + " " + (int) lastPosition.z
-                + "\n--- Char stack: " + java.util.Arrays.toString(charStack)
-                + "\n--- Pathway history: " + getPathwayHistoryInfo()
-                + "\n--- Amount of prophecies: " + prophecies.size()
-                + "\n--- Sefirot: " + (claimedSefirot.isEmpty() ? "none" : claimedSefirot)
-                + "\n--- Patron: " + (patron == null || patron.isEmpty() ? "none" : patron)
-                + "\n--- Pledge: " + (pledgedSefirot == null || pledgedSefirot.isEmpty() ? "none" : pledgedSefirot)
-                + "\n--- Was modified: " + modified
+        return LotmText.f("lotmcraft.text.name_path_seq_honorific_name_logout", "Name: %s\n--- Path: %s\n--- Seq: %s\n--- Honorific Name: %s\n--- Logout Position: %s %s %s\n--- Char stack: %s\n--- Pathway history: %s\n--- Amount of prophecies: %s\n--- Sefirot: %s\n--- Patron: %s\n--- Pledge: %s\n--- Was modified: %s", trueName, pathway, sequence, honorificName.getAllInfo(), (int) lastPosition.x, (int) lastPosition.y, (int) lastPosition.z, java.util.Arrays.toString(charStack), getPathwayHistoryInfo(), prophecies.size(), (claimedSefirot.isEmpty() ? "none" : claimedSefirot), (patron == null || patron.isEmpty() ? "none" : patron), (pledgedSefirot == null || pledgedSefirot.isEmpty() ? "none" : pledgedSefirot), modified)
                 ;
     }
 
     public String getSelfInfo() {
-        return "Name: " + trueName
-                + "\n--- Path: " + pathway
-                + "\n--- Seq: " + sequence
-                + "\n--- Honorific Name: " + honorificName.getAllInfo()
-                + "\n--- Char stack: " + java.util.Arrays.toString(charStack)
-                + "\n--- Pathway history: " + getPathwayHistoryInfo()
-                + "\n--- Sefirot: " + (claimedSefirot.isEmpty() ? "none" : claimedSefirot)
+        return LotmText.f("lotmcraft.text.name_path_seq_honorific_name_char", "Name: %s\n--- Path: %s\n--- Seq: %s\n--- Honorific Name: %s\n--- Char stack: %s\n--- Pathway history: %s\n--- Sefirot: %s", trueName, pathway, sequence, honorificName.getAllInfo(), java.util.Arrays.toString(charStack), getPathwayHistoryInfo(), (claimedSefirot.isEmpty() ? "none" : claimedSefirot))
                 ;
     }
 
@@ -83,7 +67,7 @@ public record StoredData(String pathway, Integer sequence, HonorificName honorif
                 any = true;
             }
         }
-        return any ? sb.toString() : " None";
+        return any ? sb.toString() : LotmText.t("lotmcraft.text.none_2", " None");
     }
 
     // ── regression ───────────────────────────────────────────────────────────
