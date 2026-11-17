@@ -1,5 +1,9 @@
 package de.jakob.lotm.beyonders.abilities.abyss.passives.DevilBloodlines.DevilBloodlineAbilites.FlameDevil;
 
+import de.jakob.lotm.LOTMCraft;
+
+import net.neoforged.fml.common.EventBusSubscriber;
+
 import de.jakob.lotm.beyonders.abilities.abyss.passives.DevilBloodlines.DevilBloodlineAbility;
 import de.jakob.lotm.beyonders.abilities.core.Ability;
 import de.jakob.lotm.beyonders.abilities.core.AbilityUsedEvent;
@@ -28,6 +32,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
+// The @SubscribeEvent handlers below were never registered without this, so they never ran
+@EventBusSubscriber(modid = LOTMCraft.MOD_ID)
 public class FlameCageAbility extends Ability {
 
     private static final Map<UUID, Vec3> activeCages = new HashMap<>();

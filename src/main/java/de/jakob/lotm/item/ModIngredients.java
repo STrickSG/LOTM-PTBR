@@ -294,7 +294,7 @@ public class ModIngredients {
                 .map(DeferredHolder::get)
                 .filter(i -> i instanceof PotionIngredient)
                 .map(i -> ((PotionIngredient) i))
-                .filter(i -> i.getPathways() != null && Arrays.asList(i.getPathways()).contains(pathway))
+                .filter(i -> i.isForPathway(pathway))
                 .toList();
     }
 
@@ -348,7 +348,7 @@ public class ModIngredients {
                 .map(DeferredHolder::get)
                 .filter(i -> i instanceof PotionIngredient)
                 .map(i -> ((PotionIngredient) i))
-                .filter(i -> i.getPathways() != null && Arrays.asList(i.getPathways()).contains(pathway))
+                .filter(i -> i.isForPathway(pathway))
                 .toList();
 
         if (ingredients.isEmpty()) {
@@ -383,7 +383,7 @@ public class ModIngredients {
                 .map(DeferredHolder::get)
                 .filter(i -> i instanceof PotionIngredient)
                 .map(i -> ((PotionIngredient) i))
-                .filter(i -> i.getPathways() != null && Arrays.asList(i.getPathways()).contains(pathway))
+                .filter(i -> i.isForPathway(pathway))
                 .filter(i -> i.getSequence() == sequence)
                 .toList();
 

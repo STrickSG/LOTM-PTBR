@@ -1,5 +1,9 @@
 package de.jakob.lotm.beyonders.abilities.abyss.passives;
 
+import de.jakob.lotm.LOTMCraft;
+
+import net.neoforged.fml.common.EventBusSubscriber;
+
 import de.jakob.lotm.beyonders.abilities.core.PassiveAbility;
 import de.jakob.lotm.beyonders.abilities.core.PassiveAbilityHandler;
 import de.jakob.lotm.damage.ModDamageTypes;
@@ -14,6 +18,8 @@ import net.neoforged.neoforge.event.entity.living.LivingDamageEvent;
 import java.util.HashMap;
 import java.util.Map;
 
+// The @SubscribeEvent handlers below were never registered without this, so they never ran
+@EventBusSubscriber(modid = LOTMCraft.MOD_ID)
 public class MaliceAuthorityAbility extends PassiveAbility {
     public MaliceAuthorityAbility(String id) {
         super(id);
