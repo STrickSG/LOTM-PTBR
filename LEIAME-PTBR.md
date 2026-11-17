@@ -68,6 +68,27 @@ receita da mesma Sequência.
 Mostra a receita e o ritual lado a lado, serve de receita no Caldeirão de Preparo e vale como o
 pergaminho na hora do ritual.
 
+## Rituais de avanço da Porta
+
+Valem as mesmas regras dos rituais do Sol: pergaminho, Fórmula Completa ou Carta da Porta na Sequência
+certa, e sem o ritual o avanço falha. A Carta da Porta pede as receitas das Sequências 9 a 6 e as Fórmulas
+Completas das Sequências 5 a 1.
+
+- Sequência 5, Viajante: colocar 4 Magnetitas no Mundo Espiritual, cada uma a pelo menos 1.000 blocos
+  das outras. Elas precisam continuar lá na hora de beber.
+- Sequência 4, Feiticeiro dos Segredos: selar para sempre um Beyonder hostil de Sequência 4 ou 3, preso
+  por um poder de prender (Aprisionar, Confinamento, Jaula de Chamas, Jaula Espacial, Petrificação ou
+  Selamento). Pela regra do mod, só um poder de nível semideus alcança um semideus: na prática, um
+  Artefato Selado feito com Característica de Sequência 4 ou maior. Se outro jogador ferir a criatura,
+  o selo não vale. A criatura selada fica presa por correntes. Isso só acontece no ritual.
+- Sequência 3, Errante: dentro de 3 construções diferentes do Mundo Espiritual, agachado, usar um livro
+  e pena para registrá-las. Beber com o livro no inventário.
+- Sequência 2, Andarilho dos Planos: deixar 9 lendas (livros assinados por você em atris) no Espaço
+  Profundo, cada uma a pelo menos 500 blocos das outras.
+- Sequência 1, Chave das Estrelas: o Espaço Profundo ganhou planetas grandes de obsidiana e magma, com
+  um anel de luz que gira. Pousar num deles, colocar uma Magnetita e ficar em pé nele por 5 minutos.
+  Os planetas só aparecem em partes do Espaço Profundo que ainda não tinham sido geradas.
+
 ## Correções de bugs
 
 Portadas da nossa versão (onde o criador ainda não tinha corrigido):
