@@ -132,6 +132,8 @@ Erro pede as receitas das Sequências 9 a 6 e as Fórmulas Completas das Sequên
 O Erro não precisa ter colônia: ele faz os rituais na colônia dos outros, mesmo sem permissão (é uma falha, um
 bug, que não segue as regras). A proteção do MineColonies não o impede de clicar nos colonos, pendurar molduras
 e pôr relógios nelas para esses rituais.
+Ao se tornar Deus (Erro, Sequência 0), ele ignora toda a proteção de qualquer colônia: quebrar e pôr blocos,
+abrir baús e prédios, mexer nos colonos.
 
 - Sequência 5, Ladrão de Sonhos: agachado e de mão vazia, entrar no sonho de colonos dormindo. Beber com 30
   deles dormindo a até 48 blocos.

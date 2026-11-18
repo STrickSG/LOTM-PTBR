@@ -21,6 +21,13 @@ import java.util.UUID;
 public final class Colonists {
     private Colonists() {}
 
+    /** O Deus do Erro (Erro, Sequência 0) é uma falha nas regras: nenhuma proteção de colônia vale para ele */
+    public static boolean ignoresColonyRules(net.minecraft.world.entity.player.Player player) {
+        return player != null && de.jakob.lotm.util.BeyonderData.isBeyonder(player)
+                && "error".equals(de.jakob.lotm.util.BeyonderData.getPathway(player))
+                && de.jakob.lotm.util.BeyonderData.getSequence(player) == 0;
+    }
+
     /** Colono morador (não conta visitantes da taverna) */
     public static boolean isColonist(Entity entity) {
         return entity instanceof EntityCitizen citizen && !citizen.level().isClientSide && citizen.getCitizenData() != null;
