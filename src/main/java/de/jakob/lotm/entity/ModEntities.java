@@ -606,7 +606,8 @@ public class ModEntities {
         return entity instanceof MurlocEntity
                 || entity instanceof StoneGolemEntity
                 || entity instanceof AsmannEntity
-                || SpiritHandler.isSpirit(entity);
+                || SpiritHandler.isSpirit(entity)
+                || de.jakob.lotm.addons.compat.IceAndFireCompat.isDemigodDragon(entity);
 
     }
 
@@ -614,6 +615,9 @@ public class ModEntities {
         if (!isBeyonderMob(entity)) return LOTMCraft.NON_BEYONDER_SEQ;
 
         if (SpiritHandler.isSpirit(entity)) return SpiritHandler.getSequenceOfSpirit(entity);
+        // dragões do Ice and Fire de estágio 4 e 5: semideuses
+        int dragon = de.jakob.lotm.addons.compat.IceAndFireCompat.demigodSequence(entity);
+        if (dragon != LOTMCraft.NON_BEYONDER_SEQ) return dragon;
 
         if (entity instanceof MurlocEntity) return 9;
         else if (entity instanceof AsmannEntity) return 7;

@@ -25,6 +25,14 @@ Os rituais usam os **colonos** do MineColonies no lugar dos aldeões.
   mas não luta nem segue: vive e trabalha na colônia. Monstros ganham forma humana, com a skin de um Beyonder Errante;
   um Beyonder Errante fica com a própria skin; aldeões ficam com a aparência de colono.
 
+## Ice and Fire (opcional)
+
+Sem precisar do Ice and Fire para rodar: se ele estiver instalado, os dragões de estágio 4 e 5 são semideuses.
+Estágio 4 conta como Sequência 4 e estágio 5 como Sequência 3, nos rituais (selar, matar no espetáculo, alvo mais
+forte...) e na regra do mod: poderes de Beyonders de Sequência 5 ou mais fraca não os afetam. Armas, flechas e
+qualquer outro dano continuam ferindo normalmente. O Ice and Fire Community Edition para 1.21.1 pede NeoForge
+21.1.248 ou mais novo e as bibliotecas Uranus e Jupiter.
+
 ## Tradução
 
 - Todos os textos do arquivo de idioma (`pt_br.json`), com os nomes da nossa versão:

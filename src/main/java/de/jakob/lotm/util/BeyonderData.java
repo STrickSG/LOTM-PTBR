@@ -441,7 +441,8 @@ public class BeyonderData {
 //        }
 
         if(!entity.hasData(ModAttachments.BEYONDER_COMPONENT)) {
-            return LOTMCraft.NON_BEYONDER_SEQ;
+            // criaturas Beyonder sem dados próprios (dragões do Ice and Fire...) têm a Sequência da espécie
+            return ModEntities.getSequenceForBeyonderEntity(entity);
         }
         BeyonderComponent component = entity.getData(ModAttachments.BEYONDER_COMPONENT);
         if(component.getSequence() != LOTMCraft.NON_BEYONDER_SEQ)
