@@ -1,6 +1,6 @@
 {
   "id": "lotm:slumbering_cartridges",
-  "discovered_from": "lotm:dreamwalkers_diary",
+  "discovered_from": "lotm:night_armorers_notebook",
   "candle": "minecraft:blue_candle",
   "sacrifices": [
     { "item": "immersiveengineering:bullet_casull", "count": 0 },

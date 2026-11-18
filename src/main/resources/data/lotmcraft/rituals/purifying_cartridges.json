@@ -1,6 +1,6 @@
 {
   "id": "lotm:purifying_cartridges",
-  "discovered_from": "lotm:sunlit_scripture",
+  "discovered_from": "lotm:undead_hunters_manual",
   "candle": "minecraft:white_candle",
   "sacrifices": [
     { "item": "immersiveengineering:bullet_casull", "count": 0 },
