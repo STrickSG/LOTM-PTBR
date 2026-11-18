@@ -86,7 +86,8 @@ public final class ColonyConquest {
         IColony colony = defendedColony(event.getTarget());
         if (colony == null || !foreign(colony, player)) return;
         attackingDefender = true;
-        if (colony.getPermissions().getRank(player).isHostile()) return;
+        if (atWar(colony.getID(), player.getUUID())) return;
+        data(player.server).declare(colony.getID(), player.getUUID());
         colony.getPermissions().addPlayer(player.getUUID(), player.getName().getString(), colony.getPermissions().getRankHostile());
         player.displayClientMessage(Component.translatable("lotmcraft.conquest.war_declared", colony.getName()).withColor(COLOR), true);
     }
@@ -154,6 +155,7 @@ public final class ColonyConquest {
 
     private static void conquer(ServerPlayer player, IColony colony) {
         data(player.server).put(colony.getID(), player.getUUID());
+        data(player.server).endWar(colony.getID(), player.getUUID());
         // obedece: o conquistador manda na colônia
         colony.getPermissions().addPlayer(player.getUUID(), player.getName().getString(), colony.getPermissions().getRankOfficer());
         // reverencia: todos os colonos passam a ser fiéis dele
@@ -162,6 +164,25 @@ public final class ColonyConquest {
         level.sendParticles(ParticleTypes.FLAME, player.getX(), player.getY() + 1, player.getZ(), 120, 2, 1.5, 2, .05);
         level.playSound(null, player.blockPosition(), SoundEvents.RAID_HORN.value(), SoundSource.PLAYERS, 2f, .8f);
         player.displayClientMessage(Component.translatable("lotmcraft.conquest.done", colony.getName(), conqueredPopulation(player), NATION_NEEDED).withColor(COLOR), true);
+    }
+
+    /** Em guerra declarada com a colônia: lá dentro, pode tudo (ver o mixin de permissões) */
+    public static boolean atWar(int colony, UUID player) {
+        MinecraftServer server = net.neoforged.neoforge.server.ServerLifecycleHooks.getCurrentServer();
+        if (server == null) return false;
+        java.util.Set<UUID> attackers = data(server).wars.get(colony);
+        return attackers != null && attackers.contains(player);
+    }
+
+    // morrer encerra as guerras do jogador: a colônia volta a tratá-lo como antes
+    @SubscribeEvent
+    public static void onAttackerDeath(LivingDeathEvent event) {
+        if (!(event.getEntity() instanceof ServerPlayer dead)) return;
+        Data data = data(dead.server);
+        for (IColony colony : IColonyManager.getInstance().getAllColonies()) {
+            if (!data.endWar(colony.getID(), dead.getUUID())) continue;
+            if (!dead.getUUID().equals(data.conquests.get(colony.getID()))) colony.getPermissions().removePlayer(dead.getUUID());
+        }
     }
 
     // um jogador retoma a própria colônia matando o conquistador dentro dela
@@ -209,9 +230,23 @@ public final class ColonyConquest {
         return server.overworld().getDataStorage().computeIfAbsent(new SavedData.Factory<>(Data::new, Data::load, null), "lotmcraft_conquests");
     }
 
-    /** Colônia (id) -> quem a conquistou */
+    /** Colônia (id) -> quem a conquistou; e quem está em guerra com cada colônia */
     private static final class Data extends SavedData {
         private final Map<Integer, UUID> conquests = new HashMap<>();
+        private final Map<Integer, java.util.Set<UUID>> wars = new HashMap<>();
+
+        void declare(int colony, UUID attacker) {
+            wars.computeIfAbsent(colony, k -> new java.util.HashSet<>()).add(attacker);
+            setDirty();
+        }
+
+        boolean endWar(int colony, UUID attacker) {
+            java.util.Set<UUID> attackers = wars.get(colony);
+            if (attackers == null || !attackers.remove(attacker)) return false;
+            if (attackers.isEmpty()) wars.remove(colony);
+            setDirty();
+            return true;
+        }
 
         void put(int colony, UUID conqueror) {
             conquests.put(colony, conqueror);
@@ -224,13 +259,31 @@ public final class ColonyConquest {
 
         static Data load(CompoundTag tag, HolderLookup.Provider provider) {
             Data data = new Data();
-            for (String key : tag.getAllKeys()) data.conquests.put(Integer.parseInt(key), tag.getUUID(key));
+            CompoundTag conquests = tag.contains("Conquests") ? tag.getCompound("Conquests") : tag;
+            for (String key : conquests.getAllKeys()) {
+                if (conquests.hasUUID(key)) data.conquests.put(Integer.parseInt(key), conquests.getUUID(key));
+            }
+            CompoundTag wars = tag.getCompound("Wars");
+            for (String key : wars.getAllKeys()) {
+                java.util.Set<UUID> attackers = new java.util.HashSet<>();
+                for (net.minecraft.nbt.Tag t : wars.getList(key, net.minecraft.nbt.Tag.TAG_INT_ARRAY)) attackers.add(net.minecraft.nbt.NbtUtils.loadUUID(t));
+                data.wars.put(Integer.parseInt(key), attackers);
+            }
             return data;
         }
 
         @Override
         public CompoundTag save(CompoundTag tag, HolderLookup.Provider provider) {
-            conquests.forEach((colony, conqueror) -> tag.putUUID(String.valueOf(colony), conqueror));
+            CompoundTag conquestsTag = new CompoundTag();
+            conquests.forEach((colony, conqueror) -> conquestsTag.putUUID(String.valueOf(colony), conqueror));
+            tag.put("Conquests", conquestsTag);
+            CompoundTag warsTag = new CompoundTag();
+            wars.forEach((colony, attackers) -> {
+                net.minecraft.nbt.ListTag list = new net.minecraft.nbt.ListTag();
+                attackers.forEach(id -> list.add(net.minecraft.nbt.NbtUtils.createUUID(id)));
+                warsTag.put(String.valueOf(colony), list);
+            });
+            tag.put("Wars", warsTag);
             return tag;
         }
     }

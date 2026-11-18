@@ -12,10 +12,15 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 /** O Deus do Erro (Sequência 0) não segue as regras de nenhuma colônia: toda permissão é dele. E o estandarte da conquista entra. */
 @Mixin(value = Permissions.class, remap = false)
 public abstract class ColonyPermissionsMixin {
+    @org.spongepowered.asm.mixin.Shadow @org.spongepowered.asm.mixin.Final
+    private com.minecolonies.core.colony.Colony colony;
+
     @Inject(method = "hasPermission(Lnet/minecraft/world/entity/player/Player;Lcom/minecolonies/api/colony/permissions/Action;)Z",
             at = @At("HEAD"), cancellable = true)
     private void lotmcraft$errorGod(Player player, Action action, CallbackInfoReturnable<Boolean> cir) {
         if (Colonists.ignoresColonyRules(player)) cir.setReturnValue(true);
+        // guerra declarada: lá dentro, quem ataca pode tudo
+        else if (colony != null && de.jakob.lotm.addons.colonies.ColonyConquest.atWar(colony.getID(), player.getUUID())) cir.setReturnValue(true);
         // o estandarte da conquista, no instante em que é fincado
         else if (action == Action.PLACE_BLOCKS && de.jakob.lotm.addons.colonies.ColonyConquest.placingConquestBanner()) cir.setReturnValue(true);
         // e o golpe nos defensores, em guerra declarada

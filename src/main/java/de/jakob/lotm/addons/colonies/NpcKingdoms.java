@@ -102,7 +102,9 @@ public final class NpcKingdoms {
             ICitizenData citizen = colony.getCitizenManager().createAndRegisterCivilianData();
             colony.getCitizenManager().spawnOrCreateCivilian(citizen, level, List.of(pos.above()), true);
         }
-        // defensores do reino: golens de ferro que guardam a prefeitura (além dos guardas, se o reino tiver torres)
+        // torres de guarda: o reino se defende com guardas de verdade
+        raiseGuardTowers(level, colony, pos, pack);
+        // defensores do reino: golens de ferro que guardam a prefeitura, junto com os guardas
         int golems = 3 + people / 6;
         for (int i = 0; i < golems; i++) {
             var golem = net.minecraft.world.entity.EntityType.IRON_GOLEM.create(level);
@@ -124,6 +126,90 @@ public final class NpcKingdoms {
         data(level).kingdoms.add(colony.getID());
         data(level).setDirty();
         LOTMCraft.LOGGER.info("Reino de NPC fundado: {} em {} ({} moradores)", colony.getName(), pos, colony.getCitizenManager().getCurrentCitizenCount());
+    }
+
+    private static final int TOWERS = 2, TOWER_DISTANCE = 22;
+
+    /** Constrói torres de guarda do estilo do reino e, prontas, contrata e arma um guarda em cada */
+    private static void raiseGuardTowers(ServerLevel level, IColony colony, BlockPos hall, String pack) {
+        int existing = 0;
+        for (var building : colony.getServerBuildingManager().getBuildings().values()) {
+            if (building instanceof com.minecolonies.core.colony.buildings.AbstractBuildingGuards) existing++;
+        }
+        String style = com.ldtteam.structurize.storage.StructurePacks.hasPack(pack) ? pack : "Medieval Oak";
+        double start = level.random.nextDouble() * Math.PI * 2;
+        for (int i = existing; i < TOWERS; i++) {
+            double angle = start + Math.PI * 2 * i / TOWERS;
+            BlockPos target = level.getHeightmapPos(net.minecraft.world.level.levelgen.Heightmap.Types.MOTION_BLOCKING_NO_LEAVES,
+                    hall.offset((int) (Math.cos(angle) * TOWER_DISTANCE), 0, (int) (Math.sin(angle) * TOWER_DISTANCE)));
+            placeTower(level, colony, style, target);
+        }
+        // e quem já tinha torres ganha guardas nelas
+        for (var building : colony.getServerBuildingManager().getBuildings().values()) {
+            if (building instanceof com.minecolonies.core.colony.buildings.AbstractBuildingGuards) hireGuard(level, colony, building);
+        }
+    }
+
+    /** Constrói a torre bloco a bloco a partir da planta do estilo (sem fila de construção) e já a põe para funcionar */
+    private static void placeTower(ServerLevel level, IColony colony, String style, BlockPos anchor) {
+        String path = "military/guardtower1.blueprint";
+        var blueprint = com.ldtteam.structurize.storage.StructurePacks.getBlueprint(style, path, level.registryAccess());
+        if (blueprint == null) return;
+        BlockPos origin = anchor.subtract(blueprint.getPrimaryBlockOffset());
+        for (var info : blueprint.getBlockInfoAsList()) {
+            var state = info.getState();
+            var id = net.minecraft.core.registries.BuiltInRegistries.BLOCK.getKey(state.getBlock());
+            BlockPos world = origin.offset(info.getPos());
+            if ("structurize".equals(id.getNamespace())) {
+                // marcadores da planta: chão sólido vira terra, o resto não muda o terreno
+                if (id.getPath().contains("solid")) level.setBlock(world, net.minecraft.world.level.block.Blocks.DIRT.defaultBlockState(), 2);
+                continue;
+            }
+            level.setBlock(world, state, 2);
+            if (info.hasTileEntityData()) {
+                CompoundTag data = blueprint.getTileEntityData(world, info.getPos());
+                BlockEntity entity = level.getBlockEntity(world);
+                if (data != null && entity != null) entity.loadWithComponents(data, level.registryAccess());
+            }
+        }
+        if (!(level.getBlockEntity(anchor) instanceof com.minecolonies.core.tileentities.TileEntityColonyBuilding hut)) return;
+        hut.setStructurePack(com.ldtteam.structurize.storage.StructurePacks.getStructurePack(style));
+        hut.setBlueprintPath(path);
+        staffTower(level, colony, anchor);
+    }
+
+    private static void staffTower(ServerLevel level, IColony colony, BlockPos anchor) {
+        if (!(level.getBlockEntity(anchor) instanceof AbstractTileEntityColonyBuilding hut)) {
+            LOTMCraft.LOGGER.warn("Reino de NPC: a torre de guarda em {} não ficou pronta", anchor);
+            return;
+        }
+        var building = colony.getServerBuildingManager().getBuilding(anchor);
+        if (building == null) building = colony.getServerBuildingManager().addNewBuilding(hut, level);
+        if (building != null) hireGuard(level, colony, building);
+    }
+
+    /** Um colono armado com espada e armadura de ferro, contratado como guarda da torre */
+    private static void hireGuard(ServerLevel level, IColony colony, com.minecolonies.api.colony.buildings.IBuilding building) {
+        var module = building.getFirstModuleOccurance(com.minecolonies.core.colony.buildings.modules.WorkerBuildingModule.class);
+        if (module == null || module.isFull()) return;
+        colony.getCitizenManager().setMaxCitizens(colony.getCitizenManager().getMaxCitizens() + 1);
+        ICitizenData guard = colony.getCitizenManager().createAndRegisterCivilianData();
+        colony.getCitizenManager().spawnOrCreateCivilian(guard, level, List.of(building.getPosition().above()), true);
+        var inventory = guard.getInventory();
+        for (var item : List.of(net.minecraft.world.item.Items.IRON_SWORD, net.minecraft.world.item.Items.IRON_HELMET, net.minecraft.world.item.Items.IRON_CHESTPLATE,
+                net.minecraft.world.item.Items.IRON_LEGGINGS, net.minecraft.world.item.Items.IRON_BOOTS, net.minecraft.world.item.Items.SHIELD)) {
+            net.neoforged.neoforge.items.ItemHandlerHelper.insertItem(inventory, new net.minecraft.world.item.ItemStack(item), false);
+        }
+        module.assignCitizen(guard);
+        // já armado e protegido desde o primeiro instante
+        guard.getEntity().ifPresent(entity -> {
+            entity.setItemSlot(net.minecraft.world.entity.EquipmentSlot.MAINHAND, new net.minecraft.world.item.ItemStack(net.minecraft.world.item.Items.IRON_SWORD));
+            entity.setItemSlot(net.minecraft.world.entity.EquipmentSlot.OFFHAND, new net.minecraft.world.item.ItemStack(net.minecraft.world.item.Items.SHIELD));
+            entity.setItemSlot(net.minecraft.world.entity.EquipmentSlot.HEAD, new net.minecraft.world.item.ItemStack(net.minecraft.world.item.Items.IRON_HELMET));
+            entity.setItemSlot(net.minecraft.world.entity.EquipmentSlot.CHEST, new net.minecraft.world.item.ItemStack(net.minecraft.world.item.Items.IRON_CHESTPLATE));
+            entity.setItemSlot(net.minecraft.world.entity.EquipmentSlot.LEGS, new net.minecraft.world.item.ItemStack(net.minecraft.world.item.Items.IRON_LEGGINGS));
+            entity.setItemSlot(net.minecraft.world.entity.EquipmentSlot.FEET, new net.minecraft.world.item.ItemStack(net.minecraft.world.item.Items.IRON_BOOTS));
+        });
     }
 
     /** Marca dos golens que defendem um reino (id da colônia) */
