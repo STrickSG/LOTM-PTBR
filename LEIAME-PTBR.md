@@ -92,6 +92,17 @@ Completas das Sequências 5 a 1.
   rachaduras de magma, anel de ametista, luzes que giram em volta e feixes de estrelas nos polos. Pousar num deles, colocar uma Magnetita e ficar em pé nele por 5 minutos.
   Os planetas só aparecem em partes do Espaço Profundo que ainda não tinham sido geradas.
 
+## Ritual da mesa: Passagem para a Névoa da História
+
+Ritual novo da mesa de ritual, que qualquer um pode fazer (até Sequência 9). O livro "Crônica
+Esquecida" aparece nos baús junto com os outros livros de ritual.
+
+- Vela cinza; sacrifícios: 2 livros escritos e 1 relógio.
+- Nome honorífico (em português ou inglês): "Sombra das eras que já passaram", "Guardiã de toda
+  história enterrada sob a névoa", "Abre para mim o caminho para a névoa da história".
+- Abre um portal para o Vazio Histórico (a névoa da história). Feito lá dentro, abre o portal de volta
+  para o Mundo de Cima: leve a mesa e os materiais. Para o Mundo Espiritual já existe a Chave do Viajante.
+
 ## Correções de bugs
 
 Portadas da nossa versão (onde o criador ainda não tinha corrigido):

@@ -32,6 +32,17 @@ public class RitualMagicOpenPortal implements RitualResultHandler {
 
         Vec3 portalPos = ritualCenter.getCenter().add(0, 2, 0);
         Vec3 destinationPos = result.destination.equals("lotmcraft:spirit_world") ? SpiritWorldHandler.getCoordinatesInSpiritWorld(portalPos, player.level()) : portalPos;
+
+        // feito do lado de dentro, o ritual abre o caminho de volta para o Mundo de Cima (ex.: névoa da história)
+        if (Boolean.TRUE.equals(result.return_when_inside()) && player.level() == destinationLevel) {
+            destinationLevel = player.getServer().overworld();
+            int y = destinationLevel.getHeight(net.minecraft.world.level.levelgen.Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, (int) Math.floor(portalPos.x), (int) Math.floor(portalPos.z));
+            destinationPos = new Vec3(portalPos.x, y, portalPos.z);
+        } else if (result.destination.equals("lotmcraft:historical_void")) {
+            // a névoa da história é plana: chega no chão dela
+            int y = de.jakob.lotm.beyonders.abilities.fool.HistoricalVoidHidingAbility.findSafeY(destinationLevel, (int) Math.floor(portalPos.x), (int) Math.floor(portalPos.z));
+            destinationPos = new Vec3(portalPos.x, y, portalPos.z);
+        }
         BlockPos safeLocation = searchForSafeLocation(
                 destinationLevel,
                 BlockPos.containing(destinationPos),
@@ -69,7 +80,8 @@ public class RitualMagicOpenPortal implements RitualResultHandler {
         return null;
     }
 
-    public record OpenPortalResult(String destination) { }
+    /** {@code return_when_inside}: feito dentro do destino, abre o portal de volta para o Mundo de Cima */
+    public record OpenPortalResult(String destination, Boolean return_when_inside) { }
 
     public static <T> T deserializeParams(Map<String, Object> params, Class<T> type) {
         JsonElement json = RitualManager.GSON.toJsonTree(params);
