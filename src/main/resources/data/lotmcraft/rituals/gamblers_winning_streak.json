@@ -12,7 +12,8 @@
       "Trickster who turns every wager in your favor",
       "Dealer whose cards always fall the right way",
       "Tilt fortune's wheel to favor me instead."
-    ]
+    ],
+    "translated": ["Trapaceiro que vira toda aposta a teu favor", "Crupiê cujas cartas sempre caem do jeito certo", "Inclina a roda da fortuna a meu favor."]
   },
   "conditions": { "min_sequence": 10 },
   "particle_color": { "r": 0.9, "g": 0.7, "b": 0.1 },

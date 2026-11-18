@@ -10,7 +10,8 @@
       "I sacrifice this characteristic",
       "Filled with thy blessings",
       "I'm willing to receive your blessings"
-    ]
+    ],
+    "translated": ["Eu sacrifico esta característica", "Repleta de tuas bênçãos", "Estou disposto a receber tuas bênçãos"]
   },
   "conditions": { "min_sequence": 10 },
   "particle_color": { "r": 0.75, "g": 0.55, "b": 0.95 },

@@ -12,7 +12,8 @@
       "Ancient one who slumbers beneath a ceiling of endless waves",
       "Lord of drowned fleets and the graveyards of sailors",
       "Loose your storm's fury upon those who stand against me."
-    ]
+    ],
+    "translated": ["Ancião que dorme sob um teto de ondas sem fim", "Senhor das frotas afundadas e dos cemitérios de marinheiros", "Solta a fúria da tua tempestade sobre os que se levantam contra mim."]
   },
   "conditions": { "min_sequence": 10 },
   "particle_color": { "r": 0.0, "g": 0.6, "b": 1.0 },

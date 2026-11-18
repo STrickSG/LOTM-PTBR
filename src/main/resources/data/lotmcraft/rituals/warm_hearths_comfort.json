@@ -12,7 +12,8 @@
       "Keeper of the hearth where weary travelers find rest",
       "Warmth that quiets the storm raging in the mind",
       "Still my thoughts and ease the weight I carry."
-    ]
+    ],
+    "translated": ["Guardião do lar onde viajantes cansados encontram descanso", "Calor que acalma a tempestade que assola a mente", "Aquieta meus pensamentos e alivia o peso que carrego."]
   },
   "conditions": { "min_sequence": 10 },
   "particle_color": { "r": 1.0, "g": 0.85, "b": 0.6 },

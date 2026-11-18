@@ -12,7 +12,8 @@
       "Crowned one whose throne is built on broken kingdoms",
       "Will that bends the weak and breaks the proud",
       "Grant me the strength to rule this ground by force."
-    ]
+    ],
+    "translated": ["Coroado cujo trono foi erguido sobre reinos destruídos", "Vontade que dobra os fracos e quebra os orgulhosos", "Concede-me o poder de dominar este chão pela força."]
   },
   "conditions": { "min_sequence": 10 },
   "particle_color": { "r": 0.5, "g": 0.0, "b": 0.0 },

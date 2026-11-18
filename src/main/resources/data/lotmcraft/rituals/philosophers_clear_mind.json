@@ -12,7 +12,8 @@
       "Sage whose thoughts outlast the fall of empires",
       "Mind that finds order in the chaos of the world",
       "Steady my thoughts and fortify my resolve."
-    ]
+    ],
+    "translated": ["Sábio cujos pensamentos sobrevivem à queda dos impérios", "Mente que encontra ordem no caos do mundo", "Firma meus pensamentos e fortalece minha determinação."]
   },
   "conditions": { "min_sequence": 10 },
   "particle_color": { "r": 0.9, "g": 0.9, "b": 0.8 },

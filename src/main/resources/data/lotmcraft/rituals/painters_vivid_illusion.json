@@ -12,7 +12,8 @@
       "Artist who paints the world exactly as it is not",
       "Illusion that fools even the sharpest watching eye",
       "Blend my form into the canvas of the world."
-    ]
+    ],
+    "translated": ["Artista que pinta o mundo exatamente como ele não é", "Ilusão que engana até o olho mais atento", "Mistura minha forma à tela do mundo."]
   },
   "conditions": { "min_sequence": 10 },
   "particle_color": { "r": 0.6, "g": 0.2, "b": 0.6 },

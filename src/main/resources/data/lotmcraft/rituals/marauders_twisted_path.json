@@ -11,7 +11,8 @@
       "Fugitive who slips between the seams of the world",
       "Shadow that is never where the hunters last looked",
       "Open a path for me to slip beyond their reach."
-    ]
+    ],
+    "translated": ["Fugitivo que escapa pelas costuras do mundo", "Sombra que nunca está onde os caçadores olharam por último", "Abre um caminho para eu escapar do alcance deles."]
   },
   "conditions": { "min_sequence": 10 },
   "particle_color": { "r": 0.4, "g": 0.2, "b": 0.5 },

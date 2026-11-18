@@ -12,7 +12,8 @@
       "Mother whose breath turns barren stone into blossoming field",
       "She who feeds the roots that hold the world together",
       "Let life surge forth and green swallow this scarred earth."
-    ]
+    ],
+    "translated": ["Mãe cujo sopro transforma pedra estéril em campo florido", "Aquela que alimenta as raízes que mantêm o mundo unido", "Que a vida brote e o verde cubra esta terra ferida."]
   },
   "conditions": { "min_sequence": 10 },
   "particle_color": { "r": 0.2, "g": 0.8, "b": 0.2 },

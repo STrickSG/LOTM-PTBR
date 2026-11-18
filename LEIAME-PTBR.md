@@ -19,9 +19,11 @@ mods ele aparece como **LOTM PTBR**.
 - Mais de mil textos que estavam escritos direto no código em inglês agora são traduzíveis: telas
   (Introspecção, receita, contrato, Adoração ao Diabo...), mensagens de habilidade, adivinhações,
   comandos e guia.
+- Livros de ritual da mesa de ritual em português, com o nome honorífico traduzido. Na mesa, o
+  nome honorífico pode ser escrito em português ou em inglês (sem precisar acertar os acentos).
 - Textos que o jogo compara com o que você digita continuam em inglês, porque o código só os
   entende assim: `accept`/`decline` dos contratos, a sintaxe `if ... then ...` da Escrita de
-  Histórias, as palavras exigidas no nome honorífico e os cânticos do Castelo Sefirah.
+  Histórias, as palavras exigidas no nome honorífico de jogador e os cânticos do Castelo Sefirah.
 - Avisos curtos aparecem em cima da barra de itens (barra de ação) em vez do chat. Ficam no chat
   só os textos para ler com calma: pedidos de contrato, falas de NPC, resultados com coordenadas,
   alvos de missão, preces, pedidos que precisam de resposta e respostas de comando.

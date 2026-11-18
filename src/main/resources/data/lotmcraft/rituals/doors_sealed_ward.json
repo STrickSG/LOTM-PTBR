@@ -11,7 +11,8 @@
       "Warden who bars the threshold against all intrusion",
       "Wall that has never once been breached",
       "Seal this ground against harm as you seal every door."
-    ]
+    ],
+    "translated": ["Guardião que barra o limiar contra toda intrusão", "Muralha que jamais foi rompida", "Sela este chão contra o mal como selas cada porta."]
   },
   "conditions": { "min_sequence": 10 },
   "particle_color": { "r": 0.7, "g": 0.7, "b": 0.9 },

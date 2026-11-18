@@ -12,7 +12,8 @@
       "Sovereign whose light drives back the crawling dark",
       "Flame that warms the faithful and sears the wicked",
       "Wrap me in your radiance and mend what is broken."
-    ]
+    ],
+    "translated": ["Soberano cuja luz repele a escuridão rastejante", "Chama que aquece os fiéis e queima os perversos", "Envolve-me em teu esplendor e restaura o que está quebrado."]
   },
   "conditions": { "min_sequence": 10 },
   "particle_color": { "r": 1.0, "g": 0.9, "b": 0.3 },

@@ -12,7 +12,8 @@
       "Brewer of potions that blur the line of life and death",
       "Hand that measures ruin and remedy in equal parts",
       "Distill your vigor into my failing body."
-    ]
+    ],
+    "translated": ["Preparador de poções que borram a linha entre a vida e a morte", "Mão que mede ruína e remédio em partes iguais", "Destila teu vigor em meu corpo enfraquecido."]
   },
   "conditions": { "min_sequence": 10 },
   "particle_color": { "r": 0.6, "g": 0.9, "b": 0.2 },

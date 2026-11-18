@@ -12,7 +12,8 @@
       "Voice that murmurs from the cracks between worlds",
       "Dread that gnaws at the courage of lesser men",
       "Send your whisper to scatter those who oppose me."
-    ]
+    ],
+    "translated": ["Voz que murmura das frestas entre os mundos", "Pavor que corrói a coragem dos homens menores", "Envia teu sussurro para dispersar os que se opõem a mim."]
   },
   "conditions": { "min_sequence": 10 },
   "particle_color": { "r": 0.15, "g": 0.05, "b": 0.2 },

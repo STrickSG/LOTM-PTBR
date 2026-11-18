@@ -11,7 +11,8 @@
       "You are the degenerate nature of all beings",
       "The shadow that lurks in the hearts of men",
       "Defile and corrupt me so that I may get closer to you."
-    ]
+    ],
+    "translated": ["Tu és a natureza degenerada de todos os seres", "A sombra que espreita no coração dos homens", "Profana-me e corrompe-me para que eu me aproxime de ti."]
   },
   "conditions": { "min_sequence": 10 },
   "particle_color": { "r": 0.0, "g": 0.0, "b": 0.0 },

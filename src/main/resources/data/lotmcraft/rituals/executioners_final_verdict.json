@@ -12,7 +12,8 @@
       "Headsman whose blade has never shown mercy",
       "Verdict that falls swift upon the condemned",
       "Carry out your judgment on the one nearest to me."
-    ]
+    ],
+    "translated": ["Carrasco cuja lâmina jamais mostrou misericórdia", "Veredito que cai veloz sobre os condenados", "Executa teu julgamento sobre quem estiver mais perto de mim."]
   },
   "conditions": { "min_sequence": 10 },
   "particle_color": { "r": 0.3, "g": 0.0, "b": 0.0 },

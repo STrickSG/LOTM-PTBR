@@ -12,7 +12,8 @@
       "Judge who weighs the sins hidden beneath a smiling face",
       "Flame that burns away corruption without consuming the innocent",
       "Scour this ground clean of what should not linger here."
-    ]
+    ],
+    "translated": ["Juiz que pesa os pecados escondidos por trás de um rosto sorridente", "Chama que queima a corrupção sem consumir os inocentes", "Purifica este chão de tudo o que não deveria permanecer aqui."]
   },
   "conditions": { "min_sequence": 10 },
   "particle_color": { "r": 1.0, "g": 1.0, "b": 0.9 },

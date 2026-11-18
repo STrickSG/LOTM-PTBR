@@ -12,7 +12,8 @@
       "Harbor-keeper who calms the fury of the open sea",
       "Guide of ships lost beneath the endless waves",
       "Grant me safe passage through your drowned domain."
-    ]
+    ],
+    "translated": ["Guardião do porto que acalma a fúria do mar aberto", "Guia dos navios perdidos sob as ondas sem fim", "Concede-me passagem segura pelo teu domínio afogado."]
   },
   "conditions": { "min_sequence": 10 },
   "particle_color": { "r": 0.0, "g": 0.5, "b": 0.6 },

@@ -12,7 +12,8 @@
       "Champion who has never known the taste of retreat",
       "Blood-soaked banner raised over a hundred battlefields",
       "Set the ground ablaze beneath the feet of my enemies."
-    ]
+    ],
+    "translated": ["Campeão que nunca conheceu o gosto da retirada", "Estandarte encharcado de sangue erguido sobre cem campos de batalha", "Incendeia o chão sob os pés dos meus inimigos."]
   },
   "conditions": { "min_sequence": 10 },
   "particle_color": { "r": 0.8, "g": 0.1, "b": 0.1 },

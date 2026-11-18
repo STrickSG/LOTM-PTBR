@@ -24,7 +24,14 @@ public record  RitualRecipe(
 
     public record Sacrifice(String item, int count) {}
 
-    public record Honorific(List<String> lines) {}
+    /** {@code translated}: as mesmas linhas em português (a mesa aceita as duas) */
+    public record Honorific(List<String> lines, List<String> translated) {}
+
+    /** Compara sem maiúsculas, acentos, vírgulas e pontos */
+    private static List<String> normalized(List<String> lines) {
+        return lines.stream().map(s -> java.text.Normalizer.normalize(s.toLowerCase().strip(), java.text.Normalizer.Form.NFD)
+                .replaceAll("\\p{M}", "").replace(",", "").replace(".", "").replaceAll("\\s+", " ")).toList();
+    }
 
     public record Conditions(
             int minSequence
@@ -86,9 +93,11 @@ public record  RitualRecipe(
             return false;
         }
 
-        if (!honorificLines.stream()
-                .map(s -> s.toLowerCase().strip().replace(",", "").replace(".", "")).toList()
-                .equals(this.honorific.lines().stream().map(s -> s.toLowerCase().strip().replace(",", "").replace(".", "")).toList())) {
+        // o nome honorífico vale em inglês ou em português
+        List<String> typed = normalized(honorificLines);
+        boolean english = typed.equals(normalized(this.honorific.lines()));
+        boolean portuguese = this.honorific.translated() != null && typed.equals(normalized(this.honorific.translated()));
+        if (!english && !portuguese) {
             return false;
         }
         return true;

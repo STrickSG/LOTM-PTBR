@@ -11,7 +11,8 @@
       "Ringmaster whose smile hides a thousand writhing faces",
       "Clown who laughs loudest when the world begins to unravel",
       "Send your carnival to dance around me."
-    ]
+    ],
+    "translated": ["Mestre de picadeiro cujo sorriso esconde mil rostos que se contorcem", "Palhaço que ri mais alto quando o mundo começa a se desfazer", "Envia teu carnaval para dançar ao meu redor."]
   },
   "conditions": { "min_sequence": 10 },
   "particle_color": { "r": 0.1, "g": 0.1, "b": 0.1 },

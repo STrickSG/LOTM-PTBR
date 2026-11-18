@@ -12,7 +12,8 @@
       "Keeper of the flame that never gutters in the wind",
       "Guide who lights the path for those lost in darkness",
       "Kindle your light across this shadowed ground."
-    ]
+    ],
+    "translated": ["Guardião da chama que nunca se apaga ao vento", "Guia que ilumina o caminho dos perdidos na escuridão", "Acende tua luz sobre este chão sombrio."]
   },
   "conditions": { "min_sequence": 10 },
   "particle_color": { "r": 1.0, "g": 0.8, "b": 0.4 },

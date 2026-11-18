@@ -12,7 +12,8 @@
       "Wanderer who walks the corridors between dreaming minds",
       "Keeper of the hush that falls before sweet sleep",
       "Draw the nearest waking foe into your slumber's hold."
-    ]
+    ],
+    "translated": ["Andarilho que percorre os corredores entre as mentes que sonham", "Guardião do silêncio que cai antes do doce sono", "Leva o inimigo desperto mais próximo para o domínio do teu sono."]
   },
   "conditions": { "min_sequence": 10 },
   "particle_color": { "r": 0.2, "g": 0.2, "b": 0.6 },

@@ -18,6 +18,7 @@ import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.particles.DustParticleOptions;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
@@ -88,19 +89,23 @@ public class RitualManager extends SimpleJsonResourceReloadListener {
     }
 
     private static ItemStack createBookItemStack(RitualRecipe ritual) {
-        String bookTitle = Component.translatable("ritual.lotmcraft." + ritual.discoveredFrom().split(":")[1]).getString();
+        String bookKey = "ritual.lotmcraft." + ritual.discoveredFrom().split(":")[1];
+        String bookTitle = Component.translatable(bookKey).getString();
         if(bookTitle.length() > 30) {
             bookTitle = bookTitle.substring(0, 30);
         }
-        String candleName = BuiltInRegistries.ITEM.get(ResourceLocation.parse(ritual.candle())).getDescription().getString();
-        List<String> sacrificeNames = ritual.sacrifices().stream()
-                .map(sacrifice -> {
-                    String name = "lotmcraft:beyonder_characteristic".equals(sacrifice.item())
-                            ? Component.translatable("lotm.beyonder_characteristic").getString()
-                            : BuiltInRegistries.ITEM.get(ResourceLocation.parse(sacrifice.item())).getDescription().getString();
-                    return name + " x" + sacrifice.count();
-                })
-                .toList();
+        String ritualId = ritual.id().split(":")[1];
+        // tudo como componente traduzível: cada jogador lê no próprio idioma, mesmo em servidor dedicado
+        Component candleName = BuiltInRegistries.ITEM.get(ResourceLocation.parse(ritual.candle())).getDescription();
+        MutableComponent sacrificeNames = Component.empty();
+        for (int i = 0; i < ritual.sacrifices().size(); i++) {
+            RitualRecipe.Sacrifice sacrifice = ritual.sacrifices().get(i);
+            Component name = "lotmcraft:beyonder_characteristic".equals(sacrifice.item())
+                    ? Component.translatable("lotm.beyonder_characteristic")
+                    : BuiltInRegistries.ITEM.get(ResourceLocation.parse(sacrifice.item())).getDescription();
+            if (i > 0) sacrificeNames.append(", ");
+            sacrificeNames.append(name).append(" x" + sacrifice.count());
+        }
         List<String> honorificLines = ritual.honorific().lines();
 
         ChatFormatting color = ChatFormatting.getByName(ritual.bookColor());
@@ -114,23 +119,27 @@ public class RitualManager extends SimpleJsonResourceReloadListener {
         Component candles = Component.literal("")
                 .append(Component.translatable("ritual.lotmcraft.candles")
                         .withStyle(ChatFormatting.BOLD, color))
-                .append(Component.literal(candleName));
+                .append(candleName);
 
         Component sacrifices = Component.literal("")
                 .append(Component.translatable("ritual.lotmcraft.sacrifices")
                         .withStyle(ChatFormatting.BOLD, color))
-                .append(Component.literal(String.join(", ", sacrificeNames)));
+                .append(sacrificeNames);
 
-        Component honorifics = Component.literal("")
+        MutableComponent honorifics = Component.literal("")
                 .append(Component.translatable("ritual.lotmcraft.honorifics")
-                        .withStyle(ChatFormatting.BOLD, color))
-                .append(Component.literal("\n"))
-                .append(Component.literal(String.join("\n", honorificLines.stream().map(s -> " - " + s).toList())));
+                        .withStyle(ChatFormatting.BOLD, color));
+        for (int i = 0; i < honorificLines.size(); i++) {
+            honorifics.append(Component.literal("\n - "))
+                    .append(Component.translatableWithFallback("ritual.lotmcraft.honorific." + ritualId + "." + (i + 1), honorificLines.get(i)));
+        }
 
         Component minSequence = Component.literal("")
                 .append(Component.translatable("ritual.lotmcraft.min_sequence")
                         .withStyle(ChatFormatting.BOLD, color))
-                .append(Component.literal(String.valueOf(ritual.conditions().minSequence() > 9 ? "none" : ritual.conditions().minSequence())));
+                .append(ritual.conditions().minSequence() > 9
+                        ? Component.translatableWithFallback("ritual.lotmcraft.min_sequence.none", "none")
+                        : Component.literal(String.valueOf(ritual.conditions().minSequence())));
 
         Component pageOne = Component.literal("")
                 .append(generalDescription).append(Component.literal("\n\n"))
@@ -142,9 +151,10 @@ public class RitualManager extends SimpleJsonResourceReloadListener {
 
         List<Filterable<Component>> pages = List.of(Filterable.passThrough(pageOne), Filterable.passThrough(pageTwo));
 
+        // sem autor: o livro não mostra "por Unknown"
         WrittenBookContent bookContentObj = new WrittenBookContent(
                 Filterable.passThrough(bookTitle),
-                "Unknown",
+                "",
                 0,
                 pages,
                 false
@@ -152,6 +162,8 @@ public class RitualManager extends SimpleJsonResourceReloadListener {
 
         ItemStack bookStack = new ItemStack(Items.WRITTEN_BOOK);
         bookStack.set(DataComponents.WRITTEN_BOOK_CONTENT, bookContentObj);
+        // nome do livro traduzível (o título guardado no livro é só texto)
+        bookStack.set(DataComponents.CUSTOM_NAME, Component.translatable(bookKey).withStyle(s -> s.withItalic(false)));
         return bookStack;
     }
 

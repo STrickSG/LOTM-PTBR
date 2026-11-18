@@ -12,7 +12,8 @@
       "Engine that never tires and never misses its beat",
       "Architect of gears that turn beneath the world's skin",
       "Quicken my hands to match your endless rhythm."
-    ]
+    ],
+    "translated": ["Máquina que nunca se cansa e nunca perde o compasso", "Arquiteto das engrenagens que giram sob a pele do mundo", "Acelera minhas mãos para acompanhar teu ritmo sem fim."]
   },
   "conditions": { "min_sequence": 10 },
   "particle_color": { "r": 0.6, "g": 0.6, "b": 0.6 },

@@ -12,7 +12,8 @@
       "Reaper who walks unseen among the dying breaths",
       "Silence that follows after every ended life",
       "Let your cold touch wither the one who stands before me."
-    ]
+    ],
+    "translated": ["Ceifador que caminha invisível entre os últimos suspiros", "Silêncio que segue o fim de cada vida", "Que teu toque frio murche aquele que está diante de mim."]
   },
   "conditions": { "min_sequence": 10 },
   "particle_color": { "r": 0.1, "g": 0.1, "b": 0.1 },
