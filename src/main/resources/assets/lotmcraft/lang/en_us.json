@@ -5659,7 +5659,7 @@
   "lotmcraft.ritual.fool.4.3": "• When it dies, the audience within 32 blocks must add up to 30 points: villager 1, player 5, Visionary player 15.",
   "lotmcraft.ritual.fool.4.4": "• Drink the Bizarro Sorcerer potion within 1 minute: that is the end of the performance.",
   "lotmcraft.ritual.fool.3.1": "Be separated from reality for at least three hundred years and drink the potion after becoming history, no longer belonging to the present era.",
-  "lotmcraft.ritual.fool.3.2": "• Stay in the Historical Void, the mist of history, for 3 Minecraft days in a row.",
+  "lotmcraft.ritual.fool.3.2": "• Stay in the Historical Void, the mist of history, for 7 Minecraft days in a row.",
   "lotmcraft.ritual.fool.3.3": "• If you leave early, the count starts over.",
   "lotmcraft.ritual.fool.3.4": "• After becoming history, drink the Scholar of Yore potion.",
   "lotmcraft.ritual.fool.2.1": "Return a piece of history that has been left behind to the present era.",
@@ -5678,5 +5678,9 @@
   "lotmcraft.fool.miracle_done": "%s returned from history to the present.",
   "lotmcraft.fool.town_progress": "Marionette town: %s of %s marionettes, %s%%",
   "lotmcraft.fool.town_done": "The marionette town is complete.",
-  "lotmcraft.fool.town_broken": "The marionette town fell apart (%s of %s): the count starts over."
+  "lotmcraft.fool.town_broken": "The marionette town fell apart (%s of %s): the count starts over.",
+  "lotmcraft.fool.hidden.history": "The present pulled you back.",
+  "lotmcraft.fool.hidden.song": "The threads of your spirit body are too frail for the song.",
+  "lotmcraft.fool.hidden.miracle": "The present still remembers it.",
+  "lotmcraft.fool.hidden.town": "Some fates blur together in the painting."
 }

@@ -48,8 +48,9 @@ public final class FoolRituals {
 
     public static final int SONG_WINDOW = 20 * 60;
     public static final int AUDIENCE_NEEDED = 30, SHOW_WINDOW = 20 * 60;
-    public static final int HISTORY_TICKS_NEEDED = 24000 * 3;
+    public static final int HISTORY_TICKS_NEEDED = 24000 * 7;
     public static final int MARIONETTES_NEEDED = 50, TOWN_RADIUS = 48, TOWN_TICKS_NEEDED = 24000;
+    public static final int FORGOTTEN_AGE = 24000 * 5;
 
     private static final String SONG = "LotmFoolSirenHeard", SHOW_TIME = "LotmFoolShowTime", SHOW_AUDIENCE = "LotmFoolShowAudience",
             HISTORY = "LotmFoolHistoryTicks", HISTORY_DONE = "LotmFoolBecameHistory", FORGOTTEN = "LotmFoolForgotten",
@@ -82,7 +83,13 @@ public final class FoolRituals {
 
     public static boolean heardSong(ServerPlayer player) {
         CompoundTag tag = data(player);
-        return tag.contains(SONG) && now(player) - tag.getLong(SONG) <= SONG_WINDOW;
+        if (!tag.contains(SONG) || now(player) - tag.getLong(SONG) > SONG_WINDOW) return false;
+        // condição escondida: um corpo despedaçado não aguenta (mais da metade da vida)
+        if (player.getHealth() <= player.getMaxHealth() / 2) {
+            player.displayClientMessage(Component.translatable("lotmcraft.fool.hidden.song").withColor(0xFF7A7A), false);
+            return false;
+        }
+        return true;
     }
 
     @SubscribeEvent
@@ -143,9 +150,12 @@ public final class FoolRituals {
                 for (CompoundTag marked : player.getData(ModAttachments.HISTORICAL_MARKED_ENTITIES_COMPONENT).getMarkedEntities()) {
                     CompoundTag nbt = marked.getCompound("EntityNBT");
                     if (nbt.hasUUID("UUID") && nbt.getUUID("UUID").equals(dead.getUUID())) {
-                        ListTag list = data(player).getList(FORGOTTEN, Tag.TAG_INT_ARRAY);
+                        ListTag list = data(player).getList(FORGOTTEN, Tag.TAG_COMPOUND);
                         if (list.size() >= 32) list.remove(0);
-                        list.add(NbtUtils.createUUID(dead.getUUID()));
+                        CompoundTag entry = new CompoundTag();
+                        entry.putUUID("Id", dead.getUUID());
+                        entry.putLong("Died", now(player));
+                        list.add(entry);
                         data(player).put(FORGOTTEN, list);
                     }
                 }
@@ -167,14 +177,21 @@ public final class FoolRituals {
 
     /** Marionetes do jogador, com nome (o destino de cada uma), a até 48 blocos dele */
     static int namedMarionettes(ServerPlayer player) {
+        return townNames(player)[0];
+    }
+
+    /** [marionetes com nome único, marionetes com nome repetido] (condição escondida: cada uma com um destino próprio) */
+    static int[] townNames(ServerPlayer player) {
         String owner = player.getStringUUID();
-        int count = 0;
+        java.util.Map<String, Integer> names = new java.util.HashMap<>();
         for (LivingEntity e : player.serverLevel().getEntitiesOfClass(LivingEntity.class, player.getBoundingBox().inflate(TOWN_RADIUS))) {
             if (!e.hasCustomName() || !e.hasData(ModAttachments.MARIONETTE_COMPONENT)) continue;
             MarionetteComponent m = e.getData(ModAttachments.MARIONETTE_COMPONENT);
-            if (m.isMarionette() && owner.equals(m.getControllerUUID())) count++;
+            if (m.isMarionette() && owner.equals(m.getControllerUUID())) names.merge(e.getCustomName().getString().strip().toLowerCase(), 1, Integer::sum);
         }
-        return count;
+        int unique = 0, repeated = 0;
+        for (int n : names.values()) { if (n == 1) unique++; else repeated += n; }
+        return new int[]{unique, repeated};
     }
 
     @SubscribeEvent
@@ -201,7 +218,11 @@ public final class FoolRituals {
 
         // 1: a cidade de marionetes tem de durar um dia inteiro
         if (!tag.getBoolean(TOWN_DONE) && preparing(player, 1) && player.tickCount % 100 == 0) {
-            int count = namedMarionettes(player);
+            int[] town = townNames(player);
+            int count = town[0];
+            if (town[1] > 0 && player.tickCount % 1200 == 0) {
+                tell(player, Component.translatable("lotmcraft.fool.hidden.town").withColor(0xFF7A7A));
+            }
             int ticks = tag.getInt(TOWN);
             if (count >= MARIONETTES_NEEDED) {
                 ticks += 100;
@@ -218,6 +239,17 @@ public final class FoolRituals {
                 tell(player, Component.translatable("lotmcraft.fool.town_broken", count, MARIONETTES_NEEDED).withColor(0xFF7A7A));
             }
         }
+    }
+
+    // condição escondida: quem fala com o presente ainda pertence a ele
+    @SubscribeEvent
+    public static void onChat(net.neoforged.neoforge.event.ServerChatEvent event) {
+        ServerPlayer player = event.getPlayer();
+        CompoundTag tag = data(player);
+        if (tag.getBoolean(HISTORY_DONE) || tag.getInt(HISTORY) <= 0) return;
+        if (!player.level().dimension().equals(ModDimensions.HISTORICAL_VOID_DIMENSION_KEY)) return;
+        tag.putInt(HISTORY, 0);
+        if (preparing(player, 3)) tell(player, Component.translatable("lotmcraft.fool.hidden.history").withColor(0xFF7A7A));
     }
 
     // sair do jogo ou morrer tira da névoa da história: a contagem do Erudito de Outrora zera
@@ -242,9 +274,17 @@ public final class FoolRituals {
         ServerPlayer owner = level.getServer().getPlayerList().getPlayer(tag.getUUID("VoidSummonOwner"));
         if (owner == null || !preparing(owner, 2)) return;
         UUID original = tag.getUUID("VoidOriginalUUID");
-        boolean forgotten = false;
-        for (Tag t : data(owner).getList(FORGOTTEN, Tag.TAG_INT_ARRAY)) if (NbtUtils.loadUUID(t).equals(original)) forgotten = true;
-        if (!forgotten) return;
+        long died = Long.MIN_VALUE;
+        for (Tag t : data(owner).getList(FORGOTTEN, Tag.TAG_COMPOUND)) {
+            CompoundTag entry = (CompoundTag) t;
+            if (entry.hasUUID("Id") && entry.getUUID("Id").equals(original)) died = entry.getLong("Died");
+        }
+        if (died == Long.MIN_VALUE) return;
+        // condição escondida: tem que ter ficado para trás de verdade (morta há pelo menos 5 dias)
+        if (now(owner) - died < FORGOTTEN_AGE) {
+            tell(owner, Component.translatable("lotmcraft.fool.hidden.miracle").withColor(0xFF7A7A));
+            return;
+        }
         // depois que a invocação terminar de registrar o tempo e o custo, ela vira parte do presente de vez
         ServerScheduler.scheduleDelayed(2, () -> {
             if (!entity.isAlive()) return;

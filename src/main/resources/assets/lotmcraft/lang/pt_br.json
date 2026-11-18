@@ -5458,7 +5458,7 @@
   "lotmcraft.ritual.fool.4.3": "• Na hora da morte, a plateia a até 32 blocos precisa somar 30 pontos: aldeão vale 1, jogador vale 5 e jogador do Visionário vale 15.",
   "lotmcraft.ritual.fool.4.4": "• Beba a poção do Feiticeiro Bizarro até 1 minuto depois: é o fim do espetáculo.",
   "lotmcraft.ritual.fool.3.1": "Fique separado da realidade por pelo menos trezentos anos e beba a poção depois de virar história, quando já não pertencer à época atual.",
-  "lotmcraft.ritual.fool.3.2": "• Fique no Vazio Histórico, a névoa da história, por 3 dias do Minecraft seguidos.",
+  "lotmcraft.ritual.fool.3.2": "• Fique no Vazio Histórico, a névoa da história, por 7 dias do Minecraft seguidos.",
   "lotmcraft.ritual.fool.3.3": "• Se sair antes, a contagem recomeça.",
   "lotmcraft.ritual.fool.3.4": "• Depois de virar história, beba a poção do Erudito de Outrora.",
   "lotmcraft.ritual.fool.2.1": "Traga de volta à época atual um pedaço da história que ficou para trás.",
@@ -5477,5 +5477,9 @@
   "lotmcraft.fool.miracle_done": "%s voltou da história para o presente.",
   "lotmcraft.fool.town_progress": "Cidade de marionetes: %s de %s marionetes, %s%%",
   "lotmcraft.fool.town_done": "A cidade de marionetes está completa.",
-  "lotmcraft.fool.town_broken": "A cidade de marionetes se desfez (%s de %s): a contagem recomeça."
+  "lotmcraft.fool.town_broken": "A cidade de marionetes se desfez (%s de %s): a contagem recomeça.",
+  "lotmcraft.fool.hidden.history": "O presente puxou você de volta.",
+  "lotmcraft.fool.hidden.song": "Os fios do seu corpo espiritual estão frágeis demais para o canto.",
+  "lotmcraft.fool.hidden.miracle": "O presente ainda se lembra dela.",
+  "lotmcraft.fool.hidden.town": "Alguns destinos se confundem na pintura."
 }

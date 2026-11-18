@@ -102,7 +102,7 @@ Tolo pede as receitas das Sequências 9 a 6 e as Fórmulas Completas das Sequên
 - Sequência 4, Feiticeiro Bizarro: dar o golpe final num Beyonder de Sequência 4 ou 3 diante de uma
   plateia de 30 pontos a até 32 blocos (aldeão 1, jogador 5, jogador do Visionário 15) e beber em até
   1 minuto.
-- Sequência 3, Erudito de Outrora: ficar 3 dias seguidos do Minecraft no Vazio Histórico (sair antes,
+- Sequência 3, Erudito de Outrora: ficar 7 dias seguidos do Minecraft no Vazio Histórico (sair antes,
   sair do jogo ou morrer zera).
 - Sequência 2, Invocador de Milagres: marcar uma criatura com a Invocação do Vazio Histórico e, depois
   que ela morrer, invocá-la: ela volta ao presente e fica de vez.
