@@ -65,7 +65,8 @@ public record RitualStartPacket(BlockPos pos, String field1, String field2, Stri
                 be.itemHandler.setStackInSlot(RitualMenu.SACRIFICE_SLOT_3, ItemStack.EMPTY);
                 be.setChanged();
 
-                RitualRecipe ritual = RitualManager.getRitualByRecipe(candle, sacrifices, BeyonderData.getSequence(serverPlayer), honorificLines);
+                RitualRecipe ritual = RitualManager.getRitualByRecipe(candle, sacrifices, BeyonderData.getSequence(serverPlayer), honorificLines,
+                        BeyonderData.isBeyonder(serverPlayer) ? BeyonderData.getPathway(serverPlayer) : null);
 
                 RitualManager.performRitual(ritual, serverPlayer, payload.pos(), sacrifices);
             }

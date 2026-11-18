@@ -78,10 +78,11 @@ public class RitualManager extends SimpleJsonResourceReloadListener {
             ItemStack candles,
             List<ItemStack> sacrifices,
             int sequence,
-            List<String> honorificLines
+            List<String> honorificLines,
+            String pathway
     ) {
         for (RitualRecipe ritual : rituals.values()) {
-            if (ritual.matches(candles, sacrifices, sequence, honorificLines)) {
+            if (ritual.matches(candles, sacrifices, sequence, honorificLines, pathway)) {
                 return ritual;
             }
         }
@@ -147,7 +148,16 @@ public class RitualManager extends SimpleJsonResourceReloadListener {
                 .append(sacrifices).append(Component.literal("\n\n"))
                 .append(minSequence);
 
-        Component pageTwo = honorifics;
+        // ritual exclusivo de um Caminho (nomeado pela Sequência 9, como na novel: Caminho do Vidente), no topo da página 2
+        MutableComponent pageTwo = Component.literal("");
+        String onlyPathway = ritual.conditions().pathway();
+        if (onlyPathway != null && !onlyPathway.isEmpty() && de.jakob.lotm.util.BeyonderData.pathwayInfos.containsKey(onlyPathway)) {
+            String[] names = de.jakob.lotm.util.BeyonderData.pathwayInfos.get(onlyPathway).sequenceNames();
+            pageTwo.append(Component.translatableWithFallback("ritual.lotmcraft.pathway_only", "Only for the %s Pathway",
+                            Component.translatable("lotm.sequence." + names[9])).withStyle(ChatFormatting.BOLD, color))
+                    .append(Component.literal("\n\n"));
+        }
+        pageTwo.append(honorifics);
 
         List<Filterable<Component>> pages = List.of(Filterable.passThrough(pageOne), Filterable.passThrough(pageTwo));
 

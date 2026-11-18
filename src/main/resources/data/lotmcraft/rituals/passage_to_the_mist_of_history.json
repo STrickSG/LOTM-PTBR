@@ -14,7 +14,7 @@
     ],
     "translated": ["Sombra das eras que já passaram", "Guardiã de toda história enterrada sob a névoa", "Abre para mim o caminho para a névoa da história"]
   },
-  "conditions": { "min_sequence": 10 },
+  "conditions": { "min_sequence": 4, "pathway": "fool" },
   "particle_color": { "r": 0.6, "g": 0.6, "b": 0.6 },
   "book_color": "GRAY",
   "duration_ticks": 300,

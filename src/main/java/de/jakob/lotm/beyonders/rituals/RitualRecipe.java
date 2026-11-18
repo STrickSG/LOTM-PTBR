@@ -33,8 +33,10 @@ public record  RitualRecipe(
                 .replaceAll("\\p{M}", "").replace(",", "").replace(".", "").replaceAll("\\s+", " ")).toList();
     }
 
+    /** {@code pathway}: só Beyonders desse Caminho podem fazer o ritual (vazio = qualquer um) */
     public record Conditions(
-            int minSequence
+            int minSequence,
+            String pathway
     ) {}
 
     public record ParticleColor(
@@ -54,6 +56,16 @@ public record  RitualRecipe(
             List<ItemStack> sacrifices,
             int sequence,
             List<String> honorificLines
+    ) {
+        return matches(candle, sacrifices, sequence, honorificLines, null);
+    }
+
+    public boolean matches(
+            ItemStack candle,
+            List<ItemStack> sacrifices,
+            int sequence,
+            List<String> honorificLines,
+            String pathway
     ) {
         if (!BuiltInRegistries.ITEM.getKey(candle.getItem()).toString().equals(this.candle)) {
             return false;
@@ -90,6 +102,11 @@ public record  RitualRecipe(
         }
 
         if (sequence > this.conditions.minSequence()) {
+            return false;
+        }
+
+        // ritual exclusivo de um Caminho
+        if (this.conditions.pathway() != null && !this.conditions.pathway().isEmpty() && !this.conditions.pathway().equals(pathway)) {
             return false;
         }
 

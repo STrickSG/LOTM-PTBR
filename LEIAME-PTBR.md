@@ -94,8 +94,9 @@ Completas das Sequências 5 a 1.
 
 ## Ritual da mesa: Passagem para a Névoa da História
 
-Ritual novo da mesa de ritual, que qualquer um pode fazer (até Sequência 9). O livro "Crônica
-Esquecida" aparece nos baús junto com os outros livros de ritual.
+Ritual novo da mesa de ritual, exclusivo do Caminho do Vidente, a partir da Sequência 4. O livro
+"Crônica Esquecida" aparece nos baús junto com os outros livros de ritual. Quem não é Vidente de
+Sequência 4 ou maior falha o ritual, como em qualquer ritual errado.
 
 - Vela cinza; sacrifícios: 2 livros escritos e 1 relógio.
 - Nome honorífico (em português ou inglês): "Sombra das eras que já passaram", "Guardiã de toda
