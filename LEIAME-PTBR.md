@@ -130,6 +130,8 @@ Tolo pede as receitas das Sequências 9 a 6 e as Fórmulas Completas das Sequên
   MineColonies gera no mundo).
 - Sequência 1, Atendente de Mistérios: 50 marionetes suas, cada uma com nome, vivendo a até 48 blocos de
   você ou dentro da sua colônia (soltas ou como colonos) por 7 dias do Minecraft (se ficarem menos de 50, recomeça).
+  Marionetes-colono só contam se viverem de verdade na cidade: com uma casa, ou com uma cama onde dormiram nos
+  últimos 2 dias (pode ser na pousada). Emprego não é preciso.
 
 ## Rituais de avanço do Erro
 

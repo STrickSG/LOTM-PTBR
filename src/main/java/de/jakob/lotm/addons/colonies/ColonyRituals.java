@@ -193,14 +193,28 @@ public final class ColonyRituals {
     }
 
     /** Nomes das marionetes do jogador que moram como colonos na colônia dele */
+    /** Uma cama de verdade conta por 2 dias desde a última noite em que dormiu nela (casa, pousada, qualquer cama) */
+    public static final long BED_MEMORY = 24000 * 2;
+
+    /**
+     * Nomes das marionetes do jogador que moram como colonos na colônia dele. Só conta quem vive de verdade na cidade:
+     * tem uma casa, ou tem onde dormir (dormiu numa cama nos últimos 2 dias, como na pousada).
+     */
     public static List<String> marionetteColonists(ServerPlayer player) {
         List<String> names = new ArrayList<>();
         IColony colony = Colonists.ownedBy(player.getUUID());
         if (colony == null) return names;
         Data data = data(player.server);
+        long now = player.server.overworld().getGameTime();
         for (ICitizenData citizen : colony.getCitizenManager().getCitizens()) {
-            if (player.getUUID().equals(data.controllers.get(citizen.getUUID()))) names.add(citizen.getName());
+            if (!player.getUUID().equals(data.controllers.get(citizen.getUUID()))) continue;
+            boolean sleepingNow = citizen.isAsleep() || !net.minecraft.core.BlockPos.ZERO.equals(citizen.getBedPos());
+            if (sleepingNow) data.sleptAt.put(citizen.getUUID(), now);
+            Long slept = data.sleptAt.get(citizen.getUUID());
+            boolean hasBed = slept != null && now - slept <= BED_MEMORY;
+            if (citizen.getHomeBuilding() != null || hasBed) names.add(citizen.getName());
         }
+        data.setDirty();
         return names;
     }
 
@@ -223,6 +237,7 @@ public final class ColonyRituals {
     private static final class Data extends SavedData {
         private final Map<UUID, UUID> controllers = new HashMap<>();
         private final Map<UUID, String> skins = new HashMap<>();
+        private final Map<UUID, Long> sleptAt = new HashMap<>();
 
         void put(UUID citizen, UUID controller, String skin) {
             controllers.put(citizen, controller);
@@ -236,6 +251,8 @@ public final class ColonyRituals {
             for (String citizen : controllers.getAllKeys()) {
                 if (controllers.hasUUID(citizen)) data.controllers.put(UUID.fromString(citizen), controllers.getUUID(citizen));
             }
+            CompoundTag slept = tag.getCompound("SleptAt");
+            for (String citizen : slept.getAllKeys()) data.sleptAt.put(UUID.fromString(citizen), slept.getLong(citizen));
             CompoundTag skins = tag.getCompound("Skins");
             for (String citizen : skins.getAllKeys()) data.skins.put(UUID.fromString(citizen), skins.getString(citizen));
             return data;
@@ -249,6 +266,9 @@ public final class ColonyRituals {
             CompoundTag fixed = new CompoundTag();
             skins.forEach((citizen, skin) -> fixed.putString(citizen.toString(), skin));
             tag.put("Skins", fixed);
+            CompoundTag sleptTag = new CompoundTag();
+            sleptAt.forEach((citizen, time) -> sleptTag.putLong(citizen.toString(), time));
+            tag.put("SleptAt", sleptTag);
             return tag;
         }
     }
