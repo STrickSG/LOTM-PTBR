@@ -103,7 +103,7 @@ Tolo pede as receitas das Sequências 9 a 6 e as Fórmulas Completas das Sequên
   plateia de 30 pontos a até 32 blocos (aldeão 1, jogador 5, jogador do Visionário 15) e beber em até
   1 minuto.
 - Sequência 3, Erudito de Outrora: ficar 3 dias seguidos do Minecraft no Vazio Histórico (sair antes,
-  sair do jogo ou morrer zera). O ritual da mesa abaixo leva até lá.
+  sair do jogo ou morrer zera).
 - Sequência 2, Invocador de Milagres: marcar uma criatura com a Invocação do Vazio Histórico e, depois
   que ela morrer, invocá-la: ela volta ao presente e fica de vez.
 - Sequência 1, Atendente de Mistérios: 50 marionetes suas, cada uma com nome, vivendo a até 48 blocos de
