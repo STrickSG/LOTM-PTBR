@@ -155,10 +155,6 @@ public final class ImmersiveCartridges {
         @Override
         public void addTooltip(Integer potency, @Nullable Item.TooltipContext world, List<Component> list, TooltipFlag flag) {
             list.add(Component.translatable("lotmcraft.cartridge." + name + ".desc").withStyle(ChatFormatting.GRAY));
-            int value = potency == null ? COMMON_BLESSING : potency;
-            list.add(value >= COMMON_BLESSING
-                    ? Component.translatable("lotmcraft.cartridge.common_blessing").withStyle(ChatFormatting.DARK_GRAY)
-                    : Component.translatable("lotmcraft.cartridge.potency", value).withStyle(ChatFormatting.DARK_GRAY));
         }
     }
 }
