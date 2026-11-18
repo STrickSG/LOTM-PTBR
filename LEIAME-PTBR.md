@@ -7,9 +7,21 @@ mods ele aparece como **LOTM PTBR**.
 ## Instalação
 
 1. No CurseForge, crie um perfil **Minecraft 1.21.1** com **NeoForge 21.1.217** ou mais novo.
-2. Abra a pasta do perfil (três pontinhos → *Open Folder*) e coloque o `LOTM-PTBR-1.13.3.jar` na pasta `mods`.
-3. Se o LOTMCraft original estiver lá, tire-o: os dois não podem ficar juntos.
-4. No jogo, escolha *Português (Brasil)* em Opções → Idioma.
+2. Instale o **MineColonies** (1.21.1) pelo CurseForge: ele é obrigatório e traz junto Structurize, BlockUI,
+   Domum Ornamentum e MultiPiston. O **Stylecolonies** é opcional (mais estilos de prédio, como o Steampunk).
+3. Abra a pasta do perfil (três pontinhos → *Open Folder*) e coloque o `LOTM-PTBR-1.13.3.jar` na pasta `mods`.
+4. Se o LOTMCraft original estiver lá, tire-o: os dois não podem ficar juntos.
+5. No jogo, escolha *Português (Brasil)* em Opções → Idioma.
+
+## MineColonies
+
+Os rituais usam os **colonos** do MineColonies no lugar dos aldeões.
+
+- Fiéis (Sol 1 e Âncoras): o Registro Sagrado é usado num colono. Ele ganha "(Fiel de [nome])" no nome.
+- Plateia do Feiticeiro Bizarro (Tolo 4): cada colono vale 1 ponto.
+- Matar um colono também quebra o juramento do Mentor da Justiça (Sol 3).
+- Cidade das Marionetes: dentro da sua colônia, agachado e de mão vazia, clique numa marionete sua com nome. Ela vira
+  colono (precisa de casa livre na colônia) e continua presa aos seus fios.
 
 ## Tradução
 
@@ -57,8 +69,8 @@ da Blasfêmia do Sol com aquela Sequência escolhida.
   mantê-la por 3 dias do Minecraft.
 - Sequência 2, Buscador da Luz: ligar a memória da sua justiça a um item de Anjo do Sol e deixá-lo
   à sua frente ao beber.
-- Sequência 1, Anjo Branco: reunir 100 fiéis (99 aldeões e você) com o Registro Sagrado, feito na
-  bancada. Qualquer Beyonder de Sequência 3 ou maior pode reunir fiéis, e cada aldeão segue uma fé
+- Sequência 1, Anjo Branco: reunir 100 fiéis (99 colonos e você) com o Registro Sagrado, feito na
+  bancada. Qualquer Beyonder de Sequência 3 ou maior pode reunir fiéis, e cada colono segue uma fé
   só. A contagem "Fiéis: X/100" só aparece para o Sol na Sequência 2.
 - Âncoras: os fiéis seguram a sanidade de Beyonders de Sequência 3 ou maior. O número de âncoras
   fica na aba **Âncoras** da Introspecção (só para Sequência 3 ou maior).
@@ -100,14 +112,32 @@ Tolo pede as receitas das Sequências 9 a 6 e as Fórmulas Completas das Sequên
 - Sequência 5, Marionetista: beber a poção até 1 minuto depois de ouvir a Canção da Sereia (Tirano 5)
   a até 20 blocos, cantada por outro jogador ou por um Artefato Selado.
 - Sequência 4, Feiticeiro Bizarro: dar o golpe final num Beyonder de Sequência 4 ou 3 diante de uma
-  plateia de 30 pontos a até 32 blocos (aldeão 1, jogador 5, jogador do Visionário 15) e beber em até
+  plateia de 30 pontos a até 32 blocos (colono 1, jogador 5, jogador do Visionário 15) e beber em até
   1 minuto.
 - Sequência 3, Erudito de Outrora: ficar 7 dias seguidos do Minecraft no Vazio Histórico (sair antes,
   sair do jogo ou morrer zera).
 - Sequência 2, Invocador de Milagres: marcar uma criatura com a Invocação do Vazio Histórico e, depois
-  que ela morrer, invocá-la: ela volta ao presente e fica de vez.
+  que ela morrer, invocá-la: ela volta ao presente e fica de vez. Ou reativar uma colônia abandonada (as que o
+  MineColonies gera no mundo).
 - Sequência 1, Atendente de Mistérios: 50 marionetes suas, cada uma com nome, vivendo a até 48 blocos de
-  você por 1 dia do Minecraft (se ficarem menos de 50, recomeça).
+  você ou dentro da sua colônia (soltas ou como colonos) por 1 dia do Minecraft (se ficarem menos de 50, recomeça).
+
+## Rituais de avanço do Erro
+
+Mesmas regras dos outros: pergaminho, Fórmula Completa ou Carta do Erro na Sequência certa. A Carta do
+Erro pede as receitas das Sequências 9 a 6 e as Fórmulas Completas das Sequências 5 a 1.
+
+- Sequência 5, Ladrão de Sonhos: agachado e de mão vazia, entrar no sonho de colonos dormindo. Beber com 30
+  deles dormindo a até 48 blocos.
+- Sequência 4, Parasita: agachado e de mão vazia, pedir a 9 colonos felizes que deem tudo o que têm (o inventário
+  deles passa para você). Ferir um deles desfaz a oferta. Beber com os 9 vivos.
+- Sequência 3, Mentor do Engano: sem ferir nenhuma criatura por 1 dia, deixar a felicidade geral de uma colônia
+  com pelo menos 10 colonos em 3 ou menos, e beber dentro dela.
+- Sequência 2, Cavalo de Troia do Destino: clicar num colono com uma etiqueta com o nome dele. Ele some e você
+  fica no lugar dele (seu nome no chat vira o dele). Viver 6 dias dentro da colônia dele sem usar nenhum poder lá.
+- Sequência 1, Verme do Tempo: 12 relógios em molduras numa colônia com pelo menos 20 colonos. O tempo da cidade
+  se embaralha (colonos lentos ou rápidos ao acaso). Precisa durar 7 dias com você por perto; se faltar um
+  relógio, recomeça.
 
 ## Ritual da mesa: Passagem para a Névoa da História
 

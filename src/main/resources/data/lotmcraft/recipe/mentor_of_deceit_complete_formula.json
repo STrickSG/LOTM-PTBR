@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    {
+      "item": "lotmcraft:mentor_of_deceit"
+    },
+    {
+      "item": "lotmcraft:mentor_of_deceit_ritual"
+    }
+  ],
+  "result": {
+    "id": "lotmcraft:mentor_of_deceit_complete_formula",
+    "count": 1
+  }
+}

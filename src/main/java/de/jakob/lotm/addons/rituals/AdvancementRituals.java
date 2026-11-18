@@ -96,7 +96,28 @@ public final class AdvancementRituals {
             // Tolo, Sequência 1 (Atendente de Mistérios): uma cidade só de marionetes, cada uma com seu destino
             new Ritual("fool", 1, () -> List.of(
                     new ItemStack(Items.NAME_TAG, 50),
-                    new ItemStack(PotionItemHandler.ATTENDANT_OF_MYSTERIES_POTION.get())))
+                    new ItemStack(PotionItemHandler.ATTENDANT_OF_MYSTERIES_POTION.get()))),
+            // Erro, Sequência 5 (Ladrão de Sonhos): ser figura-chave nos sonhos de 30 pessoas que dormem na hora de beber
+            new Ritual("error", 5, () -> List.of(
+                    new ItemStack(Items.RED_BED),
+                    new ItemStack(PotionItemHandler.DREAM_STEALER_POTION.get()))),
+            // Erro, Sequência 4 (Parasita): 9 alvos oferecem de boa vontade tudo o que têm para sustentá-lo
+            new Ritual("error", 4, () -> List.of(
+                    new ItemStack(Items.CHEST, 9),
+                    new ItemStack(PotionItemHandler.PARASITE_POTION.get()))),
+            // Erro, Sequência 3 (Mentor do Engano): sem violência, usar brechas nas regras para derrubar a ordem de uma vila
+            new Ritual("error", 3, () -> List.of(
+                    new ItemStack(Items.WRITABLE_BOOK),
+                    new ItemStack(PotionItemHandler.MENTOR_OF_DECEIT_POTION.get()))),
+            // Erro, Sequência 2 (Cavalo de Troia do Destino): tomar a identidade de alguém sem poderes e ganhar a confiança dos dele
+            new Ritual("error", 2, () -> List.of(
+                    new ItemStack(Items.NAME_TAG),
+                    new ItemStack(PotionItemHandler.TROJAN_HORSE_OF_DESTINY_POTION.get()))),
+            // Erro, Sequência 1 (Verme do Tempo): mergulhar uma cidade em desordem temporal por pelo menos 7 dias
+            new Ritual("error", 1, () -> List.of(
+                    new ItemStack(Items.CLOCK, 12),
+                    new ItemStack(Items.ITEM_FRAME, 12),
+                    new ItemStack(PotionItemHandler.WORM_OF_TIME_POTION.get())))
     );
 
     public static List<Ritual> all() {

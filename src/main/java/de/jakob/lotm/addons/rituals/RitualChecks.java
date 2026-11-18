@@ -62,6 +62,11 @@ public final class RitualChecks {
         if ("fool".equals(pathway) && sequence == 3) return FoolRituals.becameHistory(player);
         if ("fool".equals(pathway) && sequence == 2) return FoolRituals.miracleDone(player);
         if ("fool".equals(pathway) && sequence == 1) return FoolRituals.townDone(player);
+        if ("error".equals(pathway) && sequence == 5) return ErrorRituals.inDreams(player);
+        if ("error".equals(pathway) && sequence == 4) return ErrorRituals.sustained(player);
+        if ("error".equals(pathway) && sequence == 3) return ErrorRituals.orderCollapsed(player);
+        if ("error".equals(pathway) && sequence == 2) return ErrorRituals.identityTrusted(player);
+        if ("error".equals(pathway) && sequence == 1) return ErrorRituals.disorderDone(player);
         return false;
     }
 

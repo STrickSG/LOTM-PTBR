@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    {
+      "item": "lotmcraft:dream_stealer"
+    },
+    {
+      "item": "lotmcraft:dream_stealer_ritual"
+    }
+  ],
+  "result": {
+    "id": "lotmcraft:dream_stealer_complete_formula",
+    "count": 1
+  }
+}

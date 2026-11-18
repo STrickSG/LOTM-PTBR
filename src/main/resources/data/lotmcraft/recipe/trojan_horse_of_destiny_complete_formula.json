@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    {
+      "item": "lotmcraft:trojan_horse_of_destiny"
+    },
+    {
+      "item": "lotmcraft:trojan_horse_of_destiny_ritual"
+    }
+  ],
+  "result": {
+    "id": "lotmcraft:trojan_horse_of_destiny_complete_formula",
+    "count": 1
+  }
+}
