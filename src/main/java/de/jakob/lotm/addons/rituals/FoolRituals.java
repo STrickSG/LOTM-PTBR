@@ -37,7 +37,7 @@ import java.util.UUID;
  *   <li>4, Feiticeiro Bizarro: matar um semideus num grande espetáculo, diante de muitos espectadores, e beber no fim.</li>
  *   <li>3, Erudito de Outrora: ficar separado da realidade e virar história (3 dias seguidos no Vazio Histórico).</li>
  *   <li>2, Invocador de Milagres: trazer de volta ao presente um pedaço da história que ficou para trás.</li>
- *   <li>1, Atendente de Mistérios: uma cidade só de marionetes, cada uma com o seu destino (50 marionetes com nome, 1 dia).</li>
+ *   <li>1, Atendente de Mistérios: uma cidade só de marionetes, cada uma com o seu destino (50 marionetes com nome, 7 dias).</li>
  * </ul>
  * O ritual de cada Sequência é feito por quem ainda está na Sequência de cima; as mensagens só aparecem para ele.
  */
@@ -48,7 +48,7 @@ public final class FoolRituals {
     public static final int SONG_WINDOW = 20 * 60;
     public static final int AUDIENCE_NEEDED = 30, SHOW_WINDOW = 20 * 60;
     public static final int HISTORY_TICKS_NEEDED = 24000 * 7;
-    public static final int MARIONETTES_NEEDED = 50, TOWN_RADIUS = 48, TOWN_TICKS_NEEDED = 24000;
+    public static final int MARIONETTES_NEEDED = 50, TOWN_RADIUS = 48, TOWN_TICKS_NEEDED = 24000 * 7;
     public static final int FORGOTTEN_AGE = 24000 * 5;
 
     private static final String SONG = "LotmFoolSirenHeard", SHOW_TIME = "LotmFoolShowTime", SHOW_AUDIENCE = "LotmFoolShowAudience",
@@ -192,7 +192,9 @@ public final class FoolRituals {
             }
         }
         for (Entity e : candidates) {
-            if (!(e instanceof LivingEntity living) || !living.hasCustomName() || !living.hasData(ModAttachments.MARIONETTE_COMPONENT)) continue;
+            // marionetes-colono são contadas pelos dados da colônia logo abaixo (mesmo com o chunk descarregado)
+            if (!(e instanceof LivingEntity living) || de.jakob.lotm.addons.colonies.Colonists.isAnyCitizen(living)
+                    || !living.hasCustomName() || !living.hasData(ModAttachments.MARIONETTE_COMPONENT)) continue;
             MarionetteComponent m = living.getData(ModAttachments.MARIONETTE_COMPONENT);
             if (m.isMarionette() && owner.equals(m.getControllerUUID())) town.put(living.getUUID(), living.getCustomName().getString());
         }

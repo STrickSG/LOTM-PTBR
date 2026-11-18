@@ -20,7 +20,8 @@ public class MarionetteEventHandler {
     
     @SubscribeEvent
     public static void onEntityJoinWorld(EntityJoinLevelEvent event) {
-        if (event.getEntity() instanceof Mob mob && !event.getLevel().isClientSide) {
+        // marionetes que viraram colonos (Cidade das Marionetes) não lutam nem seguem: vivem e trabalham na colônia
+        if (event.getEntity() instanceof Mob mob && !event.getLevel().isClientSide && !(mob instanceof com.minecolonies.api.entity.citizen.AbstractEntityCitizen)) {
             MarionetteComponent component = mob.getData(ModAttachments.MARIONETTE_COMPONENT.get());
             
             // Re-add marionette goals if this entity is a marionette

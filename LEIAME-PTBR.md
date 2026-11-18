@@ -21,7 +21,9 @@ Os rituais usam os **colonos** do MineColonies no lugar dos aldeões.
 - Plateia do Feiticeiro Bizarro (Tolo 4): cada colono vale 1 ponto.
 - Matar um colono também quebra o juramento do Mentor da Justiça (Sol 3).
 - Cidade das Marionetes: dentro da sua colônia, agachado e de mão vazia, clique numa marionete sua com nome. Ela vira
-  colono (precisa de casa livre na colônia) e continua presa aos seus fios.
+  colono (precisa de casa livre na colônia), continua sendo sua marionete (conta no menu e no limite de marionetes),
+  mas não luta nem segue: vive e trabalha na colônia. Monstros ganham forma humana, com a skin de um Beyonder Errante;
+  um Beyonder Errante fica com a própria skin; aldeões ficam com a aparência de colono.
 
 ## Tradução
 
@@ -120,7 +122,7 @@ Tolo pede as receitas das Sequências 9 a 6 e as Fórmulas Completas das Sequên
   que ela morrer, invocá-la: ela volta ao presente e fica de vez. Ou reativar uma colônia abandonada (as que o
   MineColonies gera no mundo).
 - Sequência 1, Atendente de Mistérios: 50 marionetes suas, cada uma com nome, vivendo a até 48 blocos de
-  você ou dentro da sua colônia (soltas ou como colonos) por 1 dia do Minecraft (se ficarem menos de 50, recomeça).
+  você ou dentro da sua colônia (soltas ou como colonos) por 7 dias do Minecraft (se ficarem menos de 50, recomeça).
 
 ## Rituais de avanço do Erro
 

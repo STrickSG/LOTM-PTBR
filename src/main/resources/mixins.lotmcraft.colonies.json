@@ -1,0 +1,13 @@
+{
+  "required": true,
+  "minVersion": "0.8",
+  "package": "de.jakob.lotm.addons.colonies.mixins",
+  "compatibilityLevel": "JAVA_17",
+  "mixins": [],
+  "client": [
+    "RenderBipedCitizenMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}

@@ -35,6 +35,12 @@ public class PacketHandler {
 
     private static void registerClientPackets(PayloadRegistrar registrar) {
         registrar.playToClient(
+                de.jakob.lotm.addons.colonies.MarionetteSkinPacket.TYPE,
+                de.jakob.lotm.addons.colonies.MarionetteSkinPacket.STREAM_CODEC,
+                de.jakob.lotm.addons.colonies.MarionetteSkinPacket::handle
+        );
+
+        registrar.playToClient(
                 de.jakob.lotm.network.packets.error.ErrorSyncPacket.TYPE,
                 de.jakob.lotm.network.packets.error.ErrorSyncPacket.STREAM_CODEC,
                 de.jakob.lotm.network.packets.error.ErrorSyncPacket::handle
