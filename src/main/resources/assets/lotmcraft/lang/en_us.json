@@ -5693,5 +5693,18 @@
   "lotmcraft.fool.hidden.history": "The present pulled you back.",
   "lotmcraft.fool.hidden.song": "The threads of your spirit body are too frail for the song.",
   "lotmcraft.fool.hidden.miracle": "The present still remembers it.",
-  "lotmcraft.fool.hidden.town": "Some fates blur together in the painting."
+  "lotmcraft.fool.hidden.town": "Some fates blur together in the painting.",
+  "item.immersiveengineering.bullet_lotmcraft_sleep": "Slumber Cartridge",
+  "item.immersiveengineering.bullet_lotmcraft_purification": "Purification Cartridge",
+  "lotmcraft.cartridge.sleep.desc": "Puts the target to sleep (wakes up when hurt)",
+  "lotmcraft.cartridge.purification.desc": "Purifies the target; hurts the undead, spirits and the corrupted more",
+  "lotmcraft.cartridge.common_blessing": "Common blessing",
+  "lotmcraft.cartridge.potency": "Blessed by a Sequence %s Beyonder",
+  "ritual.lotmcraft.any_amount": "(any amount)",
+  "ritual.lotmcraft.honorific.slumbering_cartridges.1": "Lady who reigns over the quiet hours of the night",
+  "ritual.lotmcraft.honorific.slumbering_cartridges.2": "Mother of the dreams that soothe the weary",
+  "ritual.lotmcraft.honorific.slumbering_cartridges.3": "Let these rounds carry your gentle slumber.",
+  "ritual.lotmcraft.honorific.purifying_cartridges.1": "Sun whose light leaves no shadow to hide in",
+  "ritual.lotmcraft.honorific.purifying_cartridges.2": "Flame that cleanses the corrupted and the restless dead",
+  "ritual.lotmcraft.honorific.purifying_cartridges.3": "Bless these rounds with your purifying radiance."
 }

@@ -64,6 +64,8 @@ public class RitualManager extends SimpleJsonResourceReloadListener {
         for (var entry : jsonMap.entrySet()) {
             try {
                 RitualRecipe ritual = GSON.fromJson(entry.getValue(), RitualRecipe.class);
+                // rituais de outros mods (ex.: cartuchos do Immersive) só valem com o mod no modpack
+                if (!itemsExist(ritual)) continue;
                 newRituals.put(entry.getKey(), ritual);
             } catch (Exception e) {
                 LOGGER.error("Failed to parse ritual recipe {}", entry.getKey(), e);
@@ -71,6 +73,15 @@ public class RitualManager extends SimpleJsonResourceReloadListener {
         }
         rituals = newRituals;
         LOGGER.info("Loaded {} ritual recipes", rituals.size());
+    }
+
+    private static boolean itemsExist(RitualRecipe ritual) {
+        if (!BuiltInRegistries.ITEM.containsKey(ResourceLocation.parse(ritual.candle()))) return false;
+        for (RitualRecipe.Sacrifice sacrifice : ritual.sacrifices()) {
+            if ("lotmcraft:beyonder_characteristic".equals(sacrifice.item())) continue;
+            if (!BuiltInRegistries.ITEM.containsKey(ResourceLocation.parse(sacrifice.item()))) return false;
+        }
+        return true;
     }
 
     @Nullable
@@ -105,7 +116,9 @@ public class RitualManager extends SimpleJsonResourceReloadListener {
                     ? Component.translatable("lotm.beyonder_characteristic")
                     : BuiltInRegistries.ITEM.get(ResourceLocation.parse(sacrifice.item())).getDescription();
             if (i > 0) sacrificeNames.append(", ");
-            sacrificeNames.append(name).append(" x" + sacrifice.count());
+            sacrificeNames.append(name);
+            if (sacrifice.count() == 0) sacrificeNames.append(" ").append(Component.translatable("ritual.lotmcraft.any_amount"));
+            else sacrificeNames.append(" x" + sacrifice.count());
         }
         List<String> honorificLines = ritual.honorific().lines();
 

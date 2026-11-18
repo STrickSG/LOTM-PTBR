@@ -50,6 +50,11 @@ repositories {
         forRepository { maven { url = "https://ldtteam.jfrog.io/ldtteam/modding/" } }
         filter { includeGroup "com.ldtteam" }
     }
+    // Immersive Engineering (opcional: cartuchos Beyonder só aparecem com ele no modpack)
+    exclusiveContent {
+        forRepository { maven { url = "https://maven.blamejared.com" } }
+        filter { includeGroup "blusunrize.immersiveengineering"; includeGroup "malte0811" }
+    }
 }
 
 base {
@@ -184,6 +189,10 @@ dependencies {
     jarJar("curse.maven:terrablender-neoforge-940057:6054947")
 
     compileOnly "mezz.jei:jei-1.21.1-neoforge-api:19.27.0.340"
+
+    // Immersive Engineering: só a API para compilar; o mod não vai dentro do jar
+    compileOnly("blusunrize.immersiveengineering:ImmersiveEngineering:${ie_version}:api") { transitive = false }
+    compileOnly("malte0811:DualCodecs:0.1.2") { transitive = false }
 
     // LDLib2
     implementation("com.lowdragmc.ldlib2:ldlib2-neoforge-${minecraft_version}:${ldlib2_version}:all")

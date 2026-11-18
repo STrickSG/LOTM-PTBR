@@ -1,0 +1,26 @@
+{
+  "id": "lotm:slumbering_cartridges",
+  "discovered_from": "lotm:dreamwalkers_diary",
+  "candle": "minecraft:blue_candle",
+  "sacrifices": [
+    { "item": "immersiveengineering:bullet_casull", "count": 0 },
+    { "item": "minecraft:phantom_membrane", "count": 1 },
+    { "item": "minecraft:poppy", "count": 2 }
+  ],
+  "honorific": {
+    "lines": [
+      "Lady who reigns over the quiet hours of the night",
+      "Mother of the dreams that soothe the weary",
+      "Let these rounds carry your gentle slumber."
+    ],
+    "translated": ["Senhora que reina sobre as horas silenciosas da noite", "Mãe dos sonhos que acalmam os cansados", "Que estas balas carreguem o teu sono suave."]
+  },
+  "conditions": { "min_sequence": 10 },
+  "particle_color": { "r": 0.2, "g": 0.2, "b": 0.6 },
+  "book_color": "BLUE",
+  "duration_ticks": 200,
+  "result": {
+    "type": "bless_cartridges",
+    "params": { "cartridge": "sleep" }
+  }
+}

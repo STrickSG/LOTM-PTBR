@@ -5492,5 +5492,18 @@
   "lotmcraft.fool.hidden.history": "O presente puxou você de volta.",
   "lotmcraft.fool.hidden.song": "Os fios do seu corpo espiritual estão frágeis demais para o canto.",
   "lotmcraft.fool.hidden.miracle": "O presente ainda se lembra dela.",
-  "lotmcraft.fool.hidden.town": "Alguns destinos se confundem na pintura."
+  "lotmcraft.fool.hidden.town": "Alguns destinos se confundem na pintura.",
+  "item.immersiveengineering.bullet_lotmcraft_sleep": "Cartucho do Sono",
+  "item.immersiveengineering.bullet_lotmcraft_purification": "Cartucho da Purificação",
+  "lotmcraft.cartridge.sleep.desc": "Quem é atingido cai no sono (acorda se levar dano)",
+  "lotmcraft.cartridge.purification.desc": "Purifica o alvo; fere mais mortos-vivos, espíritos e os corrompidos",
+  "lotmcraft.cartridge.common_blessing": "Bênção comum",
+  "lotmcraft.cartridge.potency": "Abençoado por um Beyonder de Sequência %s",
+  "ritual.lotmcraft.any_amount": "(qualquer quantidade)",
+  "ritual.lotmcraft.honorific.slumbering_cartridges.1": "Senhora que reina sobre as horas silenciosas da noite",
+  "ritual.lotmcraft.honorific.slumbering_cartridges.2": "Mãe dos sonhos que acalmam os cansados",
+  "ritual.lotmcraft.honorific.slumbering_cartridges.3": "Que estas balas carreguem o teu sono suave.",
+  "ritual.lotmcraft.honorific.purifying_cartridges.1": "Sol cuja luz não deixa sombra onde se esconder",
+  "ritual.lotmcraft.honorific.purifying_cartridges.2": "Chama que purifica os corrompidos e os mortos inquietos",
+  "ritual.lotmcraft.honorific.purifying_cartridges.3": "Abençoa estas balas com o teu esplendor purificador."
 }

@@ -102,6 +102,15 @@ versionRange="[1.21.1-4.1.0.8,)"
 ordering="AFTER"
 side="BOTH"
 
+# Opcional: com o Immersive Engineering aparecem os cartuchos Beyonder (abençoados na mesa de rituais).
+# BEFORE porque os cartuchos têm que estar registrados antes do Immersive criar os itens.
+[[dependencies.${mod_id}]]
+modId="immersiveengineering"
+type="optional"
+versionRange="[1.21.1-12.4,)"
+ordering="BEFORE"
+side="BOTH"
+
 [[mixins]]
 config="mixins.lotmcraft.json"
 

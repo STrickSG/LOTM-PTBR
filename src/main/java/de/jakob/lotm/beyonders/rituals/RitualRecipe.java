@@ -22,6 +22,7 @@ public record  RitualRecipe(
         Result result
 ) {
 
+    /** {@code count} 0 = qualquer quantidade desse item */
     public record Sacrifice(String item, int count) {}
 
     /** {@code translated}: as mesmas linhas em português (a mesa aceita as duas) */
@@ -85,13 +86,24 @@ public record  RitualRecipe(
             }
         } else {
             Map<String, Integer> providedSacrifices = new HashMap<>();
-            for (ItemStack sacrifice : sacrifices) {
+            java.util.List<ItemStack> remaining = new java.util.ArrayList<>(sacrifices);
+            // quantidade livre: qualquer pilha desse item serve
+            for (Sacrifice requiredSacrifice : this.sacrifices) {
+                if (requiredSacrifice.count() != 0) continue;
+                ItemStack found = remaining.stream()
+                        .filter(stack -> BuiltInRegistries.ITEM.getKey(stack.getItem()).toString().equals(requiredSacrifice.item()))
+                        .findFirst().orElse(null);
+                if (found == null) return false;
+                remaining.remove(found);
+            }
+            for (ItemStack sacrifice : remaining) {
                 String key = BuiltInRegistries.ITEM.getKey(sacrifice.getItem()) + "|" + sacrifice.getCount();
                 providedSacrifices.merge(key, 1, Integer::sum);
             }
 
             Map<String, Integer> requiredSacrifices = new HashMap<>();
             for (Sacrifice requiredSacrifice : this.sacrifices) {
+                if (requiredSacrifice.count() == 0) continue;
                 String key = requiredSacrifice.item() + "|" + requiredSacrifice.count();
                 requiredSacrifices.merge(key, 1, Integer::sum);
             }

@@ -229,6 +229,11 @@ public class LOTMCraft
 
         BeyonderData.initPathwayInfos();
 
+        // Cartuchos Beyonder: só com o Immersive Engineering no modpack, registrados antes dele criar os itens
+        if (net.neoforged.fml.ModList.get().isLoaded("immersiveengineering")) {
+            de.jakob.lotm.addons.compat.ImmersiveCartridges.register();
+        }
+
         // Register ourselves for server and other game events we are interested in
         NeoForge.EVENT_BUS.register(this);
 
