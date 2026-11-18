@@ -87,6 +87,14 @@ ordering="NONE"
 side="BOTH"
 
 [[dependencies.${mod_id}]]
+modId="minecolonies"
+type="required"
+reason="Os rituais de avanço usam os colonos e as colônias do MineColonies"
+versionRange="[1.1.1300,)"
+ordering="AFTER"
+side="BOTH"
+
+[[dependencies.${mod_id}]]
 modId="terrablender"
 type="required"
 reason="Adds the Spirit World Patch biome to the overworld"

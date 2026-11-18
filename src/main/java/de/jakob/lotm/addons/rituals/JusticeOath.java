@@ -168,7 +168,7 @@ public final class JusticeOath {
     public static void onDeath(LivingDeathEvent event) {
         if (!(event.getSource().getEntity() instanceof ServerPlayer killer)) return;
         Entity victim = event.getEntity();
-        boolean innocent = victim instanceof AbstractVillager || victim instanceof IronGolem || victim instanceof SnowGolem
+        boolean innocent = victim instanceof AbstractVillager || de.jakob.lotm.addons.colonies.Colonists.isAnyCitizen(victim) || victim instanceof IronGolem || victim instanceof SnowGolem
                 || (victim instanceof Player other && other != killer && other.getLastHurtMob() != killer);
         if (!innocent) return;
 

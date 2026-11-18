@@ -45,6 +45,11 @@ repositories {
         forRepository { maven { url = "https://cursemaven.com" } }
         filter { includeGroup "curse.maven" }
     }
+    // MineColonies e as bibliotecas dele (Structurize, BlockUI, Domum Ornamentum, MultiPiston)
+    exclusiveContent {
+        forRepository { maven { url = "https://ldtteam.jfrog.io/ldtteam/modding/" } }
+        filter { includeGroup "com.ldtteam" }
+    }
 }
 
 base {
@@ -164,6 +169,15 @@ configurations.all {
 
 dependencies {
     implementation 'com.github.Querz:NBT:6.1'
+
+    // MineColonies (dependência obrigatória: os rituais usam colonos no lugar de aldeões)
+    implementation("com.ldtteam:minecolonies:${minecolonies_version}") {
+        exclude group: 'mezz.jei'
+        exclude group: 'com.ldtteam', module: 'datagenerators'
+    }
+    compileOnly("com.ldtteam:structurize:${structurize_version}") { transitive = false }
+    compileOnly("com.ldtteam:domum-ornamentum:${domum_version}") { transitive = false }
+    compileOnly("com.ldtteam:blockui:${blockui_version}") { transitive = false }
 
     implementation "curse.maven:terrablender-neoforge-940057:6054947"
 

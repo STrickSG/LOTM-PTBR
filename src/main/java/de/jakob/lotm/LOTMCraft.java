@@ -285,6 +285,7 @@ public class LOTMCraft
     }
 
     private void commonSetup(final FMLCommonSetupEvent event) {
+        de.jakob.lotm.addons.colonies.ColonyRituals.register();
         // Runs on both physical sides; it used to live in ClientModEvents (Dist.CLIENT only),
         // so dedicated servers never initialized the recipes at startup.
         event.enqueueWork(PotionRecipes::initPotionRecipes);

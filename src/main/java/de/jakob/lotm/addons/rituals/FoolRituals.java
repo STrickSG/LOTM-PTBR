@@ -20,7 +20,6 @@ import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.npc.AbstractVillager;
 import net.minecraft.world.entity.player.Player;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
@@ -114,7 +113,7 @@ public final class FoolRituals {
         int points = 0;
         for (LivingEntity watcher : level.getEntitiesOfClass(LivingEntity.class, stage.getBoundingBox().inflate(32))) {
             if (watcher == performer || watcher == stage || !watcher.isAlive()) continue;
-            if (watcher instanceof AbstractVillager) points += 1;
+            if (de.jakob.lotm.addons.colonies.Colonists.isAnyCitizen(watcher)) points += 1;
             else if (watcher instanceof Player p && !p.isSpectator()) {
                 points += BeyonderData.isBeyonder(p) && "visionary".equals(BeyonderData.getPathway(p)) ? 15 : 5;
             }
@@ -183,12 +182,24 @@ public final class FoolRituals {
     /** [marionetes com nome único, marionetes com nome repetido] (condição escondida: cada uma com um destino próprio) */
     static int[] townNames(ServerPlayer player) {
         String owner = player.getStringUUID();
-        java.util.Map<String, Integer> names = new java.util.HashMap<>();
-        for (LivingEntity e : player.serverLevel().getEntitiesOfClass(LivingEntity.class, player.getBoundingBox().inflate(TOWN_RADIUS))) {
-            if (!e.hasCustomName() || !e.hasData(ModAttachments.MARIONETTE_COMPONENT)) continue;
-            MarionetteComponent m = e.getData(ModAttachments.MARIONETTE_COMPONENT);
-            if (m.isMarionette() && owner.equals(m.getControllerUUID())) names.merge(e.getCustomName().getString().strip().toLowerCase(), 1, Integer::sum);
+        // marionetes soltas: a até 48 blocos de você ou dentro da sua colônia (a Cidade das Marionetes)
+        java.util.Map<java.util.UUID, String> town = new java.util.HashMap<>();
+        com.minecolonies.api.colony.IColony colony = de.jakob.lotm.addons.colonies.Colonists.ownedBy(player.getUUID());
+        java.util.List<Entity> candidates = new java.util.ArrayList<>(player.serverLevel().getEntitiesOfClass(LivingEntity.class, player.getBoundingBox().inflate(TOWN_RADIUS)));
+        if (colony != null && colony.getWorld() instanceof ServerLevel colonyLevel) {
+            for (Entity e : colonyLevel.getAllEntities()) {
+                if (e instanceof LivingEntity && colony.isCoordInColony(colonyLevel, e.blockPosition())) candidates.add(e);
+            }
         }
+        for (Entity e : candidates) {
+            if (!(e instanceof LivingEntity living) || !living.hasCustomName() || !living.hasData(ModAttachments.MARIONETTE_COMPONENT)) continue;
+            MarionetteComponent m = living.getData(ModAttachments.MARIONETTE_COMPONENT);
+            if (m.isMarionette() && owner.equals(m.getControllerUUID())) town.put(living.getUUID(), living.getCustomName().getString());
+        }
+        java.util.Map<String, Integer> names = new java.util.HashMap<>();
+        for (String name : town.values()) names.merge(name.strip().toLowerCase(), 1, Integer::sum);
+        // marionetes que viraram colonos da sua colônia
+        for (String name : de.jakob.lotm.addons.colonies.ColonyRituals.marionetteColonists(player)) names.merge(name.strip().toLowerCase(), 1, Integer::sum);
         int unique = 0, repeated = 0;
         for (int n : names.values()) { if (n == 1) unique++; else repeated += n; }
         return new int[]{unique, repeated};
@@ -263,6 +274,16 @@ public final class FoolRituals {
 
     public static boolean miracleDone(ServerPlayer player) {
         return data(player).getBoolean(MIRACLE_DONE);
+    }
+
+    /** Outra forma do milagre: reativar uma colônia abandonada traz a história dela de volta ao presente */
+    public static void restoredColony(ServerPlayer player, String colonyName) {
+        if (!preparing(player, 2) || miracleDone(player)) return;
+        data(player).putBoolean(MIRACLE_DONE, true);
+        ServerLevel level = player.serverLevel();
+        level.sendParticles(ParticleTypes.END_ROD, player.getX(), player.getY() + 1, player.getZ(), 120, 3, 2, 3, .08);
+        level.playSound(null, player.blockPosition(), SoundEvents.BEACON_POWER_SELECT, SoundSource.PLAYERS, 1f, 1.2f);
+        tell(player, Component.translatable("lotmcraft.fool.miracle_colony", colonyName).withColor(COLOR));
     }
 
     @SubscribeEvent
