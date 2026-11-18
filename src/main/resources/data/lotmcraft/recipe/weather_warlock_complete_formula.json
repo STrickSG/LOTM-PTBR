@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    {
+      "item": "lotmcraft:weather_warlock"
+    },
+    {
+      "item": "lotmcraft:weather_warlock_ritual"
+    }
+  ],
+  "result": {
+    "id": "lotmcraft:weather_warlock_complete_formula",
+    "count": 1
+  }
+}

@@ -117,7 +117,27 @@ public final class AdvancementRituals {
             new Ritual("error", 1, () -> List.of(
                     new ItemStack(Items.CLOCK, 12),
                     new ItemStack(Items.ITEM_FRAME, 12),
-                    new ItemStack(PotionItemHandler.WORM_OF_TIME_POTION.get())))
+                    new ItemStack(PotionItemHandler.WORM_OF_TIME_POTION.get()))),
+            // Sacerdote Vermelho, Sequência 5 (Ceifador): capturar um alvo mais forte e beber diante dele
+            new Ritual("red_priest", 5, () -> List.of(
+                    new ItemStack(Items.CHAIN),
+                    new ItemStack(PotionItemHandler.REAPER_POTION.get()))),
+            // Sacerdote Vermelho, Sequência 4 (Cavaleiro de Sangue de Ferro): uma equipe de trinta, forte e unida
+            new Ritual("red_priest", 4, () -> List.of(
+                    new ItemStack(Items.IRON_CHESTPLATE, 30),
+                    new ItemStack(PotionItemHandler.IRON_BLOODED_KNIGHT_POTION.get()))),
+            // Sacerdote Vermelho, Sequência 3 (Bispo da Guerra): liderar a equipe e vencer uma força inimiga poderosa
+            new Ritual("red_priest", 3, () -> List.of(
+                    new ItemStack(Items.CROSSBOW),
+                    new ItemStack(PotionItemHandler.WAR_BISHOP_POTION.get()))),
+            // Sacerdote Vermelho, Sequência 2 (Bruxo do Clima): mudar à força o clima de uma região, sem ajuda, num instante
+            new Ritual("red_priest", 2, () -> List.of(
+                    new ItemStack(Items.LIGHTNING_ROD),
+                    new ItemStack(PotionItemHandler.WEATHER_WARLOCK_POTION.get()))),
+            // Sacerdote Vermelho, Sequência 1 (Conquistador): conquistar uma nação que tema, obedeça e reverencie
+            new Ritual("red_priest", 1, () -> List.of(
+                    new ItemStack(Items.RED_BANNER),
+                    new ItemStack(PotionItemHandler.CONQUEROR_POTION.get())))
     );
 
     public static List<Ritual> all() {

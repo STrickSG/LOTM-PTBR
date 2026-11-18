@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    {
+      "item": "lotmcraft:conqueror"
+    },
+    {
+      "item": "lotmcraft:conqueror_ritual"
+    }
+  ],
+  "result": {
+    "id": "lotmcraft:conqueror_complete_formula",
+    "count": 1
+  }
+}

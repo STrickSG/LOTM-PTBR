@@ -169,6 +169,28 @@ public final class Believers {
         data.setDirty();
     }
 
+    /**
+     * Conquista: todos os colonos da colônia passam a reverenciar o conquistador, mesmo que adorassem outra pessoa.
+     * Funciona com os colonos em chunks descarregados (o nome fica nos dados do colono).
+     */
+    public static void claimByConquest(ServerPlayer god, com.minecolonies.api.colony.IColony colony) {
+        Data data = data(god.server);
+        String title = Component.translatable("lotmcraft.believers.title", god.getName().getString()).getString();
+        for (ICitizenData citizen : colony.getCitizenManager().getCitizens()) {
+            UUID id = citizen.getUUID();
+            if (god.getUUID().equals(data.godOf(id))) continue;
+            UUID previous = data.godOf(id);
+            if (previous != null) data.remove(previous, id);
+            String old = data.names.getOrDefault(id, citizen.getName());
+            data.names.put(id, old);
+            data.add(god.getUUID(), id);
+            String titled = old + " (" + title + ")";
+            citizen.setName(titled);
+            citizen.getEntity().ifPresent(entity -> entity.setCustomName(Component.literal(titled)));
+        }
+        data.setDirty();
+    }
+
     private static void forget(Data data, ICitizenData citizen, Entity colonist) {
         UUID id = citizen.getUUID();
         UUID god = data.godOf(id);

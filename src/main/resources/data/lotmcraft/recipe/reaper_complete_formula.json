@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    {
+      "item": "lotmcraft:reaper"
+    },
+    {
+      "item": "lotmcraft:reaper_ritual"
+    }
+  ],
+  "result": {
+    "id": "lotmcraft:reaper_complete_formula",
+    "count": 1
+  }
+}

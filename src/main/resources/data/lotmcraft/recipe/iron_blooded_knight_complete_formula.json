@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    {
+      "item": "lotmcraft:iron_blooded_knight"
+    },
+    {
+      "item": "lotmcraft:iron_blooded_knight_ritual"
+    }
+  ],
+  "result": {
+    "id": "lotmcraft:iron_blooded_knight_complete_formula",
+    "count": 1
+  }
+}

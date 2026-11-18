@@ -67,6 +67,11 @@ public final class RitualChecks {
         if ("error".equals(pathway) && sequence == 3) return ErrorRituals.orderCollapsed(player);
         if ("error".equals(pathway) && sequence == 2) return ErrorRituals.identityTrusted(player);
         if ("error".equals(pathway) && sequence == 1) return ErrorRituals.disorderDone(player);
+        if ("red_priest".equals(pathway) && sequence == 5) return RedPriestRituals.captured(player);
+        if ("red_priest".equals(pathway) && sequence == 4) return RedPriestRituals.teamFormed(player);
+        if ("red_priest".equals(pathway) && sequence == 3) return RedPriestRituals.warWon(player);
+        if ("red_priest".equals(pathway) && sequence == 2) return RedPriestRituals.weatherBent(player);
+        if ("red_priest".equals(pathway) && sequence == 1) return RedPriestRituals.nationConquered(player);
         return false;
     }
 

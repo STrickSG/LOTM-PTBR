@@ -160,7 +160,37 @@ abrir baús e prédios, mexer nos colonos.
   com pelo menos 20 aldeões. O tempo da cidade se embaralha (moradores lentos ou rápidos ao acaso). Precisa durar 7 dias com você por perto; se faltar um
   relógio, recomeça.
 
-## Ritual da mesa: Passagem para a Névoa da História
+## Rituais de avanço do Sacerdote Vermelho (Caçador)
+
+Mesmas regras dos outros: pergaminho, Fórmula Completa ou Carta do Sacerdote Vermelho na Sequência certa. A
+Carta pede as receitas das Sequências 9 a 6 e as Fórmulas Completas das Sequências 5 a 1. Nenhum depende de um
+poder do próprio Caminho, para servir também a quem chegar por outro Caminho.
+
+- Sequência 5, Ceifador: beber a até 8 blocos de um Beyonder mais forte que você (Sequência menor), vivo e preso de
+  qualquer jeito (sem conseguir andar, petrificado, conquistado, adormecido por um poder...).
+- Sequência 4, Cavaleiro de Sangue de Ferro: beber com 30 companheiros fortes a até 64 blocos. Companheiros: guardas
+  da sua colônia felizes (7 ou mais), aliados (qualquer um) ou subordinados seus. Fortes: armadura de ferro completa
+  ou melhor, ou Beyonders.
+- Sequência 3, Bispo da Guerra: vencer uma guerra: 20 invasores caindo perto de você (invasões do MineColonies,
+  invasões de aldeia, saqueadores...), mortos por você, seus guardas ou aliados, até não sobrar nenhum por perto.
+  Beber em até 1 dia do Minecraft.
+- Sequência 2, Bruxo do Clima: mudar o clima (limpo para chuva/tempestade ou o contrário) até 10 segundos depois de
+  usar um poder (seu, de outro Caminho ou de um Artefato Selado) ou um item, sem nenhum outro jogador a até 64 blocos.
+  A troca natural e o comando `/weather` não contam. Beber em até 1 minuto.
+- Sequência 1, Conquistador: conquistar colônias que somem pelo menos 100 colonos (a sua não conta) e beber.
+
+**Conquista de colônias** (para quem está na Sequência 2 do Sacerdote Vermelho):
+1. Atacar os defensores de uma colônia que não é sua declara guerra a ela: guardas do MineColonies e, nos Reinos de
+   NPC, os golens de ferro que guardam a prefeitura.
+2. Com nenhum defensor de pé a até 48 blocos da prefeitura, fincar um estandarte qualquer a até 16 blocos dela.
+3. A colônia obedece (você vira oficial), reverencia (os colonos viram seus fiéis) e teme (tremem perto de você).
+   Um jogador retoma a própria colônia matando o conquistador dentro dela.
+
+**Reinos de NPC:** metade das colônias abandonadas que o MineColonies gera no mundo nasce como um reino habitado,
+com nome ("Reino de ..."), prédios funcionando, de 10 a 24 moradores e golens defensores. A outra metade continua
+abandonada (Invocador de Milagres, Tolo 2).
+
+
 
 Ritual novo da mesa de ritual, exclusivo do Caminho do Vidente, a partir da Sequência 4. O livro
 "Crônica Esquecida" aparece nos baús junto com os outros livros de ritual. Quem não é Vidente de
