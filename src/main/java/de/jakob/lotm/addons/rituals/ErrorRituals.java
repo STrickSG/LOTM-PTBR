@@ -25,7 +25,9 @@ import net.minecraft.world.entity.decoration.ItemFrame;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.entity.EntityTypeTest;
+import net.neoforged.bus.api.EventPriority;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.event.entity.living.LivingIncomingDamageEvent;
@@ -111,8 +113,10 @@ public final class ErrorRituals {
     }
 
     // ------------------------------------------------------------------ interações com colonos
+    // O Erro é uma falha, um bug: faz os rituais na colônia dos outros, mesmo sem permissão. Por isso estes eventos rodam
+    // antes da proteção de colônia do MineColonies e fazem a ação eles mesmos.
 
-    @SubscribeEvent
+    @SubscribeEvent(priority = EventPriority.HIGHEST)
     public static void onInteract(PlayerInteractEvent.EntityInteract event) {
         if (event.getHand() != InteractionHand.MAIN_HAND || !(event.getTarget() instanceof EntityCitizen citizen)) return;
         Player player = event.getEntity();
@@ -293,6 +297,38 @@ public final class ErrorRituals {
 
     public static boolean disorderDone(ServerPlayer player) {
         return data(player).getBoolean(DISORDER_DONE);
+    }
+
+    // Verme do Tempo: pendurar molduras e pôr relógios nelas dentro de qualquer colônia, sem permissão
+
+    @SubscribeEvent(priority = EventPriority.HIGHEST)
+    public static void onHangFrame(PlayerInteractEvent.RightClickBlock event) {
+        Player player = event.getEntity();
+        ItemStack held = event.getItemStack();
+        if (!preparing(player, 1) || !(held.is(Items.ITEM_FRAME) || held.is(Items.GLOW_ITEM_FRAME))) return;
+        if (Colonists.colonyAt(event.getLevel(), event.getPos()) == null) return;
+        event.setCanceled(true);
+        InteractionResult result = held.useOn(new UseOnContext(player, event.getHand(), event.getHitVec()));
+        event.setCancellationResult(result);
+    }
+
+    @SubscribeEvent(priority = EventPriority.HIGHEST)
+    public static void onFrameSpecific(PlayerInteractEvent.EntityInteractSpecific event) {
+        if (!(event.getTarget() instanceof ItemFrame frame) || !clockIntoFrame(event.getEntity(), frame, event.getHand())) return;
+        event.setCanceled(true);
+        event.setCancellationResult(frame.interact(event.getEntity(), event.getHand()));
+    }
+
+    @SubscribeEvent(priority = EventPriority.HIGHEST)
+    public static void onFrame(PlayerInteractEvent.EntityInteract event) {
+        if (!(event.getTarget() instanceof ItemFrame frame) || !clockIntoFrame(event.getEntity(), frame, event.getHand())) return;
+        event.setCanceled(true);
+        event.setCancellationResult(frame.interact(event.getEntity(), event.getHand()));
+    }
+
+    private static boolean clockIntoFrame(Player player, ItemFrame frame, InteractionHand hand) {
+        return preparing(player, 1) && frame.getItem().isEmpty() && player.getItemInHand(hand).is(Items.CLOCK)
+                && Colonists.colonyAt(frame.level(), frame.blockPosition()) != null;
     }
 
     private static List<ItemFrame> framedClocks(ServerLevel level, IColony colony) {

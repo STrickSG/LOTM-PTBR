@@ -129,6 +129,10 @@ Tolo pede as receitas das Sequências 9 a 6 e as Fórmulas Completas das Sequên
 Mesmas regras dos outros: pergaminho, Fórmula Completa ou Carta do Erro na Sequência certa. A Carta do
 Erro pede as receitas das Sequências 9 a 6 e as Fórmulas Completas das Sequências 5 a 1.
 
+O Erro não precisa ter colônia: ele faz os rituais na colônia dos outros, mesmo sem permissão (é uma falha, um
+bug, que não segue as regras). A proteção do MineColonies não o impede de clicar nos colonos, pendurar molduras
+e pôr relógios nelas para esses rituais.
+
 - Sequência 5, Ladrão de Sonhos: agachado e de mão vazia, entrar no sonho de colonos dormindo. Beber com 30
   deles dormindo a até 48 blocos.
 - Sequência 4, Parasita: agachado e de mão vazia, pedir a 9 colonos felizes que deem tudo o que têm (o inventário
