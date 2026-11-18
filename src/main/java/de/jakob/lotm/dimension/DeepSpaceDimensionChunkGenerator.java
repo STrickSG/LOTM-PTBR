@@ -103,6 +103,7 @@ public class DeepSpaceDimensionChunkGenerator extends ChunkGenerator {
                 int centerX    = (sx << 4) + rng.nextInt(16);
                 int centerY    = 40 + rng.nextInt(160);        // y 40–199
                 int centerZ    = (sz << 4) + rng.nextInt(16);
+                if (DeepSpacePlanets.inClearing(centerX, centerY, centerZ)) continue; // espaço em volta dos planetas
                 BlockState fill = SPHERE_BLOCKS[rng.nextInt(SPHERE_BLOCKS.length)];
                 boolean hollow  = rng.nextBoolean();
                 boolean hasLava = !hollow && rng.nextInt(5) == 0;
@@ -166,6 +167,7 @@ public class DeepSpaceDimensionChunkGenerator extends ChunkGenerator {
                 int centerX  = (ix << 4) + rng.nextInt(16);
                 int centerY  = 80 + rng.nextInt(120); // y 80–199
                 int centerZ  = (iz << 4) + rng.nextInt(16);
+                if (DeepSpacePlanets.inClearing(centerX, centerY, centerZ)) continue; // espaço em volta dos planetas
                 int surfaceBlkIdx = rng.nextInt(ISLAND_SURFACE_BLOCKS.length);
                 int fillBlkIdx    = rng.nextInt(ISLAND_FILL_BLOCKS.length);
 

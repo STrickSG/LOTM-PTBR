@@ -279,6 +279,9 @@ public final class DoorRituals {
     // ------------------------------------------------------------------ correntes do selo
 
     private static final String CHAIN_TAG = "lotm_seal_chain";
+    private static final int DOOR_COLOR = 0x89F5F5;
+    /** Efeito visual do Selamento da Porta (Photon) mostrado para quem está perto de cada criatura selada */
+    private static final Map<UUID, Map<UUID, UUID>> SEAL_FX = new java.util.concurrent.ConcurrentHashMap<>();
 
     /**
      * Correntes de verdade (blocos de corrente) prendendo a criatura selada: quatro correntes presas no chão em volta
@@ -329,6 +332,13 @@ public final class DoorRituals {
             transformation.put("scale", floats(scale.x, scale.y, scale.z));
             transformation.put("right_rotation", floats(0, 0, 0, 1));
             tag.put("transformation", transformation);
+            // cor do Caminho da Porta: contorno brilhando e corrente sempre iluminada
+            tag.putBoolean("Glowing", true);
+            tag.putInt("glow_color_override", DOOR_COLOR);
+            CompoundTag brightness = new CompoundTag();
+            brightness.putInt("sky", 15);
+            brightness.putInt("block", 15);
+            tag.put("brightness", brightness);
             ListTag tags = new ListTag();
             tags.add(StringTag.valueOf(CHAIN_TAG));
             tags.add(StringTag.valueOf(own));
@@ -347,10 +357,43 @@ public final class DoorRituals {
         return list;
     }
 
+    /** Mostra o efeito do Selamento da Porta para quem chega perto e o tira de quem se afasta */
+    private static void updateSealFx(LivingEntity entity) {
+        ServerLevel level = (ServerLevel) entity.level();
+        Map<UUID, UUID> shown = SEAL_FX.computeIfAbsent(entity.getUUID(), k -> new java.util.concurrent.ConcurrentHashMap<>());
+        BlockPos pos = BlockPos.containing(entity.getX(), entity.getY() + entity.getBbHeight() / 2, entity.getZ());
+        for (ServerPlayer player : level.players()) {
+            if (player.distanceToSqr(entity) < 48 * 48 && !shown.containsKey(player.getUUID())) {
+                UUID fx = UUID.randomUUID();
+                de.jakob.lotm.network.PacketHandler.sendToPlayer(player, new de.jakob.lotm.network.packets.toClient.PlayCancellablePhotonBlockEffectPacket(
+                        "sealing_effect", pos, entity.getX() - (pos.getX() + .5), entity.getY() + entity.getBbHeight() / 2 - (pos.getY() + .5), entity.getZ() - (pos.getZ() + .5),
+                        1.1, null, -1, false, true, null, fx));
+                shown.put(player.getUUID(), fx);
+            }
+        }
+        shown.entrySet().removeIf(e -> {
+            ServerPlayer player = level.getServer().getPlayerList().getPlayer(e.getKey());
+            if (player != null && player.level() == level && player.distanceToSqr(entity) < 64 * 64) return false;
+            if (player != null) de.jakob.lotm.network.PacketHandler.sendToPlayer(player, new de.jakob.lotm.network.packets.toClient.CancelPhotonBlockEffectPacket(e.getValue()));
+            return true;
+        });
+    }
+
+    // quem sai do jogo perde os efeitos no cliente; ao voltar, recebe de novo
+    @SubscribeEvent
+    public static void onLogout(net.neoforged.neoforge.event.entity.player.PlayerEvent.PlayerLoggedOutEvent event) {
+        for (Map<UUID, UUID> shown : SEAL_FX.values()) shown.remove(event.getEntity().getUUID());
+    }
+
     // se a criatura selada sumir (comando, vazio), as correntes somem junto
     @SubscribeEvent
     public static void onLeave(net.neoforged.neoforge.event.entity.EntityLeaveLevelEvent event) {
         if (!(event.getEntity() instanceof LivingEntity entity) || !(event.getLevel() instanceof ServerLevel level) || !isSealed(entity)) return;
+        Map<UUID, UUID> shown = SEAL_FX.remove(entity.getUUID());
+        if (shown != null) shown.forEach((playerId, fx) -> {
+            ServerPlayer player = level.getServer().getPlayerList().getPlayer(playerId);
+            if (player != null) de.jakob.lotm.network.PacketHandler.sendToPlayer(player, new de.jakob.lotm.network.packets.toClient.CancelPhotonBlockEffectPacket(fx));
+        });
         if (entity.getRemovalReason() == null || !entity.getRemovalReason().shouldDestroy()) return;
         String own = CHAIN_TAG + "_" + entity.getUUID();
         for (net.minecraft.world.entity.Display.BlockDisplay d : level.getEntitiesOfClass(net.minecraft.world.entity.Display.BlockDisplay.class,
@@ -370,6 +413,11 @@ public final class DoorRituals {
         }
         entity.setDeltaMovement(Vec3.ZERO);
         if (entity instanceof Mob mob && !mob.isNoAi()) mob.setNoAi(true);
+        if (entity.tickCount % 10 == 0) {
+            ((ServerLevel) entity.level()).sendParticles(de.jakob.lotm.particle.ModParticles.STAR.get(), entity.getX(), entity.getY() + entity.getBbHeight() / 2,
+                    entity.getZ(), 4, entity.getBbWidth() * .7, entity.getBbHeight() * .45, entity.getBbWidth() * .7, .02);
+        }
+        if (entity.tickCount % 40 == 0) updateSealFx(entity);
         if (entity.tickCount % 20 == 0) {
             ((ServerLevel) entity.level()).sendParticles(ParticleTypes.ENCHANT, entity.getX(), entity.getY() + entity.getBbHeight() / 2, entity.getZ(),
                     6, entity.getBbWidth() * .6, entity.getBbHeight() * .5, entity.getBbWidth() * .6, .3);
@@ -508,19 +556,29 @@ public final class DoorRituals {
         double dx = planet.x() - player.getX(), dz = planet.z() - player.getZ();
         if (dx * dx + dz * dz > 400 * 400) return;
 
-        // o planeta gira e emite sinais: um anel de luz que roda em volta dele e pulsos nos polos
+        // o planeta gira e emite sinais: luzes que rodam em volta dele (acompanhando o anel) e feixes de estrelas nos polos
         long time = level.getGameTime();
-        if (time % 4 == 0) {
-            double ring = planet.radius() + 7, turn = time * 0.03;
-            for (int i = 0; i < 36; i++) {
-                double a = turn + i * Math.PI * 2 / 36;
-                level.sendParticles(player, ParticleTypes.END_ROD, true, planet.x() + .5 + Math.cos(a) * ring, planet.y() + Math.sin(a * 2) * 1.5,
-                        planet.z() + .5 + Math.sin(a) * ring, 1, 0, 0, 0, 0);
+        double cx = planet.x() + .5, cy = planet.y() + .5, cz = planet.z() + .5;
+        if (time % 3 == 0) {
+            double turn = time * 0.025;
+            for (int band = 0; band < 2; band++) {
+                double ring = band == 0 ? planet.ringOuter() + 3 : planet.radius() + 4;
+                int points = band == 0 ? 48 : 28;
+                for (int i = 0; i < points; i++) {
+                    double a = (band == 0 ? turn : -turn * 1.6) + i * Math.PI * 2 / points;
+                    level.sendParticles(player, band == 0 ? ParticleTypes.END_ROD : de.jakob.lotm.particle.ModParticles.STAR.get(), true,
+                            cx + Math.cos(a) * ring, cy + (band == 0 ? 0 : Math.sin(a * 3) * 2), cz + Math.sin(a) * ring, 1, 0, 0, 0, 0);
+                }
             }
         }
-        if (time % 60 == 0) {
-            level.sendParticles(player, ParticleTypes.END_ROD, true, planet.x() + .5, planet.y() + planet.radius() + 3, planet.z() + .5, 60, .3, 6, .3, .08);
-            level.sendParticles(player, ParticleTypes.END_ROD, true, planet.x() + .5, planet.y() - planet.radius() - 3, planet.z() + .5, 60, .3, 6, .3, .08);
+        if (time % 40 == 0) {
+            // sinal: feixe de estrelas saindo dos dois polos
+            for (int k = 0; k < 24; k++) {
+                level.sendParticles(player, de.jakob.lotm.particle.ModParticles.STAR.get(), true, cx, cy + planet.radius() + 2 + k * 1.5, cz, 4, .15, .4, .15, .01);
+                level.sendParticles(player, de.jakob.lotm.particle.ModParticles.STAR.get(), true, cx, cy - planet.radius() - 2 - k * 1.5, cz, 4, .15, .4, .15, .01);
+            }
+            level.sendParticles(player, ParticleTypes.END_ROD, true, cx, cy + planet.radius() + 18, cz, 40, .4, 14, .4, .02);
+            level.sendParticles(player, ParticleTypes.END_ROD, true, cx, cy - planet.radius() - 18, cz, 40, .4, 14, .4, .02);
         }
 
         // ligação mística: pousado no planeta, com a sua Magnetita nele

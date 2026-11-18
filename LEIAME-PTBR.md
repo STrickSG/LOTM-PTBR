@@ -80,13 +80,14 @@ Completas das Sequências 5 a 1.
   por um poder de prender (Aprisionar, Confinamento, Jaula de Chamas, Jaula Espacial, Petrificação ou
   Selamento). Pela regra do mod, só um poder de nível semideus alcança um semideus: na prática, um
   Artefato Selado feito com Característica de Sequência 4 ou maior. Se outro jogador ferir a criatura,
-  o selo não vale. A criatura selada fica presa por correntes. Isso só acontece no ritual.
+  o selo não vale. A criatura selada fica presa por correntes na cor da Porta, com o efeito do Selamento
+  e estrelas em volta. Isso só acontece no ritual.
 - Sequência 3, Errante: dentro de 3 construções diferentes do Mundo Espiritual, agachado, usar um livro
   e pena para registrá-las. Beber com o livro no inventário.
 - Sequência 2, Andarilho dos Planos: deixar 9 lendas (livros assinados por você em atris) no Espaço
   Profundo, cada uma a pelo menos 500 blocos das outras.
-- Sequência 1, Chave das Estrelas: o Espaço Profundo ganhou planetas grandes de obsidiana e magma, com
-  um anel de luz que gira. Pousar num deles, colocar uma Magnetita e ficar em pé nele por 5 minutos.
+- Sequência 1, Chave das Estrelas: o Espaço Profundo ganhou planetas pesados de pedra-negra, com
+  rachaduras de magma, anel de ametista, luzes que giram em volta e feixes de estrelas nos polos. Pousar num deles, colocar uma Magnetita e ficar em pé nele por 5 minutos.
   Os planetas só aparecem em partes do Espaço Profundo que ainda não tinham sido geradas.
 
 ## Correções de bugs
