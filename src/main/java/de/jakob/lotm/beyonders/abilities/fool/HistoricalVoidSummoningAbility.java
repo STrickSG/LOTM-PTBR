@@ -759,6 +759,10 @@ public class HistoricalVoidSummoningAbility extends SelectableAbility {
             tag.putBoolean("VoidSummoned", true);
             tag.putInt("VoidSlotCost", slotCost);
             tag.putInt("VoidDrainPerSecond", getDrainPerSecond(targetSequence));
+            // de qual criatura veio esta invocação (usado pelo ritual do Invocador de Milagres)
+            if (entityData.getCompound("EntityNBT").hasUUID("UUID")) {
+                tag.putUUID("VoidOriginalUUID", entityData.getCompound("EntityNBT").getUUID("UUID"));
+            }
 
             boolean spawned = level.addFreshEntity(entity);
 

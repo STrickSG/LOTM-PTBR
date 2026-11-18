@@ -56,6 +56,12 @@ public final class RitualChecks {
         if ("door".equals(pathway) && sequence == 3) return DoorRituals.records(player) >= DoorRituals.RECORDS_NEEDED;
         if ("door".equals(pathway) && sequence == 2) return DoorRituals.legends(player) >= DoorRituals.LEGENDS_NEEDED;
         if ("door".equals(pathway) && sequence == 1) return DoorRituals.starConnected(player);
+        // Tolo: Marionetista, Feiticeiro Bizarro, Erudito de Outrora, Invocador de Milagres e Atendente de Mistérios
+        if ("fool".equals(pathway) && sequence == 5) return FoolRituals.heardSong(player);
+        if ("fool".equals(pathway) && sequence == 4) return FoolRituals.performed(player);
+        if ("fool".equals(pathway) && sequence == 3) return FoolRituals.becameHistory(player);
+        if ("fool".equals(pathway) && sequence == 2) return FoolRituals.miracleDone(player);
+        if ("fool".equals(pathway) && sequence == 1) return FoolRituals.townDone(player);
         return false;
     }
 

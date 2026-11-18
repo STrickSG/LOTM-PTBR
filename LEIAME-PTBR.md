@@ -92,6 +92,23 @@ Completas das Sequências 5 a 1.
   rachaduras de magma, anel de ametista, luzes que giram em volta e feixes de estrelas nos polos. Pousar num deles, colocar uma Magnetita e ficar em pé nele por 5 minutos.
   Os planetas só aparecem em partes do Espaço Profundo que ainda não tinham sido geradas.
 
+## Rituais de avanço do Tolo
+
+Mesmas regras dos outros: pergaminho, Fórmula Completa ou Carta do Tolo na Sequência certa. A Carta do
+Tolo pede as receitas das Sequências 9 a 6 e as Fórmulas Completas das Sequências 5 a 1.
+
+- Sequência 5, Marionetista: beber a poção até 1 minuto depois de ouvir a Canção da Sereia (Tirano 5)
+  a até 20 blocos, cantada por outro jogador ou por um Artefato Selado.
+- Sequência 4, Feiticeiro Bizarro: dar o golpe final num Beyonder de Sequência 4 ou 3 diante de uma
+  plateia de 30 pontos a até 32 blocos (aldeão 1, jogador 5, jogador do Visionário 15) e beber em até
+  1 minuto.
+- Sequência 3, Erudito de Outrora: ficar 3 dias seguidos do Minecraft no Vazio Histórico (sair antes,
+  sair do jogo ou morrer zera). O ritual da mesa abaixo leva até lá.
+- Sequência 2, Invocador de Milagres: marcar uma criatura com a Invocação do Vazio Histórico e, depois
+  que ela morrer, invocá-la: ela volta ao presente e fica de vez.
+- Sequência 1, Atendente de Mistérios: 50 marionetes suas, cada uma com nome, vivendo a até 48 blocos de
+  você por 1 dia do Minecraft (se ficarem menos de 50, recomeça).
+
 ## Ritual da mesa: Passagem para a Névoa da História
 
 Ritual novo da mesa de ritual, exclusivo do Caminho do Vidente, a partir da Sequência 4. O livro

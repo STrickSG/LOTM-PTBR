@@ -75,7 +75,28 @@ public final class AdvancementRituals {
             // Porta, Sequência 1 (Chave das Estrelas): pousar num planeta pesado que gira e emite sinais e ligar-se a ele
             new Ritual("door", 1, () -> List.of(
                     new ItemStack(Items.LODESTONE),
-                    new ItemStack(PotionItemHandler.KEY_OF_STARS_POTION.get())))
+                    new ItemStack(PotionItemHandler.KEY_OF_STARS_POTION.get()))),
+            // Tolo, Sequência 5 (Marionetista): beber a poção em meio ao canto de sereias
+            new Ritual("fool", 5, () -> List.of(
+                    new ItemStack(Items.NAUTILUS_SHELL),
+                    new ItemStack(PotionItemHandler.MARIONETTIST_POTION.get()))),
+            // Tolo, Sequência 4 (Feiticeiro Bizarro): matar um semideus num grande espetáculo e beber no fim
+            new Ritual("fool", 4, () -> List.of(
+                    new ItemStack(Items.FIREWORK_ROCKET),
+                    new ItemStack(Items.VILLAGER_SPAWN_EGG, 30),
+                    new ItemStack(PotionItemHandler.BIZARRO_SORCERER_POTION.get()))),
+            // Tolo, Sequência 3 (Erudito de Outrora): separado da realidade, virar história
+            new Ritual("fool", 3, () -> List.of(
+                    new ItemStack(Items.CLOCK),
+                    new ItemStack(PotionItemHandler.SCHOLAR_OF_YORE_POTION.get()))),
+            // Tolo, Sequência 2 (Invocador de Milagres): devolver ao presente um pedaço da história que ficou para trás
+            new Ritual("fool", 2, () -> List.of(
+                    new ItemStack(Items.RECOVERY_COMPASS),
+                    new ItemStack(PotionItemHandler.MIRACLE_INVOKER_POTION.get()))),
+            // Tolo, Sequência 1 (Atendente de Mistérios): uma cidade só de marionetes, cada uma com seu destino
+            new Ritual("fool", 1, () -> List.of(
+                    new ItemStack(Items.NAME_TAG, 50),
+                    new ItemStack(PotionItemHandler.ATTENDANT_OF_MYSTERIES_POTION.get())))
     );
 
     public static List<Ritual> all() {

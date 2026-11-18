@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    {
+      "item": "lotmcraft:miracle_invoker"
+    },
+    {
+      "item": "lotmcraft:miracle_invoker_ritual"
+    }
+  ],
+  "result": {
+    "id": "lotmcraft:miracle_invoker_complete_formula",
+    "count": 1
+  }
+}

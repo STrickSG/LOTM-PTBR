@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    {
+      "item": "lotmcraft:scholar_of_yore"
+    },
+    {
+      "item": "lotmcraft:scholar_of_yore_ritual"
+    }
+  ],
+  "result": {
+    "id": "lotmcraft:scholar_of_yore_complete_formula",
+    "count": 1
+  }
+}

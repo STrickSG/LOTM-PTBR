@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    {
+      "item": "lotmcraft:attendant_of_mysteries"
+    },
+    {
+      "item": "lotmcraft:attendant_of_mysteries_ritual"
+    }
+  ],
+  "result": {
+    "id": "lotmcraft:attendant_of_mysteries_complete_formula",
+    "count": 1
+  }
+}
