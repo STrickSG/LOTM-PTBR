@@ -57,6 +57,12 @@ Os rituais usam os **colonos** do MineColonies no lugar dos aldeões.
 - Caminhos com Carta: Tolo, Porta, Erro, Sol, Tirano, Escuridão, Morte, Demônia, Sacerdote Vermelho,
   Mãe, Abismo, Visionário, Roda da Fortuna e Ministro.
 
+## Rituais de avanço: como funcionam
+
+Os pergaminhos, as Fórmulas Completas e as Cartas mostram só o ritual da novel e uma pista curta: descobrir como
+fazê-lo faz parte do jogo. Este LEIAME é o guia com spoilers. Muitos rituais aceitam mais de um jeito, inclusive
+poderes de outros Caminhos e Artefatos Selados.
+
 ## Rituais de avanço do Sol
 
 Sem o ritual, o avanço falha e você perde o controle (regra de jogo `applyRituals`). Para o ritual
@@ -64,7 +70,8 @@ valer, é preciso ter no inventário, na hora de beber a poção, o pergaminho d
 da Blasfêmia do Sol com aquela Sequência escolhida.
 
 - Sequência 5, Sacerdote da Luz: beber a poção em escuridão total, enterrado numa cápsula de gelo
-  compactado ou gelo azul (10 blocos em volta do corpo).
+  compactado ou gelo azul (10 blocos em volta do corpo). Também vale estar congelado por inteiro (neve fina,
+  poderes de gelo) e/ou com os olhos tomados pela escuridão (Cegueira ou Escuridão).
 - Sequência 4, Sem Sombra: agachado, usar um frasco de vidro vazio para guardar as próprias emoções
   (Frasco de Emoções) e beber a poção com ele no inventário.
 - Sequência 3, Mentor da Justiça: escrever e assinar a sua justiça num livro, jurar por ela e
@@ -93,8 +100,8 @@ Completas das Sequências 5 a 1.
 - Sequência 5, Viajante: colocar 4 Magnetitas no Mundo Espiritual, cada uma a pelo menos 1.000 blocos
   das outras. Elas precisam continuar lá na hora de beber.
 - Sequência 4, Feiticeiro dos Segredos: selar para sempre um Beyonder hostil de Sequência 4 ou 3, preso
-  por um poder de prender (Aprisionar, Confinamento, Jaula de Chamas, Jaula Espacial, Petrificação ou
-  Selamento). Pela regra do mod, só um poder de nível semideus alcança um semideus: na prática, um
+  por qualquer poder que o deixe sem andar (Aprisionar, Confinamento, jaulas, Petrificação, Selamento, cabelos,
+  plantas, aço, Conquista...), seu, de outro Caminho ou de um Artefato Selado. Pela regra do mod, só um poder de nível semideus alcança um semideus: na prática, um
   Artefato Selado feito com Característica de Sequência 4 ou maior. Se outro jogador ferir a criatura,
   o selo não vale. A criatura selada fica presa por correntes na cor da Porta, com o efeito do Selamento
   e estrelas em volta. Isso só acontece no ritual.
@@ -135,16 +142,22 @@ e pôr relógios nelas para esses rituais.
 Ao se tornar Deus (Erro, Sequência 0), ele ignora toda a proteção de qualquer colônia: quebrar e pôr blocos,
 abrir baús e prédios, mexer nos colonos.
 
-- Sequência 5, Ladrão de Sonhos: agachado e de mão vazia, entrar no sonho de colonos dormindo. Beber com 30
-  deles dormindo a até 48 blocos.
-- Sequência 4, Parasita: agachado e de mão vazia, pedir a 9 colonos felizes que deem tudo o que têm (o inventário
-  deles passa para você). Ferir um deles desfaz a oferta. Beber com os 9 vivos.
-- Sequência 3, Mentor do Engano: sem ferir nenhuma criatura por 1 dia, deixar a felicidade geral de uma colônia
-  com pelo menos 10 colonos em 3 ou menos, e beber dentro dela.
-- Sequência 2, Cavalo de Troia do Destino: clicar num colono com uma etiqueta com o nome dele. Ele some e você
-  fica no lugar dele (seu nome no chat vira o dele). Viver 6 dias dentro da colônia dele sem usar nenhum poder lá.
-- Sequência 1, Verme do Tempo: 12 relógios em molduras numa colônia com pelo menos 20 colonos. O tempo da cidade
-  se embaralha (colonos lentos ou rápidos ao acaso). Precisa durar 7 dias com você por perto; se faltar um
+- Sequência 5, Ladrão de Sonhos: entrar no sonho de 30 pessoas (colonos, aldeões, Beyonders Errantes ou
+  jogadores) e beber com elas dormindo a até 48 blocos. Entra-se agachado e de mão vazia em quem dorme, ou
+  usando um poder de sonho de qualquer Caminho (Pesadelo, Travessia de Sonhos, Tecelagem de Sonhos, Labirinto
+  de Sonhos, Poema da Meia-Noite) perto de quem dorme. Vale dormir na cama ou adormecido por um poder.
+- Sequência 4, Parasita: agachado e de mão vazia, pedir a 9 pessoas que deem tudo o que têm (inventário e
+  equipamento passam para você). Aceitam: colonos felizes (7 ou mais), aldeões que gostam muito de você
+  (reputação alta, Herói da Vila) e qualquer um que já seja seu aliado (convencido pela Eloquência, enganado...).
+  Ferir um deles desfaz a oferta; quem morre deixa de contar. Beber com os 9 vivos.
+- Sequência 3, Mentor do Engano: sem ferir nenhuma criatura por 1 dia, derrubar a ordem de uma região e beber
+  dentro dela: uma colônia com pelo menos 10 colonos e felicidade geral 3 ou menos, ou uma vila comum com pelo
+  menos 10 aldeões em que quase todos (80%) ficaram sem cama e sem posto de trabalho.
+- Sequência 2, Cavalo de Troia do Destino: clicar num colono, aldeão ou Beyonder Errante com uma etiqueta com o
+  nome dele. Ele some e você fica no lugar dele (seu nome no chat vira o dele). Viver 6 dias entre os dele (dentro
+  da colônia, ou a até 48 blocos de onde ele dormia) sem usar nenhum poder lá.
+- Sequência 1, Verme do Tempo: 12 relógios em molduras numa cidade: colônia com pelo menos 20 colonos ou vila comum
+  com pelo menos 20 aldeões. O tempo da cidade se embaralha (moradores lentos ou rápidos ao acaso). Precisa durar 7 dias com você por perto; se faltar um
   relógio, recomeça.
 
 ## Ritual da mesa: Passagem para a Névoa da História

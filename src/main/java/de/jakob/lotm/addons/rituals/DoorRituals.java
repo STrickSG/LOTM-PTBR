@@ -90,9 +90,6 @@ public final class DoorRituals {
     private static final String SEALED_BY = "LotmSealedBy", SEALED_AT = "LotmSealedAt", HURT_BY = "LotmHurtByPlayers";
     private static final String RECORD_OWNER = "LotmAstralOwner", RECORDS = "LotmAstralRecords";
 
-    /** Poderes que prendem e contam como selo (do Caminho, gravados pelo Escriba ou de um Artefato Selado) */
-    private static final Set<String> SEAL_ABILITIES = Set.of("sealing_ability", "spatial_cage_ability",
-            "imprison_ability", "confinement_ability", "flame_cage_ability", "petrification_ability");
 
     private static final int COLOR = 0xB894FF;
 
@@ -214,7 +211,8 @@ public final class DoorRituals {
 
     @SubscribeEvent
     public static void onAbilityUse(AbilityUseEvent event) {
-        if (!(event.getEntity() instanceof ServerPlayer player) || !SEAL_ABILITIES.contains(event.getAbility().getId())) return;
+        // qualquer poder (do Caminho, de outro Caminho ou de um Artefato Selado) que deixe a criatura presa serve
+        if (!(event.getEntity() instanceof ServerPlayer player)) return;
         if (!preparing(player, 4)) return;
         ServerLevel level = player.serverLevel();
         Map<LivingEntity, Vec3> candidates = new HashMap<>();
@@ -238,9 +236,12 @@ public final class DoorRituals {
             Vec3 p = entity.position();
             return Math.abs(p.x - confinement.x) < 5.5 && Math.abs(p.y - confinement.y) < 5.5 && Math.abs(p.z - confinement.z) < 5.5;
         }
-        // Aprisionar, Selamento, Jaula Espacial e Jaula de Chamas deixam a criatura sem conseguir andar
+        if (entity.hasEffect(ModEffects.PETRIFICATION) || entity.hasEffect(ModEffects.CONQUERED)) return true;
+        // Aprisionar, Selamento, jaulas, cabelos, plantas, aço... deixam a criatura sem conseguir andar
         MobEffectInstance slow = entity.getEffect(MobEffects.MOVEMENT_SLOWDOWN);
-        return slow != null && slow.getAmplifier() >= 3;
+        if (slow != null && slow.getAmplifier() >= 3) return true;
+        var speed = entity.getAttribute(net.minecraft.world.entity.ai.attributes.Attributes.MOVEMENT_SPEED);
+        return speed != null && speed.getValue() <= 0.001;
     }
 
     private static void trySeal(LivingEntity entity, ServerPlayer player) {

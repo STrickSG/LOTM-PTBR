@@ -75,6 +75,10 @@ public final class RitualChecks {
         return state.is(Blocks.PACKED_ICE) || state.is(Blocks.BLUE_ICE);
     }
 
+    /**
+     * Escuridão total e corpo preso no gelo. Vale a cápsula de gelo que não derrete ou estar congelado por inteiro
+     * (neve fina, poderes de gelo...); e vale o escuro de verdade ou os próprios olhos tomados pela escuridão.
+     */
     private static boolean buriedInPackedIceInDarkness(ServerPlayer player) {
         Level level = player.level();
         // blocos ocupados pelo corpo do jogador
@@ -82,16 +86,18 @@ public final class RitualChecks {
         BlockPos.betweenClosedStream(player.getBoundingBox().deflate(1.0E-3)).forEach(pos -> body.add(pos.immutable()));
         if (body.isEmpty()) return false;
 
+        boolean blind = player.hasEffect(net.minecraft.world.effect.MobEffects.BLINDNESS) || player.hasEffect(net.minecraft.world.effect.MobEffects.DARKNESS);
+        boolean capsule = true, dark = true;
         for (BlockPos pos : body) {
             // escuridão total: nenhuma luz do céu nem de blocos
-            if (level.getBrightness(LightLayer.SKY, pos) > 0 || level.getBrightness(LightLayer.BLOCK, pos) > 0) return false;
+            if (level.getBrightness(LightLayer.SKY, pos) > 0 || level.getBrightness(LightLayer.BLOCK, pos) > 0) dark = false;
             // enterrado: tudo encostado no corpo é gelo que não derrete
             for (Direction direction : Direction.values()) {
                 BlockPos next = pos.relative(direction);
-                if (!body.contains(next) && !isEverlastingIce(level.getBlockState(next))) return false;
+                if (!body.contains(next) && !isEverlastingIce(level.getBlockState(next))) capsule = false;
             }
         }
-        return true;
+        return (capsule || player.isFullyFrozen()) && (dark || blind);
     }
 
     /** Item de Anjo do Sol com a memória do jogador, num suporte de item ou no chão à frente dele (até 4 blocos) */
