@@ -181,16 +181,20 @@ poder do próprio Caminho, para servir também a quem chegar por outro Caminho.
 
 **Conquista de colônias** (para quem está na Sequência 2 do Sacerdote Vermelho):
 1. Atacar os defensores de uma colônia que não é sua declara guerra a ela: guardas do MineColonies e, nos Reinos de
-   NPC, os golens de ferro que guardam a prefeitura.
-2. Com nenhum defensor de pé a até 48 blocos da prefeitura, fincar um estandarte qualquer a até 16 blocos dela.
-3. A colônia obedece (você vira oficial), reverencia (os colonos viram seus fiéis) e teme (tremem perto de você).
+   NPC, também os golens de ferro que guardam a prefeitura.
+2. Em guerra, pode tudo dentro dessa colônia: quebrar e pôr blocos, abrir baús e prédios, pegar itens, atacar
+   qualquer um. A guerra acaba quando você conquista a colônia ou quando morre.
+3. Com nenhum defensor de pé a até 48 blocos da prefeitura, fincar um estandarte qualquer a até 16 blocos dela.
+   Enquanto houver torres de guarda, a colônia contrata novos guardas para as vagas: derrubar as torres ajuda.
+4. A colônia obedece (você vira oficial), reverencia (os colonos viram seus fiéis) e teme (tremem perto de você).
    Um jogador retoma a própria colônia matando o conquistador dentro dela.
 
 **Reinos de NPC:** metade das colônias abandonadas que o MineColonies gera no mundo nasce como um reino habitado,
-com nome ("Reino de ..."), prédios funcionando, de 10 a 24 moradores e golens defensores. A outra metade continua
-abandonada (Invocador de Milagres, Tolo 2).
+com nome ("Reino de ..."), prédios funcionando e de 10 a 24 moradores. Todo reino tem pelo menos 2 torres de
+guarda, com guardas de espada, escudo e armadura de ferro, e golens de ferro guardando a prefeitura. A outra metade
+continua abandonada (Invocador de Milagres, Tolo 2).
 
-
+## Ritual da mesa: Passagem para a Névoa da História
 
 Ritual novo da mesa de ritual, exclusivo do Caminho do Vidente, a partir da Sequência 4. O livro
 "Crônica Esquecida" aparece nos baús junto com os outros livros de ritual. Quem não é Vidente de
