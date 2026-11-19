@@ -220,9 +220,6 @@ public final class DemonessRituals {
             self.setOwner(player.getUUID());
             self.setCustomName(Component.translatable("entity.lotmcraft.mirror_self.of", player.getName()));
             self.setCustomNameVisible(true);
-            var maxHealth = self.getAttribute(net.minecraft.world.entity.ai.attributes.Attributes.MAX_HEALTH);
-            if (maxHealth != null) maxHealth.setBaseValue(Math.max(20, player.getMaxHealth()));
-            self.setHealth(self.getMaxHealth());
             for (EquipmentSlot slot : EquipmentSlot.values()) {
                 if (slot.getType() == EquipmentSlot.Type.HUMANOID_ARMOR || slot == EquipmentSlot.MAINHAND) {
                     self.setItemSlot(slot, player.getItemBySlot(slot).copy());
@@ -230,6 +227,10 @@ public final class DemonessRituals {
                 }
             }
             BeyonderData.setBeyonder(self, "demoness", BeyonderData.getSequence(player));
+            // a mesma vida máxima que a sua, cheia
+            var maxHealth = self.getAttribute(net.minecraft.world.entity.ai.attributes.Attributes.MAX_HEALTH);
+            if (maxHealth != null) maxHealth.setBaseValue(Math.max(1, maxHealth.getBaseValue() + player.getMaxHealth() - self.getMaxHealth()));
+            self.setHealth(self.getMaxHealth());
             player.serverLevel().addFreshEntity(self);
             data(player).putUUID(MIRROR_SELF, self.getUUID());
             tell(player, Component.translatable("lotmcraft.demoness.mirror_found").withColor(COLOR));
