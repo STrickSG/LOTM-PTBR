@@ -175,6 +175,9 @@ abrir baús e prédios, mexer nos colonos.
   (sem a contagem dos 6 dias, que é só do Erro 3). Disfarçado de um colono, na colônia dele os guardas não te atacam
   (mesmo marcado como hostil) e você pode abrir baús e outros containers; quebrar, pôr blocos e mexer no resto
   continua bloqueado. Tirar as roupas ou usar um poder entre os dele desfaz o disfarce e o colono volta.
+  **Parasitismo no modo Controlar** (ou qualquer controle de corpo) num colono: enquanto o corpo dele está com você,
+  ele fica "viajando" (o MineColonies não cria outro igual) e, na colônia dele, você tem todas as permissões e os
+  guardas não te atacam. Ao soltar o corpo, ele volta e tudo volta ao normal.
   Tirar as roupas (ou perdê-las), não vesti-las em 1 minuto ou usar um poder entre os dele estraga o ritual: ele
   volta para a vida dele e é preciso começar de novo com outra pessoa. Ao avançar, ele também volta.
 - Sequência 1, Verme do Tempo: 12 relógios em molduras numa cidade: colônia com pelo menos 20 colonos ou vila comum

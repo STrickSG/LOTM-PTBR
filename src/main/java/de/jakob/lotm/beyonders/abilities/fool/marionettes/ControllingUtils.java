@@ -109,7 +109,11 @@ public class ControllingUtils {
             controlledPlayer.setGameMode(GameType.SPECTATOR);
             controlledPlayer.setCamera(player);
         }
-        else {target.discard();}
+        else {
+            // colono: fica "viajando" enquanto o corpo está com quem controla (sem o MineColonies criar outro igual)
+            de.jakob.lotm.addons.colonies.ControlledCitizens.onStart(player, target);
+            target.discard();
+        }
         return true;
     }
 
@@ -261,6 +265,7 @@ public class ControllingUtils {
 
         // Tell the client right away that the control ended (it used to find out only through the constant requests)
         syncControllingData(player);
+        de.jakob.lotm.addons.colonies.ControlledCitizens.onStop(player);
     }
 
     public static void syncControllingData(ServerPlayer player) {

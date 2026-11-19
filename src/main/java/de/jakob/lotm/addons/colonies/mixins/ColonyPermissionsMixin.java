@@ -19,6 +19,8 @@ public abstract class ColonyPermissionsMixin {
             at = @At("HEAD"), cancellable = true)
     private void lotmcraft$errorGod(Player player, Action action, CallbackInfoReturnable<Boolean> cir) {
         if (Colonists.ignoresColonyRules(player)) cir.setReturnValue(true);
+        // controlando o corpo de um colono daqui: você é ele, pode tudo
+        else if (colony != null && de.jakob.lotm.addons.colonies.ControlledCitizens.controlsIn(player, colony.getID())) cir.setReturnValue(true);
         // guerra declarada: lá dentro, quem ataca pode tudo
         else if (colony != null && de.jakob.lotm.addons.colonies.ColonyConquest.atWar(colony.getID(), player.getUUID())) cir.setReturnValue(true);
         // o estandarte da conquista, no instante em que é fincado
@@ -36,7 +38,8 @@ public abstract class ColonyPermissionsMixin {
     private void lotmcraft$disguisedRank(Player player, CallbackInfoReturnable<com.minecolonies.api.colony.permissions.Rank> cir) {
         if (colony == null || cir.getReturnValue() == null || !cir.getReturnValue().isHostile()) return;
         if (de.jakob.lotm.addons.colonies.ColonyConquest.atWar(colony.getID(), player.getUUID())) return;
-        if (!player.level().isClientSide && de.jakob.lotm.addons.rituals.ErrorDisguise.disguisedIn(player, colony.getID())) {
+        if (!player.level().isClientSide && (de.jakob.lotm.addons.rituals.ErrorDisguise.disguisedIn(player, colony.getID())
+                || de.jakob.lotm.addons.colonies.ControlledCitizens.controlsIn(player, colony.getID()))) {
             cir.setReturnValue(((com.minecolonies.core.colony.permissions.Permissions) (Object) this).getRankNeutral());
         }
     }
