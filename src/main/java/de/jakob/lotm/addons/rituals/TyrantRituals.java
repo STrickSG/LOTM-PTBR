@@ -48,7 +48,7 @@ import java.util.UUID;
 /**
  * Rituais de avanço do Tirano. Cada um aceita vários jeitos, de qualquer Caminho:
  * <ul>
- *   <li>5, Cantor do Oceano: beber "na barriga" do mar: dentro de um Monumento Oceânico ou numa câmara fechada sob as ondas.</li>
+ *   <li>5, Cantor do Oceano: beber "na barriga" do mar: dentro de um Monumento Oceânico ou numa cápsula de obsidiana num oceano.</li>
  *   <li>4, Enterrador do Cataclismo: causar um terremoto e um tsunami e beber no meio deles (poderes ou explosões; as debaixo d'água viram tsunami).</li>
  *   <li>3, Rei do Mar: uma torre de pedra do fundo do mar até a superfície e nenhuma criatura forte de pé em volta, 3 delas vencidas por você.</li>
  *   <li>2, Calamidade: 20 pessoas atingidas por um desastre seu; depois ele para, e você bebe diante dos que sobraram.</li>
@@ -59,7 +59,7 @@ import java.util.UUID;
 public final class TyrantRituals {
     private TyrantRituals() {}
 
-    public static final int CHAMBER_DEPTH = 8;
+    public static final int CAPSULE_SIZE = 4;
     public static final int CATACLYSM_WINDOW = 20 * 60, CATACLYSM_RADIUS = 64, CATACLYSM_EXPLOSIONS = 5;
     public static final int TOWER_SEARCH = 24, TOWER_MIN_WATER = 8, SEA_RADIUS = 96, SEA_KILLS = 3, SEA_WINDOW = 24000 * 3;
     public static final int CALAMITY_PEOPLE = 20, CALAMITY_WINDOW = 20 * 60 * 10, CALM_TICKS = 20 * 60, CALM_DRINK = 20 * 60 * 5,
@@ -127,19 +127,30 @@ public final class TyrantRituals {
 
     // ------------------------------------------------------------------ 5, Cantor do Oceano: na barriga do mar
 
-    /** Dentro de um Monumento Oceânico, ou numa câmara fechada no fundo do mar (sem ver o céu, com mar por cima) */
+    /** Dentro de um Monumento Oceânico, ou fechado numa cápsula de obsidiana em qualquer bioma de oceano (abafa a voz do mar) */
     public static boolean inSeaBelly(ServerPlayer player) {
         ServerLevel level = player.serverLevel();
         BlockPos pos = player.blockPosition();
         var monument = level.registryAccess().registryOrThrow(net.minecraft.core.registries.Registries.STRUCTURE).get(BuiltinStructures.OCEAN_MONUMENT);
         if (monument != null && level.structureManager().getStructureWithPieceAt(pos, monument).isValid()) return true;
-        if (!level.getBiome(pos).is(BiomeTags.IS_OCEAN) || level.canSeeSky(pos.above())) return false;
-        // água de verdade acima do teto: o mar inteiro por cima
-        int water = 0;
-        for (int y = pos.getY() + 2; y < level.getSeaLevel() + 1 && water < CHAMBER_DEPTH; y++) {
-            if (level.getFluidState(pos.atY(y)).isSource()) water++;
+        if (!level.getBiome(pos).is(BiomeTags.IS_OCEAN)) return false;
+        // em todas as direções, dos pés e da cabeça, o primeiro bloco sólido é obsidiana
+        for (BlockPos from : new BlockPos[]{pos, pos.above()}) {
+            for (net.minecraft.core.Direction dir : net.minecraft.core.Direction.values()) {
+                if ((from == pos && dir == net.minecraft.core.Direction.UP) || (from != pos && dir == net.minecraft.core.Direction.DOWN)) continue;
+                if (!obsidianWall(level, from, dir)) return false;
+            }
         }
-        return water >= CHAMBER_DEPTH && pos.getY() < level.getSeaLevel() - CHAMBER_DEPTH;
+        return true;
+    }
+
+    private static boolean obsidianWall(ServerLevel level, BlockPos from, net.minecraft.core.Direction dir) {
+        for (int i = 1; i <= CAPSULE_SIZE; i++) {
+            BlockState state = level.getBlockState(from.relative(dir, i));
+            if (state.isAir()) continue;
+            return state.is(Blocks.OBSIDIAN) || state.is(Blocks.CRYING_OBSIDIAN);
+        }
+        return false;
     }
 
     // ------------------------------------------------------------------ 4, Enterrador do Cataclismo: terremoto e tsunami
@@ -194,22 +205,29 @@ public final class TyrantRituals {
     /** Uma torre de pedra perto de você: do fundo do mar até acima da superfície, com pelo menos 8 blocos dentro d'água */
     public static BlockPos tower(ServerPlayer player) {
         ServerLevel level = player.serverLevel();
-        int sea = level.getSeaLevel();
         BlockPos center = player.blockPosition();
         for (int dx = -TOWER_SEARCH; dx <= TOWER_SEARCH; dx++) {
             for (int dz = -TOWER_SEARCH; dz <= TOWER_SEARCH; dz++) {
                 int x = center.getX() + dx, z = center.getZ() + dz;
-                BlockPos top = new BlockPos(x, sea, z);
-                if (!stoneLike(level.getBlockState(top)) || !level.getBiome(top).is(BiomeTags.IS_OCEAN)) continue;
-                // desce pela torre; ao lado dela precisa ter mar
-                int y = sea - 1, wet = 0;
-                while (y > level.getMinBuildHeight() && stoneLike(level.getBlockState(new BlockPos(x, y, z)))) {
-                    BlockPos p = new BlockPos(x, y, z);
-                    if (level.getFluidState(p.north()).isSource() || level.getFluidState(p.south()).isSource()
-                            || level.getFluidState(p.east()).isSource() || level.getFluidState(p.west()).isSource()) wet++;
-                    y--;
+                // o topo: pedra com ar em cima, perto da sua altura
+                for (int y = center.getY() + 16; y >= center.getY() - 24; y--) {
+                    BlockPos top = new BlockPos(x, y, z);
+                    if (!stoneLike(level.getBlockState(top)) || !level.getBlockState(top.above()).isAir()) continue;
+                    if (!level.getBiome(top).is(BiomeTags.IS_OCEAN)) break;
+                    // desce pela torre; ao lado dela precisa ter mar, começando logo abaixo do topo
+                    int yy = y, wet = 0, dry = 0;
+                    while (yy > level.getMinBuildHeight() && stoneLike(level.getBlockState(new BlockPos(x, yy, z)))) {
+                        BlockPos p = new BlockPos(x, yy, z);
+                        boolean side = level.getFluidState(p.north()).isSource() || level.getFluidState(p.south()).isSource()
+                                || level.getFluidState(p.east()).isSource() || level.getFluidState(p.west()).isSource();
+                        if (side) wet++;
+                        else if (wet == 0) dry++;
+                        yy--;
+                    }
+                    // o topo fica no máximo 3 blocos acima d'água, e a base no leito do mar (não flutua)
+                    if (wet >= TOWER_MIN_WATER && dry <= 3 && !level.getFluidState(new BlockPos(x, yy, z)).isSource()) return top;
+                    break;
                 }
-                if (wet >= TOWER_MIN_WATER) return top;
             }
         }
         return null;
