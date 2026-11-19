@@ -367,7 +367,7 @@ public final class DarknessRituals {
             }
         }
         // uma civilização que você está arruinando: colônia ou aldeia
-        if (!(dead instanceof AbstractEntityCitizen) && !(dead instanceof AbstractVillager)) return;
+        if (!(dead instanceof AbstractEntityCitizen) && !(dead instanceof net.minecraft.world.entity.npc.Villager)) return;
         ServerPlayer player = culprit(level, event.getSource().getEntity(), dead);
         if (player == null || !preparing(player, 1)) return;
         String key;
@@ -377,8 +377,17 @@ public final class DarknessRituals {
             key = "colony:" + citizen.getColony().getID();
             population = citizen.getColony().getCitizenManager().getCurrentCitizenCount();
         } else {
-            key = "village:" + level.dimension().location() + ":" + (dead.getBlockX() >> 7) + ":" + (dead.getBlockZ() >> 7);
-            population = level.getEntitiesOfClass(AbstractVillager.class, dead.getBoundingBox().inflate(96), Entity::isAlive).size();
+            // a mesma aldeia: a até 96 blocos de onde o infortúnio dela começou
+            key = null;
+            CompoundTag known = data(player).getCompound(CIVILIZATIONS);
+            for (String k : known.getAllKeys()) {
+                CompoundTag c = known.getCompound(k);
+                if (k.startsWith("village:") && c.getString("dim").equals(level.dimension().location().toString())
+                        && Math.hypot(c.getInt("x") - dead.getBlockX(), c.getInt("z") - dead.getBlockZ()) <= 96) { key = k; break; }
+            }
+            if (key == null) key = "village:" + level.dimension().location() + ":" + dead.getBlockX() + ":" + dead.getBlockZ();
+            // moradores da aldeia: aldeões (o comerciante ambulante só está de passagem)
+            population = level.getEntitiesOfClass(net.minecraft.world.entity.npc.Villager.class, dead.getBoundingBox().inflate(96), Entity::isAlive).size();
         }
         CompoundTag all = data(player).getCompound(CIVILIZATIONS);
         CompoundTag civ = all.getCompound(key);
@@ -388,6 +397,9 @@ public final class DarknessRituals {
             civ.putLong("start", time);
             // o tamanho dela quando o infortúnio começou (contando quem acabou de morrer)
             civ.putInt("size", population + 1);
+            civ.putString("dim", level.dimension().location().toString());
+            civ.putInt("x", dead.getBlockX());
+            civ.putInt("z", dead.getBlockZ());
         }
         civ.putInt("dead", civ.getInt("dead") + 1);
         all.put(key, civ);
