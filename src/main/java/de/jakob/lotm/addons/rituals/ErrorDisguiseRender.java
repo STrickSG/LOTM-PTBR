@@ -129,4 +129,13 @@ public final class ErrorDisguiseRender {
         body.setItemSlot(EquipmentSlot.OFFHAND, player.getOffhandItem());
         body.tickCount = player.tickCount;
     }
+
+    /** A mesma janela que abre ao clicar no colono de verdade */
+    static void openCitizenWindow(DisguiseCitizenWindowPacket packet) {
+        var dimension = net.minecraft.resources.ResourceKey.create(net.minecraft.core.registries.Registries.DIMENSION, ResourceLocation.parse(packet.dimension()));
+        var colony = com.minecolonies.api.colony.IColonyManager.getInstance().getColonyView(packet.colonyId(), dimension);
+        if (colony == null) return;
+        var citizen = colony.getCitizen(packet.citizenId());
+        if (citizen != null) new com.minecolonies.core.client.gui.WindowInteraction(citizen).open();
+    }
 }

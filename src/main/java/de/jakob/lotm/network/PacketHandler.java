@@ -35,6 +35,12 @@ public class PacketHandler {
 
     private static void registerClientPackets(PayloadRegistrar registrar) {
         registrar.playToClient(
+                de.jakob.lotm.addons.rituals.DisguiseCitizenWindowPacket.TYPE,
+                de.jakob.lotm.addons.rituals.DisguiseCitizenWindowPacket.STREAM_CODEC,
+                de.jakob.lotm.addons.rituals.DisguiseCitizenWindowPacket::handle
+        );
+
+        registrar.playToClient(
                 de.jakob.lotm.addons.rituals.DisguiseSyncPacket.TYPE,
                 de.jakob.lotm.addons.rituals.DisguiseSyncPacket.STREAM_CODEC,
                 de.jakob.lotm.addons.rituals.DisguiseSyncPacket::handle

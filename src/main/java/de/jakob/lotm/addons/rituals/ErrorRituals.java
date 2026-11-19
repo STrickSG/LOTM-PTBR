@@ -480,6 +480,14 @@ public final class ErrorRituals {
         return data(player).contains(IDENTITY);
     }
 
+    /** Colono que este jogador está vivendo agora ({colônia, colono}), ou null */
+    @org.jetbrains.annotations.Nullable
+    public static int[] disguisedCitizen(Player player) {
+        CompoundTag tag = data(player);
+        if (!tag.contains(IDENTITY) || !tag.contains(IDENTITY_CITIZEN)) return null;
+        return new int[]{tag.getInt(IDENTITY_COLONY), tag.getInt(IDENTITY_CITIZEN)};
+    }
+
     public static String disguiseName(Player player) {
         return data(player).getString(IDENTITY);
     }

@@ -168,7 +168,9 @@ abrir baús e prédios, mexer nos colonos.
   (continua na lista da colônia, com casa e emprego, só sem corpo); aldeão e Beyonder Errante ficam guardados. Você
   recebe as **Roupas** dele: usar veste (você fica com a aparência dele, para todos), usar de novo tira. Vestido,
   viva 6 dias entre os dele (dentro da colônia, ou a até 48 blocos de onde ele dormia) sem usar poderes. Enquanto
-  for ele, você não fala no chat, some da lista do Tab e as mensagens do servidor com o seu nome não aparecem.
+  for ele, você não fala no chat, some da lista do Tab e as mensagens do servidor com o seu nome não aparecem. Quem
+  clicar em você vê a janela do colono de verdade (nome, emprego, felicidade); disfarçado de aldeão, você "balança a
+  cabeça" como um aldeão sem trabalho.
   Tirar as roupas (ou perdê-las), não vesti-las em 1 minuto ou usar um poder entre os dele estraga o ritual: ele
   volta para a vida dele e é preciso começar de novo com outra pessoa. Ao avançar, ele também volta.
 - Sequência 1, Verme do Tempo: 12 relógios em molduras numa cidade: colônia com pelo menos 20 colonos ou vila comum

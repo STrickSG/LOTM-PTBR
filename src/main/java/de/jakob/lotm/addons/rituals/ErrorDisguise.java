@@ -217,6 +217,35 @@ public final class ErrorDisguise {
         if (persisted(joined).contains(WORN)) joined.connection.send(packetFor(joined));
     }
 
+    // ------------------------------------------------------------------ clicar no disfarçado
+
+    /**
+     * Quem clica em alguém disfarçado vê o que veria clicando na pessoa de verdade:
+     * a janela do colono (os dados dele continuam na colônia enquanto ele "viaja"); aldeão balança a cabeça.
+     */
+    @SubscribeEvent(priority = EventPriority.HIGHEST)
+    public static void onClickDisguised(net.neoforged.neoforge.event.entity.player.PlayerInteractEvent.EntityInteract event) {
+        if (!(event.getTarget() instanceof Player target) || event.getHand() != net.minecraft.world.InteractionHand.MAIN_HAND) return;
+        if (!persisted(target).contains(WORN)) return;
+        event.setCanceled(true);
+        event.setCancellationResult(net.minecraft.world.InteractionResult.sidedSuccess(event.getLevel().isClientSide));
+        if (!(event.getEntity() instanceof ServerPlayer clicker) || !(target instanceof ServerPlayer disguised)) return;
+        int[] citizen = ErrorRituals.disguisedCitizen(disguised);
+        if (citizen != null) {
+            for (IColony colony : IColonyManager.getInstance().getAllColonies()) {
+                if (colony.getID() != citizen[0]) continue;
+                var data = colony.getCitizenManager().getCivilian(citizen[1]);
+                if (!(data instanceof com.minecolonies.api.colony.ICitizenData citizenData)) return;
+                if (!colony.getPermissions().hasPermission(clicker, com.minecolonies.api.colony.permissions.Action.ACCESS_HUTS)) return;
+                new com.minecolonies.core.network.messages.client.colony.ColonyViewCitizenViewMessage((com.minecolonies.core.colony.Colony) colony, citizenData).sendToPlayer(clicker);
+                clicker.connection.send(new DisguiseCitizenWindowPacket(colony.getID(), colony.getDimension().location().toString(), citizenData.getId()));
+                return;
+            }
+        } else {
+            disguised.level().playSound(null, disguised.blockPosition(), net.minecraft.sounds.SoundEvents.VILLAGER_NO, net.minecraft.sounds.SoundSource.NEUTRAL, 1f, 1f);
+        }
+    }
+
     // ------------------------------------------------------------------ chat
 
     @SubscribeEvent(priority = EventPriority.HIGHEST)
