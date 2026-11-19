@@ -171,6 +171,10 @@ abrir baús e prédios, mexer nos colonos.
   for ele, você não fala no chat, some da lista do Tab e as mensagens do servidor com o seu nome não aparecem. Quem
   clicar em você vê a janela do colono de verdade (nome, emprego, felicidade); disfarçado de aldeão, você "balança a
   cabeça" como um aldeão sem trabalho.
+  **Disfarce fora do ritual:** qualquer Beyonder do Erro, de qualquer Sequência, pode fazer o mesmo só como disfarce
+  (sem a contagem dos 6 dias, que é só do Erro 3). Disfarçado de um colono, na colônia dele os guardas não te atacam
+  (mesmo marcado como hostil) e você pode abrir baús e outros containers; quebrar, pôr blocos e mexer no resto
+  continua bloqueado. Tirar as roupas ou usar um poder entre os dele desfaz o disfarce e o colono volta.
   Tirar as roupas (ou perdê-las), não vesti-las em 1 minuto ou usar um poder entre os dele estraga o ritual: ele
   volta para a vida dele e é preciso começar de novo com outra pessoa. Ao avançar, ele também volta.
 - Sequência 1, Verme do Tempo: 12 relógios em molduras numa cidade: colônia com pelo menos 20 colonos ou vila comum

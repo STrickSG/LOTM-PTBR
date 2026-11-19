@@ -3,6 +3,7 @@ package de.jakob.lotm.addons.rituals;
 import com.minecolonies.api.colony.IColony;
 import com.minecolonies.api.colony.IColonyManager;
 import com.minecolonies.api.entity.citizen.AbstractEntityCitizen;
+import de.jakob.lotm.addons.colonies.Colonists;
 import de.jakob.lotm.LOTMCraft;
 import de.jakob.lotm.item.custom.DisguiseClothesItem;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -244,6 +245,44 @@ public final class ErrorDisguise {
         } else {
             disguised.level().playSound(null, disguised.blockPosition(), net.minecraft.sounds.SoundEvents.VILLAGER_NO, net.minecraft.sounds.SoundSource.NEUTRAL, 1f, 1f);
         }
+    }
+
+    // ------------------------------------------------------------------ na colônia daquele colono
+
+    /** Disfarçado (e vestido) de um colono desta colônia */
+    public static boolean disguisedIn(Player player, int colonyId) {
+        int[] citizen = ErrorRituals.disguisedCitizen(player);
+        return citizen != null && citizen[0] == colonyId && wearing(player, ErrorRituals.disguiseName(player));
+    }
+
+    /** No instante em que o disfarçado abre um baú (ou outro container) da colônia daquele colono */
+    private static boolean openingChest;
+
+    public static boolean openingChest() {
+        return openingChest;
+    }
+
+    @SubscribeEvent(priority = EventPriority.HIGHEST)
+    public static void onRightClickBlockStart(net.neoforged.neoforge.event.entity.player.PlayerInteractEvent.RightClickBlock event) {
+        openingChest = false;
+        if (event.getLevel().isClientSide || !(event.getEntity() instanceof ServerPlayer player)) return;
+        IColony colony = Colonists.colonyAt(event.getLevel(), event.getPos());
+        if (colony == null || !disguisedIn(player, colony.getID())) return;
+        var level = event.getLevel();
+        var pos = event.getPos();
+        var state = level.getBlockState(pos);
+        var blockEntity = level.getBlockEntity(pos);
+        boolean container = level.getCapability(net.neoforged.neoforge.capabilities.Capabilities.ItemHandler.BLOCK, pos, state, blockEntity, null) != null;
+        for (net.minecraft.core.Direction side : net.minecraft.core.Direction.values()) {
+            if (container) break;
+            container = level.getCapability(net.neoforged.neoforge.capabilities.Capabilities.ItemHandler.BLOCK, pos, state, blockEntity, side) != null;
+        }
+        openingChest = container;
+    }
+
+    @SubscribeEvent(priority = EventPriority.LOWEST, receiveCanceled = true)
+    public static void onRightClickBlockEnd(net.neoforged.neoforge.event.entity.player.PlayerInteractEvent.RightClickBlock event) {
+        openingChest = false;
     }
 
     // ------------------------------------------------------------------ chat

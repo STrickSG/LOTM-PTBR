@@ -94,6 +94,11 @@ public final class ErrorRituals {
         return root.getCompound(Player.PERSISTED_NBT_TAG);
     }
 
+    /** Beyonder do Caminho do Erro, de qualquer Sequência */
+    private static boolean isError(Player player) {
+        return BeyonderData.isBeyonder(player) && "error".equals(BeyonderData.getPathway(player));
+    }
+
     /** Está na Sequência de onde se faz o ritual da Sequência {@code ritualSequence} do Erro */
     private static boolean preparing(Player player, int ritualSequence) {
         return BeyonderData.isBeyonder(player) && "error".equals(BeyonderData.getPathway(player))
@@ -156,7 +161,7 @@ public final class ErrorRituals {
         ItemStack held = player.getMainHandItem();
         boolean dream = preparing(player, 5) && player.isShiftKeyDown() && held.isEmpty();
         boolean host = preparing(player, 4) && player.isShiftKeyDown() && held.isEmpty() && !(target instanceof Player);
-        boolean identity = preparing(player, 2) && held.is(Items.NAME_TAG) && held.has(net.minecraft.core.component.DataComponents.CUSTOM_NAME)
+        boolean identity = isError(player) && held.is(Items.NAME_TAG) && held.has(net.minecraft.core.component.DataComponents.CUSTOM_NAME)
                 && (target instanceof EntityCitizen || target instanceof AbstractVillager || target instanceof BeyonderNPCEntity);
         if (!dream && !host && !identity) return;
         event.setCanceled(true);
@@ -548,8 +553,8 @@ public final class ErrorRituals {
         if (!(event.getEntity() instanceof ServerPlayer player) || player.tickCount % 100 != 0) return;
         CompoundTag tag = data(player);
 
-        // 2: depois de avançar (ou fora do Erro 3) a identidade emprestada fica para trás
-        if (tag.contains(IDENTITY) && !preparing(player, 2)) dropIdentity(player);
+        // o disfarce é do Caminho do Erro (qualquer Sequência); quem deixa de ser do Erro perde a identidade emprestada
+        if (tag.contains(IDENTITY) && !isError(player)) dropIdentity(player);
         // 2: as roupas dele precisam estar vestidas; tirá-las (ou não vesti-las a tempo) estraga o ritual
         if (tag.contains(IDENTITY)) {
             boolean wearing = ErrorDisguise.wearing(player, tag.getString(IDENTITY));
@@ -562,7 +567,8 @@ public final class ErrorRituals {
             }
         }
         // 2: vivendo como o outro, dentro da colônia dele, vestido como ele
-        if (tag.contains(IDENTITY) && !tag.getBoolean(IDENTITY_DONE)) {
+        // só conta para o ritual quem está no Erro 3 (preparando o Cavalo de Troia do Destino); para os outros é só um disfarce
+        if (tag.contains(IDENTITY) && !tag.getBoolean(IDENTITY_DONE) && preparing(player, 2)) {
             if (tag.getBoolean(IDENTITY_WORN) && amongTheirPeople(player, tag)) {
                 int ticks = tag.getInt(IDENTITY_TICKS) + 100;
                 tag.putInt(IDENTITY_TICKS, ticks);

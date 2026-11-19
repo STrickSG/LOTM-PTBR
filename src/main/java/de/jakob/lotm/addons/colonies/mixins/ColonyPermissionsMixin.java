@@ -25,5 +25,19 @@ public abstract class ColonyPermissionsMixin {
         else if (action == Action.PLACE_BLOCKS && de.jakob.lotm.addons.colonies.ColonyConquest.placingConquestBanner()) cir.setReturnValue(true);
         // e o golpe nos defensores, em guerra declarada
         else if ((action == Action.ATTACK_ENTITY || action == Action.ATTACK_CITIZEN) && de.jakob.lotm.addons.colonies.ColonyConquest.attackingDefender()) cir.setReturnValue(true);
+        // disfarçado de um colono daqui (Caminho do Erro): só pode abrir baús, nada de quebrar ou pôr blocos
+        else if ((action == Action.OPEN_CONTAINER || action == Action.RIGHTCLICK_BLOCK || action == Action.RIGHTCLICK_ENTITY)
+                && de.jakob.lotm.addons.rituals.ErrorDisguise.openingChest()) cir.setReturnValue(true);
+    }
+
+    /** Disfarçado de um colono daqui, os guardas veem o colono, não um inimigo */
+    @Inject(method = "getRank(Lnet/minecraft/world/entity/player/Player;)Lcom/minecolonies/api/colony/permissions/Rank;",
+            at = @At("RETURN"), cancellable = true)
+    private void lotmcraft$disguisedRank(Player player, CallbackInfoReturnable<com.minecolonies.api.colony.permissions.Rank> cir) {
+        if (colony == null || cir.getReturnValue() == null || !cir.getReturnValue().isHostile()) return;
+        if (de.jakob.lotm.addons.colonies.ColonyConquest.atWar(colony.getID(), player.getUUID())) return;
+        if (!player.level().isClientSide && de.jakob.lotm.addons.rituals.ErrorDisguise.disguisedIn(player, colony.getID())) {
+            cir.setReturnValue(((com.minecolonies.core.colony.permissions.Permissions) (Object) this).getRankNeutral());
+        }
     }
 }
