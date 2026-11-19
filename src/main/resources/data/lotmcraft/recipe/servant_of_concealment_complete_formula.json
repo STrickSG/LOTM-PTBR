@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    {
+      "item": "lotmcraft:servant_of_concealment"
+    },
+    {
+      "item": "lotmcraft:servant_of_concealment_ritual"
+    }
+  ],
+  "result": {
+    "id": "lotmcraft:servant_of_concealment_complete_formula",
+    "count": 1
+  }
+}

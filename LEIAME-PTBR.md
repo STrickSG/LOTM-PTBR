@@ -281,6 +281,33 @@ Tirano.
     desordem do tempo em andamento.
   Um de Sequência 1 (ou menor) vale pelos 3.
 
+## Rituais de avanço da Escuridão
+
+Mesmas regras dos outros: pergaminho, Fórmula Completa ou Carta da Escuridão na Sequência certa. A Carta pede as
+receitas das Sequências 9 a 6 e as Fórmulas Completas das Sequências 5 a 1. Nenhum depende de um poder da própria
+Escuridão.
+
+- Sequência 5, Bruxo Espiritual: entrar no Mundo Espiritual com o corpo (de qualquer jeito: a Chave do Viajante,
+  poderes de outros Caminhos...). Ao chegar, a "informação do seu verdadeiro eu" fica num ponto a 80-160 blocos dali.
+  A cada 10 segundos você sente se está muito longe, longe, perto ou bem aqui, e se chegou mais perto ou mais longe;
+  a 64 blocos aparece uma luz. Um poder de adivinhação de qualquer Caminho (Adivinhação, Profecia, Visão Espiritual...)
+  usado lá mostra a direção e a distância. A até 3 blocos dela, você se funde. Beber ainda no Mundo Espiritual.
+- Sequência 4, Vigia da Noite: um círculo mágico em volta de você, de 2 a 5 blocos de distância, com pelo menos
+  8 marcas e marcas dos quatro lados: velas acesas (de qualquer cor), pó de redstone, lanternas, tochas, fogo ou
+  fogueira de alma. E o sangue de uma linhagem divina: qualquer Característica Beyonder no inventário. Beber no meio.
+- Sequência 3, Bispo do Horror: beber à beira da morte: com no máximo 25% da vida e tendo levado dano nos últimos
+  5 segundos (de qualquer coisa: monstros, queda, lava, poderes...), ou até 30 segundos depois de um Totem da
+  Imortalidade te salvar.
+- Sequência 2, Servo da Ocultação: 3 dias do Minecraft (os "três anos") isolado: no escuro (luz 4 ou menos), sem
+  ninguém a até 48 blocos (jogadores, colonos, aldeões, Beyonders Errantes) e acordado. Sair disso por mais de
+  10 segundos, dormir, falar no chat, mexer com alguém ou ser ferido por alguém faz recomeçar do zero. Só conta com
+  você no jogo. Depois, beber com a sanidade acima da metade.
+- Sequência 1, Cavaleiro do Infortúnio: qualquer um destes:
+  - um Arcanjo: até 1 dia depois de um ser de Sequência 1 ou 0 que você feriu cair, de você pôr Azar (poção, flecha,
+    poder) nele, ou de usar um poder de infortúnio ou maldição a até 32 blocos dele;
+  - uma civilização: uma colônia ou aldeia com pelo menos 30 moradores perder metade deles por sua causa (mortos por
+    você ou por um poder seu) em até 7 dias.
+
 ## Ritual da mesa: Passagem para a Névoa da História
 
 Ritual novo da mesa de ritual, exclusivo do Caminho do Vidente, a partir da Sequência 4. O livro

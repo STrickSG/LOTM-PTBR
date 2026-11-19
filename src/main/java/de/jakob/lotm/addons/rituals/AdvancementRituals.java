@@ -177,7 +177,27 @@ public final class AdvancementRituals {
             // Tirano, Sequência 1 (Deus do Trovão): com raios, atrapalhar a ascensão de três Anjos
             new Ritual("tyrant", 1, () -> List.of(
                     new ItemStack(Items.LIGHTNING_ROD),
-                    new ItemStack(PotionItemHandler.THUNDER_GOD_POTION.get())))
+                    new ItemStack(PotionItemHandler.THUNDER_GOD_POTION.get()))),
+            // Escuridão, Sequência 5 (Bruxo Espiritual): no Mundo Espiritual, fundir-se com o seu verdadeiro eu
+            new Ritual("darkness", 5, () -> List.of(
+                    new ItemStack(Items.ENDER_EYE),
+                    new ItemStack(PotionItemHandler.SPIRIT_WARLOCK_POTION.get()))),
+            // Escuridão, Sequência 4 (Vigia da Noite): um círculo que acalma as almas, com sangue de linhagem divina
+            new Ritual("darkness", 4, () -> List.of(
+                    new ItemStack(Items.CANDLE, 8),
+                    new ItemStack(PotionItemHandler.NIGHTWATCHER_POTION.get()))),
+            // Escuridão, Sequência 3 (Bispo do Horror): encarar a morte de verdade
+            new Ritual("darkness", 3, () -> List.of(
+                    new ItemStack(Items.WITHER_ROSE),
+                    new ItemStack(PotionItemHandler.HORROR_BISHOP_POTION.get()))),
+            // Escuridão, Sequência 2 (Servo da Ocultação): isolado, no escuro e em silêncio
+            new Ritual("darkness", 2, () -> List.of(
+                    new ItemStack(Items.BLACK_WOOL),
+                    new ItemStack(PotionItemHandler.SERVANT_OF_CONCEALMENT_POTION.get()))),
+            // Escuridão, Sequência 1 (Cavaleiro do Infortúnio): ser o infortúnio de um Arcanjo ou de uma civilização
+            new Ritual("darkness", 1, () -> List.of(
+                    new ItemStack(Items.BLACK_BANNER),
+                    new ItemStack(PotionItemHandler.KNIGHT_OF_MISFORTUNE_POTION.get())))
     );
 
     public static List<Ritual> all() {

@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    {
+      "item": "lotmcraft:horror_bishop"
+    },
+    {
+      "item": "lotmcraft:horror_bishop_ritual"
+    }
+  ],
+  "result": {
+    "id": "lotmcraft:horror_bishop_complete_formula",
+    "count": 1
+  }
+}
