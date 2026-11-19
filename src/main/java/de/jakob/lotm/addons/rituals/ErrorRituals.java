@@ -504,6 +504,11 @@ public final class ErrorRituals {
 
     // ------------------------------------------------------------------ 1, Verme do Tempo
 
+    /** O Verme do Tempo está com a desordem de uma cidade em andamento */
+    public static boolean disorderRunning(ServerPlayer player) {
+        return data(player).getInt(DISORDER_TICKS) > 0 && !data(player).getBoolean(DISORDER_DONE);
+    }
+
     public static boolean disorderDone(ServerPlayer player) {
         return data(player).getBoolean(DISORDER_DONE);
     }

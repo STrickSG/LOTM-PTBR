@@ -271,8 +271,15 @@ Tirano.
   Caminho. Depois o desastre para: 1 minuto sem ninguém mais atingido. Então, em até 5 minutos, beber diante de pelo
   menos 10 delas (a até 48 blocos) e sem nenhum outro jogador a até 64 blocos.
 - Sequência 1, Deus do Trovão: com raios seus (poderes de qualquer Caminho, Artefatos Selados, tridente com
-  Canalização), atingir 3 Anjos de Sequência 2 que querem subir: Beyonders Errantes ou criaturas de Sequência 2, ou
-  jogadores de Sequência 2 no meio do avanço. Um de Sequência 1 (ou menor) vale pelos 3.
+  Canalização), interromper 3 Anjos de Sequência 2 que tentam subir. Cada Anjo conta uma vez só. Conta:
+  - matar com raio um ser de Sequência 2 (Beyonder Errante, criatura ou jogador);
+  - acertar com raio um jogador de Sequência 2 no meio do ritual dele: bebendo a poção ou com o ritual da
+    Sequência 1 no inventário (pergaminho, Fórmula Completa ou Carta);
+  - destruir com raio parte do ritual de um jogador de Sequência 2, mesmo que ele não esteja bebendo: matar um fiel
+    de um Sol, uma marionete ou um morador da colônia (a Cidade das Marionetes) de um Tolo, um morador de uma colônia
+    que um Sacerdote Vermelho conquistou, ou acertar um relógio na moldura da cidade de um Erro que está com a
+    desordem do tempo em andamento.
+  Um de Sequência 1 (ou menor) vale pelos 3.
 
 ## Ritual da mesa: Passagem para a Névoa da História
 

@@ -158,6 +158,12 @@ public final class Believers {
         }
     }
 
+    /** De quem este colono é fiel (ou null) */
+    public static UUID godOf(MinecraftServer server, net.minecraft.world.entity.Entity entity) {
+        ICitizenData citizen = Colonists.data(entity);
+        return citizen == null ? null : data(server).godOf(citizen.getUUID());
+    }
+
     // Fiel morto deixa de contar
     @SubscribeEvent
     public static void onDeath(LivingDeathEvent event) {

@@ -52,7 +52,8 @@ import java.util.UUID;
  *   <li>4, Enterrador do Cataclismo: causar um terremoto e um tsunami e beber no meio deles (poderes ou explosões; as debaixo d'água viram tsunami).</li>
  *   <li>3, Rei do Mar: um pilar maciço de pedra do fundo do mar até 10 blocos acima da água, e nenhuma criatura forte de pé em volta, 3 delas vencidas por você.</li>
  *   <li>2, Calamidade: 20 pessoas atingidas por um desastre seu; depois ele para, e você bebe diante dos que sobraram.</li>
- *   <li>1, Deus do Trovão: com raios, atrapalhar a ascensão de 3 Anjos de Sequência 2 (um de Sequência 1 vale os 3).</li>
+ *   <li>1, Deus do Trovão: com raios, interromper 3 Anjos de Sequência 2 que tentam subir: matá-los, acertá-los no meio do ritual
+ *   ou destruir parte do ritual deles (um de Sequência 1 vale os 3).</li>
  * </ul>
  */
 @EventBusSubscriber(modid = LOTMCraft.MOD_ID)
@@ -443,31 +444,111 @@ public final class TyrantRituals {
             }
         }
 
-        // 1: um raio seu na ascensão de um Anjo (poderes e artefatos)
-        if (lightning(source) && BeyonderData.isBeyonder(target)) {
+        // 1: um raio seu (poderes e artefatos) num Anjo que tenta subir
+        if (lightning(source)) {
             ServerPlayer player = culprit(level, from, target.position(), 1);
-            if (player != null) angelStruck(player, target);
+            if (player != null) {
+                STRUCK.put(target.getUUID(), new Strike(player.getUUID(), now(level)));
+                if (target instanceof ServerPlayer angel && inRitual(angel)) disrupt(player, angel);
+            }
         }
+    }
+
+    // ------------------------------------------------------------------ 1, Deus do Trovão: o que conta como interromper
+
+    private record Strike(UUID cause, long time) {}
+
+    /** Quem acertou cada criatura com raio por último (para saber quem matou, se ela morrer logo depois) */
+    private static final Map<UUID, Strike> STRUCK = new HashMap<>();
+    public static final int STRIKE_MEMORY = 20 * 5, CLOCK_RADIUS = 128;
+
+    /** Um Anjo (Sequência 2) que está tentando subir: no meio do avanço, ou com o ritual da Sequência 1 no inventário */
+    private static boolean inRitual(ServerPlayer angel) {
+        if (!BeyonderData.isBeyonder(angel) || BeyonderData.getSequence(angel) > 2) return false;
+        int sequence = BeyonderData.getSequence(angel);
+        return AdvancementUtil.isAdvancing(angel.getUUID()) || (sequence >= 1
+                && RitualChecks.knowsRitual(angel, BeyonderData.getPathway(angel), sequence - 1));
     }
 
     /** Raios comuns (tridente com Canalização, raios chamados): quem chamou o raio é quem o causou */
     @SubscribeEvent
     public static void onStruck(net.neoforged.neoforge.event.entity.EntityStruckByLightningEvent event) {
-        if (event.getEntity() instanceof LivingEntity target && BeyonderData.isBeyonder(target)
-                && event.getLightning().getCause() != null) {
-            angelStruck(event.getLightning().getCause(), target);
+        ServerPlayer player = event.getLightning().getCause();
+        if (player == null || !(event.getEntity().level() instanceof ServerLevel level)) return;
+        Entity struck = event.getEntity();
+        STRUCK.put(struck.getUUID(), new Strike(player.getUUID(), now(level)));
+        if (struck instanceof ServerPlayer angel && inRitual(angel)) disrupt(player, angel);
+        // o ritual do Verme do Tempo: os relógios nas molduras da cidade
+        if (struck instanceof net.minecraft.world.entity.decoration.ItemFrame frame && frame.getItem().is(net.minecraft.world.item.Items.CLOCK)) {
+            for (ServerPlayer angel : level.players()) {
+                if (angel.distanceTo(frame) <= CLOCK_RADIUS && "error".equals(BeyonderData.getPathway(angel))
+                        && BeyonderData.getSequence(angel) == 2 && ErrorRituals.disorderRunning(angel)) disrupt(player, angel);
+            }
         }
     }
 
-    private static void angelStruck(ServerPlayer player, LivingEntity target) {
-        if (player == target || !preparing(player, 1)) return;
-        int sequence = BeyonderData.getSequence(target);
-        boolean rising = target instanceof Player ? AdvancementUtil.isAdvancing(target.getUUID()) : true;
-        if (sequence > 2 || !rising) return;
+    /** O jogador de Sequência 2 de quem esta criatura é parte do ritual (fiel do Sol, morador da Cidade das Marionetes, conquista) */
+    private static ServerPlayer ritualOwner(ServerLevel level, LivingEntity dead) {
+        var server = level.getServer();
+        java.util.List<UUID> owners = new java.util.ArrayList<>();
+        // Sol: os fiéis do Anjo Branco
+        UUID god = Believers.godOf(server, dead);
+        if (god != null) owners.add(god);
+        // Tolo: as marionetes da Cidade das Marionetes (soltas ou colonos da colônia dele)
+        if (dead.hasData(de.jakob.lotm.attachments.ModAttachments.MARIONETTE_COMPONENT)) {
+            var marionette = dead.getData(de.jakob.lotm.attachments.ModAttachments.MARIONETTE_COMPONENT);
+            if (marionette.isMarionette()) {
+                try { owners.add(UUID.fromString(marionette.getControllerUUID())); } catch (IllegalArgumentException ignored) { }
+            }
+        }
+        var citizen = Colonists.data(dead);
+        if (citizen != null) {
+            owners.add(citizen.getColony().getPermissions().getOwner());
+            // Sacerdote Vermelho: as colônias que ele conquista
+            UUID conqueror = de.jakob.lotm.addons.colonies.ColonyConquest.conqueror(server, citizen.getColony());
+            if (conqueror != null) owners.add(conqueror);
+        }
+        for (UUID id : owners) {
+            ServerPlayer angel = id == null ? null : server.getPlayerList().getPlayer(id);
+            if (angel == null || BeyonderData.getSequence(angel) != 2) continue;
+            String pathway = BeyonderData.getPathway(angel);
+            boolean part = (id.equals(god) && "sun".equals(pathway))
+                    || ("fool".equals(pathway) && (citizen == null || id.equals(citizen.getColony().getPermissions().getOwner())))
+                    || ("red_priest".equals(pathway) && citizen != null && id.equals(de.jakob.lotm.addons.colonies.ColonyConquest.conqueror(server, citizen.getColony())));
+            if (part) return angel;
+        }
+        return null;
+    }
+
+    /** Matar com raio um Anjo, ou uma parte do ritual de um Anjo que tenta subir */
+    @SubscribeEvent(priority = net.neoforged.bus.api.EventPriority.HIGH)
+    public static void onLightningDeath(LivingDeathEvent event) {
+        LivingEntity dead = event.getEntity();
+        if (!(dead.level() instanceof ServerLevel level)) return;
+        ServerPlayer player = null;
+        if (lightning(event.getSource())) {
+            Entity from = event.getSource().getEntity() != null ? event.getSource().getEntity() : event.getSource().getDirectEntity();
+            player = culprit(level, from, dead.position(), 1);
+        }
+        Strike strike = STRUCK.remove(dead.getUUID());
+        if (player == null && strike != null && now(level) - strike.time() <= STRIKE_MEMORY) {
+            player = level.getServer().getPlayerList().getPlayer(strike.cause());
+        }
+        if (player == null || !preparing(player, 1)) return;
+        if (BeyonderData.isBeyonder(dead) && BeyonderData.getSequence(dead) <= 2) disrupt(player, dead);
+        else {
+            ServerPlayer angel = ritualOwner(level, dead);
+            if (angel != null) disrupt(player, angel);
+        }
+    }
+
+    /** Cada Anjo conta uma vez; um de Sequência 1 (subindo a 0) vale pelos três */
+    private static void disrupt(ServerPlayer player, LivingEntity angel) {
+        if (player == angel || !preparing(player, 1)) return;
         CompoundTag angels = data(player).getCompound(ANGELS);
-        String key = target.getUUID().toString();
+        String key = angel.getUUID().toString();
         if (angels.contains(key)) return;
-        angels.putInt(key, sequence <= 1 ? ANGELS_NEEDED : 1);
+        angels.putInt(key, BeyonderData.getSequence(angel) <= 1 ? ANGELS_NEEDED : 1);
         data(player).put(ANGELS, angels);
         tell(player, Component.translatable("lotmcraft.tyrant.angel_disrupted", Math.min(angelsDisrupted(player), ANGELS_NEEDED), ANGELS_NEEDED).withColor(COLOR));
     }
