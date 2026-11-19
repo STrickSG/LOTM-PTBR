@@ -338,20 +338,33 @@ public final class TyrantRituals {
             }
         }
 
-        // 1: um raio seu na ascensão de um Anjo
+        // 1: um raio seu na ascensão de um Anjo (poderes e artefatos)
         if (lightning(source) && BeyonderData.isBeyonder(target)) {
             ServerPlayer player = culprit(level, from, target.position(), 1);
-            if (player == null || player == target || !preparing(player, 1)) return;
-            int sequence = BeyonderData.getSequence(target);
-            boolean rising = target instanceof Player ? AdvancementUtil.isAdvancing(target.getUUID()) : true;
-            if (sequence > 2 || !rising) return;
-            CompoundTag angels = data(player).getCompound(ANGELS);
-            String key = target.getUUID().toString();
-            if (angels.contains(key)) return;
-            angels.putInt(key, sequence <= 1 ? ANGELS_NEEDED : 1);
-            data(player).put(ANGELS, angels);
-            tell(player, Component.translatable("lotmcraft.tyrant.angel_disrupted", Math.min(angelsDisrupted(player), ANGELS_NEEDED), ANGELS_NEEDED).withColor(COLOR));
+            if (player != null) angelStruck(player, target);
         }
+    }
+
+    /** Raios comuns (tridente com Canalização, raios chamados): quem chamou o raio é quem o causou */
+    @SubscribeEvent
+    public static void onStruck(net.neoforged.neoforge.event.entity.EntityStruckByLightningEvent event) {
+        if (event.getEntity() instanceof LivingEntity target && BeyonderData.isBeyonder(target)
+                && event.getLightning().getCause() != null) {
+            angelStruck(event.getLightning().getCause(), target);
+        }
+    }
+
+    private static void angelStruck(ServerPlayer player, LivingEntity target) {
+        if (player == target || !preparing(player, 1)) return;
+        int sequence = BeyonderData.getSequence(target);
+        boolean rising = target instanceof Player ? AdvancementUtil.isAdvancing(target.getUUID()) : true;
+        if (sequence > 2 || !rising) return;
+        CompoundTag angels = data(player).getCompound(ANGELS);
+        String key = target.getUUID().toString();
+        if (angels.contains(key)) return;
+        angels.putInt(key, sequence <= 1 ? ANGELS_NEEDED : 1);
+        data(player).put(ANGELS, angels);
+        tell(player, Component.translatable("lotmcraft.tyrant.angel_disrupted", Math.min(angelsDisrupted(player), ANGELS_NEEDED), ANGELS_NEEDED).withColor(COLOR));
     }
 
     @SubscribeEvent
