@@ -262,12 +262,24 @@ public final class TyrantRituals {
         // de cima até o leito: cada andar maciço, com pedra suficiente; embaixo da água, até tocar o fundo
         int stone = 0, other = 0;
         boolean floor = false;
+        java.util.List<BlockPos> last = java.util.List.of();
         for (int y = top; y > level.getMinBuildHeight(); y--) {
             final int yy = y;
             java.util.List<BlockPos> layer = tower.stream().filter(p -> p.getY() == yy).toList();
-            if (layer.isEmpty()) break;
-            if (y <= top - 1 && layer.size() < TOWER_LAYER_MIN) return null;
-            if (hollow(level, layer, tower)) return null;
+            if (layer.isEmpty()) {
+                // acabou a pedra: a torre se apoia no leito (chão de verdade embaixo, não água)
+                long ground = last.stream().filter(p -> {
+                    BlockState below = level.getBlockState(p.below());
+                    return !below.isAir() && below.getFluidState().isEmpty();
+                }).count();
+                floor = y < surface && ground * 2 >= last.size();
+                break;
+            }
+            last = layer;
+            // o corpo da torre (do leito até 10 acima da água) é maciço; acima disso (ameias, sala, telhado) é livre
+            if (y <= surface + TOWER_ABOVE_WATER) {
+                if (layer.size() < TOWER_LAYER_MIN || hollow(level, layer, tower)) return null;
+            }
             stone += layer.size();
             other += decorations(level, layer, tower);
             // o andar já está abaixo da água e nenhum lado dele dá para a água: chegou ao leito

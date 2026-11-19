@@ -258,12 +258,14 @@ Tirano.
 - Sequência 4, Enterrador do Cataclismo: nos últimos 60 segundos, a até 64 blocos, causar um terremoto e um tsunami
   e beber no meio deles. Terremoto: um poder de terremoto (de qualquer Caminho) ou 5 explosões suas (TNT, poderes,
   Artefatos Selados...). Tsunami: um poder de tsunami, dilúvio ou maré, ou 5 explosões suas debaixo d'água.
-- Sequência 3, Rei do Mar: uma torre de pedra (pedra, pedregulho, tijolos de pedra, ardósia, prismarinho...) num
-  oceano, do fundo do mar até acima da água (no máximo 3 blocos acima), com pelo menos 8 blocos dentro d'água, a até
-  24 blocos de você. Em
-  volta dela (96 blocos), nenhuma criatura forte viva (guardiões, afogados, Beyonders que não são colonos) e pelo
-  menos 3 vencidas por você ali nos últimos 3 dias (um Guardião Ancião ou um Beyonder de Sequência 4 ou menor vale
-  pelos 3).
+- Sequência 3, Rei do Mar: uma torre de pedra num oceano, a até 24 blocos de você. Formato livre (redonda, quadrada,
+  octógono...), mas o corpo dela é um pilar maciço, sem vão por dentro, do leito do mar até pelo menos 10 blocos acima
+  da água, com pelo menos 9 blocos de pedra em cada andar. Acima disso (ameias, sala, telhado) é livre. Conta toda a
+  família da pedra: pedra, pedregulho, tijolos, ardósia e suas variações, andesito, diorito, granito, tufo, pedra-negra,
+  prismarinho, obsidiana, inclusive escadas, lajes e muros. Enfeites de qualquer material grudados por fora (grades,
+  lanternas, madeira, vidro) fazem parte da build, desde que pelo menos 70% da torre seja pedra. Em volta dela
+  (96 blocos), nenhuma criatura forte viva (guardiões, afogados, Beyonders que não são colonos) e pelo menos 3 vencidas
+  por você ali nos últimos 3 dias (um Guardião Ancião ou um Beyonder de Sequência 4 ou menor vale pelos 3).
 - Sequência 2, Calamidade: atingir 20 pessoas (colonos, aldeões, jogadores ou Beyonders Errantes) com um desastre
   seu em até 10 minutos: raios, fogo, explosões, congelamento, afogamento, blocos caindo ou poderes de qualquer
   Caminho. Depois o desastre para: 1 minuto sem ninguém mais atingido. Então, em até 5 minutos, beber diante de pelo
