@@ -137,7 +137,27 @@ public final class AdvancementRituals {
             // Sacerdote Vermelho, Sequência 1 (Conquistador): conquistar uma nação que tema, obedeça e reverencie
             new Ritual("red_priest", 1, () -> List.of(
                     new ItemStack(Items.RED_BANNER),
-                    new ItemStack(PotionItemHandler.CONQUEROR_POTION.get())))
+                    new ItemStack(PotionItemHandler.CONQUEROR_POTION.get()))),
+            // Demônia, Sequência 5 (Demônia da Aflição): queimar sem parar e sobreviver sem enlouquecer
+            new Ritual("demoness", 5, () -> List.of(
+                    new ItemStack(Items.CAMPFIRE),
+                    new ItemStack(PotionItemHandler.DEMONESS_OF_AFFLICTION_POTION.get()))),
+            // Demônia, Sequência 4 (Demônia do Desespero): envolver muita gente numa praga
+            new Ritual("demoness", 4, () -> List.of(
+                    new ItemStack(Items.FERMENTED_SPIDER_EYE),
+                    new ItemStack(PotionItemHandler.DEMONESS_OF_DESPAIR_POTION.get()))),
+            // Demônia, Sequência 3 (Demônia da Perpetuidade): escravizar, encantar ou reconciliar-se com o eu do espelho
+            new Ritual("demoness", 3, () -> List.of(
+                    new ItemStack(Items.GLASS_PANE),
+                    new ItemStack(PotionItemHandler.DEMONESS_OF_UNAGING_POTION.get()))),
+            // Demônia, Sequência 2 (Demônia da Catástrofe): participar de um desastre e beber durante ele
+            new Ritual("demoness", 2, () -> List.of(
+                    new ItemStack(Items.TNT),
+                    new ItemStack(PotionItemHandler.DEMONESS_OF_CATASTROPHE_POTION.get()))),
+            // Demônia, Sequência 1 (Demônia do Apocalipse): fim de uma era, apocalipse em curso ou queda de uma divindade
+            new Ritual("demoness", 1, () -> List.of(
+                    new ItemStack(Items.DRAGON_HEAD),
+                    new ItemStack(PotionItemHandler.DEMONESS_OF_APOCALYPSE_POTION.get())))
     );
 
     public static List<Ritual> all() {

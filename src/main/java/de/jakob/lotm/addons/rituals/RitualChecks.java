@@ -72,6 +72,12 @@ public final class RitualChecks {
         if ("red_priest".equals(pathway) && sequence == 3) return RedPriestRituals.warWon(player);
         if ("red_priest".equals(pathway) && sequence == 2) return RedPriestRituals.weatherBent(player);
         if ("red_priest".equals(pathway) && sequence == 1) return RedPriestRituals.nationConquered(player);
+        // Demônia: Aflição, Desespero, Perpetuidade, Catástrofe e Apocalipse
+        if ("demoness".equals(pathway) && sequence == 5) return DemonessRituals.burnedEnough(player);
+        if ("demoness".equals(pathway) && sequence == 4) return DemonessRituals.infected(player) >= DemonessRituals.PLAGUE_NEEDED;
+        if ("demoness".equals(pathway) && sequence == 3) return DemonessRituals.mirrorDone(player);
+        if ("demoness".equals(pathway) && sequence == 2) return DemonessRituals.disasterActive(player);
+        if ("demoness".equals(pathway) && sequence == 1) return DemonessRituals.apocalypseNow(player);
         return false;
     }
 

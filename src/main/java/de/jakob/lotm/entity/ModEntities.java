@@ -439,6 +439,11 @@ public class ModEntities {
             ENTITY_TYPES.register("grim_reaper", () -> EntityType.Builder.of(SpiritGrimReaperEntity::new, MobCategory.MONSTER)
                     .sized(1.6f, 2.7f).build("grim_reaper"));
 
+    /** O seu eu do espelho (Demônia, ritual da Sequência 3) */
+    public static final Supplier<EntityType<de.jakob.lotm.entity.custom.MirrorSelfEntity>> MIRROR_SELF =
+            ENTITY_TYPES.register("mirror_self", () -> EntityType.Builder.of(de.jakob.lotm.entity.custom.MirrorSelfEntity::new, MobCategory.MISC)
+                    .sized(0.6f, 1.8f).build("mirror_self"));
+
     public static final Supplier<EntityType<AsmannEntity>> ASMANN =
             ENTITY_TYPES.register("asmann", () -> EntityType.Builder.of(AsmannEntity::new, MobCategory.MONSTER)
                     .sized(1.6f, 1.6f).build("asmann"));

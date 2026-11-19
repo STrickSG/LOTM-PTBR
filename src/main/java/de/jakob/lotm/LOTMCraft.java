@@ -404,6 +404,7 @@ public class LOTMCraft
             EntityRenderers.register(ModEntities.MURLOC.get(), MurlocRenderer::new);
             EntityRenderers.register(ModEntities.GRIM_REAPER.get(), GrimReaperRenderer::new);
             EntityRenderers.register(ModEntities.ASMANN.get(), AsmannRenderer::new);
+            EntityRenderers.register(ModEntities.MIRROR_SELF.get(), de.jakob.lotm.entity.client.MirrorSelfRenderer::new);
             EntityRenderers.register(ModEntities.KNOWLEDGE_DEMON.get(), KnowledgeDemonRenderer::new);
             EntityRenderers.register(ModEntities.STONE_GOLEM.get(), StoneGolemRenderer::new);
             EntityRenderers.register(ModEntities.HEADLESS_BRIDE.get(), HeadlessBrideRenderer::new);

@@ -218,6 +218,34 @@ com nome ("Reino de ..."), prédios funcionando e de 10 a 24 moradores. Todo rei
 guarda, com guardas de espada, escudo e armadura de ferro, e golens de ferro guardando a prefeitura. A outra metade
 continua abandonada (Invocador de Milagres, Tolo 2).
 
+## Rituais de avanço da Demônia
+
+Mesmas regras dos outros: pergaminho, Fórmula Completa ou Carta da Demônia na Sequência certa. A Carta pede as
+receitas das Sequências 9 a 6 e as Fórmulas Completas das Sequências 5 a 1. Nenhum depende de um poder da própria
+Demônia.
+
+- Sequência 5, Demônia da Aflição: queimar sem parar por 3 minutos, de qualquer fonte de fogo (lava, fogueira,
+  poderes, flechas de fogo...), sem Resistência ao Fogo nem imunidade. Se o fogo apagar, recomeça. Beber ainda em
+  chamas, ou até 1 minuto depois, com a sanidade acima da metade.
+- Sequência 4, Demônia do Desespero: deixar doentes 30 pessoas diferentes (colonos, aldeões, jogadores ou Beyonders
+  Errantes) em até 3 dias. Contam veneno, murchar, fome, Praga Mental e Corrosão, de qualquer fonte sua: poções
+  arremessadas, flechas, poderes de qualquer Caminho, Artefatos Selados. Quem adoeceu há mais de 3 dias deixa de
+  contar.
+- Sequência 3, Demônia da Perpetuidade: entrar no Mundo do Espelho. O seu reflexo aparece, com a sua aparência, a
+  sua vida e o que você veste. Qualquer um destes serve:
+  - escravizar: vencê-lo sozinha (ele não morre, se curva). Se outra criatura o ferir, ou você usar um Artefato
+    Selado na mão, não vale;
+  - apaixonar: usar nele um poder de encanto (Charme ou outro de qualquer Caminho) a até 16 blocos;
+  - reconciliar: ficar a até 16 blocos dele, no Mundo do Espelho, por 1 dia do Minecraft sem nunca atacá-lo.
+  Depois disso ele acompanha você. Beber quando quiser.
+- Sequência 2, Demônia da Catástrofe: 40 mortes a até 128 blocos de você em 10 minutos, 5 delas suas (qualquer
+  criatura, de qualquer jeito: explosões, raios, pragas, guerra...). Beber enquanto o desastre dura.
+- Sequência 1, Demônia do Apocalipse: qualquer um destes:
+  - fim de uma era: até 1 dia depois de o Dragão do Fim morrer (de quem for), ou no dia 100, 200, 300... do mundo;
+  - apocalipse: durante um desastre como o da Sequência 2, ou até 10 minutos depois de alguém usar o poder
+    Apocalipse a até 128 blocos;
+  - queda de uma divindade: até 1 dia depois da morte de um ser de Sequência 1 ou 0 que você feriu.
+
 ## Ritual da mesa: Passagem para a Névoa da História
 
 Ritual novo da mesa de ritual, exclusivo do Caminho do Vidente, a partir da Sequência 4. O livro

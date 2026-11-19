@@ -223,6 +223,7 @@ public class ModEvents {
         event.put(ModEntities.ABSCESSED_HAND.get(), AbscessedHandEntity.createAttributes().build());
         event.put(ModEntities.GRIM_REAPER.get(), SpiritGrimReaperEntity.createAttributes().build());
         event.put(ModEntities.ASMANN.get(), AsmannEntity.createAttributes().build());
+        event.put(ModEntities.MIRROR_SELF.get(), de.jakob.lotm.entity.custom.MirrorSelfEntity.createAttributes().build());
         event.put(ModEntities.KNOWLEDGE_DEMON.get(), KnowledgeDemonEntity.createAttributes().build());
         event.put(ModEntities.STONE_GOLEM.get(), StoneGolemEntity.createAttributes().build());
         event.put(ModEntities.HEADLESS_BRIDE.get(), HeadlessBrideEntity.createAttributes().build());

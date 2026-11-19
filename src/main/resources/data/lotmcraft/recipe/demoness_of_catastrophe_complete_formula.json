@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    {
+      "item": "lotmcraft:demoness_of_catastrophe"
+    },
+    {
+      "item": "lotmcraft:demoness_of_catastrophe_ritual"
+    }
+  ],
+  "result": {
+    "id": "lotmcraft:demoness_of_catastrophe_complete_formula",
+    "count": 1
+  }
+}
