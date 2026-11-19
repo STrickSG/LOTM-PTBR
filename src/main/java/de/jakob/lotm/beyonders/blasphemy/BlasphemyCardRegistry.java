@@ -37,6 +37,14 @@ public class BlasphemyCardRegistry extends SavedData {
         return true;
     }
 
+    /** Criativo: esta carta passa a ser a única do Caminho, mesmo que outra estivesse registrada */
+    public void force(String pathway, UUID uid) {
+        if (!uid.equals(cards.get(pathway))) {
+            cards.put(pathway, uid);
+            setDirty();
+        }
+    }
+
     /** The card was destroyed: a new one can be crafted. Only the genuine card frees the pathway. */
     public void lost(String pathway, UUID uid) {
         if (uid.equals(cards.get(pathway))) {

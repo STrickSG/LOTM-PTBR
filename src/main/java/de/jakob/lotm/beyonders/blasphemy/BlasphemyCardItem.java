@@ -96,6 +96,14 @@ public class BlasphemyCardItem extends Item {
             registry.claim(pathway, uid);
             return true;
         }
+        // No criativo o inventário é do cliente: ele devolve a carta sem a marca e ela sumia.
+        // Carta na mão de quem está no criativo é sempre a verdadeira (isso também destrava um mundo preso).
+        if (holder instanceof Player creative && creative.isCreative()) {
+            UUID id = uid != null ? uid : UUID.randomUUID();
+            registry.force(pathway, id);
+            if (uid == null) CustomData.update(DataComponents.CUSTOM_DATA, stack, tag -> tag.putUUID(UID_KEY, id));
+            return true;
+        }
         if (holder instanceof Player player) {
             player.displayClientMessage(Component.translatable("item.lotmcraft.blasphemy_card.already_exists", getName(stack))
                     .withStyle(ChatFormatting.DARK_PURPLE), true); // action bar, not chat
