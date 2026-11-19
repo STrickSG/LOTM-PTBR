@@ -50,7 +50,7 @@ import java.util.UUID;
  * <ul>
  *   <li>5, Cantor do Oceano: beber "na barriga" do mar: dentro de um Monumento Oceânico ou numa cápsula de obsidiana num oceano.</li>
  *   <li>4, Enterrador do Cataclismo: causar um terremoto e um tsunami e beber no meio deles (poderes ou explosões; as debaixo d'água viram tsunami).</li>
- *   <li>3, Rei do Mar: uma torre de pedra do fundo do mar até a superfície e nenhuma criatura forte de pé em volta, 3 delas vencidas por você.</li>
+ *   <li>3, Rei do Mar: um pilar maciço de pedra do fundo do mar até 10 blocos acima da água, e nenhuma criatura forte de pé em volta, 3 delas vencidas por você.</li>
  *   <li>2, Calamidade: 20 pessoas atingidas por um desastre seu; depois ele para, e você bebe diante dos que sobraram.</li>
  *   <li>1, Deus do Trovão: com raios, atrapalhar a ascensão de 3 Anjos de Sequência 2 (um de Sequência 1 vale os 3).</li>
  * </ul>
@@ -61,7 +61,9 @@ public final class TyrantRituals {
 
     public static final int CAPSULE_SIZE = 4;
     public static final int CATACLYSM_WINDOW = 20 * 60, CATACLYSM_RADIUS = 64, CATACLYSM_EXPLOSIONS = 5;
-    public static final int TOWER_SEARCH = 24, TOWER_MIN_WATER = 8, SEA_RADIUS = 96, SEA_KILLS = 3, SEA_WINDOW = 24000 * 3;
+    public static final int TOWER_SEARCH = 24, TOWER_RADIUS = 16, TOWER_MAX_BLOCKS = 20000, TOWER_ABOVE_WATER = 10, TOWER_LAYER_MIN = 9;
+    public static final float TOWER_STONE_SHARE = 0.7f;
+    public static final int SEA_RADIUS = 96, SEA_KILLS = 3, SEA_WINDOW = 24000 * 3;
     public static final int CALAMITY_PEOPLE = 20, CALAMITY_WINDOW = 20 * 60 * 10, CALM_TICKS = 20 * 60, CALM_DRINK = 20 * 60 * 5,
             WITNESSES = 10, WITNESS_RADIUS = 48, ALONE_RADIUS = 64, ACTION_WINDOW = 20 * 3;
     public static final int ANGELS_NEEDED = 3;
@@ -194,43 +196,134 @@ public final class TyrantRituals {
 
     // ------------------------------------------------------------------ 3, Rei do Mar: a torre e o mar subjugado
 
-    private static boolean stoneLike(BlockState state) {
-        return state.is(Tags.Blocks.STONES) || state.is(Tags.Blocks.COBBLESTONES) || state.is(BlockTags.STONE_BRICKS)
-                || state.is(BlockTags.BASE_STONE_OVERWORLD) || state.is(Blocks.PRISMARINE) || state.is(Blocks.PRISMARINE_BRICKS)
-                || state.is(Blocks.DARK_PRISMARINE) || state.is(Blocks.SMOOTH_STONE) || state.is(Blocks.POLISHED_ANDESITE)
-                || state.is(Blocks.POLISHED_DIORITE) || state.is(Blocks.POLISHED_GRANITE) || state.is(Blocks.POLISHED_DEEPSLATE)
-                || state.is(Blocks.DEEPSLATE_BRICKS) || state.is(Blocks.DEEPSLATE_TILES) || state.is(Blocks.MOSSY_COBBLESTONE);
+    /** Família da pedra: pedras, pedregulhos, tijolos, ardósia, andesito, prismarinho... inclusive escadas, lajes e muros */
+    static boolean stoneLike(BlockState state) {
+        if (state.is(Tags.Blocks.STONES) || state.is(Tags.Blocks.COBBLESTONES) || state.is(BlockTags.STONE_BRICKS)
+                || state.is(BlockTags.BASE_STONE_OVERWORLD)) return true;
+        String path = net.minecraft.core.registries.BuiltInRegistries.BLOCK.getKey(state.getBlock()).getPath();
+        if (path.contains("redstone") || path.contains("glowstone") || path.contains("lodestone") || path.contains("button")
+                || path.contains("pressure_plate")) return false;
+        for (String word : STONE_WORDS) if (path.contains(word)) return true;
+        return false;
     }
 
-    /** Uma torre de pedra perto de você: do fundo do mar até acima da superfície, com pelo menos 8 blocos dentro d'água */
+    private static final String[] STONE_WORDS = {"stone", "deepslate", "andesite", "diorite", "granite", "tuff", "blackstone",
+            "basalt", "prismarine", "brick", "obsidian"};
+
+    private static boolean water(ServerLevel level, BlockPos pos) {
+        return level.getFluidState(pos).isSource() && level.getFluidState(pos).is(net.minecraft.tags.FluidTags.WATER);
+    }
+
+    /**
+     * Uma torre de pedra perto de você, num oceano: um pilar maciço (sem vão por dentro), de qualquer formato, do leito do mar
+     * até pelo menos 10 blocos acima da água, com pelo menos 9 blocos de pedra em cada andar e 70% de pedra no todo.
+     * Enfeites de qualquer material por fora fazem parte da build.
+     */
     public static BlockPos tower(ServerPlayer player) {
         ServerLevel level = player.serverLevel();
         BlockPos center = player.blockPosition();
-        for (int dx = -TOWER_SEARCH; dx <= TOWER_SEARCH; dx++) {
-            for (int dz = -TOWER_SEARCH; dz <= TOWER_SEARCH; dz++) {
-                int x = center.getX() + dx, z = center.getZ() + dz;
-                // o topo: pedra com ar em cima, perto da sua altura
-                for (int y = center.getY() + 16; y >= center.getY() - 24; y--) {
-                    BlockPos top = new BlockPos(x, y, z);
-                    if (!stoneLike(level.getBlockState(top)) || !level.getBlockState(top.above()).isAir()) continue;
-                    if (!level.getBiome(top).is(BiomeTags.IS_OCEAN)) break;
-                    // desce pela torre; ao lado dela precisa ter mar, começando logo abaixo do topo
-                    int yy = y, wet = 0, dry = 0;
-                    while (yy > level.getMinBuildHeight() && stoneLike(level.getBlockState(new BlockPos(x, yy, z)))) {
-                        BlockPos p = new BlockPos(x, yy, z);
-                        boolean side = level.getFluidState(p.north()).isSource() || level.getFluidState(p.south()).isSource()
-                                || level.getFluidState(p.east()).isSource() || level.getFluidState(p.west()).isSource();
-                        if (side) wet++;
-                        else if (wet == 0) dry++;
-                        yy--;
+        // um ponto de partida: pedra com água ao lado, perto de você
+        BlockPos seed = null;
+        search:
+        for (int r = 0; r <= TOWER_SEARCH; r++) {
+            for (int dx = -r; dx <= r; dx++) for (int dz = -r; dz <= r; dz++) {
+                if (Math.max(Math.abs(dx), Math.abs(dz)) != r) continue;
+                for (int dy = 8; dy >= -40; dy--) {
+                    BlockPos p = center.offset(dx, dy, dz);
+                    if (!stoneLike(level.getBlockState(p))) continue;
+                    if (!level.getBiome(p).is(BiomeTags.IS_OCEAN)) continue;
+                    for (net.minecraft.core.Direction dir : net.minecraft.core.Direction.Plane.HORIZONTAL) {
+                        if (water(level, p.relative(dir)) && !water(level, p.relative(dir).above())) { seed = p; break search; }
                     }
-                    // o topo fica no máximo 3 blocos acima d'água, e a base no leito do mar (não flutua)
-                    if (wet >= TOWER_MIN_WATER && dry <= 3 && !level.getFluidState(new BlockPos(x, yy, z)).isSource()) return top;
-                    break;
                 }
             }
         }
-        return null;
+        if (seed == null) return null;
+
+        // a torre: a pedra ligada ao ponto de partida (sem se espalhar pelo leito)
+        java.util.Set<BlockPos> tower = new java.util.HashSet<>();
+        java.util.ArrayDeque<BlockPos> queue = new java.util.ArrayDeque<>();
+        queue.add(seed);
+        tower.add(seed);
+        while (!queue.isEmpty() && tower.size() < TOWER_MAX_BLOCKS) {
+            BlockPos p = queue.poll();
+            for (net.minecraft.core.Direction dir : net.minecraft.core.Direction.values()) {
+                BlockPos n = p.relative(dir);
+                if (Math.abs(n.getX() - seed.getX()) > TOWER_RADIUS || Math.abs(n.getZ() - seed.getZ()) > TOWER_RADIUS) continue;
+                if (tower.contains(n) || !stoneLike(level.getBlockState(n))) continue;
+                tower.add(n);
+                queue.add(n);
+            }
+        }
+        int surface = seed.getY();
+        int top = tower.stream().mapToInt(BlockPos::getY).max().orElse(surface);
+        if (top < surface + TOWER_ABOVE_WATER) return null;
+
+        // de cima até o leito: cada andar maciço, com pedra suficiente; embaixo da água, até tocar o fundo
+        int stone = 0, other = 0;
+        boolean floor = false;
+        for (int y = top; y > level.getMinBuildHeight(); y--) {
+            final int yy = y;
+            java.util.List<BlockPos> layer = tower.stream().filter(p -> p.getY() == yy).toList();
+            if (layer.isEmpty()) break;
+            if (y <= top - 1 && layer.size() < TOWER_LAYER_MIN) return null;
+            if (hollow(level, layer, tower)) return null;
+            stone += layer.size();
+            other += decorations(level, layer, tower);
+            // o andar já está abaixo da água e nenhum lado dele dá para a água: chegou ao leito
+            if (y < surface && layer.stream().noneMatch(p -> net.minecraft.core.Direction.Plane.HORIZONTAL.stream().anyMatch(d -> water(level, p.relative(d))))) {
+                floor = true;
+                break;
+            }
+        }
+        if (!floor) return null;
+        if (stone < TOWER_STONE_SHARE * (stone + other)) return null;
+        return new BlockPos(seed.getX(), top, seed.getZ());
+    }
+
+    /** Um vão por dentro do andar: ar ou água cercados de pedra por todos os lados (o pilar tem que ser maciço) */
+    private static boolean hollow(ServerLevel level, java.util.List<BlockPos> layer, java.util.Set<BlockPos> tower) {
+        int minX = Integer.MAX_VALUE, maxX = Integer.MIN_VALUE, minZ = Integer.MAX_VALUE, maxZ = Integer.MIN_VALUE, y = layer.get(0).getY();
+        for (BlockPos p : layer) {
+            minX = Math.min(minX, p.getX()); maxX = Math.max(maxX, p.getX());
+            minZ = Math.min(minZ, p.getZ()); maxZ = Math.max(maxZ, p.getZ());
+        }
+        // tudo o que não é a torre e se alcança de fora da caixa é "fora"; o resto é miolo
+        java.util.Set<Long> outside = new java.util.HashSet<>();
+        java.util.ArrayDeque<int[]> queue = new java.util.ArrayDeque<>();
+        for (int x = minX - 1; x <= maxX + 1; x++) { queue.add(new int[]{x, minZ - 1}); queue.add(new int[]{x, maxZ + 1}); }
+        for (int z = minZ - 1; z <= maxZ + 1; z++) { queue.add(new int[]{minX - 1, z}); queue.add(new int[]{maxX + 1, z}); }
+        while (!queue.isEmpty()) {
+            int[] c = queue.poll();
+            if (c[0] < minX - 1 || c[0] > maxX + 1 || c[1] < minZ - 1 || c[1] > maxZ + 1) continue;
+            long key = ((long) c[0] << 32) ^ (c[1] & 0xffffffffL);
+            if (!outside.add(key) || tower.contains(new BlockPos(c[0], y, c[1]))) continue;
+            queue.add(new int[]{c[0] + 1, c[1]}); queue.add(new int[]{c[0] - 1, c[1]});
+            queue.add(new int[]{c[0], c[1] + 1}); queue.add(new int[]{c[0], c[1] - 1});
+        }
+        for (int x = minX; x <= maxX; x++) for (int z = minZ; z <= maxZ; z++) {
+            BlockPos p = new BlockPos(x, y, z);
+            long key = ((long) x << 32) ^ (z & 0xffffffffL);
+            if (tower.contains(p) || outside.contains(key)) continue;
+            BlockState state = level.getBlockState(p);
+            if (state.isAir() || !state.getFluidState().isEmpty()) return true;
+        }
+        return false;
+    }
+
+    /** Enfeites grudados no andar (qualquer bloco que não é pedra, nem ar, nem água) */
+    private static int decorations(ServerLevel level, java.util.List<BlockPos> layer, java.util.Set<BlockPos> tower) {
+        java.util.Set<BlockPos> seen = new java.util.HashSet<>();
+        for (BlockPos p : layer) {
+            for (net.minecraft.core.Direction dir : net.minecraft.core.Direction.Plane.HORIZONTAL) {
+                BlockPos n = p.relative(dir);
+                if (tower.contains(n) || !seen.add(n)) continue;
+                BlockState state = level.getBlockState(n);
+                if (!state.isAir() && state.getFluidState().isEmpty()) seen.add(n.immutable());
+                else seen.remove(n);
+            }
+        }
+        return seen.size();
     }
 
     private static boolean powerful(LivingEntity entity) {
