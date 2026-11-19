@@ -5451,7 +5451,7 @@
   "lotmcraft.ritual.error.3.1": "Sem violência, encontre e use brechas nas regras para fazer a ordem de uma região desmoronar por um tempo. A região não pode ser menor que uma vila.",
   "lotmcraft.ritual.error.3.2": "Uma colônia infeliz ou uma vila sem camas e sem trabalho já não tem ordem. Não fira ninguém por um dia.",
   "lotmcraft.ritual.error.2.1": "Tome a identidade de alguém com disfarces e enganos, sem poderes Beyonder, e conquiste a confiança das pessoas próximas dele.",
-  "lotmcraft.ritual.error.2.2": "Há mais de um jeito de vestir a vida de outra pessoa. Viva como ela sem que ninguém perceba.",
+  "lotmcraft.ritual.error.2.2": "Uma etiqueta com o nome de alguém abre a porta da vida dele. Viva entre os dele sem usar poderes.",
   "lotmcraft.ritual.error.1.1": "Mergulhe uma cidade em desordem temporal por pelo menos sete dias.",
   "lotmcraft.ritual.error.1.2": "Relógios em molduras confundem o tempo de uma cidade grande. Eles precisam ficar lá por uma semana, com você por perto.",
   "lotmcraft.error.dream_awake": "%s está acordado: não há sonho para entrar.",
@@ -5505,7 +5505,5 @@
   "ritual.lotmcraft.honorific.purifying_cartridges.2": "Chama que purifica os corrompidos e os mortos inquietos",
   "ritual.lotmcraft.honorific.purifying_cartridges.3": "Abençoa estas balas com o teu esplendor purificador.",
   "ritual.lotmcraft.night_armorers_notebook": "Caderno do Armeiro da Noite",
-  "ritual.lotmcraft.undead_hunters_manual": "Manual do Caçador de Zumbis",
-  "lotmcraft.error.identity_parasite": "Dentro de %s, você vive a vida dele. Não use outros poderes nem saia.",
-  "lotmcraft.error.identity_left": "Você saiu de %s: a identidade se desfez."
+  "ritual.lotmcraft.undead_hunters_manual": "Manual do Caçador de Zumbis"
 }

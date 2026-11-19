@@ -166,9 +166,6 @@ abrir baús e prédios, mexer nos colonos.
 - Sequência 2, Cavalo de Troia do Destino: clicar num colono, aldeão ou Beyonder Errante com uma etiqueta com o
   nome dele. Ele some e você fica no lugar dele (seu nome no chat vira o dele). Viver 6 dias entre os dele (dentro
   da colônia, ou a até 48 blocos de onde ele dormia) sem usar nenhum poder lá.
-  Outro jeito: parasitar qualquer criatura com o Parasitismo (Controlar ou Ocultar), em qualquer lugar, sem limite de
-  colônia, e ficar dentro dela por 6 dias. O Parasitismo não entrega o disfarce; qualquer outro poder, sim. Sair dela
-  (ou ela morrer) antes dos 6 dias desfaz a identidade e zera a contagem.
 - Sequência 1, Verme do Tempo: 12 relógios em molduras numa cidade: colônia com pelo menos 20 colonos ou vila comum
   com pelo menos 20 aldeões. O tempo da cidade se embaralha (moradores lentos ou rápidos ao acaso). Precisa durar 7 dias com você por perto; se faltar um
   relógio, recomeça.

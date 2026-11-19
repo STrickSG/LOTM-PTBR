@@ -5652,7 +5652,7 @@
   "lotmcraft.ritual.error.3.1": "Without violence, find and exploit loopholes in the rules to make the order of a region collapse for a while. The region cannot be smaller than a village.",
   "lotmcraft.ritual.error.3.2": "An unhappy colony, or a village without beds and work, has no order left. Hurt no one for a day.",
   "lotmcraft.ritual.error.2.1": "Assume someone else's identity through disguise and deceit, without Beyonder powers, and earn the trust of the people close to them.",
-  "lotmcraft.ritual.error.2.2": "There is more than one way to wear another person's life. Live as them without anyone noticing.",
+  "lotmcraft.ritual.error.2.2": "A name tag with someone's name opens the door to their life. Live among their people without using powers.",
   "lotmcraft.ritual.error.1.1": "Plunge a city into temporal disorder for at least seven days.",
   "lotmcraft.ritual.error.1.2": "Clocks in item frames confuse the time of a large city. They must stay there for a week, with you nearby.",
   "lotmcraft.error.dream_awake": "%s is awake: there is no dream to enter.",
@@ -5706,7 +5706,5 @@
   "ritual.lotmcraft.honorific.purifying_cartridges.2": "Flame that cleanses the corrupted and the restless dead",
   "ritual.lotmcraft.honorific.purifying_cartridges.3": "Bless these rounds with your purifying radiance.",
   "ritual.lotmcraft.night_armorers_notebook": "Night Armorer's Notebook",
-  "ritual.lotmcraft.undead_hunters_manual": "Zombie Hunter's Manual",
-  "lotmcraft.error.identity_parasite": "Inside %s, you live their life. Do not use other powers or leave.",
-  "lotmcraft.error.identity_left": "You left %s: the identity fell apart."
+  "ritual.lotmcraft.undead_hunters_manual": "Zombie Hunter's Manual"
 }

@@ -81,7 +81,7 @@ public final class ErrorRituals {
     private static final String DREAMS = "LotmErrorDreams", HOSTS = "LotmErrorHosts", HOSTS_OTHERS = "LotmErrorHostsOthers", LAST_VIOLENCE = "LotmErrorLastViolence",
             IDENTITY = "LotmErrorIdentity", IDENTITY_COLONY = "LotmErrorIdentityColony",
             IDENTITY_HOME = "LotmErrorIdentityHome", IDENTITY_DIMENSION = "LotmErrorIdentityDimension", IDENTITY_TICKS = "LotmErrorIdentityTicks",
-            IDENTITY_DONE = "LotmErrorIdentityDone", IDENTITY_HOST = "LotmErrorIdentityHost", DISORDER_KEY = "LotmErrorDisorderCity", DISORDER_SEEN = "LotmErrorDisorderSeen", DISORDER_NAME = "LotmErrorDisorderName", DISORDER_TICKS = "LotmErrorDisorderTicks",
+            IDENTITY_DONE = "LotmErrorIdentityDone", DISORDER_KEY = "LotmErrorDisorderCity", DISORDER_SEEN = "LotmErrorDisorderSeen", DISORDER_NAME = "LotmErrorDisorderName", DISORDER_TICKS = "LotmErrorDisorderTicks",
             DISORDER_DONE = "LotmErrorDisorderDone";
     private static final int COLOR = 0x9D6BFF, BAD = 0xFF7A7A;
 
@@ -376,7 +376,6 @@ public final class ErrorRituals {
         }
         CompoundTag tag = data(player);
         tag.putString(IDENTITY, name);
-        tag.remove(IDENTITY_HOST);
         IColony colony = target instanceof EntityCitizen citizen ? citizen.getCitizenData().getColony() : Colonists.colonyAt(target.level(), target.blockPosition());
         if (colony != null) {
             tag.putInt(IDENTITY_COLONY, colony.getID());
@@ -427,9 +426,7 @@ public final class ErrorRituals {
         dreamPowers(player, event.getAbility().getId());
         CompoundTag tag = data(player);
         if (!tag.contains(IDENTITY) || tag.getBoolean(IDENTITY_DONE)) return;
-        if (tag.hasUUID(IDENTITY_HOST)) {
-            if (event.getAbility().getId().equals("parasitation_ability")) return;
-        } else if (!amongTheirPeople(player, tag)) return;
+        if (!amongTheirPeople(player, tag)) return;
         String name = tag.getString(IDENTITY);
         dropIdentity(player);
         tell(player, Component.translatable("lotmcraft.error.identity_exposed", name).withColor(BAD));
@@ -443,32 +440,7 @@ public final class ErrorRituals {
         tag.remove(IDENTITY_DIMENSION);
         tag.remove(IDENTITY_TICKS);
         tag.remove(IDENTITY_DONE);
-        tag.remove(IDENTITY_HOST);
         player.refreshDisplayName();
-    }
-
-    /**
-     * Cavalo de Troia do Destino pelo Parasitismo: estar dentro de alguém é vestir a vida dele.
-     * Sair dele (ou ele morrer) antes de completar desfaz a identidade e zera a contagem.
-     */
-    private static void parasiteIdentity(ServerPlayer player, CompoundTag tag) {
-        LivingEntity host = de.jakob.lotm.beyonders.abilities.error.ParasitationAbility.getHostForEntity(player.serverLevel(), player);
-        if (host != null && host.isAlive() && host != player) {
-            if (tag.hasUUID(IDENTITY_HOST) && tag.getUUID(IDENTITY_HOST).equals(host.getUUID())) return;
-            if (tag.getBoolean(IDENTITY_DONE) && tag.hasUUID(IDENTITY_HOST)) return;
-            dropIdentity(player);
-            tag.putString(IDENTITY, nameOf(host));
-            tag.putUUID(IDENTITY_HOST, host.getUUID());
-            tag.putInt(IDENTITY_TICKS, 0);
-            player.refreshDisplayName();
-            tell(player, Component.translatable("lotmcraft.error.identity_parasite", nameOf(host)).withColor(COLOR));
-            return;
-        }
-        if (tag.hasUUID(IDENTITY_HOST) && !tag.getBoolean(IDENTITY_DONE)) {
-            String name = tag.getString(IDENTITY);
-            dropIdentity(player);
-            tell(player, Component.translatable("lotmcraft.error.identity_left", name).withColor(BAD));
-        }
     }
 
     public static boolean identityTrusted(ServerPlayer player) {
@@ -529,11 +501,9 @@ public final class ErrorRituals {
 
         // 2: depois de avançar (ou fora do Erro 3) a identidade emprestada fica para trás
         if (tag.contains(IDENTITY) && !preparing(player, 2)) dropIdentity(player);
-        // 2: parasitando alguém (qualquer criatura, em qualquer lugar: o Erro é uma falha, não segue regras)
-        if (preparing(player, 2)) parasiteIdentity(player, tag);
-        // 2: vivendo como o outro, dentro da colônia dele (com o Parasitismo, dentro dele)
+        // 2: vivendo como o outro, dentro da colônia dele
         if (tag.contains(IDENTITY) && !tag.getBoolean(IDENTITY_DONE)) {
-            if (tag.hasUUID(IDENTITY_HOST) || amongTheirPeople(player, tag)) {
+            if (amongTheirPeople(player, tag)) {
                 int ticks = tag.getInt(IDENTITY_TICKS) + 100;
                 tag.putInt(IDENTITY_TICKS, ticks);
                 if (ticks >= IDENTITY_TICKS_NEEDED) {
