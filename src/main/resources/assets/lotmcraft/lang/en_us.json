@@ -5662,7 +5662,7 @@
   "lotmcraft.error.host_offered": "%s offered all they have to sustain you (%s of %s).",
   "lotmcraft.error.host_lost": "You hurt %s: the offer was taken back.",
   "lotmcraft.error.identity_wrong_name": "The name tag must bear the name of %s.",
-  "lotmcraft.error.identity_taken": "You are now %s. Live among their people without using powers.",
+  "lotmcraft.error.identity_taken": "You are now %s. Put on their clothes and live among their people without using powers.",
   "lotmcraft.error.identity_progress": "Living as %s: %s%%",
   "lotmcraft.error.identity_done": "The people of %s trust you: the identity is yours.",
   "lotmcraft.error.identity_exposed": "You used a power: the identity of %s fell apart.",
@@ -5706,5 +5706,13 @@
   "ritual.lotmcraft.honorific.purifying_cartridges.2": "Flame that cleanses the corrupted and the restless dead",
   "ritual.lotmcraft.honorific.purifying_cartridges.3": "Bless these rounds with your purifying radiance.",
   "ritual.lotmcraft.night_armorers_notebook": "Night Armorer's Notebook",
-  "ritual.lotmcraft.undead_hunters_manual": "Zombie Hunter's Manual"
+  "ritual.lotmcraft.undead_hunters_manual": "Zombie Hunter's Manual",
+  "item.lotmcraft.disguise_clothes": "Clothes",
+  "item.lotmcraft.disguise_clothes.of": "%s's Clothes",
+  "item.lotmcraft.disguise_clothes.tooltip": "Use to put them on and look like whoever wore them; use again to take them off.",
+  "lotmcraft.error.identity_silent": "%s does not talk to anyone like this: it would expose you.",
+  "lotmcraft.error.identity_undressed": "Without %s's clothes, everyone saw who you are: the identity is lost.",
+  "lotmcraft.error.clothes_not_yours": "%s's clothes do not fit you.",
+  "lotmcraft.error.clothes_on": "You put on %s's clothes.",
+  "lotmcraft.error.clothes_off": "You took off %s's clothes."
 }

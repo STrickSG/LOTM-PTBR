@@ -163,9 +163,14 @@ abrir baús e prédios, mexer nos colonos.
 - Sequência 3, Mentor do Engano: sem ferir nenhuma criatura por 1 dia, derrubar a ordem de uma região e beber
   dentro dela: uma colônia com pelo menos 10 colonos e felicidade geral 3 ou menos, ou uma vila comum com pelo
   menos 10 aldeões em que quase todos (80%) ficaram sem cama e sem posto de trabalho.
-- Sequência 2, Cavalo de Troia do Destino: clicar num colono, aldeão ou Beyonder Errante com uma etiqueta com o
-  nome dele. Ele some e você fica no lugar dele (seu nome no chat vira o dele). Viver 6 dias entre os dele (dentro
-  da colônia, ou a até 48 blocos de onde ele dormia) sem usar nenhum poder lá.
+- Sequência 2, Cavalo de Troia do Destino: sem nenhum poder Beyonder. Renomear uma etiqueta na bigorna com o nome
+  exato de um colono, aldeão ou Beyonder Errante e clicar nele com ela. Ele sai de cena: o colono fica "viajando"
+  (continua na lista da colônia, com casa e emprego, só sem corpo); aldeão e Beyonder Errante ficam guardados. Você
+  recebe as **Roupas** dele: usar veste (você fica com a aparência dele, para todos), usar de novo tira. Vestido,
+  viva 6 dias entre os dele (dentro da colônia, ou a até 48 blocos de onde ele dormia) sem usar poderes. Enquanto
+  for ele, você não fala no chat, some da lista do Tab e as mensagens do servidor com o seu nome não aparecem.
+  Tirar as roupas (ou perdê-las), não vesti-las em 1 minuto ou usar um poder entre os dele estraga o ritual: ele
+  volta para a vida dele e é preciso começar de novo com outra pessoa. Ao avançar, ele também volta.
 - Sequência 1, Verme do Tempo: 12 relógios em molduras numa cidade: colônia com pelo menos 20 colonos ou vila comum
   com pelo menos 20 aldeões. O tempo da cidade se embaralha (moradores lentos ou rápidos ao acaso). Precisa durar 7 dias com você por perto; se faltar um
   relógio, recomeça.

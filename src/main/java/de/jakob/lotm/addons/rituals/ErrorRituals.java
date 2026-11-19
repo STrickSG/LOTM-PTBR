@@ -81,7 +81,8 @@ public final class ErrorRituals {
     private static final String DREAMS = "LotmErrorDreams", HOSTS = "LotmErrorHosts", HOSTS_OTHERS = "LotmErrorHostsOthers", LAST_VIOLENCE = "LotmErrorLastViolence",
             IDENTITY = "LotmErrorIdentity", IDENTITY_COLONY = "LotmErrorIdentityColony",
             IDENTITY_HOME = "LotmErrorIdentityHome", IDENTITY_DIMENSION = "LotmErrorIdentityDimension", IDENTITY_TICKS = "LotmErrorIdentityTicks",
-            IDENTITY_DONE = "LotmErrorIdentityDone", DISORDER_KEY = "LotmErrorDisorderCity", DISORDER_SEEN = "LotmErrorDisorderSeen", DISORDER_NAME = "LotmErrorDisorderName", DISORDER_TICKS = "LotmErrorDisorderTicks",
+            IDENTITY_DONE = "LotmErrorIdentityDone", IDENTITY_CITIZEN = "LotmErrorIdentityCitizen", IDENTITY_BODY = "LotmErrorIdentityBody",
+            IDENTITY_BODY_DIMENSION = "LotmErrorIdentityBodyDimension", IDENTITY_WORN = "LotmErrorIdentityWorn", IDENTITY_DEADLINE = "LotmErrorIdentityDeadline", DISORDER_KEY = "LotmErrorDisorderCity", DISORDER_SEEN = "LotmErrorDisorderSeen", DISORDER_NAME = "LotmErrorDisorderName", DISORDER_TICKS = "LotmErrorDisorderTicks",
             DISORDER_DONE = "LotmErrorDisorderDone";
     private static final int COLOR = 0x9D6BFF, BAD = 0xFF7A7A;
 
@@ -395,10 +396,33 @@ public final class ErrorRituals {
         ServerLevel level = player.serverLevel();
         level.sendParticles(ParticleTypes.LARGE_SMOKE, target.getX(), target.getY() + 1, target.getZ(), 30, .3, .6, .3, .02);
         level.playSound(null, target.blockPosition(), SoundEvents.ILLUSIONER_MIRROR_MOVE, SoundSource.PLAYERS, 1f, 1f);
-        // ele some do mundo; você fica no lugar dele
-        if (target instanceof EntityCitizen citizen) citizen.getCitizenData().getColony().getCitizenManager().removeCivilian(citizen.getCitizenData());
+        // a pessoa sai de cena sem sumir da vida: o colono "viaja" (continua na colônia, com casa e emprego, sem corpo);
+        // aldeão ou Beyonder Errante fica guardado para voltar quando a identidade acabar
+        CompoundTag look = ErrorDisguise.lookOf(target);
+        tag.remove(IDENTITY_CITIZEN);
+        tag.remove(IDENTITY_BODY);
+        if (target instanceof EntityCitizen citizen && citizen.getCitizenData() != null) {
+            com.minecolonies.api.colony.ICitizenData citizenData = citizen.getCitizenData();
+            BlockPos back = citizenData.getHomeBuilding() != null ? citizenData.getHomeBuilding().getPosition() : citizen.blockPosition();
+            citizenData.getColony().getTravellingManager().startTravellingTo(citizenData.getId(), back, Integer.MAX_VALUE / 2);
+            tag.putInt(IDENTITY_CITIZEN, citizenData.getId());
+            tag.putInt(IDENTITY_COLONY, citizenData.getColony().getID());
+        } else {
+            CompoundTag body = new CompoundTag();
+            if (target.save(body)) {
+                tag.put(IDENTITY_BODY, body);
+                tag.putString(IDENTITY_BODY_DIMENSION, target.level().dimension().location().toString());
+            }
+        }
         if (target.isAlive()) target.discard();
+        // você fica com as roupas dele: vestidas, você tem a aparência dele (disfarce, não poder).
+        // Vão direto para você (colonos recolhem o que fica no chão); só caem se o inventário estiver cheio
+        ItemStack clothes = de.jakob.lotm.item.custom.DisguiseClothesItem.create(de.jakob.lotm.item.ModItems.DISGUISE_CLOTHES.get(), name, player.getUUID(), look);
+        if (!player.getInventory().add(clothes)) player.drop(clothes, false);
+        tag.putBoolean(IDENTITY_WORN, false);
+        tag.putLong(IDENTITY_DEADLINE, now(player) + 20 * 60);
         player.refreshDisplayName();
+        ErrorDisguise.hideFromTab(player);
         tell(player, Component.translatable("lotmcraft.error.identity_taken", name).withColor(COLOR));
     }
 
@@ -434,6 +458,14 @@ public final class ErrorRituals {
 
     private static void dropIdentity(ServerPlayer player) {
         CompoundTag tag = data(player);
+        if (tag.contains(IDENTITY)) ErrorDisguise.restore(player, tag.getString(IDENTITY),
+                tag.contains(IDENTITY_CITIZEN) ? tag.getInt(IDENTITY_COLONY) : -1, tag.contains(IDENTITY_CITIZEN) ? tag.getInt(IDENTITY_CITIZEN) : -1,
+                tag.getCompound(IDENTITY_BODY), tag.getString(IDENTITY_BODY_DIMENSION));
+        tag.remove(IDENTITY_CITIZEN);
+        tag.remove(IDENTITY_BODY);
+        tag.remove(IDENTITY_BODY_DIMENSION);
+        tag.remove(IDENTITY_WORN);
+        tag.remove(IDENTITY_DEADLINE);
         tag.remove(IDENTITY);
         tag.remove(IDENTITY_COLONY);
         tag.remove(IDENTITY_HOME);
@@ -441,6 +473,15 @@ public final class ErrorRituals {
         tag.remove(IDENTITY_TICKS);
         tag.remove(IDENTITY_DONE);
         player.refreshDisplayName();
+    }
+
+    /** Está vivendo a vida de outro agora (para o chat, o Tab e as mensagens do servidor) */
+    public static boolean disguised(Player player) {
+        return data(player).contains(IDENTITY);
+    }
+
+    public static String disguiseName(Player player) {
+        return data(player).getString(IDENTITY);
     }
 
     public static boolean identityTrusted(ServerPlayer player) {
@@ -501,9 +542,20 @@ public final class ErrorRituals {
 
         // 2: depois de avançar (ou fora do Erro 3) a identidade emprestada fica para trás
         if (tag.contains(IDENTITY) && !preparing(player, 2)) dropIdentity(player);
-        // 2: vivendo como o outro, dentro da colônia dele
+        // 2: as roupas dele precisam estar vestidas; tirá-las (ou não vesti-las a tempo) estraga o ritual
+        if (tag.contains(IDENTITY)) {
+            boolean wearing = ErrorDisguise.wearing(player, tag.getString(IDENTITY));
+            if (wearing) tag.putBoolean(IDENTITY_WORN, true);
+            else if (tag.getBoolean(IDENTITY_WORN) || now(player) > tag.getLong(IDENTITY_DEADLINE)) {
+                String name = tag.getString(IDENTITY);
+                dropIdentity(player);
+                tell(player, Component.translatable("lotmcraft.error.identity_undressed", name).withColor(BAD));
+                return;
+            }
+        }
+        // 2: vivendo como o outro, dentro da colônia dele, vestido como ele
         if (tag.contains(IDENTITY) && !tag.getBoolean(IDENTITY_DONE)) {
-            if (amongTheirPeople(player, tag)) {
+            if (tag.getBoolean(IDENTITY_WORN) && amongTheirPeople(player, tag)) {
                 int ticks = tag.getInt(IDENTITY_TICKS) + 100;
                 tag.putInt(IDENTITY_TICKS, ticks);
                 if (ticks >= IDENTITY_TICKS_NEEDED) {

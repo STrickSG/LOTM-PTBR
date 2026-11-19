@@ -5461,7 +5461,7 @@
   "lotmcraft.error.host_offered": "%s ofereceu tudo o que tem para sustentar você (%s de %s).",
   "lotmcraft.error.host_lost": "Você feriu %s: a oferta foi retirada.",
   "lotmcraft.error.identity_wrong_name": "A etiqueta precisa ter o nome de %s.",
-  "lotmcraft.error.identity_taken": "Agora você é %s. Viva entre os dele sem usar poderes.",
+  "lotmcraft.error.identity_taken": "Agora você é %s. Vista as roupas dele e viva entre os dele sem usar poderes.",
   "lotmcraft.error.identity_progress": "Vivendo como %s: %s%%",
   "lotmcraft.error.identity_done": "Os de %s confiam em você: a identidade é sua.",
   "lotmcraft.error.identity_exposed": "Você usou um poder: a identidade de %s caiu.",
@@ -5505,5 +5505,13 @@
   "ritual.lotmcraft.honorific.purifying_cartridges.2": "Chama que purifica os corrompidos e os mortos inquietos",
   "ritual.lotmcraft.honorific.purifying_cartridges.3": "Abençoa estas balas com o teu esplendor purificador.",
   "ritual.lotmcraft.night_armorers_notebook": "Caderno do Armeiro da Noite",
-  "ritual.lotmcraft.undead_hunters_manual": "Manual do Caçador de Zumbis"
+  "ritual.lotmcraft.undead_hunters_manual": "Manual do Caçador de Zumbis",
+  "item.lotmcraft.disguise_clothes": "Roupas",
+  "item.lotmcraft.disguise_clothes.of": "Roupas de %s",
+  "item.lotmcraft.disguise_clothes.tooltip": "Use para vestir e ficar com a aparência de quem as usava; use de novo para tirar.",
+  "lotmcraft.error.identity_silent": "%s não fala com ninguém assim: isso exporia você.",
+  "lotmcraft.error.identity_undressed": "Sem as roupas de %s, todos viram quem você é: a identidade se perdeu.",
+  "lotmcraft.error.clothes_not_yours": "As roupas de %s não servem em você.",
+  "lotmcraft.error.clothes_on": "Você vestiu as roupas de %s.",
+  "lotmcraft.error.clothes_off": "Você tirou as roupas de %s."
 }

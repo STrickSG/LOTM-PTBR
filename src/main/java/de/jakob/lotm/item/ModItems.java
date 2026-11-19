@@ -144,6 +144,9 @@ public class ModItems {
                     .rarity(Rarity.RARE)
             )
     );
+    // Roupas de quem teve a vida tomada pelo Erro (Cavalo de Troia do Destino): disfarce, sem poderes
+    public static final Supplier<Item> DISGUISE_CLOTHES = ITEMS.register("disguise_clothes",
+            () -> new de.jakob.lotm.item.custom.DisguiseClothesItem(new Item.Properties().stacksTo(1)));
     public static final Supplier<Item> MOON_ITEM = ITEMS.register("moon",
             () -> new MoonItem(new Item.Properties()
                     .stacksTo(1)
