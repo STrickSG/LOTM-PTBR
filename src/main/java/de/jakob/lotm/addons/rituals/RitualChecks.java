@@ -78,6 +78,12 @@ public final class RitualChecks {
         if ("demoness".equals(pathway) && sequence == 3) return DemonessRituals.mirrorDone(player);
         if ("demoness".equals(pathway) && sequence == 2) return DemonessRituals.disasterActive(player);
         if ("demoness".equals(pathway) && sequence == 1) return DemonessRituals.apocalypseNow(player);
+        // Tirano: Cantor do Oceano, Enterrador do Cataclismo, Rei do Mar, Calamidade e Deus do Trovão
+        if ("tyrant".equals(pathway) && sequence == 5) return TyrantRituals.inSeaBelly(player);
+        if ("tyrant".equals(pathway) && sequence == 4) return TyrantRituals.amidstCataclysm(player);
+        if ("tyrant".equals(pathway) && sequence == 3) return TyrantRituals.seaSubdued(player);
+        if ("tyrant".equals(pathway) && sequence == 2) return TyrantRituals.calamityHalted(player);
+        if ("tyrant".equals(pathway) && sequence == 1) return TyrantRituals.angelsDisrupted(player) >= TyrantRituals.ANGELS_NEEDED;
         return false;
     }
 

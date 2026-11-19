@@ -157,7 +157,27 @@ public final class AdvancementRituals {
             // Demônia, Sequência 1 (Demônia do Apocalipse): fim de uma era, apocalipse em curso ou queda de uma divindade
             new Ritual("demoness", 1, () -> List.of(
                     new ItemStack(Items.DRAGON_HEAD),
-                    new ItemStack(PotionItemHandler.DEMONESS_OF_APOCALYPSE_POTION.get())))
+                    new ItemStack(PotionItemHandler.DEMONESS_OF_APOCALYPSE_POTION.get()))),
+            // Tirano, Sequência 5 (Cantor do Oceano): beber na barriga de um gigante do mar
+            new Ritual("tyrant", 5, () -> List.of(
+                    new ItemStack(Items.NAUTILUS_SHELL),
+                    new ItemStack(PotionItemHandler.OCEAN_SONGSTER_POTION.get()))),
+            // Tirano, Sequência 4 (Enterrador do Cataclismo): causar terremoto e tsunami e beber no meio deles
+            new Ritual("tyrant", 4, () -> List.of(
+                    new ItemStack(Items.WATER_BUCKET),
+                    new ItemStack(PotionItemHandler.CATACLYSMIC_INTERRER_POTION.get()))),
+            // Tirano, Sequência 3 (Rei do Mar): uma torre de pedra do fundo do mar e todo o mar em volta subjugado
+            new Ritual("tyrant", 3, () -> List.of(
+                    new ItemStack(Items.STONE_BRICKS, 16),
+                    new ItemStack(PotionItemHandler.SEA_KING_POTION.get()))),
+            // Tirano, Sequência 2 (Calamidade): causar sozinho um desastre e pará-lo diante dos que sobraram
+            new Ritual("tyrant", 2, () -> List.of(
+                    new ItemStack(Items.SKELETON_SKULL),
+                    new ItemStack(PotionItemHandler.CALAMITY_POTION.get()))),
+            // Tirano, Sequência 1 (Deus do Trovão): com raios, atrapalhar a ascensão de três Anjos
+            new Ritual("tyrant", 1, () -> List.of(
+                    new ItemStack(Items.LIGHTNING_ROD),
+                    new ItemStack(PotionItemHandler.THUNDER_GOD_POTION.get())))
     );
 
     public static List<Ritual> all() {

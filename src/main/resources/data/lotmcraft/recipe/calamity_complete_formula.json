@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    {
+      "item": "lotmcraft:calamity"
+    },
+    {
+      "item": "lotmcraft:calamity_ritual"
+    }
+  ],
+  "result": {
+    "id": "lotmcraft:calamity_complete_formula",
+    "count": 1
+  }
+}

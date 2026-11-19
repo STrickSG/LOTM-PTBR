@@ -246,6 +246,31 @@ Demônia.
     Apocalipse a até 128 blocos;
   - queda de uma divindade: até 1 dia depois da morte de um ser de Sequência 1 ou 0 que você feriu.
 
+## Rituais de avanço do Tirano
+
+Mesmas regras dos outros: pergaminho, Fórmula Completa ou Carta do Tirano na Sequência certa. A Carta pede as
+receitas das Sequências 9 a 6 e as Fórmulas Completas das Sequências 5 a 1. Nenhum depende de um poder do próprio
+Tirano.
+
+- Sequência 5, Cantor do Oceano: beber "na barriga" do mar: dentro de um Monumento Oceânico, ou numa câmara fechada
+  no fundo de um oceano (sem ver o céu, a pelo menos 8 blocos abaixo do nível do mar e com pelo menos 8 blocos de
+  água por cima).
+- Sequência 4, Enterrador do Cataclismo: nos últimos 60 segundos, a até 64 blocos, causar um terremoto e um tsunami
+  e beber no meio deles. Terremoto: um poder de terremoto (de qualquer Caminho) ou 5 explosões suas (TNT, poderes,
+  Artefatos Selados...). Tsunami: um poder de tsunami, dilúvio ou maré, ou 5 explosões suas debaixo d'água.
+- Sequência 3, Rei do Mar: uma torre de pedra (pedra, pedregulho, tijolos de pedra, ardósia, prismarinho...) num
+  oceano, do fundo do mar até o nível do mar, com pelo menos 8 blocos dentro d'água, a até 24 blocos de você. Em
+  volta dela (96 blocos), nenhuma criatura forte viva (guardiões, afogados, Beyonders que não são colonos) e pelo
+  menos 3 vencidas por você ali nos últimos 3 dias (um Guardião Ancião ou um Beyonder de Sequência 4 ou menor vale
+  pelos 3).
+- Sequência 2, Calamidade: atingir 20 pessoas (colonos, aldeões, jogadores ou Beyonders Errantes) com um desastre
+  seu em até 10 minutos: raios, fogo, explosões, congelamento, afogamento, blocos caindo ou poderes de qualquer
+  Caminho. Depois o desastre para: 1 minuto sem ninguém mais atingido. Então, em até 5 minutos, beber diante de pelo
+  menos 10 delas (a até 48 blocos) e sem nenhum outro jogador a até 64 blocos.
+- Sequência 1, Deus do Trovão: com raios seus (poderes de qualquer Caminho, Artefatos Selados, tridente com
+  Canalização), atingir 3 Anjos de Sequência 2 que querem subir: Beyonders Errantes ou criaturas de Sequência 2, ou
+  jogadores de Sequência 2 no meio do avanço. Um de Sequência 1 (ou menor) vale pelos 3.
+
 ## Ritual da mesa: Passagem para a Névoa da História
 
 Ritual novo da mesa de ritual, exclusivo do Caminho do Vidente, a partir da Sequência 4. O livro

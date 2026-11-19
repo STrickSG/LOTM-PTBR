@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    {
+      "item": "lotmcraft:sea_king"
+    },
+    {
+      "item": "lotmcraft:sea_king_ritual"
+    }
+  ],
+  "result": {
+    "id": "lotmcraft:sea_king_complete_formula",
+    "count": 1
+  }
+}

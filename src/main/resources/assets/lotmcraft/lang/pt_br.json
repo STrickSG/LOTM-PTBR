@@ -5538,5 +5538,19 @@
   "lotmcraft.demoness.disaster_progress": "Mortes em volta: %s de %s.",
   "lotmcraft.demoness.deity_fell": "Um ser divino caiu, e você teve parte nisso.",
   "entity.lotmcraft.mirror_self": "Eu do Espelho",
-  "entity.lotmcraft.mirror_self.of": "Reflexo de %s"
+  "entity.lotmcraft.mirror_self.of": "Reflexo de %s",
+  "lotmcraft.ritual.tyrant.5.1": "Beba a poção na barriga de um Obninsk.",
+  "lotmcraft.ritual.tyrant.5.2": "No fundo do mar, dentro de algo que te engula: a barriga de um colosso marinho, um templo submerso, uma câmara fechada sob as ondas.",
+  "lotmcraft.ritual.tyrant.4.1": "Provoque um terremoto e um tsunami e beba a poção no meio deles, até o fim da ascensão.",
+  "lotmcraft.ritual.tyrant.4.2": "A terra e o mar precisam se revoltar por sua causa, com poderes ou com força bruta. O que explode no fundo do mar levanta ondas.",
+  "lotmcraft.ritual.tyrant.3.1": "Escolha uma região do mar, erga com o seu próprio poder uma torre de pedra do fundo do mar até a superfície e subjugue todas as criaturas poderosas num raio de trezentas milhas náuticas.",
+  "lotmcraft.ritual.tyrant.3.2": "Pedra sobre pedra, do leito do mar até acima das ondas. Nada forte pode continuar de pé em volta dela.",
+  "lotmcraft.ritual.tyrant.2.1": "Só com a sua própria força, provoque um desastre natural que atinja pelo menos um milhão de pessoas. No auge do medo e do desespero delas, apareça e detenha o desastre, também só com o seu poder.",
+  "lotmcraft.ritual.tyrant.2.2": "Raios, fogo, explosões, tempestades ou poderes: muita gente precisa sofrer. Quando tudo se acalmar, beba diante delas, sem mais ninguém como você por perto.",
+  "lotmcraft.ritual.tyrant.1.1": "Encontre e use o raio para interromper o ritual de avanço de pelo menos três Anjos de Sequência 2 rumo à Sequência 1.",
+  "lotmcraft.ritual.tyrant.1.2": "Todo Anjo deseja subir. Qualquer raio que venha de você serve: poderes, artefatos, um tridente que chama o trovão.",
+  "lotmcraft.tyrant.calamity_progress": "O desastre atinge %s de %s pessoas.",
+  "lotmcraft.tyrant.calamity_peak": "%s pessoas no auge do medo. Agora detenha o desastre.",
+  "lotmcraft.tyrant.angel_disrupted": "Seu raio interrompeu a ascensão de um Anjo: %s de %s.",
+  "lotmcraft.tyrant.sea_kill": "Uma criatura do mar subjugada: %s de %s."
 }

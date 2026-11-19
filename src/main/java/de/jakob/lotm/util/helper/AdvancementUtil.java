@@ -41,6 +41,11 @@ public class AdvancementUtil {
 
     private static final HashMap<UUID, BeyonderPotion> activeAdvancements = new HashMap<>();
 
+    /** Está no meio de um avanço agora (bebeu a poção e a ascensão ainda não acabou) */
+    public static boolean isAdvancing(UUID entity) {
+        return activeAdvancements.containsKey(entity);
+    }
+
     private static final List<HashSet<String>> PATHWAY_DOMAINS = List.of(
             new HashSet<>(Set.of("fool", "error", "door")),
             new HashSet<>(Set.of("red_priest", "demoness")),

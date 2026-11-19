@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    {
+      "item": "lotmcraft:cataclysmic_interrer"
+    },
+    {
+      "item": "lotmcraft:cataclysmic_interrer_ritual"
+    }
+  ],
+  "result": {
+    "id": "lotmcraft:cataclysmic_interrer_complete_formula",
+    "count": 1
+  }
+}
