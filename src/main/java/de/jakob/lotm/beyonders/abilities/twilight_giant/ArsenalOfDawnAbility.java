@@ -428,7 +428,8 @@ public class ArsenalOfDawnAbility extends SelectableAbility {
         upkeep(player, WEAPONS, UPKEEP_COST);
     }
 
-    @SubscribeEvent
+    // Desativada: a varredura rodava a cada 2s para todos os jogadores e reenviava o inventário inteiro,
+    // o que apagava o item no cursor do criativo. Sem @SubscribeEvent ela não roda mais.
     public static void onServerTick(ServerTickEvent.Post event) {
         MinecraftServer server = event.getServer();
         if (server.getTickCount() % SWEEP_INTERVAL != 0) return;
