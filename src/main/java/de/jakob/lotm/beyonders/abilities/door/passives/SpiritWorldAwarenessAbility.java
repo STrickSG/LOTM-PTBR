@@ -43,15 +43,11 @@ public class SpiritWorldAwarenessAbility extends PassiveAbility {
         if(entity.level().dimension().equals(ModDimensions.SPIRIT_WORLD_DIMENSION_KEY)) {
             Vec3 posInSpiritWorld = entity.position();
             Vec3 overworldCoords = SpiritWorldHandler.getCoordinatesInOverworld(posInSpiritWorld, serverLevel);
-            AbilityUtil.sendActionBar(entity, Component.translatable("ability.lotmcraft.spirit_world_awareness.overworld_coordinates").append(": ").append(
-                    Component.literal(
-                            "(" +
-                                    (int) overworldCoords.x + ", " +
-                                    (int) overworldCoords.y + ", " +
-                                    (int) overworldCoords.z +
-                                    ")"
-                    )
-            ).withColor(0xdb11ed));
+            // num canto da tela (não na barra de ação, para não esconder as outras mensagens)
+            if (entity instanceof net.minecraft.server.level.ServerPlayer player && player.tickCount % 5 == 0) {
+                de.jakob.lotm.network.PacketHandler.sendToPlayer(player, new SpiritCoordinatesPacket(
+                        (int) overworldCoords.x, (int) overworldCoords.y, (int) overworldCoords.z));
+            }
         }
     }
 }

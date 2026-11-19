@@ -35,6 +35,12 @@ public class PacketHandler {
 
     private static void registerClientPackets(PayloadRegistrar registrar) {
         registrar.playToClient(
+                de.jakob.lotm.beyonders.abilities.door.passives.SpiritCoordinatesPacket.TYPE,
+                de.jakob.lotm.beyonders.abilities.door.passives.SpiritCoordinatesPacket.STREAM_CODEC,
+                de.jakob.lotm.beyonders.abilities.door.passives.SpiritCoordinatesPacket::handle
+        );
+
+        registrar.playToClient(
                 de.jakob.lotm.addons.colonies.MarionetteSkinPacket.TYPE,
                 de.jakob.lotm.addons.colonies.MarionetteSkinPacket.STREAM_CODEC,
                 de.jakob.lotm.addons.colonies.MarionetteSkinPacket::handle
