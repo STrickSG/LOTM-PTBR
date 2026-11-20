@@ -46,9 +46,10 @@ public class SpectatingOverlayRenderer {
             if (entity != null) {
                 int viewerSeq = ClientBeyonderCache.getSequence(mc.player.getUUID());
                 java.util.List<String> extra = VisionInfo.spectating(entity, viewerSeq);
-                int width = VisionInfo.width(mc.font, extra, screenWidth / 3);
+                java.util.List<String> sizing = new java.util.ArrayList<>(extra); sizing.add(entity.getName().getString());
+                int width = VisionInfo.width(mc.font, sizing, 130); // compacto, no canto como o do Espectador
                 int height = 42 + extra.size() * VisionInfo.LINE_HEIGHT;
-                int x = screenWidth / 2 - width / 2;
+                int x = screenWidth - width - 10;
                 int y = 12;
 
                 renderPanel(guiGraphics, x, y, width, height, 0xFFf7cd83);
@@ -67,7 +68,7 @@ public class SpectatingOverlayRenderer {
                         entity.getHealth(), entity.getMaxHealth(),
                         0xFFFF0000, 0xFFe43fa3);
 
-                displayStats(guiGraphics, entity, screenWidth, viewerSeq);
+                displayStats(guiGraphics, entity, screenWidth, viewerSeq, y + height + 6);
             }
         }
     }
@@ -115,7 +116,7 @@ public class SpectatingOverlayRenderer {
             Attributes.MOVEMENT_SPEED.value(), Attributes.ATTACK_DAMAGE.value(), Attributes.JUMP_STRENGTH.value(), Attributes.ARMOR.value()
     };
 
-    private static void displayStats(GuiGraphics guiGraphics, LivingEntity entity, int screenWidth, int viewerSeq) {
+    private static void displayStats(GuiGraphics guiGraphics, LivingEntity entity, int screenWidth, int viewerSeq, int panelY) {
         Collection<AttributeInstance> attributes = BuiltInRegistries.ATTRIBUTE.holders()
                 .map(entity::getAttribute)
                 .filter(Objects::nonNull)
@@ -146,7 +147,6 @@ public class SpectatingOverlayRenderer {
         int panelWidth = maxTextWidth + padding * 2;
         int panelHeight = parameterCount * lineSpacing + padding * 2 - 5;
         int panelX = screenWidth - panelWidth - 10;
-        int panelY = 12;
 
         renderPanel(guiGraphics, panelX, panelY, panelWidth, panelHeight, 0xFFf7cd83);
 

@@ -57,9 +57,10 @@ public class SpiritVisionOverlayRenderer {
 
         // Quanto mais alta a sequência, mais linhas de informação
         List<String> extra = VisionInfo.spirit(entity, ClientBeyonderCache.getSequence(mc.player.getUUID()));
-        int width = VisionInfo.width(mc.font, extra, screenWidth / 3);
+        java.util.List<String> sizing = new java.util.ArrayList<>(extra); sizing.add(entity.getName().getString() + " (00)");
+        int width = VisionInfo.width(mc.font, sizing, 130); // compacto, no canto como o do Espectador
         int height = 42 + extra.size() * VisionInfo.LINE_HEIGHT;
-        int x = screenWidth / 2 - width / 2;
+        int x = screenWidth - width - 10;
         int y = 12;
 
         renderPanel(guiGraphics, x, y, width, height);
