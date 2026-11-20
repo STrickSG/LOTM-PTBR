@@ -94,6 +94,11 @@ public final class VisionInfo {
 
     public static final int LINE_HEIGHT = 11;
 
+    /** Onde os painéis das visões ficam: à esquerda, embaixo da barra de espiritualidade e das coordenadas da Porta (y 66) */
+    public static final int PANEL_X = 6;
+    public static final int PANEL_Y = 80;
+    public static final float PANEL_SCALE = 0.8f;
+
     /** Largura do painel: a de sempre, ou mais se alguma linha não couber */
     public static int width(Font font, List<String> lines, int base) {
         int w = base;

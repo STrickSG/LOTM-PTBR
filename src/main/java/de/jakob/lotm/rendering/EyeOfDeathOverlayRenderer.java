@@ -52,11 +52,15 @@ public class EyeOfDeathOverlayRenderer {
 
         java.util.List<String> extra = VisionInfo.death(entity, de.jakob.lotm.util.ClientBeyonderCache.getSequence(mc.player.getUUID()));
         java.util.List<String> sizing = new java.util.ArrayList<>(extra); sizing.add(entity.getName().getString());
-        int width = VisionInfo.width(mc.font, sizing, 130); // compacto, no canto como o do Espectador
+        int width = VisionInfo.width(mc.font, sizing, 120); // compacto, no canto como o do Espectador
         int height = 42 + extra.size() * VisionInfo.LINE_HEIGHT;
-        int x = screenWidth - width - 10;
-        int y = 12;
+        int x = 0;
+        int y = 0;
 
+        // no canto esquerdo, embaixo da barra de espiritualidade e das coordenadas da Porta, um pouco menor
+        guiGraphics.pose().pushPose();
+        guiGraphics.pose().translate(VisionInfo.PANEL_X, VisionInfo.PANEL_Y, 0);
+        guiGraphics.pose().scale(VisionInfo.PANEL_SCALE, VisionInfo.PANEL_SCALE, 1);
         renderPanel(guiGraphics, x, y, width, height, 0xFF6897cc);
 
         String name = entity.getName().getString();
@@ -72,6 +76,7 @@ public class EyeOfDeathOverlayRenderer {
         renderHealthBar(guiGraphics, mc.font, barX, barY, barWidth, barHeight,
                 entity.getHealth(), entity.getMaxHealth(),
                 0xFF6897cc, 0xFF95bfed);
+        guiGraphics.pose().popPose();
     }
 
     private static void renderPanel(GuiGraphics guiGraphics, int x, int y, int width, int height, int accentColor) {

@@ -47,11 +47,15 @@ public class SpectatingOverlayRenderer {
                 int viewerSeq = ClientBeyonderCache.getSequence(mc.player.getUUID());
                 java.util.List<String> extra = VisionInfo.spectating(entity, viewerSeq);
                 java.util.List<String> sizing = new java.util.ArrayList<>(extra); sizing.add(entity.getName().getString());
-                int width = VisionInfo.width(mc.font, sizing, 130); // compacto, no canto como o do Espectador
+                int width = VisionInfo.width(mc.font, sizing, 120); // compacto, no canto como o do Espectador
                 int height = 42 + extra.size() * VisionInfo.LINE_HEIGHT;
-                int x = screenWidth - width - 10;
-                int y = 12;
+                int x = 0;
+                int y = 0;
 
+                // no canto esquerdo, embaixo da barra de espiritualidade e das coordenadas da Porta, um pouco menor
+                guiGraphics.pose().pushPose();
+                guiGraphics.pose().translate(VisionInfo.PANEL_X, VisionInfo.PANEL_Y, 0);
+                guiGraphics.pose().scale(VisionInfo.PANEL_SCALE, VisionInfo.PANEL_SCALE, 1);
                 renderPanel(guiGraphics, x, y, width, height, 0xFFf7cd83);
 
                 String name = entity.getName().getString();
@@ -68,7 +72,8 @@ public class SpectatingOverlayRenderer {
                         entity.getHealth(), entity.getMaxHealth(),
                         0xFFFF0000, 0xFFe43fa3);
 
-                displayStats(guiGraphics, entity, screenWidth, viewerSeq, y + height + 6);
+                displayStats(guiGraphics, entity, screenWidth, viewerSeq, y + height + 4);
+                guiGraphics.pose().popPose();
             }
         }
     }
@@ -146,7 +151,7 @@ public class SpectatingOverlayRenderer {
 
         int panelWidth = maxTextWidth + padding * 2;
         int panelHeight = parameterCount * lineSpacing + padding * 2 - 5;
-        int panelX = screenWidth - panelWidth - 10;
+        int panelX = 0; // embaixo do painel principal
 
         renderPanel(guiGraphics, panelX, panelY, panelWidth, panelHeight, 0xFFf7cd83);
 
