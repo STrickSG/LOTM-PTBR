@@ -24,9 +24,10 @@ import org.joml.Matrix4f;
 import java.util.Random;
 
 /**
- * Mundo Astral: o céu é o Cosmos visto por trás da Barreira Astral. Milhares de estrelas, a faixa da galáxia,
- * nebulosas, os astros ocupados pelos Deuses Exteriores (o carmesim que pulsa, o que olha de volta), o sol em
- * pinceladas pálidas e, por cima de tudo, a película da Barreira, rachada, vazando luz.
+ * Mundo Astral: o céu é o Cosmos visto por trás da Barreira Astral, mas aqui tudo é conceito, e o conceito chega
+ * filtrado, sem a corrupção do Cosmos: como desenhos de criança a giz de cera, sem rostos. Estrelas de giz, a faixa
+ * da galáxia e nebulosas em borrões pastel, os Deuses Exteriores rabiscados, enormes, colados na Barreira, o Sol
+ * Ardente Eterno do lado de dentro e, por cima de tudo, as rachaduras da Barreira riscadas a giz.
  */
 @EventBusSubscriber(modid = LOTMCraft.MOD_ID, value = Dist.CLIENT)
 public final class AstralWorldEffects {
@@ -66,7 +67,7 @@ public final class AstralWorldEffects {
             new SkyImage(tex("sun"), 140f, 35f, 0f, 20f, 1f, true, 0.04f, 0f),
     };
 
-    private static final int STARS = 3500;
+    private static final int STARS = 1600;
     private static final float[][] STAR = new float[STARS][];
 
     static {
@@ -122,13 +123,14 @@ public final class AstralWorldEffects {
             RenderSystem.depthMask(false);
             RenderSystem.enableBlend();
 
-            // estrelas, piscando devagar
+            // estrelas: asteriscos de giz, piscando devagar
             RenderSystem.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE);
-            RenderSystem.setShader(GameRenderer::getPositionColorShader);
-            BufferBuilder stars = Tesselator.getInstance().begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_COLOR);
+            RenderSystem.setShader(GameRenderer::getPositionTexColorShader);
+            RenderSystem.setShaderTexture(0, tex("star"));
+            BufferBuilder stars = Tesselator.getInstance().begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX_COLOR);
             for (float[] s : STAR) {
-                float twinkle = 0.65f + 0.35f * Mth.sin(time * 0.05f + s[7]);
-                star(stars, modelViewMatrix, s[0] * 100, s[1] * 100, s[2] * 100, s[3], s[4], s[5], s[6], twinkle);
+                float twinkle = 0.55f + 0.45f * Mth.sin(time * 0.05f + s[7]);
+                star(stars, modelViewMatrix, s[0] * 100, s[1] * 100, s[2] * 100, s[3] * 2.4f, s[4], s[5], s[6], twinkle);
             }
             BufferUploader.drawWithShader(stars.buildOrThrow());
 
@@ -138,7 +140,7 @@ public final class AstralWorldEffects {
 
             // a Barreira Astral: uma película quase invisível em volta de tudo, rachada, vazando luz
             RenderSystem.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE);
-            float shimmer = 0.22f + 0.06f * Mth.sin(time * 0.02f);
+            float shimmer = 0.5f + 0.1f * Mth.sin(time * 0.02f);
             for (int face = 0; face < 6; face++) {
                 Matrix4f m = new Matrix4f(modelViewMatrix);
                 switch (face) {
@@ -184,10 +186,10 @@ public final class AstralWorldEffects {
             float ul = Mth.sqrt(ux * ux + uy * uy + uz * uz);
             ux = ux / ul * size; uy = uy / ul * size; uz = uz / ul * size;
             float vx = dy * uz - dz * uy, vy = dz * ux - dx * uz, vz = dx * uy - dy * ux;
-            b.addVertex(m, x - ux - vx, y - uy - vy, z - uz - vz).setColor(r, g, bl, a);
-            b.addVertex(m, x + ux - vx, y + uy - vy, z + uz - vz).setColor(r, g, bl, a);
-            b.addVertex(m, x + ux + vx, y + uy + vy, z + uz + vz).setColor(r, g, bl, a);
-            b.addVertex(m, x - ux + vx, y - uy + vy, z - uz + vz).setColor(r, g, bl, a);
+            b.addVertex(m, x - ux - vx, y - uy - vy, z - uz - vz).setUv(0, 0).setColor(r, g, bl, a);
+            b.addVertex(m, x + ux - vx, y + uy - vy, z + uz - vz).setUv(1, 0).setColor(r, g, bl, a);
+            b.addVertex(m, x + ux + vx, y + uy + vy, z + uz + vz).setUv(1, 1).setColor(r, g, bl, a);
+            b.addVertex(m, x - ux + vx, y - uy + vy, z - uz + vz).setUv(0, 1).setColor(r, g, bl, a);
         }
 
         private static void quad(Matrix4f m, ResourceLocation texture, float w, float h, float d, float u0, float v0, float u1, float v1,
