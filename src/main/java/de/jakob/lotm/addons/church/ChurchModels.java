@@ -11,6 +11,10 @@ public final class ChurchModels {
     private ChurchModels() {}
 
     /** Pasta da planta -> Caminho */
+    /** O pacote de estilos com as igrejas e a planta padrão (Igreja do Sol, nível 1) */
+    public static final String PACK = "LOTM";
+    public static final String DEFAULT_PATH = "sol/church1.blueprint";
+
     private static final Map<String, String> FOLDERS = Map.of(
             "sol", "sun"
     );
