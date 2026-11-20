@@ -1,6 +1,7 @@
 package de.jakob.lotm.beyonders.abilities.common;
 
 import de.jakob.lotm.LOTMCraft;
+import de.jakob.lotm.addons.astral.AstralWorld;
 import de.jakob.lotm.beyonders.abilities.core.SelectableAbility;
 import de.jakob.lotm.beyonders.artifacts.SealedArtifactData;
 import de.jakob.lotm.data.ModDataComponents;
@@ -14,6 +15,7 @@ import de.jakob.lotm.util.BeyonderData;
 import de.jakob.lotm.util.helper.ParticleUtil;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
@@ -66,7 +68,8 @@ public class AngelAuthorityAbility extends SelectableAbility {
     protected String[] getAllAbilityNames() {
         return new String[]{"ability.lotmcraft.angel_authority.spirit_world_passage",
                 "ability.lotmcraft.angel_authority.artifact_shattering",
-                "ability.lotmcraft.angel_authority.flight"
+                "ability.lotmcraft.angel_authority.flight",
+                "ability.lotmcraft.angel_authority.astral_world_passage"
         };
     }
 
@@ -83,6 +86,10 @@ public class AngelAuthorityAbility extends SelectableAbility {
 
                 case 2:
                     flight(player, (ServerLevel) level);
+                    break;
+
+                case 3:
+                    this.astralWorldPassage(player);
                     break;
 
             }
@@ -169,5 +176,51 @@ public class AngelAuthorityAbility extends SelectableAbility {
         }
         ParticleUtil.spawnParticles((ServerLevel)player.level(), ParticleTypes.END_ROD, player.position(), 200, 2.0, 0.001);
         targetLevel.playSound(null, player.getX(), player.getY(), player.getZ(), SoundEvents.ENDERMAN_TELEPORT, SoundSource.PLAYERS, 1.0f, 1.0f);
+    }
+
+    private static final String ASTRAL_ORIGIN = "lotmcraft_astral_origin";
+
+    /** Entra no Mundo Astral guardando de onde veio; usada lá dentro, volta para esse lugar */
+    public void astralWorldPassage(ServerPlayer player) {
+        CompoundTag data = player.getPersistentData();
+        ServerLevel targetLevel;
+        BlockPos pos;
+
+        if (!player.level().dimension().equals(AstralWorld.DIMENSION)) {
+            targetLevel = player.server.getLevel(AstralWorld.DIMENSION);
+            if (targetLevel == null) return;
+            CompoundTag origin = new CompoundTag();
+            origin.putString("dim", player.level().dimension().location().toString());
+            origin.putDouble("x", player.getX());
+            origin.putDouble("y", player.getY());
+            origin.putDouble("z", player.getZ());
+            data.put(ASTRAL_ORIGIN, origin);
+            pos = BlockPos.containing(player.getX(), 100, player.getZ());
+            if (targetLevel.getBlockState(pos.below()).isAir()) {
+                targetLevel.setBlockAndUpdate(pos.below(), Blocks.END_STONE.defaultBlockState());
+            }
+        } else {
+            CompoundTag origin = data.getCompound(ASTRAL_ORIGIN);
+            ServerLevel back = null;
+            ResourceLocation dim = ResourceLocation.tryParse(origin.getString("dim"));
+            if (dim != null) back = player.server.getLevel(ResourceKey.create(Registries.DIMENSION, dim));
+            if (back == null || !origin.contains("x")) {
+                targetLevel = player.server.overworld();
+                pos = targetLevel.getSharedSpawnPos();
+            } else {
+                targetLevel = back;
+                pos = BlockPos.containing(origin.getDouble("x"), origin.getDouble("y"), origin.getDouble("z"));
+            }
+            while (!targetLevel.getBlockState(pos).isAir()) {
+                pos = pos.above();
+            }
+            if (targetLevel.getBlockState(pos.below()).isAir()) {
+                targetLevel.setBlockAndUpdate(pos.below(), Blocks.STONE.defaultBlockState());
+            }
+            data.remove(ASTRAL_ORIGIN);
+        }
+        player.teleportTo(targetLevel, pos.getX() + 0.5, pos.getY(), pos.getZ() + 0.5, player.getYRot(), player.getXRot());
+        ParticleUtil.spawnParticles((ServerLevel) player.level(), ModParticles.STAR.get(), player.position(), 200, 2.0, 0.001);
+        targetLevel.playSound(null, player.getX(), player.getY(), player.getZ(), SoundEvents.AMETHYST_BLOCK_RESONATE, SoundSource.PLAYERS, 1.0f, 0.8f);
     }
 }
