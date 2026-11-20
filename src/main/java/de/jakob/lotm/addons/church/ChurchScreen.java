@@ -22,7 +22,9 @@ public class ChurchScreen extends Screen {
     private static final int TITLE = 0x4A2E05, TEXT = 0x3B2A12, DIM = 0x7A6440, GOLD = 0xA87A12, BAD = 0x9A2A1A;
 
     private final ChurchBuilding.View view;
-    private int left, top, tab;
+    private int left, top, tab, scroll;
+    private ChurchMembersPacket members;
+    private static final int ROWS = 8;
     private EditBox nameBox;
     private boolean sect;
 
@@ -40,7 +42,15 @@ public class ChurchScreen extends Screen {
     private String shown = "";
 
     private String state() {
-        return view.god + "|" + view.churchName + "|" + view.getBuildingLevel();
+        return view.god + "|" + view.churchName + "|" + view.getBuildingLevel() + "|" + (members == null ? "" : members.members().size() + ":" + members.flags() + ":" + members.members().hashCode());
+    }
+
+    public void setMembers(ChurchMembersPacket packet) {
+        if (packet.temple().equals(view.getPosition())) members = packet;
+    }
+
+    private void requestMembers() {
+        PacketDistributor.sendToServer(new ChurchActionPacket(view.getPosition(), "members", "", ""));
     }
 
     @Override
@@ -63,8 +73,29 @@ public class ChurchScreen extends Screen {
         left = (width - W) / 2;
         top = (height - H) / 2;
         clearWidgets();
-        addRenderableWidget(tabButton(0, "lotmcraft.church.tab.church", left + 22));
-        addRenderableWidget(tabButton(1, "lotmcraft.church.tab.anchors", left + W / 2 + 2));
+        int tw = (W - 44) / 3;
+        addRenderableWidget(tabButton(0, "lotmcraft.church.tab.church", left + 22, tw));
+        addRenderableWidget(tabButton(1, "lotmcraft.church.tab.members", left + 22 + tw, tw));
+        addRenderableWidget(tabButton(2, "lotmcraft.church.tab.anchors", left + 22 + tw * 2, tw));
+        if (tab != 0 && members == null && consecrated()) requestMembers();
+        if (tab == 1 && members != null) {
+            if (members.canEdit()) {
+                Button preach = Button.builder(Component.translatable(members.preachedToday() ? "lotmcraft.church.preach.done_today" : "lotmcraft.church.preach"),
+                        b -> PacketDistributor.sendToServer(new ChurchActionPacket(view.getPosition(), "preach", "", ""))).bounds(left + 30, top + 64, W - 60, 16).build();
+                preach.active = !members.preachedToday();
+                addRenderableWidget(preach);
+            }
+            var list = members.members();
+            scroll = Math.max(0, Math.min(scroll, Math.max(0, list.size() - ROWS)));
+            for (int i = 0; i < ROWS && scroll + i < list.size(); i++) {
+                var m = list.get(scroll + i);
+                int y = top + 86 + i * 14;
+                if (members.canEdit()) {
+                    addRenderableWidget(Button.builder(Component.literal("<"), b -> cycle(m, -1)).bounds(left + W - 50, y - 2, 11, 12).build());
+                    addRenderableWidget(Button.builder(Component.literal(">"), b -> cycle(m, 1)).bounds(left + W - 37, y - 2, 11, 12).build());
+                }
+            }
+        }
 
         if (tab == 0) {
             if (!consecrated() || isGod()) {
@@ -92,8 +123,25 @@ public class ChurchScreen extends Screen {
         return Component.translatable(sect ? "lotmcraft.church.kind.sect" : "lotmcraft.church.kind.church");
     }
 
-    private Button tabButton(int index, String key, int x) {
-        Button button = Button.builder(Component.translatable(key), b -> { tab = index; init(); }).bounds(x, top + 40, W / 2 - 24, 16).build();
+    private void cycle(ChurchMembersPacket.Member member, int dir) {
+        var roles = ChurchRoles.of(view.kind);
+        int i = Math.max(0, roles.indexOf(member.role()));
+        String next = roles.get(Math.floorMod(i + dir, roles.size()));
+        PacketDistributor.sendToServer(new ChurchActionPacket(view.getPosition(), "role", member.id().toString(), next));
+    }
+
+    @Override
+    public boolean mouseScrolled(double mouseX, double mouseY, double scrollX, double scrollY) {
+        if (tab == 1 && members != null) {
+            scroll = Math.max(0, scroll - (int) Math.signum(scrollY));
+            init();
+            return true;
+        }
+        return super.mouseScrolled(mouseX, mouseY, scrollX, scrollY);
+    }
+
+    private Button tabButton(int index, String key, int x, int w) {
+        Button button = Button.builder(Component.translatable(key), b -> { tab = index; scroll = 0; init(); }).bounds(x, top + 40, w, 16).build();
         button.active = tab != index;
         return button;
     }
@@ -142,13 +190,54 @@ public class ChurchScreen extends Screen {
                     y += 11;
                 }
             }
-        } else {
-            for (var l : font.split(Component.translatable("lotmcraft.church.anchors_soon"), W - 50)) {
+        } else if (!consecrated()) {
+            for (var l : font.split(Component.translatable("lotmcraft.church.no_god_yet"), W - 50)) {
                 g.drawString(font, l, left + 25, y, TEXT, false);
                 y += 11;
             }
+        } else if (members == null) {
+            g.drawCenteredString(font, Component.translatable("lotmcraft.church.loading"), left + W / 2, y, DIM);
+        } else if (tab == 1) {
+            var list = members.members();
+            if (list.isEmpty()) {
+                int ny = top + 90;
+                for (var l : font.split(Component.translatable("lotmcraft.church.members.none"), W - 50)) {
+                    g.drawString(font, l, left + 25, ny, TEXT, false);
+                    ny += 11;
+                }
+            }
+            for (int i = 0; i < ROWS && scroll + i < list.size(); i++) {
+                var m = list.get(scroll + i);
+                int ry = top + 86 + i * 14;
+                Component role = Component.translatable("lotmcraft.church.role." + (Churches.SECT.equals(view.kind) && "believer".equals(m.role()) ? "member" : m.role()));
+                int roleW = (int) (font.width(role) * 0.8f);
+                small(g, Component.literal(m.name()), left + 24, ry, 0.85f, TEXT, W - 82 - roleW);
+                small(g, role, left + W - 54 - roleW, ry + 1, 0.8f, "believer".equals(m.role()) ? DIM : GOLD, roleW + 2);
+            }
+            if (list.size() > ROWS) g.drawCenteredString(font, Component.literal((scroll + 1) + "-" + Math.min(list.size(), scroll + ROWS) + " / " + list.size()), left + W / 2, top + 86 + ROWS * 14, DIM);
+        } else {
+            line(g, Component.translatable("lotmcraft.church.anchors.total", members.total()), y);
+            line(g, Component.translatable("lotmcraft.church.anchors.floor", String.format("%.1f", members.floorPercent() / 10f)), y + 12);
+            int yy = y + 30;
+            g.drawString(font, Component.translatable("lotmcraft.church.anchors.by_colony"), left + 25, yy, GOLD, false);
+            yy += 12;
+            for (String c : members.colonies()) {
+                if (yy > top + H - 44) break;
+                small(g, Component.literal("• " + c), left + 30, yy, 0.9f, TEXT, W - 60);
+                yy += 11;
+            }
         }
         super.render(g, mouseX, mouseY, partialTick);
+    }
+
+    /** Texto pequeno, encolhido para caber na largura */
+    private void small(GuiGraphics g, Component text, int x, int y, float scale, int color, int maxW) {
+        float sc = Math.min(scale, maxW / (float) Math.max(1, font.width(text)));
+        g.pose().pushPose();
+        g.pose().translate(x, y, 0);
+        g.pose().scale(sc, sc, 1f);
+        g.drawString(font, text, 0, 0, color, false);
+        g.pose().popPose();
     }
 
     private void line(GuiGraphics g, Component text, int y) {

@@ -110,37 +110,78 @@ public final class Believers {
         }
     }
 
-    // Clique direito num colono com o Registro Sagrado: ele vira seu fiel (antes que a tela do colono abra)
+    // Clique direito num colono com o Registro Sagrado: a fé não se impõe. O colono só entra numa Igreja por vontade
+    // própria (ver ChurchConversion); o Registro só diz de quem ele é fiel, se for.
     @SubscribeEvent
     public static void onInteract(PlayerInteractEvent.EntityInteract event) {
         if (!event.getItemStack().is(ModItems.SACRED_REGISTER.get()) || !Colonists.isAnyCitizen(event.getTarget())) return;
         event.setCanceled(true);
         event.setCancellationResult(InteractionResult.sidedSuccess(event.getLevel().isClientSide));
-        if (!(event.getEntity() instanceof ServerPlayer player) || !canGather(player)) return;
-        Entity colonist = event.getTarget();
-        ICitizenData citizen = Colonists.data(colonist);
-        if (citizen == null) return; // visitante da taverna: ainda não mora na colônia
+        if (!(event.getEntity() instanceof ServerPlayer player)) return;
+        ICitizenData citizen = Colonists.data(event.getTarget());
+        if (citizen == null) return;
+        UUID god = data(player.server).godOf(citizen.getUUID());
+        if (god == null) player.displayClientMessage(Component.translatable("lotmcraft.believers.free_will").withColor(COLOR), true);
+        else player.displayClientMessage(Component.translatable(god.equals(player.getUUID()) ? "lotmcraft.believers.already_yours" : "lotmcraft.believers.other_god").withColor(COLOR), true);
+    }
 
-        Data data = data(player.server);
+    /** O colono entra, por vontade própria, na Igreja deste Deus. Falha se já for de alguém ou se foi ferido por ele. */
+    public static boolean join(MinecraftServer server, UUID god, String godName, ICitizenData citizen) {
+        Data data = data(server);
         UUID id = citizen.getUUID();
-        UUID god = data.godOf(id);
-        if (god != null) {
-            player.displayClientMessage(Component.translatable(god.equals(player.getUUID()) ? "lotmcraft.believers.already_yours" : "lotmcraft.believers.other_god").withColor(COLOR), true);
-            return;
-        }
-        if (data.wronged(id).contains(player.getUUID())) {
-            colonist.playSound(SoundEvents.VILLAGER_NO, 1f, 1f);
-            player.displayClientMessage(Component.translatable("lotmcraft.believers.wronged").withColor(0xFF7A7A), true);
-            return;
-        }
+        if (data.godOf(id) != null || data.wronged(id).contains(god)) return false;
+        data.add(god, id);
+        String old = citizen.getName();
+        data.names.put(id, old);
+        data.setDirty();
+        retitle(data, citizen, godName);
+        return true;
+    }
 
-        data.add(player.getUUID(), id);
-        giveTitle(data, citizen, colonist, player);
-        ServerLevel level = player.serverLevel();
-        level.sendParticles(ParticleTypes.END_ROD, colonist.getX(), colonist.getY(1.1), colonist.getZ(), 20, 0.3, 0.5, 0.3, 0.04);
-        level.sendParticles(ParticleTypes.HAPPY_VILLAGER, colonist.getX(), colonist.getY(1.0), colonist.getZ(), 8, 0.4, 0.4, 0.4, 0);
-        colonist.playSound(SoundEvents.VILLAGER_CELEBRATE, 1f, 1f);
-        countMessage(player, "lotmcraft.believers.converted", COLOR);
+    public static boolean isWronged(MinecraftServer server, UUID citizen, UUID god) {
+        return data(server).wronged(citizen).contains(god);
+    }
+
+    /** De quem o colono (pela identidade fixa) é fiel, ou null */
+    public static UUID godOfCitizen(MinecraftServer server, UUID citizen) {
+        return data(server).godOf(citizen);
+    }
+
+    /** O nome do colono sem o título de fé */
+    public static String originalName(MinecraftServer server, ICitizenData citizen) {
+        return data(server).names.getOrDefault(citizen.getUUID(), citizen.getName());
+    }
+
+    public static Set<UUID> members(MinecraftServer server, UUID god) {
+        return data(server).of(god);
+    }
+
+    /** O cargo do fiel na Igreja ("believer" = fiel comum) */
+    public static String roleOf(MinecraftServer server, UUID citizen) {
+        return data(server).roles.getOrDefault(citizen, ROLE_BELIEVER);
+    }
+
+    public static final String ROLE_BELIEVER = "believer";
+
+    public static void setRole(MinecraftServer server, UUID god, String godName, ICitizenData citizen, String role) {
+        Data data = data(server);
+        if (!god.equals(data.godOf(citizen.getUUID()))) return;
+        if (ROLE_BELIEVER.equals(role)) data.roles.remove(citizen.getUUID());
+        else data.roles.put(citizen.getUUID(), role);
+        data.setDirty();
+        retitle(data, citizen, godName);
+    }
+
+    /** O título depois do nome: "Fiel de X", ou o cargo ("Bispo de X") */
+    private static void retitle(Data data, ICitizenData citizen, String godName) {
+        String old = data.names.getOrDefault(citizen.getUUID(), citizen.getName());
+        String role = data.roles.getOrDefault(citizen.getUUID(), ROLE_BELIEVER);
+        String title = ROLE_BELIEVER.equals(role)
+                ? Component.translatable("lotmcraft.believers.title", godName).getString()
+                : Component.translatable("lotmcraft.church.role_title", Component.translatable("lotmcraft.church.role." + role), godName).getString();
+        String titled = old + " (" + title + ")";
+        citizen.setName(titled);
+        citizen.getEntity().ifPresent(entity -> entity.setCustomName(Component.literal(titled)));
     }
 
     // Ferir um colono: ele perde a fé em você (se era seu fiel) e nunca mais aceita você
@@ -210,15 +251,6 @@ public final class Believers {
         data.setDirty();
     }
 
-    // título "Fiel de [jogador]" depois do nome do colono; o nome original volta se a fé acabar
-    private static void giveTitle(Data data, ICitizenData citizen, Entity colonist, ServerPlayer player) {
-        String old = citizen.getName();
-        data.names.put(citizen.getUUID(), old);
-        data.setDirty();
-        String title = Component.translatable("lotmcraft.believers.title", player.getName().getString()).getString();
-        colonist.setCustomName(Component.literal(old + " (" + title + ")"));
-    }
-
     private static Data data(MinecraftServer server) {
         return server.overworld().getDataStorage().computeIfAbsent(new SavedData.Factory<>(Data::new, Data::load, null), "lotmcraft_believers_colonists");
     }
@@ -228,6 +260,7 @@ public final class Believers {
         private final Map<UUID, Set<UUID>> believers = new HashMap<>();
         private final Map<UUID, Set<UUID>> wronged = new HashMap<>();
         private final Map<UUID, String> names = new HashMap<>();
+        private final Map<UUID, String> roles = new HashMap<>();
 
         Set<UUID> of(UUID god) {
             return believers.getOrDefault(god, Set.of());
@@ -256,11 +289,13 @@ public final class Believers {
         void remove(UUID god, UUID citizen) {
             Set<UUID> set = believers.get(god);
             if (set != null && set.remove(citizen)) setDirty();
+            if (roles.remove(citizen) != null) setDirty();
         }
 
         void removeEverywhere(UUID citizen) {
             believers.values().forEach(set -> set.remove(citizen));
             wronged.remove(citizen);
+            roles.remove(citizen);
         }
 
         /** Tira os fiéis que não existem mais (colônia apagada, colono que foi embora) */
@@ -269,6 +304,7 @@ public final class Believers {
             for (Set<UUID> set : believers.values()) changed |= set.retainAll(existing);
             changed |= names.keySet().retainAll(existing);
             changed |= wronged.keySet().retainAll(existing);
+            changed |= roles.keySet().retainAll(existing);
             if (changed) setDirty();
         }
 
@@ -280,6 +316,8 @@ public final class Believers {
             for (String citizen : wronged.getAllKeys()) data.wronged.put(UUID.fromString(citizen), uuids(wronged.getList(citizen, Tag.TAG_INT_ARRAY)));
             CompoundTag names = tag.getCompound("Names");
             for (String citizen : names.getAllKeys()) data.names.put(UUID.fromString(citizen), names.getString(citizen));
+            CompoundTag roles = tag.getCompound("Roles");
+            for (String citizen : roles.getAllKeys()) data.roles.put(UUID.fromString(citizen), roles.getString(citizen));
             return data;
         }
 
@@ -306,6 +344,9 @@ public final class Believers {
             CompoundTag namesTag = new CompoundTag();
             names.forEach((citizen, name) -> namesTag.putString(citizen.toString(), name));
             tag.put("Names", namesTag);
+            CompoundTag rolesTag = new CompoundTag();
+            roles.forEach((citizen, role) -> rolesTag.putString(citizen.toString(), role));
+            tag.put("Roles", rolesTag);
             return tag;
         }
     }

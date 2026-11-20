@@ -13,6 +13,10 @@ public final class ChurchClient {
         Minecraft.getInstance().setScreen(new ChurchScreen(view));
     }
 
+    public static void members(ChurchMembersPacket packet) {
+        if (Minecraft.getInstance().screen instanceof ChurchScreen screen) screen.setMembers(packet);
+    }
+
     public static void openAt(BlockPos temple) {
         Minecraft mc = Minecraft.getInstance();
         if (mc.level == null) return;

@@ -35,6 +35,12 @@ public class PacketHandler {
 
     private static void registerClientPackets(PayloadRegistrar registrar) {
         registrar.playToClient(
+                de.jakob.lotm.addons.church.ChurchMembersPacket.TYPE,
+                de.jakob.lotm.addons.church.ChurchMembersPacket.STREAM_CODEC,
+                de.jakob.lotm.addons.church.ChurchMembersPacket::handle
+        );
+
+        registrar.playToClient(
                 de.jakob.lotm.addons.church.OpenChurchPacket.TYPE,
                 de.jakob.lotm.addons.church.OpenChurchPacket.STREAM_CODEC,
                 de.jakob.lotm.addons.church.OpenChurchPacket::handle

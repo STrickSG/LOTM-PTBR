@@ -19,6 +19,8 @@ import java.util.UUID;
 public class ChurchBuilding extends AbstractBuilding {
     public static final String SCHEMATIC = "church";
     private UUID god;
+    /** O dia (do mundo) da última pregação do Deus neste templo: uma por dia */
+    private long lastPreachDay = -1;
 
     public ChurchBuilding(IColony colony, BlockPos pos) {
         super(colony, pos);
@@ -38,6 +40,15 @@ public class ChurchBuilding extends AbstractBuilding {
         return god;
     }
 
+    public long getLastPreachDay() {
+        return lastPreachDay;
+    }
+
+    public void setLastPreachDay(long day) {
+        lastPreachDay = day;
+        markDirty();
+    }
+
     public void setGod(UUID god) {
         this.god = god;
         markDirty();
@@ -47,12 +58,14 @@ public class ChurchBuilding extends AbstractBuilding {
     public void deserializeNBT(HolderLookup.Provider provider, CompoundTag tag) {
         super.deserializeNBT(provider, tag);
         god = tag.hasUUID("lotmGod") ? tag.getUUID("lotmGod") : null;
+        lastPreachDay = tag.contains("lotmPreach") ? tag.getLong("lotmPreach") : -1;
     }
 
     @Override
     public CompoundTag serializeNBT(HolderLookup.Provider provider) {
         CompoundTag tag = super.serializeNBT(provider);
         if (god != null) tag.putUUID("lotmGod", god);
+        tag.putLong("lotmPreach", lastPreachDay);
         return tag;
     }
 

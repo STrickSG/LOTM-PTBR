@@ -4,6 +4,8 @@ import com.minecolonies.api.colony.IColony;
 import com.minecolonies.api.colony.IColonyManager;
 import de.jakob.lotm.LOTMCraft;
 import de.jakob.lotm.util.BeyonderData;
+import de.jakob.lotm.addons.rituals.Believers;
+import java.util.UUID;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleTypes;
@@ -80,8 +82,80 @@ public record ChurchActionPacket(BlockPos temple, String action, String name, St
                 Churches.temples(player.server, player.getUUID()).forEach(ChurchBuilding::markDirty);
                 say(player, Component.translatable("lotmcraft.church.renamed", name), 0xFFE29A);
             }
+            case "preach" -> preach(player, colony, temple);
+            case "members" -> sendMembers(player, colony, temple);
+            case "role" -> setRole(player, colony, temple, packet.name(), packet.kind());
             default -> { }
         }
+    }
+
+    /** A pregação: uma vez por dia em cada templo, o Deus prega e quem está perto tem o triplo de chance de crer */
+    private static void preach(ServerPlayer player, IColony colony, ChurchBuilding temple) {
+        if (!player.getUUID().equals(temple.getGod())) return;
+        long day = player.server.overworld().getDayTime() / 24000L;
+        if (temple.getLastPreachDay() == day) {
+            say(player, Component.translatable("lotmcraft.church.preach.already"), 0xFF7A7A);
+            return;
+        }
+        temple.setLastPreachDay(day);
+        int converted = ChurchConversion.dailyRoll(player.server, colony, 3.0, player, 24);
+        player.serverLevel().sendParticles(ParticleTypes.END_ROD, player.getX(), player.getY(1.2), player.getZ(), 30, 1.2, 0.6, 1.2, 0.02);
+        player.serverLevel().playSound(null, player.blockPosition(), SoundEvents.BELL_BLOCK, SoundSource.PLAYERS, 1.5f, 0.8f);
+        say(player, Component.translatable("lotmcraft.church.preach.done", converted), 0xFFE29A);
+        sendMembers(player, colony, temple);
+    }
+
+    static void sendMembers(ServerPlayer player, IColony colony, ChurchBuilding temple) {
+        UUID god = temple.getGod();
+        var members = new java.util.ArrayList<ChurchMembersPacket.Member>();
+        var colonies = new java.util.ArrayList<String>();
+        int total = 0, floor = 0;
+        boolean preached = false;
+        if (god != null) {
+            var all = Believers.members(player.server, god);
+            total = all.size();
+            for (var citizen : colony.getCitizenManager().getCitizens()) {
+                if (all.contains(citizen.getUUID()))
+                    members.add(new ChurchMembersPacket.Member(citizen.getUUID(), Believers.originalName(player.server, citizen), Believers.roleOf(player.server, citizen.getUUID())));
+            }
+            for (var other : IColonyManager.getInstance().getAllColonies()) {
+                int n = 0;
+                for (var citizen : other.getCitizenManager().getCitizens()) if (all.contains(citizen.getUUID())) n++;
+                if (n > 0) colonies.add(other.getName() + ": " + n);
+            }
+            ServerPlayer godPlayer = player.server.getPlayerList().getPlayer(god);
+            if (godPlayer != null) floor = Math.round(Believers.anchorFloor(godPlayer) * 1000);
+            preached = temple.getLastPreachDay() == player.server.overworld().getDayTime() / 24000L;
+        }
+        members.sort(java.util.Comparator.comparingInt((ChurchMembersPacket.Member m) -> -ChurchRoles.of(Churches.CHURCH).indexOf(m.role())).thenComparing(ChurchMembersPacket.Member::name));
+        de.jakob.lotm.network.PacketHandler.sendToPlayer(player, new ChurchMembersPacket(temple.getPosition(), members, total, floor, colonies,
+                player.getUUID().equals(god), preached));
+    }
+
+    /** O Deus dá um cargo a um fiel desta colônia (respeitando o limite do cargo) */
+    private static void setRole(ServerPlayer player, IColony colony, ChurchBuilding temple, String citizenId, String role) {
+        UUID god = temple.getGod();
+        if (god == null || !player.getUUID().equals(god)) return;
+        Churches.Info info = Churches.get(player.server).info(god);
+        if (info == null || !ChurchRoles.of(info.kind()).contains(role)) return;
+        UUID id;
+        try { id = UUID.fromString(citizenId); } catch (IllegalArgumentException e) { return; }
+        var citizen = colony.getCitizenManager().getCitizens().stream().filter(c -> c.getUUID().equals(id)).findFirst().orElse(null);
+        if (citizen == null || !god.equals(Believers.godOfCitizen(player.server, id))) return;
+        int limit = ChurchRoles.limit(role);
+        if (limit != Integer.MAX_VALUE) {
+            long holders;
+            if (limit < 0) holders = colony.getCitizenManager().getCitizens().stream()
+                    .filter(c -> !c.getUUID().equals(id) && god.equals(Believers.godOfCitizen(player.server, c.getUUID())) && role.equals(Believers.roleOf(player.server, c.getUUID()))).count();
+            else holders = Believers.members(player.server, god).stream().filter(m -> !m.equals(id) && role.equals(Believers.roleOf(player.server, m))).count();
+            if (holders >= Math.abs(limit)) {
+                say(player, Component.translatable("lotmcraft.church.role.full", Component.translatable("lotmcraft.church.role." + role)), 0xFF7A7A);
+                sendMembers(player, colony, temple);
+                return;
+            }
+        }
+        Believers.setRole(player.server, god, Churches.godName(player.server, god), citizen, role);
+        sendMembers(player, colony, temple);
     }
 
     private static void say(ServerPlayer player, Component text, int color) {
