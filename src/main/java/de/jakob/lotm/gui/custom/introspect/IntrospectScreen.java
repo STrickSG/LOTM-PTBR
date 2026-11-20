@@ -135,14 +135,16 @@ public class IntrospectScreen extends AbstractContainerScreen<IntrospectMenu> {
     private static final int DIV1_Y = 81;
     private static final int DIGEST_LABEL_Y = 87;
     private static final int TUBE_Y = 97;
-    private static final int DIV2_Y = 119;
-    private static final int DIAL_Y = 124;
-    private static final int DIV3_Y = 161;
-    private static final int PASSIVE_LABEL_Y = 167;
-    private static final int PASSIVE_SLOT_Y = 178;
+    private static final int CORRUPTION_LABEL_Y = 117;
+    private static final int CORRUPTION_TUBE_Y = 127;
+    private static final int DIV2_Y = 149;
+    private static final int DIAL_Y = 154;
+    private static final int DIV3_Y = 191;
+    private static final int PASSIVE_LABEL_Y = 197;
+    private static final int PASSIVE_SLOT_Y = 208;
     private static final int PASSIVE_COLS = 9;
     private static final int PASSIVE_ROWS = 2;
-    private static final int BOTTOM_Y = 218;
+    private static final int BOTTOM_Y = 248;
 
     private static final int TUBE_W = 128;
     private static final int TUBE_H = 16;
@@ -391,7 +393,7 @@ public class IntrospectScreen extends AbstractContainerScreen<IntrospectMenu> {
     public IntrospectScreen(IntrospectMenu menu, Inventory playerInventory, Component title) {
         super(menu, playerInventory, title);
         this.playerInventory = playerInventory;
-        this.imageHeight = 249;
+        this.imageHeight = 279;
         this.imageWidth = 192;
     }
 
@@ -1086,6 +1088,7 @@ public class IntrospectScreen extends AbstractContainerScreen<IntrospectMenu> {
 
         renderHeader(guiGraphics, x, y, t);
         renderDigestion(guiGraphics, x, y, t);
+        renderCorruption(guiGraphics, x, y, t);
         renderSanity(guiGraphics, x, y, t);
         renderPassiveSection(guiGraphics, x, y, mouseX, mouseY);
         renderBottomRow(guiGraphics, x, y);
@@ -1175,6 +1178,17 @@ public class IntrospectScreen extends AbstractContainerScreen<IntrospectMenu> {
 
         drawCounter(g, x + PAD_X + TUBE_W + 4, y + TUBE_Y + 1, 30, 14,
                 (int) (Mth.clamp(progress, 0f, 1f) * 100) + "%", TEXT_NORMAL);
+    }
+
+    /** A corrupção: vinho avermelhado, logo abaixo da digestão */
+    private void renderCorruption(GuiGraphics g, int x, int y, float t) {
+        heading(g, Component.translatable("lotm.corruption"), x + 16, y + CORRUPTION_LABEL_Y);
+        float corruption = 0f;
+        if (minecraft != null && minecraft.player != null)
+            corruption = de.jakob.lotm.addons.corruption.Corruption.fromStacks(ClientBeyonderCache.getCharStacks(minecraft.player.getUUID()));
+        renderTube(g, x + PAD_X, y + CORRUPTION_TUBE_Y, corruption, 0xFFA63358, 0xFF5E1232, t);
+        drawCounter(g, x + PAD_X + TUBE_W + 4, y + CORRUPTION_TUBE_Y + 1, 30, 14,
+                (int) (Mth.clamp(corruption, 0f, 1f) * 100) + "%", TEXT_NORMAL);
     }
 
     private void renderSanity(GuiGraphics g, int x, int y, float t) {

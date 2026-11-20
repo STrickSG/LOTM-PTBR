@@ -5752,5 +5752,6 @@
   "ability.lotmcraft.divine_authority.too_strong": "Só é possível extrair de quem está abaixo de você.",
   "ability.lotmcraft.divine_authority.failed": "A característica não se soltou.",
   "ability.lotmcraft.divine_authority.extracted": "Você arrancou a característica de %s.",
-  "ability.lotmcraft.divine_authority.victim": "Um Deus arrancou a sua característica."
+  "ability.lotmcraft.divine_authority.victim": "Um Deus arrancou a sua característica.",
+  "lotm.corruption": "Corrupção"
 }
