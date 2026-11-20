@@ -66,7 +66,7 @@ public record HonorificName(LinkedList<String> lines) {
                     case "wheel_of_fortune" -> List.of("Destino", "Sorte", "Sortudo", "Infortúnio", "Fortuna", "Rio", "Calamidades", "Probabilidade", "Loucura", "Caos");
                     case "mother" -> List.of("Terra", "Fertilidade", "Reprodução", "Desolação", "Natureza", "Origem", "Vida", "Colheita", "Fartura");
                     case "moon" -> List.of("Lua", "Fertilidade", "Reprodução", "Espiritualidade", "Beleza", "Proliferação", "Luar", "Prata", "Carmesim");
-                    case "abyss" -> List.of("Demônios", "Mal", "Desejos", "Corrupção", "Sangue", "Malícia", "Balbucios", "Corrosão", "Imundície");
+                    case "abyss" -> List.of("Demônios", "Mal", "Desejos", "Corrupção", "Sangue", "Malícia", "Tagarela", "Corrosão", "Imundície");
                     case "chained" -> List.of("Correntes", "Temperança", "Desviantes", "Contenção", "Indulgência", "Unidade", "Amarras", "Maldições", "Espinhos");
                     case "black_emperor" -> List.of("Desordem", "Distorção", "Exploração", "Entropia", "Abolição", "Frenesi", "Dominação", "Negro", "Sombra");
                     case "justiciar" -> List.of("Leis", "Regras", "Equilíbrio", "Disciplina", "Justiça", "Julgamento", "Ordem", "Branco", "Punição");
