@@ -72,8 +72,9 @@ public final class VisionInfo {
             return new Content(lines, footer, footerColor);
         }
 
-        // Visão Espiritual e Observação: sanidade (Seq 7), espiritualidade e caminho (Seq 5), sequência (Seq 3)
-        if (viewerSeq <= 7 && beyonder) {
+        // Visão Espiritual e Observação: espiritualidade e caminho (Seq 5), sequência (Seq 3); a sanidade só na Observação (Seq 7)
+        // a sanidade é a mente: só o Espectador (Visionário) enxerga
+        if (kind == Kind.SPECTATING && viewerSeq <= 7 && beyonder) {
             String san = stronger ? UNKNOWN : Math.round(sanityOf(target) * 100) + "%";
             lines.add(new Line(t("sanity", "San"), san, Icon.SANITY));
         }
