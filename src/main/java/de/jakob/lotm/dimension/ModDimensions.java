@@ -50,6 +50,10 @@ public class ModDimensions {
     public static final Supplier<MapCodec<MirrorWorldChunkGenerator>> MIRROR_WORLD_CHUNK_GENERATOR =
             CHUNK_GENERATORS.register("mirror_world", () -> MirrorWorldChunkGenerator.CODEC);
 
+    // Mar do Subconsciente Coletivo (Visionário)
+    public static final Supplier<MapCodec<de.jakob.lotm.addons.subconscious.SubconsciousSeaChunkGenerator>> SUBCONSCIOUS_SEA_CHUNK_GENERATOR =
+            CHUNK_GENERATORS.register("subconscious_sea", () -> de.jakob.lotm.addons.subconscious.SubconsciousSeaChunkGenerator.CODEC);
+
     public static final Supplier<MapCodec<NatureDimensionWorldChunkGenerator>> NATURE_WORLD_CHUNK_GENERATOR =
             CHUNK_GENERATORS.register("nature", () -> NatureDimensionWorldChunkGenerator.CODEC);
 

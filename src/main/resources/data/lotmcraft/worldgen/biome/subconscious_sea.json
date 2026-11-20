@@ -1,0 +1,32 @@
+{
+  "carvers": {},
+  "downfall": 0.0,
+  "effects": {
+    "fog_color": 2760522,
+    "foliage_color": 7032736,
+    "grass_color": 7032736,
+    "mood_sound": {
+      "block_search_extent": 8,
+      "offset": 2.0,
+      "sound": "minecraft:ambient.soul_sand_valley.mood",
+      "tick_delay": 3000
+    },
+    "sky_color": 459802,
+    "water_color": 3877498,
+    "water_fog_color": 1051174
+  },
+  "features": [],
+  "has_precipitation": false,
+  "spawn_costs": {},
+  "spawners": {
+    "ambient": [],
+    "axolotls": [],
+    "creature": [],
+    "misc": [],
+    "monster": [],
+    "underground_water_creature": [],
+    "water_ambient": [],
+    "water_creature": []
+  },
+  "temperature": 0.5
+}

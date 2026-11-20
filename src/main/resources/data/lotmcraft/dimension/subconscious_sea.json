@@ -1,0 +1,10 @@
+{
+  "type": "lotmcraft:subconscious_sea",
+  "generator": {
+    "type": "lotmcraft:subconscious_sea",
+    "biome_source": {
+      "type": "minecraft:fixed",
+      "biome": "lotmcraft:subconscious_sea"
+    }
+  }
+}

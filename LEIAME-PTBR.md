@@ -311,6 +311,27 @@ Escuridão.
   - uma civilização: uma colônia ou aldeia com pelo menos 30 moradores perder metade deles por sua causa (mortos por
     você ou por um poder seu) em até 7 dias.
 
+## Mar do Subconsciente Coletivo
+
+Uma dimensão nova: um mar escuro e parado, sob uma noite sem estrelas, onde as mentes de quem dorme aparecem como
+ilhas, no mesmo lugar em que a pessoa dorme no mundo de verdade.
+
+- **Entrar:** um Visionário de Sequência 5 ou menor que dorme numa cama sonha para dentro do mar (depois de
+  3 segundos dormindo). Qualquer Beyonder entra usando, agachado, um poder de sonho de qualquer Caminho (Travessia
+  de Sonhos, Tecelagem de Sonhos, Labirinto de Sonhos, Pesadelo, Poema da Meia-Noite, Indução ao Sono...).
+- **Andar:** anda-se por cima da água. Agachado, afunda.
+- **Sair (acordar):** afundar até o fundo do mar, ou usar de novo, agachado, um poder de sonho. Você volta para onde
+  estava.
+- **Ilhas:** colonos, aldeões e jogadores dormindo a até 96 blocos aparecem como ilhas de ametista e calcita, com o
+  nome, o ofício e um objeto da vida da pessoa girando no alto (a espada do guarda, o pão do padeiro, a picareta do
+  minerador...). Quando a pessoa acorda, a ilha afunda.
+- **Influenciar:** clicar na chama da ilha abre as opções no chat. Cada mente aceita uma influência por noite, e é
+  preciso estar a até 10 blocos dela:
+  - Paz: o colono fica mais feliz por 3 dias (aldeão: gosta mais de você; jogador: recupera sanidade);
+  - Pesadelo: o colono fica mais infeliz por 3 dias (aldeão: gosta menos de você; jogador: perde sanidade);
+  - Sonho de força (+1 em Força e Vigor), de destreza (+1 em Destreza e Agilidade), de saber (+1 em Conhecimento e
+    Inteligência; aldeão: experiência no ofício) e de arte (+1 em Criatividade e Foco), só para colonos.
+
 ## Ritual da mesa: Passagem para a Névoa da História
 
 Ritual novo da mesa de ritual, exclusivo do Caminho do Vidente, a partir da Sequência 4. O livro
