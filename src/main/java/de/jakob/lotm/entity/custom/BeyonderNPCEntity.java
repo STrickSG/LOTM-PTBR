@@ -343,6 +343,14 @@ public class BeyonderNPCEntity extends PathfinderMob {
         return super.hurt(source, amount);
     }
 
+    /** Depois de perder uma característica: o Caminho/Sequência salvos passam a ser os atuais, para não voltarem ao recarregar */
+    public void syncSequenceFromData() {
+        if (BeyonderData.isBeyonder(this)) {
+            this._pathway = BeyonderData.getPathway(this);
+            this._sequence = BeyonderData.getSequence(this);
+        }
+    }
+
     // ========================= Loot and Drops =========================
     @Override
     protected void dropCustomDeathLoot(@NotNull ServerLevel level, @NonNull DamageSource damageSource, boolean recentlyHit) {
@@ -359,9 +367,13 @@ public class BeyonderNPCEntity extends PathfinderMob {
             return;
         }
 
-        // Drop characteristic
-        BeyonderCharacteristicItem characteristicItem =
-                BeyonderCharacteristicItemHandler.selectCharacteristicOfPathwayAndSequence(_pathway, _sequence);
+        // Drop characteristic: a que ele tem agora (se alguém já arrancou a característica, ela não cai de novo)
+        BeyonderCharacteristicItem characteristicItem = null;
+        if (!this.getPersistentData().getBoolean("LotmCharacteristicTaken")) {
+            boolean current = BeyonderData.isBeyonder(this);
+            characteristicItem = BeyonderCharacteristicItemHandler.selectCharacteristicOfPathwayAndSequence(
+                    current ? BeyonderData.getPathway(this) : _pathway, current ? BeyonderData.getSequence(this) : _sequence);
+        }
         if (characteristicItem != null) {
             this.spawnAtLocation(characteristicItem);
         }

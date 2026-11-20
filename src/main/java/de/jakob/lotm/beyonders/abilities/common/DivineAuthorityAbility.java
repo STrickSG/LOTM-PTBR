@@ -82,6 +82,7 @@ public class DivineAuthorityAbility extends SelectableAbility {
             message(god, "ability.lotmcraft.divine_authority.failed");
             return;
         }
+        if (target instanceof de.jakob.lotm.entity.custom.BeyonderNPCEntity npc) npc.syncSequenceFromData();
         FxHandler.playOnEntity(level, "characteristic_theft", target, target.getBbHeight() * 0.5, Math.max(1, target.getBbHeight() / 1.6));
         level.sendParticles(ParticleTypes.END_ROD, target.getX(), target.getY(0.6), target.getZ(), 40, 0.4, 0.6, 0.4, 0.08);
         level.playSound(null, target.blockPosition(), SoundEvents.BEACON_DEACTIVATE, SoundSource.PLAYERS, 1.5f, 0.6f);
@@ -90,6 +91,8 @@ public class DivineAuthorityAbility extends SelectableAbility {
         if (target instanceof ServerPlayer victim)
             victim.displayClientMessage(Component.translatable("ability.lotmcraft.divine_authority.victim").withColor(GOLD), false);
         if (dies) {
+            // a característica já saiu: o corpo não solta outra ao morrer
+            target.getPersistentData().putBoolean("LotmCharacteristicTaken", true);
             target.hurt(level.damageSources().magic(), Float.MAX_VALUE);
             // colonos e outros protegidos não morrem só com dano: sem a característica, o corpo não aguenta
             if (target.isAlive()) {
