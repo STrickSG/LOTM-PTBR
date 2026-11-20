@@ -37,38 +37,50 @@ public final class AstralWorldEffects {
         return ResourceLocation.fromNamespaceAndPath(LOTMCraft.MOD_ID, "textures/environment/astral/" + name + ".png");
     }
 
-    /** Uma imagem no céu: textura, direção (graus), inclinação a partir do topo (graus), giro, tamanho, proporção, se soma luz, pulso, giro por tick */
-    private record SkyImage(ResourceLocation texture, float yaw, float tilt, float roll, float size, float aspect, boolean additive, float pulse, float spin) {}
+    /** Uma imagem no céu, parada: textura, direção (graus), inclinação a partir do topo (graus), giro, tamanho, proporção, se soma luz */
+    private record SkyImage(ResourceLocation texture, float yaw, float tilt, float roll, float size, float aspect, boolean additive) {}
 
-    /** O Cosmos atrás da Barreira: a galáxia, as nebulosas, astros comuns e, enormes e colados nela, os Deuses Exteriores */
+    /**
+     * O Cosmos atrás da Barreira. O céu não se mexe: cada coisa tem o seu lugar fixo.
+     * Os 10 Deuses Exteriores ficam bem separados: um no topo, quatro num anel alto e cinco num anel logo abaixo do horizonte,
+     * intercalados, e o lugar que sobra no anel alto é do sol. Galáxias, nebulosas e planetas preenchem os vãos.
+     */
     private static final SkyImage[] COSMOS = {
-            new SkyImage(tex("galaxy"), 60f, 70f, 20f, 18f, 1f, true, 0f, 0.0005f),
-            new SkyImage(tex("galaxy_pink"), 250f, 66f, -40f, 16f, 1f, true, 0f, -0.0004f),
-            new SkyImage(tex("galaxy_teal"), 160f, 30f, 10f, 14f, 1f, true, 0f, 0.0006f),
-            new SkyImage(tex("galaxy_pink"), 340f, 110f, 60f, 12f, 1f, true, 0f, 0.0003f),
-            new SkyImage(tex("galaxy_teal"), 100f, 125f, -20f, 13f, 1f, true, 0f, -0.0005f),
-            new SkyImage(tex("galaxy"), 200f, 140f, 30f, 15f, 1f, true, 0f, 0.0004f),
-            new SkyImage(tex("nebula_violet"), 160f, 60f, 0f, 30f, 1f, true, 0f, 0f),
-            new SkyImage(tex("nebula_teal"), 300f, 100f, 30f, 28f, 1f, true, 0f, 0f),
-            new SkyImage(tex("nebula_crimson"), 20f, 105f, 70f, 26f, 1f, true, 0f, 0f),
-            new SkyImage(tex("planet_gas"), 130f, 115f, 0f, 6f, 1f, false, 0f, 0f),
-            new SkyImage(tex("planet_ring"), 230f, 120f, 10f, 5f, 1f, false, 0f, 0f),
-            // os Deuses Exteriores, espalhados por todo o céu
-            new SkyImage(tex("outer_depravity"), 0f, 60f, 0f, 16f, 1f, false, 0.25f, 0f),
-            new SkyImage(tex("outer_desire"), 36f, 100f, 0f, 13f, 1f, false, 0.15f, 0.002f),
-            new SkyImage(tex("outer_chaos"), 72f, 40f, 0f, 12f, 1f, false, 0f, 0.004f),
-            new SkyImage(tex("outer_hunger"), 108f, 80f, 15f, 15f, 1f, false, 0.1f, 0f),
-            new SkyImage(tex("outer_inevitability"), 144f, 50f, 0f, 14f, 1f, true, 0f, 0.01f),
-            new SkyImage(tex("outer_supernova"), 180f, 95f, 0f, 12f, 1f, true, 0.3f, 0f),
-            new SkyImage(tex("outer_ravings"), 216f, 45f, 0f, 11f, 1f, true, 0.35f, 0.003f),
-            new SkyImage(tex("outer_decay"), 252f, 85f, 0f, 13f, 1f, false, 0f, 0.001f),
-            new SkyImage(tex("outer_overseer"), 0f, 4f, 0f, 12f, 1f, false, 0.08f, 0f),
-            new SkyImage(tex("outer_fate"), 288f, 55f, 0f, 11f, 1f, false, 0f, 0.006f),
+            // nebulosas, grandes e fracas, no fundo
+            new SkyImage(tex("nebula_violet"), 180f, 25f, 0f, 30f, 1f, true),
+            new SkyImage(tex("nebula_teal"), 36f, 140f, 30f, 30f, 1f, true),
+            new SkyImage(tex("nebula_crimson"), 252f, 140f, 70f, 28f, 1f, true),
+            // galáxias nos vãos entre os anéis (podem repetir)
+            new SkyImage(tex("galaxy"), 18f, 75f, 20f, 10f, 1f, true),
+            new SkyImage(tex("galaxy_pink"), 90f, 75f, -40f, 9f, 1f, true),
+            new SkyImage(tex("galaxy_teal"), 162f, 75f, 10f, 10f, 1f, true),
+            new SkyImage(tex("galaxy"), 234f, 75f, 60f, 9f, 1f, true),
+            new SkyImage(tex("galaxy_pink"), 0f, 25f, -20f, 8f, 1f, true),
+            new SkyImage(tex("galaxy_teal"), 72f, 25f, 30f, 8f, 1f, true),
+            new SkyImage(tex("galaxy"), 288f, 25f, 45f, 8f, 1f, true),
+            new SkyImage(tex("galaxy_teal"), 108f, 135f, 15f, 9f, 1f, true),
+            new SkyImage(tex("galaxy_pink"), 324f, 135f, -30f, 9f, 1f, true),
+            // planetas comuns, pequenos
+            new SkyImage(tex("planet_gas"), 126f, 78f, 0f, 5f, 1f, false),
+            new SkyImage(tex("planet_ring"), 270f, 80f, 10f, 4.5f, 1f, false),
+            // os Deuses Exteriores: no topo, o Supervisor olhando de cima
+            new SkyImage(tex("outer_overseer"), 0f, 0f, 0f, 13f, 1f, false),
+            // anel alto (o quinto lugar é o do sol, em 324)
+            new SkyImage(tex("outer_depravity"), 36f, 50f, 0f, 16f, 1f, false),
+            new SkyImage(tex("outer_supernova"), 108f, 50f, 0f, 13f, 1f, true),
+            new SkyImage(tex("outer_chaos"), 180f, 50f, 0f, 13f, 1f, false),
+            new SkyImage(tex("outer_desire"), 252f, 50f, 0f, 14f, 1f, false),
+            // anel logo abaixo do horizonte, intercalado com o de cima
+            new SkyImage(tex("outer_hunger"), 0f, 100f, 15f, 15f, 1f, false),
+            new SkyImage(tex("outer_inevitability"), 72f, 100f, 0f, 14f, 1f, true),
+            new SkyImage(tex("outer_ravings"), 144f, 100f, 0f, 12f, 1f, true),
+            new SkyImage(tex("outer_decay"), 216f, 100f, 0f, 13f, 1f, false),
+            new SkyImage(tex("outer_fate"), 288f, 100f, 0f, 12f, 1f, false),
     };
 
-    /** Do lado de dentro da Barreira: o Sol Ardente Eterno */
+    /** Do lado de dentro da Barreira: o Sol Ardente Eterno, o mais perto de todos e por isso o maior */
     private static final SkyImage[] INSIDE = {
-            new SkyImage(tex("sun"), 324f, 72f, 0f, 22f, 1f, true, 0.04f, 0f),
+            new SkyImage(tex("sun"), 324f, 50f, 0f, 48f, 1f, true),
     };
 
     private static final int STARS = 700;
@@ -121,7 +133,6 @@ public final class AstralWorldEffects {
         @Override
         public boolean renderSky(ClientLevel level, int ticks, float partialTick, Matrix4f modelViewMatrix, Camera camera,
                                  Matrix4f projectionMatrix, boolean isFoggy, Runnable setupFog) {
-            float time = ticks + partialTick;
             RenderSystem.disableCull();
             RenderSystem.disableDepthTest();
             RenderSystem.depthMask(false);
@@ -143,24 +154,23 @@ public final class AstralWorldEffects {
                 quad(m, tex("sky"), 120f, 120f, 120f, 0f, 0f, 3f, 3f, 1f, 1f, 1f, 1f);
             }
 
-            // estrelas: estrelinhas de giz, piscando devagar
+            // estrelas: estrelinhas de giz, cada uma com o seu brilho
             RenderSystem.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE);
             RenderSystem.setShader(GameRenderer::getPositionTexColorShader);
             RenderSystem.setShaderTexture(0, tex("star"));
             BufferBuilder stars = Tesselator.getInstance().begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX_COLOR);
             for (float[] s : STAR) {
-                float twinkle = 0.55f + 0.45f * Mth.sin(time * 0.05f + s[7]);
-                star(stars, modelViewMatrix, s[0] * 100, s[1] * 100, s[2] * 100, 0.6f + s[3] * 3f, 1f, 1f, 1f, twinkle);
+                float bright = 0.55f + 0.45f * Mth.sin(s[7]);
+                star(stars, modelViewMatrix, s[0] * 100, s[1] * 100, s[2] * 100, 0.6f + s[3] * 3f, 1f, 1f, 1f, bright);
             }
             BufferUploader.drawWithShader(stars.buildOrThrow());
 
             // o Cosmos e os Deuses Exteriores, atrás da Barreira
             RenderSystem.setShader(GameRenderer::getPositionTexColorShader);
-            for (SkyImage image : COSMOS) drawImage(modelViewMatrix, image, time);
+            for (SkyImage image : COSMOS) drawImage(modelViewMatrix, image);
 
             // a Barreira Astral: uma película quase invisível em volta de tudo, rachada, vazando luz
             RenderSystem.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE);
-            float shimmer = 0.5f + 0.1f * Mth.sin(time * 0.02f);
             for (int face = 0; face < 6; face++) {
                 Matrix4f m = new Matrix4f(modelViewMatrix);
                 switch (face) {
@@ -171,11 +181,11 @@ public final class AstralWorldEffects {
                     case 5 -> m.rotateZ(-Mth.HALF_PI);
                     default -> { }
                 }
-                quad(m, tex("barrier"), 90f, 90f, 90f, 0f, 0f, 2f, 2f, shimmer, shimmer, shimmer, 1f);
+                quad(m, tex("barrier"), 90f, 90f, 90f, 0f, 0f, 2f, 2f, 0.5f, 0.5f, 0.5f, 1f);
             }
 
             // do lado de dentro: o sol
-            for (SkyImage image : INSIDE) drawImage(modelViewMatrix, image, time);
+            for (SkyImage image : INSIDE) drawImage(modelViewMatrix, image);
 
             RenderSystem.defaultBlendFunc();
             RenderSystem.disableBlend();
@@ -185,16 +195,15 @@ public final class AstralWorldEffects {
             return true;
         }
 
-        private static void drawImage(Matrix4f modelViewMatrix, SkyImage image, float time) {
+        private static void drawImage(Matrix4f modelViewMatrix, SkyImage image) {
             if (image.additive()) RenderSystem.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE);
             else RenderSystem.defaultBlendFunc();
             RenderSystem.setShader(GameRenderer::getPositionTexColorShader);
-            float glow = 1f - image.pulse() + image.pulse() * (0.5f + 0.5f * Mth.sin(time * 0.04f + image.yaw()));
             Matrix4f m = new Matrix4f(modelViewMatrix)
                     .rotateY((float) Math.toRadians(image.yaw()))
                     .rotateX((float) Math.toRadians(image.tilt()))
-                    .rotateY((float) Math.toRadians(image.roll()) + time * image.spin());
-            quad(m, image.texture(), image.size() * image.aspect(), image.size(), 100f, 0f, 0f, 1f, 1f, glow, glow, glow, 1f);
+                    .rotateY((float) Math.toRadians(image.roll()));
+            quad(m, image.texture(), image.size() * image.aspect(), image.size(), 100f, 0f, 0f, 1f, 1f, 1f, 1f, 1f, 1f);
         }
 
         /** Um ponto de estrela virado para quem olha */
