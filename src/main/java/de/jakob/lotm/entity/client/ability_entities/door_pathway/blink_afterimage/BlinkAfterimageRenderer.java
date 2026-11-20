@@ -33,13 +33,15 @@ public class BlinkAfterimageRenderer extends MobRenderer<BlinkAfterimageEntity, 
             return entity.getDefaultSkinTexture();
         }
 
-        if (SKIN_CACHE.containsKey(ownerUUID)) {
-            return SKIN_CACHE.get(ownerUUID);
+        // a skin de verdade chega depois (é baixada); antes disso vem a padrão, que não pode ficar guardada para sempre
+        ResourceLocation fallback = DefaultPlayerSkin.get(ownerUUID).texture();
+        ResourceLocation cached = SKIN_CACHE.get(ownerUUID);
+        if (cached != null && !cached.equals(fallback)) {
+            return cached;
         }
 
         ResourceLocation playerSkin = getPlayerSkin(ownerUUID);
-
-        SKIN_CACHE.put(ownerUUID, playerSkin);
+        if (!playerSkin.equals(fallback)) SKIN_CACHE.put(ownerUUID, playerSkin);
         return playerSkin;
     }
 
@@ -48,9 +50,8 @@ public class BlinkAfterimageRenderer extends MobRenderer<BlinkAfterimageEntity, 
 
         if (mc.level != null) {
             Player player = mc.level.getPlayerByUUID(playerUUID);
-            if (player != null) {
-                PlayerSkin skin = mc.getSkinManager().getInsecureSkin(player.getGameProfile());
-                return skin.texture();
+            if (player instanceof net.minecraft.client.player.AbstractClientPlayer clientPlayer) {
+                return clientPlayer.getSkin().texture();
             }
         }
 

@@ -829,7 +829,9 @@ public class ClientHandler {
     public static void playPhotonBlockEffect(PlayPhotonBlockEffectPacket packet) {
         FX fx = FXHelper.getFX(ResourceLocation.fromNamespaceAndPath(LOTMCraft.MOD_ID, packet.effectPath()));
         if (fx != null) {
-            BlockEffectExecutor fxExecutor = new BlockEffectExecutor(fx, Minecraft.getInstance().level, packet.pos());
+            BlockEffectExecutor fxExecutor = packet.checkState()
+                    ? new BlockEffectExecutor(fx, Minecraft.getInstance().level, packet.pos())
+                    : new StableBlockEffectExecutor(fx, Minecraft.getInstance().level, packet.pos());
             fxExecutor.setOffset(packet.xOffset(), packet.yOffset(), packet.zOffset());
             if(packet.scaleVector() != null) {
                 fxExecutor.setScale(packet.scaleVector().x(), packet.scaleVector().y(), packet.scaleVector().z());
@@ -864,7 +866,9 @@ public class ClientHandler {
     private static void startCancellableBlockEffect(PlayCancellablePhotonBlockEffectPacket packet) {
         FX fx = FXHelper.getFX(ResourceLocation.fromNamespaceAndPath(LOTMCraft.MOD_ID, packet.effectPath()));
         if (fx != null) {
-            BlockEffectExecutor fxExecutor = new BlockEffectExecutor(fx, Minecraft.getInstance().level, packet.pos());
+            BlockEffectExecutor fxExecutor = packet.checkState()
+                    ? new BlockEffectExecutor(fx, Minecraft.getInstance().level, packet.pos())
+                    : new StableBlockEffectExecutor(fx, Minecraft.getInstance().level, packet.pos());
             fxExecutor.setOffset(packet.xOffset(), packet.yOffset(), packet.zOffset());
             if(packet.scaleVector() != null) {
                 fxExecutor.setScale(packet.scaleVector().x(), packet.scaleVector().y(), packet.scaleVector().z());
