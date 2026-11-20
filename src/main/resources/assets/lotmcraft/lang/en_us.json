@@ -5901,5 +5901,6 @@
   "lotmcraft.church.need_name": "Give your Church or Sect a name.",
   "lotmcraft.church.consecrated": "The temple now belongs to %s.",
   "lotmcraft.church.renamed": "Your Church is now called %s.",
-  "lotmcraft.church.altar.no_temple": "This altar is not in a colony with a Church."
+  "lotmcraft.church.altar.no_temple": "This altar is not in a colony with a Church.",
+  "lotmcraft.church.wrong_model": "This temple follows the %s Pathway model: only a Beyonder of that Pathway can consecrate it."
 }

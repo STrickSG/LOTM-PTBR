@@ -52,6 +52,11 @@ public record ChurchActionPacket(BlockPos temple, String action, String name, St
                     say(player, Component.translatable("lotmcraft.church.not_worthy", Churches.MAX_SEQUENCE), 0xFF7A7A);
                     return;
                 }
+                String model = ChurchModels.pathwayOf(temple.getBlueprintPath());
+                if (model != null && !model.equals(BeyonderData.getPathway(player))) {
+                    say(player, Component.translatable("lotmcraft.church.wrong_model", Component.translatable("lotm.pathway." + model)), 0xFF7A7A);
+                    return;
+                }
                 if (temple.getGod() != null && !temple.getGod().equals(player.getUUID())) {
                     say(player, Component.translatable("lotmcraft.church.already_consecrated"), 0xFF7A7A);
                     return;

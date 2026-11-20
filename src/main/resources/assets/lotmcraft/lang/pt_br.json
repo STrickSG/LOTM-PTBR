@@ -5700,5 +5700,6 @@
   "lotmcraft.church.need_name": "Dê um nome à sua Igreja ou Seita.",
   "lotmcraft.church.consecrated": "O templo agora pertence a %s.",
   "lotmcraft.church.renamed": "Sua Igreja agora se chama %s.",
-  "lotmcraft.church.altar.no_temple": "Este altar não está numa colônia com Igreja."
+  "lotmcraft.church.altar.no_temple": "Este altar não está numa colônia com Igreja.",
+  "lotmcraft.church.wrong_model": "Este templo segue o modelo do Caminho %s: só um Beyonder desse Caminho pode consagrá-lo."
 }
