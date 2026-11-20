@@ -211,7 +211,12 @@ public class ChurchScreen extends Screen {
                 int ry = top + 86 + i * 14;
                 Component role = Component.translatable("lotmcraft.church.role." + (Churches.SECT.equals(view.kind) && "believer".equals(m.role()) ? "member" : m.role()));
                 int roleW = (int) (font.width(role) * 0.8f);
-                small(g, Component.literal(m.name()), left + 24, ry, 0.85f, TEXT, W - 82 - roleW);
+                Component name = Component.literal(m.name());
+                if (!m.beyonder().isEmpty()) {
+                    String[] b = m.beyonder().split(":");
+                    name = name.copy().append(Component.literal(" · ").withColor(DIM)).append(Component.translatable("lotmcraft.church.member_seq", b[1]).withColor(0x8A5A00));
+                }
+                small(g, name, left + 24, ry, 0.85f, TEXT, W - 82 - roleW);
                 small(g, role, left + W - 54 - roleW, ry + 1, 0.8f, "believer".equals(m.role()) ? DIM : GOLD, roleW + 2);
             }
             if (list.size() > ROWS) g.drawCenteredString(font, Component.literal((scroll + 1) + "-" + Math.min(list.size(), scroll + ROWS) + " / " + list.size()), left + W / 2, top + 86 + ROWS * 14, DIM);

@@ -116,7 +116,11 @@ public record ChurchActionPacket(BlockPos temple, String action, String name, St
             total = all.size();
             for (var citizen : colony.getCitizenManager().getCitizens()) {
                 if (all.contains(citizen.getUUID()))
-                    members.add(new ChurchMembersPacket.Member(citizen.getUUID(), Believers.originalName(player.server, citizen), Believers.roleOf(player.server, citizen.getUUID())));
+                {
+                    ColonistBeyonders.Info b = ColonistBeyonders.info(player.server, citizen.getUUID());
+                    members.add(new ChurchMembersPacket.Member(citizen.getUUID(), Believers.originalName(player.server, citizen), Believers.roleOf(player.server, citizen.getUUID()),
+                            b == null ? "" : b.pathway() + ":" + b.sequence()));
+                }
             }
             for (var other : IColonyManager.getInstance().getAllColonies()) {
                 int n = 0;
@@ -142,6 +146,16 @@ public record ChurchActionPacket(BlockPos temple, String action, String name, St
         try { id = UUID.fromString(citizenId); } catch (IllegalArgumentException e) { return; }
         var citizen = colony.getCitizenManager().getCitizens().stream().filter(c -> c.getUUID().equals(id)).findFirst().orElse(null);
         if (citizen == null || !god.equals(Believers.godOfCitizen(player.server, id))) return;
+        int needed = ColonistBeyonders.requiredSequence(role);
+        if (needed <= 9) {
+            ColonistBeyonders.Info b = ColonistBeyonders.info(player.server, id);
+            if (b == null || b.sequence() > needed) {
+                say(player, Component.translatable(needed == 9 ? "lotmcraft.church.role.needs_beyonder" : "lotmcraft.church.role.needs_sequence",
+                        Component.translatable("lotmcraft.church.role." + role), needed), 0xFF7A7A);
+                sendMembers(player, colony, temple);
+                return;
+            }
+        }
         int limit = ChurchRoles.limit(role);
         if (limit != Integer.MAX_VALUE) {
             long holders;

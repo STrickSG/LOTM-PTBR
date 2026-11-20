@@ -28,9 +28,11 @@ public record ChurchMembersPacket(BlockPos temple, List<Member> members, int tot
         return (flags & 2) != 0;
     }
 
-    public record Member(UUID id, String name, String role) {
+    /** beyonder: "caminho:sequência", ou vazio se o colono não é Beyonder */
+    public record Member(UUID id, String name, String role, String beyonder) {
         static final StreamCodec<ByteBuf, Member> CODEC = StreamCodec.composite(
-                UUIDUtil.STREAM_CODEC, Member::id, ByteBufCodecs.STRING_UTF8, Member::name, ByteBufCodecs.STRING_UTF8, Member::role, Member::new);
+                UUIDUtil.STREAM_CODEC, Member::id, ByteBufCodecs.STRING_UTF8, Member::name, ByteBufCodecs.STRING_UTF8, Member::role,
+                ByteBufCodecs.STRING_UTF8, Member::beyonder, Member::new);
     }
 
     public static final Type<ChurchMembersPacket> TYPE = new Type<>(ResourceLocation.fromNamespaceAndPath(LOTMCraft.MOD_ID, "church_members"));
