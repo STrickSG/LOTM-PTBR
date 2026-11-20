@@ -78,7 +78,8 @@ public final class VisionInfo {
             String san = stronger ? UNKNOWN : Math.round(sanityOf(target) * 100) + "%";
             lines.add(new Line(t("sanity", "San"), san, Icon.SANITY));
         }
-        if (viewerSeq <= 5 && beyonder)
+        // a espiritualidade só a Visão Espiritual enxerga
+        if (kind == Kind.SPIRIT && viewerSeq <= 5 && beyonder)
             lines.add(new Line(t("spirituality", "Spi"), stronger ? UNKNOWN : String.valueOf(Math.round(ClientBeyonderCache.getSpirituality(id))), Icon.NONE));
         if (viewerSeq <= 7) footerColor = footer(footer, target, beyonder, stronger, targetSeq, viewerSeq <= 5, viewerSeq <= 3);
         return new Content(lines, footer, footerColor);
