@@ -331,7 +331,19 @@ public class IntrospectScreen extends AbstractContainerScreen<IntrospectMenu> {
             int textY = y + (h - 8) / 2;
 
             g.enableScissor(x + 3, y + 1, x + w - 3, y + h - 1);
-            g.drawString(font, getMessage(), Math.max(textX, x + 3), textY, color, true);
+            // rótulo comprido demais (ex.: "Características"): encolhe para caber, em vez de cortar
+            int room = x + w - 4 - Math.max(textX, x + 3);
+            int tw = font.width(getMessage());
+            if (tw > room && room > 0) {
+                float sc = room / (float) tw;
+                g.pose().pushPose();
+                g.pose().translate(Math.max(textX, x + 3), textY + (8 - 8 * sc) / 2f, 0);
+                g.pose().scale(sc, sc, 1f);
+                g.drawString(font, getMessage(), 0, 0, color, true);
+                g.pose().popPose();
+            } else {
+                g.drawString(font, getMessage(), Math.max(textX, x + 3), textY, color, true);
+            }
             g.disableScissor();
         }
     }
