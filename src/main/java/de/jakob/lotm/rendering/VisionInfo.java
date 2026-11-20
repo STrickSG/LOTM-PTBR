@@ -26,7 +26,6 @@ public final class VisionInfo {
     public static List<String> spirit(LivingEntity target, int viewerSeq) {
         List<String> lines = new ArrayList<>();
         if (viewerSeq > 7) return lines;
-        lines.add(LotmText.t("lotmcraft.vision.state", "State") + ": " + bodyState(target));
         beyonderLines(lines, target, viewerSeq, 5, 3, true);
         return lines;
     }
@@ -105,8 +104,12 @@ public final class VisionInfo {
      * com o nome no cabeçalho e as linhas "Rótulo: valor" embaixo, nas cores de cada visão.
      */
     public static void card(GuiGraphics g, Font font, String title, int accent, int titleColor, List<String> lines) {
-        int sw = g.guiWidth(), sh = g.guiHeight();
-        int w = Math.max(100, font.width(title) + 16);
+        // menor, como o do Tensura: tudo desenhado em 70% do tamanho
+        final float scale = 0.7f;
+        g.pose().pushPose();
+        g.pose().scale(scale, scale, 1);
+        int sw = (int) (g.guiWidth() / scale), sh = (int) (g.guiHeight() / scale);
+        int w = Math.max(90, font.width(title) + 16);
         for (String l : lines) w = Math.max(w, font.width(l) + 12);
         int h = 19 + lines.size() * LINE_HEIGHT + 4;
         int x = sw - w - 4;
@@ -132,6 +135,7 @@ public final class VisionInfo {
             } else g.drawString(font, l, x + 6, ly, 0xFFF2EEF7, true);
             ly += LINE_HEIGHT;
         }
+        g.pose().popPose();
     }
 
     /** Onde os painéis das visões ficam: à esquerda, embaixo da barra de espiritualidade e das coordenadas da Porta (y 66) */
