@@ -99,7 +99,7 @@ public final class VisionInfo {
             footer.add(t("beyonder", "Beyonder"));
             return 0xFFE8E2F0;
         }
-        footer.add(pathwayTitle(pathway, info.getName()));
+        footer.add(info.getName()); // só o nome do caminho, sem a palavra "Caminho"
         if (showSeq) {
             footer.add(LotmText.t("lotm.sequence", "Sequence") + " " + targetSeq);
             String seqName = info.getSequenceName(targetSeq);
@@ -145,7 +145,7 @@ public final class VisionInfo {
     }
 
     public static final int LINE_HEIGHT = 11;
-    private static final float SCALE = 0.7f;
+    private static final float SCALE = 0.55f;
     private static final ResourceLocation ARMOR_SPRITE = ResourceLocation.withDefaultNamespace("hud/armor_full");
     private static final ResourceLocation HEART_SPRITE = ResourceLocation.withDefaultNamespace("hud/heart/full");
 
