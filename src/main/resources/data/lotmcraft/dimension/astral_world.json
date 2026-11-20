@@ -1,0 +1,10 @@
+{
+  "type": "lotmcraft:astral_world",
+  "generator": {
+    "type": "lotmcraft:empty",
+    "biome_source": {
+      "type": "minecraft:fixed",
+      "biome": "lotmcraft:astral_world"
+    }
+  }
+}
