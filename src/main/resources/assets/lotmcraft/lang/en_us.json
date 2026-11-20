@@ -5815,5 +5815,20 @@
   "lotmcraft.sea.already": "That mind has dreamed enough tonight.",
   "lotmcraft.sea.awake": "That person has already woken up.",
   "lotmcraft.sea.no_job": "No trade",
-  "lotmcraft.sea.dreamer": "Dreamer"
+  "lotmcraft.sea.dreamer": "Dreamer",
+  "lotmcraft.ritual.visionary.5.1": "Seek out a harpy in the Spirit World and sign a contract with it. Then, holding one tail feather, consume the potion amidst intense feelings of either joy or anger.",
+  "lotmcraft.ritual.visionary.5.2": "The beings there accept a written, signed contract. What they leave you must be in your hand, with your heart racing.",
+  "lotmcraft.ritual.visionary.4.1": "In the middle of a grand event with at least 10,000 people, resonate with their emotions, then take the potion.",
+  "lotmcraft.ritual.visionary.4.2": "Gather a crowd and make its heart beat with yours: with a call, or with a power that stirs emotions.",
+  "lotmcraft.ritual.visionary.3.1": "Cause at least 100,000 people to have the same dream on the same night.",
+  "lotmcraft.ritual.visionary.3.2": "Dreams are woven on the other side, where minds sleep together, or with powers near those who sleep. All in a single night.",
+  "lotmcraft.ritual.visionary.2.1": "Delve into the subconscious of at least ten thousand humans, uncover their deepest fears, most primal desires, and the root of all their psychological issues, then leave a mark of oneself.",
+  "lotmcraft.ritual.visionary.2.2": "Every mind you touch in the sea of minds keeps your mark. Many minds, all different.",
+  "lotmcraft.ritual.visionary.1.1": "Using real people as characters, write a medium- to long-length novel, and let the actual fates of those real people follow the story's plot to its conclusion, leaving imprints in both the Spirit World and the River of Fate.",
+  "lotmcraft.ritual.visionary.1.2": "One chapter per page, each with the name of someone real and what will happen to them. Sign the book and make the story come true.",
+  "lotmcraft.visionary.feather": "Feather of %s",
+  "lotmcraft.visionary.contract": "The contract with %s is sealed. A feather stays with you.",
+  "lotmcraft.visionary.same_dream": "Your dream tonight: %s of %s minds.",
+  "lotmcraft.visionary.story_begun": "\"%s\": %s chapters about real people. Now their fate follows your story.",
+  "lotmcraft.visionary.story_short": "\"%s\" has only %s chapters about real people (%s are needed)."
 }

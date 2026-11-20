@@ -197,7 +197,27 @@ public final class AdvancementRituals {
             // Escuridão, Sequência 1 (Cavaleiro do Infortúnio): ser o infortúnio de um Arcanjo ou de uma civilização
             new Ritual("darkness", 1, () -> List.of(
                     new ItemStack(Items.BLACK_BANNER),
-                    new ItemStack(PotionItemHandler.KNIGHT_OF_MISFORTUNE_POTION.get())))
+                    new ItemStack(PotionItemHandler.KNIGHT_OF_MISFORTUNE_POTION.get()))),
+            // Visionário, Sequência 5 (Caminhante dos Sonhos): contrato com uma criatura do Mundo Espiritual, a pena e uma emoção forte
+            new Ritual("visionary", 5, () -> List.of(
+                    new ItemStack(Items.FEATHER),
+                    new ItemStack(PotionItemHandler.DREAMWALKER_POTION.get()))),
+            // Visionário, Sequência 4 (Manipulador): ressoar com as emoções de uma multidão
+            new Ritual("visionary", 4, () -> List.of(
+                    new ItemStack(Items.BELL),
+                    new ItemStack(PotionItemHandler.MANIPULATOR_POTION.get()))),
+            // Visionário, Sequência 3 (Tecelão de Sonhos): muita gente com o mesmo sonho numa noite
+            new Ritual("visionary", 3, () -> List.of(
+                    new ItemStack(Items.PHANTOM_MEMBRANE),
+                    new ItemStack(PotionItemHandler.DREAM_WEAVER_POTION.get()))),
+            // Visionário, Sequência 2 (Discernidor): deixar a sua marca no subconsciente de muita gente
+            new Ritual("visionary", 2, () -> List.of(
+                    new ItemStack(Items.SPYGLASS),
+                    new ItemStack(PotionItemHandler.DISCERNER_POTION.get()))),
+            // Visionário, Sequência 1 (Autor): um romance com pessoas reais, e o destino delas seguindo a história
+            new Ritual("visionary", 1, () -> List.of(
+                    new ItemStack(Items.WRITABLE_BOOK),
+                    new ItemStack(PotionItemHandler.AUTHOR_POTION.get())))
     );
 
     public static List<Ritual> all() {

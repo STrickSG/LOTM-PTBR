@@ -95,6 +95,12 @@ public final class RitualChecks {
         if ("darkness".equals(pathway) && sequence == 3) return DarknessRituals.facingDeath(player);
         if ("darkness".equals(pathway) && sequence == 2) return DarknessRituals.concealed(player);
         if ("darkness".equals(pathway) && sequence == 1) return DarknessRituals.misfortuneBrought(player);
+        // Visionário: Caminhante dos Sonhos, Manipulador, Tecelão de Sonhos, Discernidor e Autor
+        if ("visionary".equals(pathway) && sequence == 5) return VisionaryRituals.featherAndEmotion(player);
+        if ("visionary".equals(pathway) && sequence == 4) return VisionaryRituals.resonated(player);
+        if ("visionary".equals(pathway) && sequence == 3) return VisionaryRituals.sameDream(player) >= VisionaryRituals.SAME_DREAM;
+        if ("visionary".equals(pathway) && sequence == 2) return de.jakob.lotm.addons.subconscious.SubconsciousSea.marked(player) >= VisionaryRituals.MARKS_NEEDED;
+        if ("visionary".equals(pathway) && sequence == 1) return VisionaryRituals.storyComplete(player);
         return false;
     }
 

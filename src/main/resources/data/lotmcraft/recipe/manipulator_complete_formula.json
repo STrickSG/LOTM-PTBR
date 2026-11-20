@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    {
+      "item": "lotmcraft:manipulator"
+    },
+    {
+      "item": "lotmcraft:manipulator_ritual"
+    }
+  ],
+  "result": {
+    "id": "lotmcraft:manipulator_complete_formula",
+    "count": 1
+  }
+}

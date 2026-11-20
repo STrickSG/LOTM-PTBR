@@ -5614,5 +5614,20 @@
   "lotmcraft.sea.already": "Essa mente já sonhou o bastante nesta noite.",
   "lotmcraft.sea.awake": "Essa pessoa já acordou.",
   "lotmcraft.sea.no_job": "Sem ofício",
-  "lotmcraft.sea.dreamer": "Sonhador"
+  "lotmcraft.sea.dreamer": "Sonhador",
+  "lotmcraft.ritual.visionary.5.1": "Procure uma harpia no Mundo Espiritual e assine um contrato com ela. Depois, segurando uma pena da cauda dela, beba a poção no meio de uma alegria ou de uma raiva intensa.",
+  "lotmcraft.ritual.visionary.5.2": "Os seres de lá aceitam um contrato escrito e assinado. O que deixam para você deve estar na sua mão, com o coração acelerado.",
+  "lotmcraft.ritual.visionary.4.1": "No meio de um grande evento com pelo menos dez mil pessoas, entre em ressonância com as emoções delas e beba a poção.",
+  "lotmcraft.ritual.visionary.4.2": "Junte uma multidão e faça o coração dela bater no mesmo ritmo que o seu: com um chamado, ou com um poder que mexe nas emoções.",
+  "lotmcraft.ritual.visionary.3.1": "Faça pelo menos cem mil pessoas terem o mesmo sonho na mesma noite.",
+  "lotmcraft.ritual.visionary.3.2": "Sonhos se tecem do outro lado, onde as mentes dormem juntas, ou com poderes perto de quem dorme. Tudo numa única noite.",
+  "lotmcraft.ritual.visionary.2.1": "Mergulhe no subconsciente de pelo menos dez mil pessoas, descubra os medos mais fundos, os desejos mais primitivos e a raiz de todos os seus problemas, e deixe uma marca sua.",
+  "lotmcraft.ritual.visionary.2.2": "Cada mente que você toca no mar das mentes guarda a sua marca. Muitas mentes, diferentes.",
+  "lotmcraft.ritual.visionary.1.1": "Usando pessoas reais como personagens, escreva um romance de tamanho médio ou longo e deixe que o destino delas siga a história até o fim, deixando marcas no Mundo Espiritual e no Rio do Destino.",
+  "lotmcraft.ritual.visionary.1.2": "Um capítulo por página, cada um com o nome de alguém de verdade e o que vai acontecer com ele. Assine o livro e faça a história se cumprir.",
+  "lotmcraft.visionary.feather": "Pena de %s",
+  "lotmcraft.visionary.contract": "O contrato com %s foi selado. Uma pena fica com você.",
+  "lotmcraft.visionary.same_dream": "O seu sonho nesta noite: %s de %s mentes.",
+  "lotmcraft.visionary.story_begun": "\"%s\": %s capítulos sobre gente de verdade. Agora o destino deles segue a sua história.",
+  "lotmcraft.visionary.story_short": "\"%s\" tem só %s capítulos sobre gente de verdade (são precisos %s)."
 }

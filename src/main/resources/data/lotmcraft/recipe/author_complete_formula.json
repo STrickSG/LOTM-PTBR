@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    {
+      "item": "lotmcraft:author"
+    },
+    {
+      "item": "lotmcraft:author_ritual"
+    }
+  ],
+  "result": {
+    "id": "lotmcraft:author_complete_formula",
+    "count": 1
+  }
+}

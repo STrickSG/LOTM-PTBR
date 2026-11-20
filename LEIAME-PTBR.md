@@ -311,6 +311,31 @@ Escuridão.
   - uma civilização: uma colônia ou aldeia com pelo menos 30 moradores perder metade deles por sua causa (mortos por
     você ou por um poder seu) em até 7 dias.
 
+## Rituais de avanço do Visionário
+
+Mesmas regras dos outros: pergaminho, Fórmula Completa ou Carta do Visionário na Sequência certa. A Carta pede as
+receitas das Sequências 9 a 6 e as Fórmulas Completas das Sequências 5 a 1. Vários usam o Mar do Subconsciente
+Coletivo (abaixo).
+
+- Sequência 5, Caminhante dos Sonhos: no Mundo Espiritual, clicar com um livro assinado (o contrato) numa criatura
+  de lá (Dervixe, Fantasma, Malmouth, Flagelo, Feiticeiros...): o livro vai embora e fica uma "Pena de ...". Beber
+  segurando a pena (em qualquer mão), no meio de uma emoção forte: ter lutado ou sido ferido, ter subido de nível,
+  ter comido algo especial (maçã dourada, bolo, torta, mel, biscoito, bagas brilhantes) ou usado um poder de emoção
+  de qualquer Caminho nos últimos 30 segundos, ou estar com Herói da Vila.
+- Sequência 4, Manipulador: com uma multidão de pelo menos 30 pessoas (colonos, aldeões, jogadores, Beyonders
+  Errantes) a até 32 blocos, entrar em ressonância com ela: tocar um sino, ou usar um poder de emoção de qualquer
+  Caminho (charme, incitar, hipnose, medo, canção, discurso...). Beber em até 1 minuto.
+- Sequência 3, Tecelão de Sonhos: 20 pessoas com o mesmo sonho seu numa mesma noite: a mesma influência (Paz,
+  Pesadelo ou um dos sonhos) em 20 mentes no Mar do Subconsciente, ou um poder de sonho de qualquer Caminho usado
+  perto de quem dorme (todos a até 32 blocos contam). Beber na mesma noite.
+- Sequência 2, Discernidor: deixar a sua marca em 50 mentes diferentes no Mar do Subconsciente (qualquer influência
+  conta, em qualquer noite).
+- Sequência 1, Autor: escrever e assinar um livro com pelo menos 7 capítulos, um por página, cada um com o nome de um
+  colono de verdade (de qualquer colônia) e o destino dele: "morre", "sonha", "feliz", "triste" ou "aprende". Com o
+  livro no inventário, a história começa. Ela se cumpre quando todos os destinos acontecerem: o colono morrer,
+  você o influenciar no Mar, a felicidade dele subir a 7 ou mais (ou cair a 3 ou menos), ou ele ganhar nível numa
+  habilidade. Beber quando a história inteira se cumprir.
+
 ## Mar do Subconsciente Coletivo
 
 Uma dimensão nova: um mar escuro e parado, sob uma noite sem estrelas, onde as mentes de quem dorme aparecem como
