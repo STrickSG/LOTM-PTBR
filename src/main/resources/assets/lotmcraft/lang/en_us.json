@@ -5830,5 +5830,19 @@
   "lotmcraft.visionary.contract": "The contract with %s is sealed. A feather stays with you.",
   "lotmcraft.visionary.same_dream": "Your dream tonight: %s of %s minds.",
   "lotmcraft.visionary.story_begun": "\"%s\": %s chapters about real people. Now their fate follows your story.",
-  "lotmcraft.visionary.story_short": "\"%s\" has only %s chapters about real people (%s are needed)."
+  "lotmcraft.visionary.story_short": "\"%s\" has only %s chapters about real people (%s are needed).",
+  "lotmcraft.sea.screen.happiness": "Happiness: %s",
+  "lotmcraft.sea.screen.villager_level": "Trade level: %s",
+  "lotmcraft.sea.screen.sanity": "Sanity: %s",
+  "lotmcraft.sea.skill.athletics": "Athletics",
+  "lotmcraft.sea.skill.dexterity": "Dexterity",
+  "lotmcraft.sea.skill.strength": "Strength",
+  "lotmcraft.sea.skill.agility": "Agility",
+  "lotmcraft.sea.skill.stamina": "Stamina",
+  "lotmcraft.sea.skill.mana": "Mana",
+  "lotmcraft.sea.skill.adaptability": "Adaptability",
+  "lotmcraft.sea.skill.focus": "Focus",
+  "lotmcraft.sea.skill.creativity": "Creativity",
+  "lotmcraft.sea.skill.knowledge": "Knowledge",
+  "lotmcraft.sea.skill.intelligence": "Intelligence"
 }

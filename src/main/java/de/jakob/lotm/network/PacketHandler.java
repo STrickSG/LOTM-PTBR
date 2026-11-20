@@ -35,6 +35,12 @@ public class PacketHandler {
 
     private static void registerClientPackets(PayloadRegistrar registrar) {
         registrar.playToClient(
+                de.jakob.lotm.addons.subconscious.DreamMindPacket.TYPE,
+                de.jakob.lotm.addons.subconscious.DreamMindPacket.STREAM_CODEC,
+                de.jakob.lotm.addons.subconscious.DreamMindPacket::handle
+        );
+
+        registrar.playToClient(
                 de.jakob.lotm.addons.rituals.DisguiseCitizenWindowPacket.TYPE,
                 de.jakob.lotm.addons.rituals.DisguiseCitizenWindowPacket.STREAM_CODEC,
                 de.jakob.lotm.addons.rituals.DisguiseCitizenWindowPacket::handle
@@ -724,6 +730,12 @@ public class PacketHandler {
     }
 
     private static void registerServerPackets(PayloadRegistrar registrar) {
+
+        registrar.playToServer(
+                de.jakob.lotm.addons.subconscious.DreamActionPacket.TYPE,
+                de.jakob.lotm.addons.subconscious.DreamActionPacket.STREAM_CODEC,
+                de.jakob.lotm.addons.subconscious.DreamActionPacket::handle
+        );
 
         registrar.playToServer(
                 de.jakob.lotm.network.packets.error.ErrorActionPacket.TYPE,

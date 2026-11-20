@@ -347,11 +347,13 @@ ilhas, no mesmo lugar em que a pessoa dorme no mundo de verdade.
 - **Andar:** anda-se por cima da água. Agachado, afunda.
 - **Sair (acordar):** afundar até o fundo do mar, ou usar de novo, agachado, um poder de sonho. Você volta para onde
   estava.
-- **Ilhas:** colonos, aldeões e jogadores dormindo a até 96 blocos aparecem como ilhas de ametista e calcita, com o
-  nome, o ofício e um objeto da vida da pessoa girando no alto (a espada do guarda, o pão do padeiro, a picareta do
-  minerador...). Quando a pessoa acorda, a ilha afunda.
-- **Influenciar:** clicar na chama da ilha abre as opções no chat. Cada mente aceita uma influência por noite, e é
-  preciso estar a até 10 blocos dela:
+- **Ilhas:** quem dorme aparece como uma ilha de ametista e calcita, com o nome, o ofício e um objeto da vida da
+  pessoa girando no alto (a espada do guarda, o pão do padeiro, a picareta do minerador...). Quando a pessoa acorda,
+  a ilha afunda. Se você dormiu (ou entrou) dentro de uma colônia, só aparecem os colonos dessa colônia. Fora de
+  colônia, aparecem colonos, aldeões e jogadores dormindo a até 96 blocos. Marionetes nunca aparecem.
+- **Influenciar:** clicar na chama da ilha abre o menu de sonhos, no painel estrelado do mod: nome, ofício,
+  felicidade e habilidades do colono, e um botão para cada sonho (passar o mouse mostra o que ele faz). Cada mente
+  aceita uma influência por noite, e é preciso estar a até 10 blocos dela:
   - Paz: o colono fica mais feliz por 3 dias (aldeão: gosta mais de você; jogador: recupera sanidade);
   - Pesadelo: o colono fica mais infeliz por 3 dias (aldeão: gosta menos de você; jogador: perde sanidade);
   - Sonho de força (+1 em Força e Vigor), de destreza (+1 em Destreza e Agilidade), de saber (+1 em Conhecimento e

@@ -5,14 +5,11 @@ import com.minecolonies.api.entity.citizen.Skill;
 import com.minecolonies.api.entity.citizen.happiness.ExpirationBasedHappinessModifier;
 import com.minecolonies.api.entity.citizen.happiness.StaticHappinessSupplier;
 import com.minecolonies.core.entity.citizen.EntityCitizen;
-import com.mojang.brigadier.arguments.StringArgumentType;
 import de.jakob.lotm.LOTMCraft;
 import de.jakob.lotm.addons.colonies.Colonists;
 import de.jakob.lotm.attachments.ModAttachments;
 import de.jakob.lotm.beyonders.abilities.core.AbilityUseEvent;
 import de.jakob.lotm.util.BeyonderData;
-import net.minecraft.commands.Commands;
-import net.minecraft.commands.arguments.UuidArgument;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -20,11 +17,7 @@ import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.FloatTag;
 import net.minecraft.nbt.ListTag;
-import net.minecraft.network.chat.ClickEvent;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.HoverEvent;
-import net.minecraft.network.chat.MutableComponent;
-import net.minecraft.network.chat.Style;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.MinecraftServer;
@@ -48,7 +41,6 @@ import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
-import net.neoforged.neoforge.event.RegisterCommandsEvent;
 import net.neoforged.neoforge.event.entity.player.PlayerInteractEvent;
 import net.neoforged.neoforge.event.tick.PlayerTickEvent;
 
@@ -81,7 +73,7 @@ public final class SubconsciousSea {
     public static final int MIND_RADIUS = 96, SLEEP_TICKS = 60, ISLAND_SPACING = 11, REACH = 10;
     private static final int S = SubconsciousSeaChunkGenerator.SURFACE + 1;
     private static final String ORIGIN_DIM = "LotmSeaOriginDim", ORIGIN_X = "LotmSeaOriginX", ORIGIN_Y = "LotmSeaOriginY",
-            ORIGIN_Z = "LotmSeaOriginZ", SLEPT = "LotmSeaSlept", TAG = "lotm_mind", TAG_PREFIX = "lotm_mind_";
+            ORIGIN_Z = "LotmSeaOriginZ", ORIGIN_COLONY = "LotmSeaOriginColony", SLEPT = "LotmSeaSlept", TAG = "lotm_mind", TAG_PREFIX = "lotm_mind_";
     /** Marcas deixadas nas mentes (para os rituais do Visionário) */
     public static final String MARKS = "LotmSeaMarks", NIGHT_DREAMS = "LotmSeaNightDreams";
     private static final int COLOR = 0x9C88D8, BAD = 0xFF7A7A;
@@ -133,6 +125,10 @@ public final class SubconsciousSea {
         tag.putDouble(ORIGIN_X, player.getX());
         tag.putDouble(ORIGIN_Y, player.getY());
         tag.putDouble(ORIGIN_Z, player.getZ());
+        // dormindo dentro de uma colônia, só as mentes dela aparecem
+        var colony = Colonists.colonyAt(player.level(), player.blockPosition());
+        if (colony != null) tag.putInt(ORIGIN_COLONY, colony.getID());
+        else tag.remove(ORIGIN_COLONY);
         if (player.isSleeping()) player.stopSleeping();
         player.teleportTo(sea, player.getX(), S + 0.5, player.getZ(), player.getYRot(), player.getXRot());
         player.displayClientMessage(Component.translatable("lotmcraft.sea.entered").withColor(COLOR), false);
@@ -185,7 +181,13 @@ public final class SubconsciousSea {
     }
 
     private static boolean person(Entity entity) {
-        return entity instanceof EntityCitizen || entity instanceof Villager || entity instanceof Player;
+        return (entity instanceof EntityCitizen || entity instanceof Villager || entity instanceof Player) && !marionette(entity);
+    }
+
+    /** Marionetes não têm mente própria: não aparecem no mar */
+    private static boolean marionette(Entity entity) {
+        return entity instanceof LivingEntity living && living.hasData(ModAttachments.MARIONETTE_COMPONENT)
+                && living.getData(ModAttachments.MARIONETTE_COMPONENT).isMarionette();
     }
 
     @SubscribeEvent
@@ -233,14 +235,25 @@ public final class SubconsciousSea {
         AABB area = new AABB(player.getX() - MIND_RADIUS, real.getMinBuildHeight(), player.getZ() - MIND_RADIUS,
                 player.getX() + MIND_RADIUS, real.getMaxBuildHeight(), player.getZ() + MIND_RADIUS);
         Set<UUID> sleeping = new HashSet<>();
-        for (LivingEntity entity : real.getEntitiesOfClass(LivingEntity.class, area, e -> e.isAlive() && person(e) && e != player && asleep(e))) {
+        java.util.List<LivingEntity> sleepers = new java.util.ArrayList<>();
+        com.minecolonies.api.colony.IColony colony = tag.contains(ORIGIN_COLONY)
+                ? com.minecolonies.api.colony.IColonyManager.getInstance().getColonyByWorld(tag.getInt(ORIGIN_COLONY), real) : null;
+        if (colony != null) {
+            // numa colônia, só os colonos dela
+            for (ICitizenData citizen : colony.getCitizenManager().getCitizens()) {
+                citizen.getEntity().ifPresent(e -> { if (e.isAlive() && person(e) && asleep(e)) sleepers.add(e); });
+            }
+        } else {
+            sleepers.addAll(real.getEntitiesOfClass(LivingEntity.class, area, e -> e.isAlive() && person(e) && e != player && asleep(e)));
+        }
+        for (LivingEntity entity : sleepers) {
             sleeping.add(entity.getUUID());
             if (!MINDS.containsKey(entity.getUUID())) raise(sea, real, entity);
         }
         // quem acordou (ou saiu de perto) perde a ilha
         for (Mind mind : new java.util.ArrayList<>(MINDS.values())) {
             if (!mind.realDimension().equals(real.dimension()) || sleeping.contains(mind.sleeper())) continue;
-            if (Math.hypot(mind.center().getX() - player.getX(), mind.center().getZ() - player.getZ()) > MIND_RADIUS) continue;
+            if (colony == null && Math.hypot(mind.center().getX() - player.getX(), mind.center().getZ() - player.getZ()) > MIND_RADIUS) continue;
             sink(sea, mind);
         }
         // ilhas antigas, de antes de o servidor fechar
@@ -412,32 +425,41 @@ public final class SubconsciousSea {
         showMenu(player, mind);
     }
 
+    private static final String[] SKILL_NAMES = {"Athletics", "Dexterity", "Strength", "Agility", "Stamina", "Mana", "Adaptability", "Focus",
+            "Creativity", "Knowledge", "Intelligence"};
+
+    /** Abre o menu de sonhos desta mente (no estilo do mod) */
     private static void showMenu(ServerPlayer player, Mind mind) {
-        MutableComponent menu = Component.translatable("lotmcraft.sea.menu").withColor(COLOR).append("\n");
-        String[] actions = mind.kind().equals("colonist") ? new String[]{"peace", "nightmare", "strength", "skill", "knowledge", "art"}
-                : new String[]{"peace", "nightmare", "knowledge"};
-        for (String action : actions) {
-            menu.append(Component.literal("[").append(Component.translatable("lotmcraft.sea.action." + action)).append("] ")
-                    .withStyle(Style.EMPTY.withColor(action.equals("nightmare") ? 0xC0504D : 0xD8CCFF)
-                            .withClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/lotmsonho " + mind.sleeper() + " " + action))
-                            .withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, Component.translatable("lotmcraft.sea.action." + action + ".hint")))));
+        ServerLevel real = player.server.getLevel(mind.realDimension());
+        Entity body = real == null ? null : real.getEntity(mind.sleeper());
+        if (!(body instanceof LivingEntity living)) return;
+        CompoundTag info = new CompoundTag();
+        info.putUUID("uuid", mind.sleeper());
+        info.putString("name", living.getName().getString());
+        info.putString("job", jobKey(living));
+        info.putString("kind", mind.kind());
+        long night = player.server.overworld().getDayTime() / 24000;
+        info.putBoolean("tonight", INFLUENCED.getOrDefault(mind.sleeper(), -1L) == night);
+        ICitizenData citizen = Colonists.data(living);
+        if (citizen != null) {
+            info.putString("actions", "peace,nightmare,strength,skill,knowledge,art");
+            info.putDouble("happiness", citizen.getCitizenHappinessHandler().getHappiness(citizen.getColony(), citizen));
+            CompoundTag skills = new CompoundTag();
+            for (String name : SKILL_NAMES) skills.putInt(name, citizen.getCitizenSkillHandler().getLevel(Skill.valueOf(name)));
+            info.put("skills", skills);
+        } else if (living instanceof Villager villager) {
+            info.putString("actions", "peace,nightmare,knowledge");
+            info.putString("infoKey", "lotmcraft.sea.screen.villager_level");
+            info.putString("infoArg", String.valueOf(villager.getVillagerData().getLevel()));
+        } else {
+            info.putString("actions", "peace,nightmare");
+            info.putString("infoKey", "lotmcraft.sea.screen.sanity");
+            info.putString("infoArg", String.format("%.0f%%", living.getData(ModAttachments.SANITY_COMPONENT).getSanity() * 100));
         }
-        player.displayClientMessage(menu, false);
+        player.connection.send(new DreamMindPacket(info));
     }
 
-    @SubscribeEvent
-    public static void onCommands(RegisterCommandsEvent event) {
-        event.getDispatcher().register(Commands.literal("lotmsonho")
-                .then(Commands.argument("alvo", UuidArgument.uuid())
-                        .then(Commands.argument("acao", StringArgumentType.word())
-                                .executes(ctx -> {
-                                    ServerPlayer player = ctx.getSource().getPlayerOrException();
-                                    influence(player, UuidArgument.getUuid(ctx, "alvo"), StringArgumentType.getString(ctx, "acao"));
-                                    return 1;
-                                }))));
-    }
-
-    private static void influence(ServerPlayer player, UUID sleeper, String action) {
+    public static void influence(ServerPlayer player, UUID sleeper, String action) {
         Mind mind = MINDS.get(sleeper);
         if (mind == null || !inSea(player) || Math.hypot(mind.center().getX() - player.getX(), mind.center().getZ() - player.getZ()) > REACH) {
             player.displayClientMessage(Component.translatable("lotmcraft.sea.too_far").withColor(BAD), true);

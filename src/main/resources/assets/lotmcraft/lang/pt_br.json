@@ -5629,5 +5629,19 @@
   "lotmcraft.visionary.contract": "O contrato com %s foi selado. Uma pena fica com você.",
   "lotmcraft.visionary.same_dream": "O seu sonho nesta noite: %s de %s mentes.",
   "lotmcraft.visionary.story_begun": "\"%s\": %s capítulos sobre gente de verdade. Agora o destino deles segue a sua história.",
-  "lotmcraft.visionary.story_short": "\"%s\" tem só %s capítulos sobre gente de verdade (são precisos %s)."
+  "lotmcraft.visionary.story_short": "\"%s\" tem só %s capítulos sobre gente de verdade (são precisos %s).",
+  "lotmcraft.sea.screen.happiness": "Felicidade: %s",
+  "lotmcraft.sea.screen.villager_level": "Nível no ofício: %s",
+  "lotmcraft.sea.screen.sanity": "Sanidade: %s",
+  "lotmcraft.sea.skill.athletics": "Atletismo",
+  "lotmcraft.sea.skill.dexterity": "Destreza",
+  "lotmcraft.sea.skill.strength": "Força",
+  "lotmcraft.sea.skill.agility": "Agilidade",
+  "lotmcraft.sea.skill.stamina": "Vigor",
+  "lotmcraft.sea.skill.mana": "Mana",
+  "lotmcraft.sea.skill.adaptability": "Adaptabilidade",
+  "lotmcraft.sea.skill.focus": "Foco",
+  "lotmcraft.sea.skill.creativity": "Criatividade",
+  "lotmcraft.sea.skill.knowledge": "Conhecimento",
+  "lotmcraft.sea.skill.intelligence": "Inteligência"
 }
