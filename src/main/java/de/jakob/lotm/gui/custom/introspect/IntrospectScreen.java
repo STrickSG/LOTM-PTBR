@@ -1183,9 +1183,7 @@ public class IntrospectScreen extends AbstractContainerScreen<IntrospectMenu> {
     /** A corrupção: vinho avermelhado, logo abaixo da digestão */
     private void renderCorruption(GuiGraphics g, int x, int y, float t) {
         heading(g, Component.translatable("lotm.corruption"), x + 16, y + CORRUPTION_LABEL_Y);
-        float corruption = 0f;
-        if (minecraft != null && minecraft.player != null)
-            corruption = de.jakob.lotm.addons.corruption.Corruption.fromStacks(ClientBeyonderCache.getCharStacks(minecraft.player.getUUID()));
+        float corruption = de.jakob.lotm.addons.corruption.CorruptionSyncPacket.clientValue;
         renderTube(g, x + PAD_X, y + CORRUPTION_TUBE_Y, corruption, 0xFFA63358, 0xFF5E1232, t);
         drawCounter(g, x + PAD_X + TUBE_W + 4, y + CORRUPTION_TUBE_Y + 1, 30, 14,
                 (int) (Mth.clamp(corruption, 0f, 1f) * 100) + "%", TEXT_NORMAL);

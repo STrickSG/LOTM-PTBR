@@ -22,7 +22,10 @@ public class ActingHandler {
                 .findFirst()
                 .ifPresent(task -> {
                     float amount = task.getScaledAmount(sequence);
+                    float digestionBefore = BeyonderData.getDigestionProgress(player);
                     BeyonderData.digest(player, amount, true);
+                    if (player instanceof ServerPlayer serverPlayer)
+                        de.jakob.lotm.addons.corruption.Corruption.onActing(serverPlayer, digestionBefore, amount);
                     ActingHelper.setCooldown(player, task.getId(), task.getCooldownTicks());
 
                     if(!ActingHelper.isTriggerUnlocked(pathway, sequence, player, task.getId())) {
