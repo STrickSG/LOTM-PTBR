@@ -50,10 +50,8 @@ public class EyeOfDeathOverlayRenderer {
         LivingEntity entity = entitiesLookedAt.get(mc.player.getUUID());
         if (entity == null) return;
 
-        java.util.List<String> lines = new java.util.ArrayList<>();
-        lines.add(VisionInfo.healthLine(entity.getHealth()));
-        lines.addAll(VisionInfo.death(entity, de.jakob.lotm.util.ClientBeyonderCache.getSequence(mc.player.getUUID())));
-        VisionInfo.card(guiGraphics, mc.font, entity.getName().getString(), 0xFF6897CC, 0xFF95BFED, lines);
+        VisionInfo.Content content = VisionInfo.build(VisionInfo.Kind.DEATH, entity, entity.getHealth(), de.jakob.lotm.util.ClientBeyonderCache.getSequence(mc.player.getUUID()));
+        VisionInfo.card(guiGraphics, mc.font, entity.getName().getString(), VisionInfo.titleColor(entity), 0xFF6897CC, content);
     }
 
     private static void renderPanel(GuiGraphics guiGraphics, int x, int y, int width, int height, int accentColor) {

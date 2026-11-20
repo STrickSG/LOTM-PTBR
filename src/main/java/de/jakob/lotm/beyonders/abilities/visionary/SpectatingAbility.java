@@ -108,6 +108,7 @@ public class SpectatingAbility extends ToggleAbility {
         }
 
         PacketHandler.sendToPlayer(player, new SyncSpectatingAbilityPacket(true, lookedAt == null ? -1 : lookedAt.getId()));
+        de.jakob.lotm.network.packets.toClient.VisionTargetPacket.send(player, lookedAt);
 
         entity.addEffect(new MobEffectInstance(MobEffects.NIGHT_VISION, 20 * 17, 1, false, false, false));
     }

@@ -55,8 +55,6 @@ public class SpiritVisionOverlayRenderer {
         LivingEntity entity = entitiesLookedAt.get(mc.player.getUUID());
         if (entity == null) return;
 
-        // Quanto mais alta a sequência, mais linhas de informação
-        List<String> extra = VisionInfo.spirit(entity, ClientBeyonderCache.getSequence(mc.player.getUUID()));
         String name = entity.getName().getString();
         float maxHealth = entity.getMaxHealth();
         float health = entity.getHealth();
@@ -83,10 +81,9 @@ public class SpiritVisionOverlayRenderer {
         }
 
         if (!VisionaryHandler.shouldStayInvisible(ClientBeyonderCache.getSequence(mc.player.getUUID()), entity)) {
-            List<String> lines = new java.util.ArrayList<>();
-            lines.add(VisionInfo.healthLine(health));
-            lines.addAll(extra);
-            VisionInfo.card(guiGraphics, mc.font, name, 0xFF9B6BD6, ACCENT_LIGHT, lines);
+            // quanto mais alta a sequência, mais aparece
+            VisionInfo.Content content = VisionInfo.build(VisionInfo.Kind.SPIRIT, entity, health, ClientBeyonderCache.getSequence(mc.player.getUUID()));
+            VisionInfo.card(guiGraphics, mc.font, name, VisionInfo.titleColor(entity), 0xFF9B6BD6, content);
         }
     }
 

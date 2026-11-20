@@ -472,6 +472,12 @@ public class PacketHandler {
         );
 
         registrar.playToClient(
+                de.jakob.lotm.network.packets.toClient.VisionTargetPacket.TYPE,
+                de.jakob.lotm.network.packets.toClient.VisionTargetPacket.STREAM_CODEC,
+                de.jakob.lotm.network.packets.toClient.VisionTargetPacket::handle
+        );
+
+        registrar.playToClient(
                 SyncSpiritVisionAbilityPacket.TYPE,
                 SyncSpiritVisionAbilityPacket.STREAM_CODEC,
                 SyncSpiritVisionAbilityPacket::handle

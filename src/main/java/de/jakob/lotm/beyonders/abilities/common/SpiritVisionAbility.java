@@ -145,6 +145,7 @@ public class SpiritVisionAbility extends ToggleAbility {
         PacketHandler.sendToPlayer(player, new PlayPhotonEntityEffectPacket("spirit_vision", player.getId(), 0, 0, 0, 1, null, true, true, UUID.randomUUID(), true));
 
         PacketHandler.sendToPlayer(player, new SyncSpiritVisionAbilityPacket(true, lookedAt == null ? -1 : lookedAt.getId()));
+        de.jakob.lotm.network.packets.toClient.VisionTargetPacket.send(player, lookedAt);
         AllyComponent allyComponent = entity.getData(ModAttachments.ALLY_COMPONENT);
 
         if (lookedAt != null) {

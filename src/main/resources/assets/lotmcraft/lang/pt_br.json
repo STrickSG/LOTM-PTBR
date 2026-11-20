@@ -5777,5 +5777,20 @@
   "lotmcraft.vision.nature.spirit": "Espírito",
   "lotmcraft.vision.nature.undead": "Morto-vivo",
   "lotmcraft.vision.nature.living": "Vivo",
-  "lotmcraft.vision.health": "Vida"
+  "lotmcraft.vision.health": "Vida",
+  "lotmcraft.vision.short.hp": "PS",
+  "lotmcraft.vision.short.armor": "Arm",
+  "lotmcraft.vision.short.sanity": "San",
+  "lotmcraft.vision.short.spirituality": "Esp",
+  "lotmcraft.vision.short.death": "Mor",
+  "lotmcraft.vision.short.nature": "Nat",
+  "lotmcraft.vision.short.death.far": "Distante",
+  "lotmcraft.vision.short.death.near": "Próxima",
+  "lotmcraft.vision.short.death.imminent": "Iminente",
+  "lotmcraft.vision.short.nature.spirit": "Espírito",
+  "lotmcraft.vision.short.nature.undead": "Morto-vivo",
+  "lotmcraft.vision.short.nature.living": "Vivo",
+  "lotmcraft.vision.short.not_beyonder": "Não é Beyonder",
+  "lotmcraft.vision.short.beyonder": "Beyonder",
+  "lotmcraft.vision.pathway_title": "%s Pathway"
 }

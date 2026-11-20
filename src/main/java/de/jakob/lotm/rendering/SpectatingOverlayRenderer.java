@@ -45,11 +45,8 @@ public class SpectatingOverlayRenderer {
             LivingEntity entity = entitiesLookedAtByPlayerWithActiveSpectating.get(mc.player.getUUID());
             if (entity != null) {
                 int viewerSeq = ClientBeyonderCache.getSequence(mc.player.getUUID());
-                java.util.List<String> lines = new java.util.ArrayList<>();
-                lines.add(VisionInfo.healthLine(entity.getHealth()));
-                lines.addAll(statLines(entity, viewerSeq));
-                lines.addAll(VisionInfo.spectating(entity, viewerSeq));
-                VisionInfo.card(guiGraphics, mc.font, entity.getName().getString(), 0xFFC9A24A, 0xFFF7CD83, lines);
+                VisionInfo.Content content = VisionInfo.build(VisionInfo.Kind.SPECTATING, entity, entity.getHealth(), viewerSeq);
+                VisionInfo.card(guiGraphics, mc.font, entity.getName().getString(), VisionInfo.titleColor(entity), 0xFFC9A24A, content);
             }
         }
     }
