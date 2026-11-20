@@ -44,18 +44,59 @@ public record HonorificName(LinkedList<String> lines) {
         });
     }
 
+    /** As mesmas palavras em português. Qualquer uma das duas línguas vale no nome honorífico. */
+    static public LinkedList<String> getMustHaveWordsPt(String path){
+        return new LinkedList<String>(
+                switch (path){
+                    case "fool" -> List.of("História", "Mistério", "Bizarrice", "Mudança", "Desejos", "Milagres", "Drama", "Atuações", "Tolos");
+                    case "error" -> List.of("Tempo", "Engano", "Trapaça", "Brechas", "Adulteração", "Exploração", "Bugs", "Roubo", "Erros");
+                    case "door" -> List.of("Espaço", "Estrelas", "Cosmos", "Mundos", "Ocultação", "Selos", "Viagens", "Crônicas", "Portas");
+                    case "visionary" -> List.of("Mente", "Sonhos", "Visões", "Fantasias", "Imaginação", "Discernimento", "Psique", "Coincidência", "Arranjos");
+                    case "sun" -> List.of("Luz", "Ordem", "Santidade", "Contratos", "Justiça", "Energia", "Sol", "Dia", "Inextinguível");
+                    case "tyrant" -> List.of("Tempestades", "Calamidades", "Mares", "Céus", "Tsunamis", "Profundezas", "Criaturas", "Tirania", "Ira");
+                    case "white_tower" -> List.of("Conhecimento", "Observação", "Raciocínio", "Cognição", "Sabedoria", "Razão", "Onisciência", "Aprendizado", "Loucura");
+                    case "hanged_man" -> List.of("Degeneração", "Corrupção", "Mutação", "Sombras", "Escuridão", "Sussurros", "Sacrifício", "Depravação", "Palavras");
+                    case "darkness" -> List.of("Escuridão", "Sonhos", "Silêncio", "Horror", "Repouso", "Infortúnio", "Ocultação", "Estrelas", "Noite");
+                    case "death" -> List.of("Morte", "Não-morte", "Espíritos", "Submundo", "Palidez", "Estige", "Mortos", "Eterno", "Descanso");
+                    case "twilight_giant" -> List.of("Crepúsculo", "Decadência", "Glória", "Passagem", "Tempo", "Alvorada", "Anoitecer", "Poder", "Combate");
+                    case "demoness" -> List.of("Caos", "Catástrofes", "Espelho", "Desastres", "Apocalipse", "Discórdia", "Pragas", "Primórdio", "Feminilidade");
+                    case "red_priest" -> List.of("Guerra", "Calamidade", "Ferro", "Sangue", "Batalha", "Discórdia", "Caos", "Destruição", "Masculinidade");
+                    case "hermit" -> List.of("Conhecimento", "Informação", "Símbolos", "Magia", "Dados", "Números", "Educação", "Histórias", "Misticismo");
+                    case "paragon" -> List.of("Tecnologia", "Lógica", "Máquinas", "Física", "Civilizações", "Estrutura", "Essência", "Educação", "Iluminação");
+                    case "wheel_of_fortune" -> List.of("Destino", "Sorte", "Sortudo", "Infortúnio", "Fortuna", "Rio", "Calamidades", "Probabilidade", "Loucura", "Caos");
+                    case "mother" -> List.of("Terra", "Fertilidade", "Reprodução", "Desolação", "Natureza", "Origem", "Vida", "Colheita", "Fartura");
+                    case "moon" -> List.of("Lua", "Fertilidade", "Reprodução", "Espiritualidade", "Beleza", "Proliferação", "Luar", "Prata", "Carmesim");
+                    case "abyss" -> List.of("Demônios", "Mal", "Desejos", "Corrupção", "Sangue", "Malícia", "Balbucios", "Corrosão", "Imundície");
+                    case "chained" -> List.of("Correntes", "Temperança", "Desviantes", "Contenção", "Indulgência", "Unidade", "Amarras", "Maldições", "Espinhos");
+                    case "black_emperor" -> List.of("Desordem", "Distorção", "Exploração", "Entropia", "Abolição", "Frenesi", "Dominação", "Negro", "Sombra");
+                    case "justiciar" -> List.of("Leis", "Regras", "Equilíbrio", "Disciplina", "Justiça", "Julgamento", "Ordem", "Branco", "Punição");
+                    default -> List.of();
+        });
+    }
+
+    /** As palavras para mostrar a quem está escrevendo: em português, se o jogo estiver em português */
+    static public LinkedList<String> getMustHaveWordsFor(String path, String languageCode){
+        return languageCode != null && languageCode.startsWith("pt") ? getMustHaveWordsPt(path) : getMustHaveWords(path);
+    }
+
+    /** Sem acento, em minúsculas e sem o "s" do plural: "Misterio" vale como "Mistério" e "Tolo" como "Tolos" */
+    private static String plain(String s){
+        String p = java.text.Normalizer.normalize(s, java.text.Normalizer.Form.NFD).replaceAll("\\p{M}", "").toLowerCase(java.util.Locale.ROOT);
+        return p.length() > 3 && p.endsWith("s") ? p.substring(0, p.length() - 1) : p;
+    }
+
     public static int MAX_LENGTH = 200;
 
     public boolean contains(String str) {return lines.contains(str);}
 
     public static boolean validate(String path, LinkedList<String> list){
-        var mustHave = getMustHaveWords(path);
+        var mustHave = new java.util.HashSet<String>();
+        getMustHaveWords(path).forEach(w -> mustHave.add(plain(w)));
+        getMustHaveWordsPt(path).forEach(w -> mustHave.add(plain(w)));
 
         for (var str : list){
-            var words = List.of(str.split("[ ,]"));
-            if(!words.stream().
-                    anyMatch(input -> mustHave.stream().
-                            anyMatch(target -> target.equalsIgnoreCase(input))))
+            var words = List.of(str.split("[ ,.;:!?]"));
+            if(words.stream().noneMatch(input -> mustHave.contains(plain(input))))
                 return false;
         }
 

@@ -113,7 +113,7 @@ public class SetHonorificNameScreen extends Screen {
         int centerX = this.width / 2;
         int startY  = this.height / 2 - (lineCount * 30) / 2 + 20;
 
-        int panelTop    = startY - 58;
+        int panelTop    = startY - 66;
         int panelBottom = startY + lineCount * 30 + 60 + (errorMessage.isEmpty() ? 0 : 14);
         int panelLeft   = centerX - 148;
         int panelRight  = centerX + 148;
@@ -132,18 +132,21 @@ public class SetHonorificNameScreen extends Screen {
         String pathInfo = BeyonderData.pathwayInfos.get(pathway).getSequenceName(sequence);
         gfx.drawCenteredString(font, pathInfo, centerX, divY + 5, COL_LABEL);
 
-        List<String> requiredWords = HonorificName.getMustHaveWords(pathway);
+        List<String> requiredWords = HonorificName.getMustHaveWordsFor(pathway,
+                net.minecraft.client.Minecraft.getInstance().getLanguageManager().getSelected());
         if (!requiredWords.isEmpty()) {
-            int maxWidth = Math.min(this.width - 40, 400);
             gfx.drawCenteredString(font, LotmText.t("lotmcraft.text.required_words_at_least_one_per", "Required words (at least one per line):"), centerX, divY + 17, COL_HINT);
+            // a lista inteira, quebrada em linhas menores (antes era cortada com "...")
             String wordsStr = String.join(", ", requiredWords);
-            if (font.width(wordsStr) > maxWidth) {
-                int truncIndex = Math.max(0, Math.min(
-                        wordsStr.length() * maxWidth / font.width(wordsStr) - 3,
-                        wordsStr.length() - 3));
-                wordsStr = wordsStr.substring(0, truncIndex) + "...";
+            float scale = font.width(wordsStr) > 280 ? 0.8f : 1f;
+            gfx.pose().pushPose();
+            gfx.pose().translate(centerX, divY + 27, 0);
+            gfx.pose().scale(scale, scale, 1f);
+            var lines = font.split(net.minecraft.network.chat.Component.literal(wordsStr), (int) (280 / scale));
+            for (int i = 0; i < lines.size() && i < 2; i++) {
+                gfx.drawCenteredString(font, lines.get(i), 0, i * 10, COL_HINT);
             }
-            gfx.drawCenteredString(font, wordsStr, centerX, divY + 27, COL_HINT);
+            gfx.pose().popPose();
         }
 
         if (!errorMessage.isEmpty()) {
