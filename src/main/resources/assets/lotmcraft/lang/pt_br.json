@@ -5753,5 +5753,8 @@
   "ability.lotmcraft.divine_authority.failed": "A característica não se soltou.",
   "ability.lotmcraft.divine_authority.extracted": "Você arrancou a característica de %s.",
   "ability.lotmcraft.divine_authority.victim": "Um Deus arrancou a sua característica.",
-  "lotm.corruption": "Corrupção"
+  "lotm.corruption": "Corrupção",
+  "lotm.characteristics": "Características",
+  "lotm.characteristics.corruption": "Corrupção: %s%%",
+  "lotm.characteristics.rate": "Sobe %s%% por dia"
 }

@@ -103,6 +103,7 @@ public class IntrospectScreen extends AbstractContainerScreen<IntrospectMenu> {
     private static final ResourceLocation ICON_ALLIES = sprite("icon_allies");
     private static final ResourceLocation ICON_APOTHEOSIS = sprite("icon_apotheosis");
     private static final ResourceLocation ICON_ANCHORS = sprite("icon_anchors");
+    private static final ResourceLocation ICON_CHARACTERISTICS = sprite("icon_characteristics");
 
     // =====================================================================================
     //  Palette (text)
@@ -173,8 +174,9 @@ public class IntrospectScreen extends AbstractContainerScreen<IntrospectMenu> {
     private boolean showMissedActing = false;
     private boolean showAllies = false;
     private boolean showAnchors = false;
+    private boolean showCharacteristics = false;
 
-    private enum SidePanel {ABILITIES, QUESTS, ACTING, MISSED, ALLIES, ANCHORS}
+    private enum SidePanel {ABILITIES, QUESTS, ACTING, MISSED, ALLIES, ANCHORS, CHARACTERISTICS}
 
     private enum Tab {
         ABILITY_WHEEL,
@@ -720,6 +722,7 @@ public class IntrospectScreen extends AbstractContainerScreen<IntrospectMenu> {
             case MISSED -> showMissedActing;
             case ALLIES -> showAllies;
             case ANCHORS -> showAnchors;
+            case CHARACTERISTICS -> showCharacteristics;
         };
 
         showAbilities = false;
@@ -728,6 +731,7 @@ public class IntrospectScreen extends AbstractContainerScreen<IntrospectMenu> {
         showMissedActing = false;
         showAllies = false;
         showAnchors = false;
+        showCharacteristics = false;
         allyNameInput.setFocused(false);
 
         if (!wasOpen) {
@@ -738,6 +742,7 @@ public class IntrospectScreen extends AbstractContainerScreen<IntrospectMenu> {
                 case MISSED -> showMissedActing = true;
                 case ALLIES -> showAllies = true;
                 case ANCHORS -> showAnchors = true;
+                case CHARACTERISTICS -> showCharacteristics = true;
             }
         }
         updateButtonPositions();
@@ -808,6 +813,8 @@ public class IntrospectScreen extends AbstractContainerScreen<IntrospectMenu> {
         if (menu.getSequence() <= de.jakob.lotm.addons.rituals.Believers.MAX_SEQUENCE) {
             addSideTab(LotmText.t("lotmcraft.text.anchors", "Anchors"), ICON_ANCHORS, 210, showAnchors, b -> togglePanel(SidePanel.ANCHORS));
         }
+
+        addSideTab(Component.translatable("lotm.characteristics").getString(), ICON_CHARACTERISTICS, 235, showCharacteristics, b -> togglePanel(SidePanel.CHARACTERISTICS));
 
         if (showAbilities) {
             addAbilityButtons(baseLeftPos);
@@ -1102,6 +1109,7 @@ public class IntrospectScreen extends AbstractContainerScreen<IntrospectMenu> {
         if (showAllies) renderAlliesPanel(guiGraphics);
         if (showMissedActing) renderMissedActingPanel(guiGraphics);
         if (showAnchors) renderAnchorsPanel(guiGraphics);
+        if (showCharacteristics) renderCharacteristicsPanel(guiGraphics);
 
         RenderSystem.disableBlend();
     }
@@ -1524,6 +1532,68 @@ public class IntrospectScreen extends AbstractContainerScreen<IntrospectMenu> {
         guiGraphics.pose().scale(2f, 2f, 1f);
         guiGraphics.drawString(this.font, number, -this.font.width(number) / 2, 0, TEXT_HEADING, true);
         guiGraphics.pose().popPose();
+    }
+
+    // -------------------------------------------------------------- Characteristics drawer
+
+    /**
+     * Características: as que estão no corpo, da Sequência 9 até a atual, com quantas cópias de cada e quanto as cópias
+     * extras pesam na corrupção. Embaixo, a corrupção total e quanto ela sobe por dia.
+     */
+    private void renderCharacteristicsPanel(GuiGraphics g) {
+        int panelX = this.leftPos + this.imageWidth + 5;
+        int panelY = this.topPos;
+        int panelW = ACTING_PANEL_WIDTH + 20;
+        String pathway = menu.getPathway();
+        int current = menu.getSequence();
+        int[] stacks = this.minecraft != null && this.minecraft.player != null
+                ? ClientBeyonderCache.getCharStacks(this.minecraft.player.getUUID()) : new int[10];
+        int rows = Math.max(0, 9 - current + 1);
+        int panelH = 22 + rows * 18 + 36;
+
+        drawDrawer(g, panelX, panelY, panelW, panelH);
+        heading(g, Component.translatable("lotm.characteristics"), panelX + 5, panelY + 5);
+        drawTitleRule(g, panelX, panelY, panelW);
+
+        int y = panelY + 19;
+        for (int seq = 9; seq >= current && seq >= 0; seq--) {
+            int extra = stacks != null && seq < stacks.length ? Math.max(0, stacks[seq]) : 0;
+            var item = de.jakob.lotm.beyonders.potions.BeyonderCharacteristicItemHandler.selectCharacteristicOfPathwayAndSequence(pathway, seq);
+            if (item != null) {
+                g.pose().pushPose();
+                g.pose().translate(panelX + 5, y, 0);
+                g.pose().scale(0.875f, 0.875f, 1f);
+                g.renderItem(new ItemStack(item), 0, 0);
+                g.pose().popPose();
+            }
+            String name = BeyonderData.getSequenceName(pathway, seq);
+            Component line = Component.literal(seq + " · " + name);
+            int maxW = panelW - 24 - 34;
+            float sc = Math.min(1f, maxW / (float) Math.max(1, this.font.width(line)));
+            g.pose().pushPose();
+            g.pose().translate(panelX + 22, y + 4, 0);
+            g.pose().scale(sc, sc, 1f);
+            g.drawString(this.font, line, 0, 0, seq == current ? TEXT_HEADING : TEXT_BODY, true);
+            g.pose().popPose();
+            Component count = Component.literal("×" + (1 + extra)).withStyle(extra > 0 ? ChatFormatting.GOLD : ChatFormatting.GRAY);
+            g.drawString(this.font, count, panelX + panelW - 32, y + 4, TEXT_NORMAL, true);
+            if (extra > 0) {
+                int pct = Math.round(extra * (0.04f + 0.02f * (9 - seq)) * 100);
+                Component w = Component.literal("+" + pct + "%");
+                g.pose().pushPose();
+                g.pose().translate(panelX + panelW - 6 - this.font.width(w) * 0.75f, y + 13, 0);
+                g.pose().scale(0.75f, 0.75f, 1f);
+                g.drawString(this.font, w, 0, 0, 0xFFC0506E, true);
+                g.pose().popPose();
+            }
+            y += 18;
+        }
+
+        g.fill(panelX + 6, y + 1, panelX + panelW - 6, y + 2, 0x60F4D58A);
+        float corruption = de.jakob.lotm.addons.corruption.CorruptionSyncPacket.clientValue;
+        float daily = de.jakob.lotm.addons.corruption.Corruption.dailyGrowth(current, stacks);
+        g.drawString(this.font, Component.translatable("lotm.characteristics.corruption", (int) (corruption * 100)), panelX + 6, y + 6, 0xFFD06A8A, true);
+        g.drawString(this.font, Component.translatable("lotm.characteristics.rate", String.format(java.util.Locale.ROOT, "%.1f", daily * 100)), panelX + 6, y + 18, TEXT_DIM, true);
     }
 
     // -------------------------------------------------------------- Missed acting drawer

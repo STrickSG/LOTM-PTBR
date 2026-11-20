@@ -84,9 +84,12 @@ public final class Corruption {
 
     /** Quanto sobe por dia de jogo (20 minutos) */
     public static float dailyGrowth(LivingEntity entity) {
-        int seq = BeyonderData.getSequence(entity);
+        return dailyGrowth(BeyonderData.getSequence(entity), BeyonderData.getCharStacks(entity));
+    }
+
+    public static float dailyGrowth(int seq, int[] stacks) {
         float base = 0.01f + 0.004f * (9 - Math.max(0, Math.min(9, seq)));
-        return base * (1f + 4f * stackWeight(BeyonderData.getCharStacks(entity)));
+        return base * (1f + 4f * stackWeight(stacks));
     }
 
     // ------------------------------------------------------------------ o tempo

@@ -5954,5 +5954,8 @@
   "ability.lotmcraft.divine_authority.failed": "The characteristic did not come loose.",
   "ability.lotmcraft.divine_authority.extracted": "You tore out %s's characteristic.",
   "ability.lotmcraft.divine_authority.victim": "A God tore out your characteristic.",
-  "lotm.corruption": "Corruption"
+  "lotm.corruption": "Corruption",
+  "lotm.characteristics": "Characteristics",
+  "lotm.characteristics.corruption": "Corruption: %s%%",
+  "lotm.characteristics.rate": "Rises %s%% per day"
 }
