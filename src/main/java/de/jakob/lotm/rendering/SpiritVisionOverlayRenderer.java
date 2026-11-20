@@ -57,18 +57,6 @@ public class SpiritVisionOverlayRenderer {
 
         // Quanto mais alta a sequência, mais linhas de informação
         List<String> extra = VisionInfo.spirit(entity, ClientBeyonderCache.getSequence(mc.player.getUUID()));
-        java.util.List<String> sizing = new java.util.ArrayList<>(extra); sizing.add(entity.getName().getString() + " (00)");
-        int width = VisionInfo.width(mc.font, sizing, 120); // compacto, no canto como o do Espectador
-        int height = 42 + extra.size() * VisionInfo.LINE_HEIGHT;
-        int x = 0;
-        int y = 0;
-
-        // no canto esquerdo, embaixo da barra de espiritualidade e das coordenadas da Porta, um pouco menor
-        guiGraphics.pose().pushPose();
-        guiGraphics.pose().translate(VisionInfo.PANEL_X, VisionInfo.PANEL_Y, 0);
-        guiGraphics.pose().scale(VisionInfo.PANEL_SCALE, VisionInfo.PANEL_SCALE, 1);
-        renderPanel(guiGraphics, x, y, width, height);
-
         String name = entity.getName().getString();
         float maxHealth = entity.getMaxHealth();
         float health = entity.getHealth();
@@ -94,20 +82,12 @@ public class SpiritVisionOverlayRenderer {
             }
         }
 
-        if (!VisionaryHandler.shouldStayInvisible(ClientBeyonderCache.getSequence(mc.player.getUUID()), entity)){
-            guiGraphics.drawString(mc.font, name, x + width / 2 - mc.font.width(name) / 2 + 1, y + 7 + 1, 0x55000000);
-            guiGraphics.drawCenteredString(mc.font, name, x + width / 2, y + 7, ACCENT_LIGHT);
-            VisionInfo.draw(guiGraphics, mc.font, extra, x + width / 2, y + 19, 0xFFE6DAF5);
-
-            int barWidth = (int) (width / 1.3);
-            int barHeight = 12;
-            int barX = x + (width - barWidth) / 2;
-            int barY = y + height - barHeight - 7;
-
-            renderHealthBar(guiGraphics, mc.font, barX, barY, barWidth, barHeight,
-                    health, maxHealth);
+        if (!VisionaryHandler.shouldStayInvisible(ClientBeyonderCache.getSequence(mc.player.getUUID()), entity)) {
+            List<String> lines = new java.util.ArrayList<>();
+            lines.add(VisionInfo.healthLine(health));
+            lines.addAll(extra);
+            VisionInfo.card(guiGraphics, mc.font, name, 0xFF9B6BD6, ACCENT_LIGHT, lines);
         }
-        guiGraphics.pose().popPose();
     }
 
     private static float getEntityMaxHealth(String shapeKey) {

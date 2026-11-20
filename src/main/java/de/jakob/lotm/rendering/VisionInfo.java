@@ -94,6 +94,46 @@ public final class VisionInfo {
 
     public static final int LINE_HEIGHT = 11;
 
+    /** A linha da vida, com o coração em vez de barra */
+    public static String healthLine(float health) {
+        String v = health == Math.floor(health) ? String.valueOf((int) health) : String.format(java.util.Locale.ROOT, "%.1f", health);
+        return LotmText.t("lotmcraft.vision.health", "Health") + ": " + v + " \u00a7c\u2764";
+    }
+
+    /**
+     * O painel das visões: uma caixa estreita encostada na direita, na altura do meio da tela,
+     * com o nome no cabeçalho e as linhas "Rótulo: valor" embaixo, nas cores de cada visão.
+     */
+    public static void card(GuiGraphics g, Font font, String title, int accent, int titleColor, List<String> lines) {
+        int sw = g.guiWidth(), sh = g.guiHeight();
+        int w = Math.max(100, font.width(title) + 16);
+        for (String l : lines) w = Math.max(w, font.width(l) + 12);
+        int h = 19 + lines.size() * LINE_HEIGHT + 4;
+        int x = sw - w - 4;
+        int y = sh / 2 - h / 2;
+        int border = 0xFF000000 | (accent & 0xFFFFFF);
+
+        g.fill(x, y, x + w, y + h, 0xC40E0B14);                                   // fundo
+        g.fill(x + 1, y + 1, x + w - 1, y + 15, 0x50000000 | (accent & 0xFFFFFF)); // cabeçalho
+        g.fill(x, y, x + w, y + 1, border);                                        // borda fina
+        g.fill(x, y + h - 1, x + w, y + h, border);
+        g.fill(x, y, x + 1, y + h, border);
+        g.fill(x + w - 1, y, x + w, y + h, border);
+        g.fill(x + 1, y + 15, x + w - 1, y + 16, 0x90000000 | (accent & 0xFFFFFF)); // linha embaixo do nome
+
+        g.drawCenteredString(font, title, x + w / 2, y + 4, titleColor);
+        int ly = y + 20;
+        for (String l : lines) {
+            int cut = l.indexOf(": ");
+            if (cut > 0) {
+                String label = l.substring(0, cut + 2);
+                g.drawString(font, label, x + 6, ly, 0xFFB9B2C4, true);
+                g.drawString(font, l.substring(cut + 2), x + 6 + font.width(label), ly, 0xFFF2EEF7, true);
+            } else g.drawString(font, l, x + 6, ly, 0xFFF2EEF7, true);
+            ly += LINE_HEIGHT;
+        }
+    }
+
     /** Onde os painéis das visões ficam: à esquerda, embaixo da barra de espiritualidade e das coordenadas da Porta (y 66) */
     public static final int PANEL_X = 6;
     public static final int PANEL_Y = 80;

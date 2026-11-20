@@ -50,33 +50,10 @@ public class EyeOfDeathOverlayRenderer {
         LivingEntity entity = entitiesLookedAt.get(mc.player.getUUID());
         if (entity == null) return;
 
-        java.util.List<String> extra = VisionInfo.death(entity, de.jakob.lotm.util.ClientBeyonderCache.getSequence(mc.player.getUUID()));
-        java.util.List<String> sizing = new java.util.ArrayList<>(extra); sizing.add(entity.getName().getString());
-        int width = VisionInfo.width(mc.font, sizing, 120); // compacto, no canto como o do Espectador
-        int height = 42 + extra.size() * VisionInfo.LINE_HEIGHT;
-        int x = 0;
-        int y = 0;
-
-        // no canto esquerdo, embaixo da barra de espiritualidade e das coordenadas da Porta, um pouco menor
-        guiGraphics.pose().pushPose();
-        guiGraphics.pose().translate(VisionInfo.PANEL_X, VisionInfo.PANEL_Y, 0);
-        guiGraphics.pose().scale(VisionInfo.PANEL_SCALE, VisionInfo.PANEL_SCALE, 1);
-        renderPanel(guiGraphics, x, y, width, height, 0xFF6897cc);
-
-        String name = entity.getName().getString();
-        guiGraphics.drawString(mc.font, name, x + width / 2 - mc.font.width(name) / 2 + 1, y + 7 + 1, 0x55000000);
-        guiGraphics.drawCenteredString(mc.font, name, x + width / 2, y + 7, 0xFF95bfed);
-        VisionInfo.draw(guiGraphics, mc.font, extra, x + width / 2, y + 19, 0xFFD5E6F7);
-
-        int barWidth = (int) (width / 1.3);
-        int barHeight = 12;
-        int barX = x + (width - barWidth) / 2;
-        int barY = y + height - barHeight - 7;
-
-        renderHealthBar(guiGraphics, mc.font, barX, barY, barWidth, barHeight,
-                entity.getHealth(), entity.getMaxHealth(),
-                0xFF6897cc, 0xFF95bfed);
-        guiGraphics.pose().popPose();
+        java.util.List<String> lines = new java.util.ArrayList<>();
+        lines.add(VisionInfo.healthLine(entity.getHealth()));
+        lines.addAll(VisionInfo.death(entity, de.jakob.lotm.util.ClientBeyonderCache.getSequence(mc.player.getUUID())));
+        VisionInfo.card(guiGraphics, mc.font, entity.getName().getString(), 0xFF6897CC, 0xFF95BFED, lines);
     }
 
     private static void renderPanel(GuiGraphics guiGraphics, int x, int y, int width, int height, int accentColor) {

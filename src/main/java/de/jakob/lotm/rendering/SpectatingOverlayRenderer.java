@@ -45,35 +45,11 @@ public class SpectatingOverlayRenderer {
             LivingEntity entity = entitiesLookedAtByPlayerWithActiveSpectating.get(mc.player.getUUID());
             if (entity != null) {
                 int viewerSeq = ClientBeyonderCache.getSequence(mc.player.getUUID());
-                java.util.List<String> extra = VisionInfo.spectating(entity, viewerSeq);
-                java.util.List<String> sizing = new java.util.ArrayList<>(extra); sizing.add(entity.getName().getString());
-                int width = VisionInfo.width(mc.font, sizing, 120); // compacto, no canto como o do Espectador
-                int height = 42 + extra.size() * VisionInfo.LINE_HEIGHT;
-                int x = 0;
-                int y = 0;
-
-                // no canto esquerdo, embaixo da barra de espiritualidade e das coordenadas da Porta, um pouco menor
-                guiGraphics.pose().pushPose();
-                guiGraphics.pose().translate(VisionInfo.PANEL_X, VisionInfo.PANEL_Y, 0);
-                guiGraphics.pose().scale(VisionInfo.PANEL_SCALE, VisionInfo.PANEL_SCALE, 1);
-                renderPanel(guiGraphics, x, y, width, height, 0xFFf7cd83);
-
-                String name = entity.getName().getString();
-                guiGraphics.drawString(mc.font, name, x + width / 2 - mc.font.width(name) / 2 + 1, y + 7 + 1, 0x55000000);
-                guiGraphics.drawCenteredString(mc.font, name, x + width / 2, y + 7, 0xFFf7cd83);
-                VisionInfo.draw(guiGraphics, mc.font, extra, x + width / 2, y + 19, 0xFFF3E3C2);
-
-                int barWidth = (int) (width / 1.3);
-                int barHeight = 12;
-                int barX = x + (width - barWidth) / 2;
-                int barY = y + height - barHeight - 7;
-
-                renderHealthBar(guiGraphics, mc.font, barX, barY, barWidth, barHeight,
-                        entity.getHealth(), entity.getMaxHealth(),
-                        0xFFFF0000, 0xFFe43fa3);
-
-                displayStats(guiGraphics, entity, screenWidth, viewerSeq, y + height + 4);
-                guiGraphics.pose().popPose();
+                java.util.List<String> lines = new java.util.ArrayList<>();
+                lines.add(VisionInfo.healthLine(entity.getHealth()));
+                lines.addAll(statLines(entity, viewerSeq));
+                lines.addAll(VisionInfo.spectating(entity, viewerSeq));
+                VisionInfo.card(guiGraphics, mc.font, entity.getName().getString(), 0xFFC9A24A, 0xFFF7CD83, lines);
             }
         }
     }
@@ -120,6 +96,18 @@ public class SpectatingOverlayRenderer {
     private static final Attribute[] attributesThatShouldGetDisplayed = new Attribute[]{
             Attributes.MOVEMENT_SPEED.value(), Attributes.ATTACK_DAMAGE.value(), Attributes.JUMP_STRENGTH.value(), Attributes.ARMOR.value()
     };
+
+    /** Os atributos do alvo: no começo só velocidade e força; armadura e pulo a partir do Psiquiatra (7) */
+    private static java.util.List<String> statLines(LivingEntity entity, int viewerSeq) {
+        java.util.List<String> out = new java.util.ArrayList<>();
+        for (Attribute at : attributesThatShouldGetDisplayed) {
+            if (viewerSeq > 7 && at != Attributes.MOVEMENT_SPEED.value() && at != Attributes.ATTACK_DAMAGE.value()) continue;
+            AttributeInstance inst = BuiltInRegistries.ATTRIBUTE.wrapAsHolder(at) == null ? null : entity.getAttribute(BuiltInRegistries.ATTRIBUTE.wrapAsHolder(at));
+            if (inst == null) continue;
+            out.add(getAttributeName(inst.getAttribute()) + ": " + Math.round(inst.getValue() * 100) / 100.0);
+        }
+        return out;
+    }
 
     private static void displayStats(GuiGraphics guiGraphics, LivingEntity entity, int screenWidth, int viewerSeq, int panelY) {
         Collection<AttributeInstance> attributes = BuiltInRegistries.ATTRIBUTE.holders()
