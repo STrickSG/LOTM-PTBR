@@ -36,20 +36,34 @@ public final class AstralWorldEffects {
         return ResourceLocation.fromNamespaceAndPath(LOTMCraft.MOD_ID, "textures/environment/astral/" + name + ".png");
     }
 
-    /** Uma imagem no céu: textura, direção (graus), inclinação a partir do topo (graus), giro, tamanho, proporção, se soma luz, pulso */
-    private record SkyImage(ResourceLocation texture, float yaw, float tilt, float roll, float size, float aspect, boolean additive, float pulse) {}
+    /** Uma imagem no céu: textura, direção (graus), inclinação a partir do topo (graus), giro, tamanho, proporção, se soma luz, pulso, giro por tick */
+    private record SkyImage(ResourceLocation texture, float yaw, float tilt, float roll, float size, float aspect, boolean additive, float pulse, float spin) {}
 
-    private static final SkyImage[] IMAGES = {
-            new SkyImage(tex("galaxy"), 30f, 62f, 18f, 46f, 4f, true, 0f),
-            new SkyImage(tex("galaxy"), 210f, 62f, -18f, 46f, 4f, true, 0f),
-            new SkyImage(tex("nebula_violet"), 75f, 40f, 0f, 48f, 1f, true, 0f),
-            new SkyImage(tex("nebula_teal"), 200f, 55f, 30f, 56f, 1f, true, 0f),
-            new SkyImage(tex("nebula_crimson"), 310f, 30f, 70f, 40f, 1f, true, 0f),
-            new SkyImage(tex("sun"), 140f, 35f, 0f, 22f, 1f, true, 0.04f),
-            new SkyImage(tex("planet_gas"), 20f, 70f, 0f, 20f, 1f, false, 0f),
-            new SkyImage(tex("planet_ring"), 250f, 48f, 12f, 18f, 1f, false, 0f),
-            new SkyImage(tex("planet_crimson"), 330f, 66f, 0f, 15f, 1f, false, 0.18f),
-            new SkyImage(tex("planet_eye"), 95f, 78f, 0f, 11f, 1f, false, 0.08f),
+    /** O Cosmos atrás da Barreira: a galáxia, as nebulosas, astros comuns e, enormes e colados nela, os Deuses Exteriores */
+    private static final SkyImage[] COSMOS = {
+            new SkyImage(tex("galaxy"), 30f, 62f, 18f, 46f, 4f, true, 0f, 0f),
+            new SkyImage(tex("galaxy"), 210f, 62f, -18f, 46f, 4f, true, 0f, 0f),
+            new SkyImage(tex("nebula_violet"), 75f, 40f, 0f, 48f, 1f, true, 0f, 0f),
+            new SkyImage(tex("nebula_teal"), 200f, 55f, 30f, 56f, 1f, true, 0f, 0f),
+            new SkyImage(tex("nebula_crimson"), 310f, 30f, 70f, 40f, 1f, true, 0f, 0f),
+            new SkyImage(tex("planet_gas"), 160f, 82f, 0f, 7f, 1f, false, 0f, 0f),
+            new SkyImage(tex("planet_ring"), 285f, 84f, 10f, 6f, 1f, false, 0f, 0f),
+            // os Deuses Exteriores
+            new SkyImage(tex("outer_depravity"), 335f, 58f, 0f, 38f, 1f, false, 0.25f, 0f),
+            new SkyImage(tex("outer_desire"), 265f, 70f, 0f, 34f, 1f, false, 0.15f, 0.002f),
+            new SkyImage(tex("outer_chaos"), 20f, 24f, 0f, 26f, 1f, false, 0f, 0.004f),
+            new SkyImage(tex("outer_hunger"), 110f, 64f, 15f, 40f, 1f, false, 0.1f, 0f),
+            new SkyImage(tex("outer_inevitability"), 190f, 30f, 0f, 30f, 1f, true, 0f, 0.01f),
+            new SkyImage(tex("outer_supernova"), 70f, 80f, 0f, 30f, 1f, true, 0.3f, 0f),
+            new SkyImage(tex("outer_ravings"), 230f, 78f, 0f, 24f, 1f, true, 0.35f, 0.003f),
+            new SkyImage(tex("outer_decay"), 150f, 46f, 0f, 30f, 1f, false, 0f, 0.001f),
+            new SkyImage(tex("outer_overseer"), 0f, 2f, 0f, 22f, 1f, false, 0.08f, 0f),
+            new SkyImage(tex("outer_fate"), 300f, 82f, 0f, 22f, 1f, false, 0f, 0.006f),
+    };
+
+    /** Do lado de dentro da Barreira: o Sol Ardente Eterno */
+    private static final SkyImage[] INSIDE = {
+            new SkyImage(tex("sun"), 140f, 35f, 0f, 20f, 1f, true, 0.04f, 0f),
     };
 
     private static final int STARS = 3500;
@@ -118,18 +132,9 @@ public final class AstralWorldEffects {
             }
             BufferUploader.drawWithShader(stars.buildOrThrow());
 
-            // galáxia, nebulosas, o sol e os astros
+            // o Cosmos e os Deuses Exteriores, atrás da Barreira
             RenderSystem.setShader(GameRenderer::getPositionTexColorShader);
-            for (SkyImage image : IMAGES) {
-                if (image.additive()) RenderSystem.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE);
-                else RenderSystem.defaultBlendFunc();
-                float glow = 1f - image.pulse() + image.pulse() * (0.5f + 0.5f * Mth.sin(time * 0.04f + image.yaw()));
-                Matrix4f m = new Matrix4f(modelViewMatrix)
-                        .rotateY((float) Math.toRadians(image.yaw()))
-                        .rotateX((float) Math.toRadians(image.tilt()))
-                        .rotateY((float) Math.toRadians(image.roll()));
-                quad(m, image.texture(), image.size() * image.aspect(), image.size(), 100f, 0f, 0f, 1f, 1f, glow, glow, glow, 1f);
-            }
+            for (SkyImage image : COSMOS) drawImage(modelViewMatrix, image, time);
 
             // a Barreira Astral: uma película quase invisível em volta de tudo, rachada, vazando luz
             RenderSystem.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE);
@@ -147,12 +152,27 @@ public final class AstralWorldEffects {
                 quad(m, tex("barrier"), 90f, 90f, 90f, 0f, 0f, 2f, 2f, shimmer, shimmer, shimmer, 1f);
             }
 
+            // do lado de dentro: o sol
+            for (SkyImage image : INSIDE) drawImage(modelViewMatrix, image, time);
+
             RenderSystem.defaultBlendFunc();
             RenderSystem.disableBlend();
             RenderSystem.enableDepthTest();
             RenderSystem.depthMask(true);
             RenderSystem.enableCull();
             return true;
+        }
+
+        private static void drawImage(Matrix4f modelViewMatrix, SkyImage image, float time) {
+            if (image.additive()) RenderSystem.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE);
+            else RenderSystem.defaultBlendFunc();
+            RenderSystem.setShader(GameRenderer::getPositionTexColorShader);
+            float glow = 1f - image.pulse() + image.pulse() * (0.5f + 0.5f * Mth.sin(time * 0.04f + image.yaw()));
+            Matrix4f m = new Matrix4f(modelViewMatrix)
+                    .rotateY((float) Math.toRadians(image.yaw()))
+                    .rotateX((float) Math.toRadians(image.tilt()))
+                    .rotateY((float) Math.toRadians(image.roll()) + time * image.spin());
+            quad(m, image.texture(), image.size() * image.aspect(), image.size(), 100f, 0f, 0f, 1f, 1f, glow, glow, glow, 1f);
         }
 
         /** Um ponto de estrela virado para quem olha */
