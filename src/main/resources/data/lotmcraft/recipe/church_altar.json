@@ -1,0 +1,27 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "G": {
+      "item": "minecraft:gold_ingot"
+    },
+    "C": {
+      "item": "minecraft:calcite"
+    },
+    "Q": {
+      "item": "minecraft:quartz_pillar"
+    },
+    "K": {
+      "item": "minecraft:candle"
+    }
+  },
+  "pattern": [
+    "GKG",
+    " Q ",
+    "CCC"
+  ],
+  "result": {
+    "count": 1,
+    "id": "lotmcraft:church_altar"
+  }
+}

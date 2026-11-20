@@ -1,0 +1,20 @@
+{
+  "variants": {
+    "facing=east": {
+      "model": "lotmcraft:block/blockhutchurch",
+      "y": 90
+    },
+    "facing=south": {
+      "model": "lotmcraft:block/blockhutchurch",
+      "y": 180
+    },
+    "facing=west": {
+      "model": "lotmcraft:block/blockhutchurch",
+      "y": 270
+    },
+    "facing=north": {
+      "model": "lotmcraft:block/blockhutchurch",
+      "y": 0
+    }
+  }
+}

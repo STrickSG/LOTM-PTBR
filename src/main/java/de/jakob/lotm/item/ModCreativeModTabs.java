@@ -28,6 +28,8 @@ public class ModCreativeModTabs {
                     .displayItems((parameters, output) -> {
                         output.accept(ModItems.FOOL_Card.get());
                         output.accept(ModItems.CRYSTAL_BALL.get());
+                        output.accept(de.jakob.lotm.addons.church.ChurchRegistry.CHURCH_HUT_ITEM.get());
+                        output.accept(de.jakob.lotm.addons.church.ChurchRegistry.ALTAR_ITEM.get());
                         output.accept(ModItems.CANE.get());
                         //output.accept(ModItems.MYSTICAL_RING.get());
                         output.accept(ModItems.GUIDING_BOOK.get());

@@ -1,0 +1,15 @@
+{
+  "icon": "icon.png",
+  "name": "LOTM",
+  "authors": [
+    "LOTM PTBR"
+  ],
+  "desc": "Igrejas e Seitas dos Caminhos de Lord of the Mysteries.",
+  "mods": [
+    "structurize",
+    "minecolonies",
+    "lotmcraft"
+  ],
+  "version": "1",
+  "pack-format": "1"
+}

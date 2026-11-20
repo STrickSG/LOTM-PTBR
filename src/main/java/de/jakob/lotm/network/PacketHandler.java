@@ -35,6 +35,12 @@ public class PacketHandler {
 
     private static void registerClientPackets(PayloadRegistrar registrar) {
         registrar.playToClient(
+                de.jakob.lotm.addons.church.OpenChurchPacket.TYPE,
+                de.jakob.lotm.addons.church.OpenChurchPacket.STREAM_CODEC,
+                de.jakob.lotm.addons.church.OpenChurchPacket::handle
+        );
+
+        registrar.playToClient(
                 de.jakob.lotm.addons.subconscious.DreamMindPacket.TYPE,
                 de.jakob.lotm.addons.subconscious.DreamMindPacket.STREAM_CODEC,
                 de.jakob.lotm.addons.subconscious.DreamMindPacket::handle
@@ -730,6 +736,12 @@ public class PacketHandler {
     }
 
     private static void registerServerPackets(PayloadRegistrar registrar) {
+        registrar.playToServer(
+                de.jakob.lotm.addons.church.ChurchActionPacket.TYPE,
+                de.jakob.lotm.addons.church.ChurchActionPacket.STREAM_CODEC,
+                de.jakob.lotm.addons.church.ChurchActionPacket::handle
+        );
+
 
         registrar.playToServer(
                 de.jakob.lotm.addons.subconscious.DreamActionPacket.TYPE,

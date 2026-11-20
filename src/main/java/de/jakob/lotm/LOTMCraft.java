@@ -250,6 +250,7 @@ public class LOTMCraft
         ModBiomeModifiers.register(modEventBus);
         ModVillagers.register(modEventBus);
         ModBlocks.register(modEventBus);
+        de.jakob.lotm.addons.church.ChurchRegistry.register(modEventBus);
         ModFilth.register(modEventBus);
         ModBlockEntities.register(modEventBus);
         ModStructures.register(modEventBus);
