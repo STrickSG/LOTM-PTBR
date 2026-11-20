@@ -55,6 +55,13 @@ public class CogitationAbility extends ToggleAbility {
             entity.addEffect(new MobEffectInstance(MobEffects.BLINDNESS, 20 * 5, 1, false, false, false));
 
             player.getData(ModAttachments.SANITY_COMPONENT).increaseSanityAndSync(.0025f, player);
+
+            // a mente em repouso segura a corrupção (cerca de 1% a cada 10 segundos)
+            if (player instanceof net.minecraft.server.level.ServerPlayer serverPlayer)
+                de.jakob.lotm.addons.corruption.Corruption.add(serverPlayer, -0.001f * tickRate / 20f);
+            // cogitar no meio da ascensão ajuda a não perder o controle
+            if (de.jakob.lotm.util.helper.AdvancementUtil.isAdvancing(player.getUUID()))
+                de.jakob.lotm.util.helper.AdvancementUtil.noteCogitation(player, tickRate);
             DisabledAbilitiesComponent component = entity.getData(ModAttachments.DISABLED_ABILITIES_COMPONENT);
             component.disableAbilityUsageForTime("cogitation", 30, entity);
 

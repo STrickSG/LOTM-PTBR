@@ -149,19 +149,23 @@ public class AdvancementUtil {
         int finalDuration = event.getDuration();
 
         scheduleAdvancementEffects(entity, finalPathway, finalDuration, finalSequence);
+        if (entity.getServer() != null) COGITATION.put(entity.getUUID(), new int[]{entity.getServer().getTickCount(), 0});
 
-        if (finalFailureChance >= 1.0 || Math.random() < finalFailureChance) {
-            scheduleFailure(entity, finalDuration);
-            return;
-        }
-
-        ServerScheduler.scheduleDelayed(finalDuration, () -> {
+        Runnable success = () -> {
+            COGITATION.remove(entity.getUUID());
             if (!activeAdvancements.containsKey(entity.getUUID())) return;
             activeAdvancements.remove(entity.getUUID());
             if (entity.isDeadOrDying()) return;
             BeyonderData.addCharStack(entity, sequence);
             sendThirdPersonPacket(entity);
-        });
+        };
+
+        if (finalFailureChance >= 1.0 || Math.random() < finalFailureChance) {
+            scheduleFailure(entity, finalDuration, success);
+            return;
+        }
+
+        ServerScheduler.scheduleDelayed(finalDuration, success);
     }
 
     // Fires the event, schedules effects, then schedules failure-death or success-setBeyonder.
@@ -202,13 +206,10 @@ public class AdvancementUtil {
         int finalDuration = event.getDuration();
 
         scheduleAdvancementEffects(entity, finalPathway, finalDuration, finalSequence);
+        if (entity.getServer() != null) COGITATION.put(entity.getUUID(), new int[]{entity.getServer().getTickCount(), 0});
 
-        if (finalFailureChance >= 1.0 || Math.random() < finalFailureChance) {
-            scheduleFailure(entity, finalDuration);
-            return;
-        }
-
-        ServerScheduler.scheduleDelayed(finalDuration, () -> {
+        Runnable success = () -> {
+            COGITATION.remove(entity.getUUID());
             if (!activeAdvancements.containsKey(entity.getUUID())) return;
             activeAdvancements.remove(entity.getUUID());
             if (entity.isDeadOrDying()) return; // died mid-advancement; don't apply the sequence-up
@@ -218,7 +219,14 @@ public class AdvancementUtil {
 
             entity.resetFallDistance();
             entity.fallDistance = 0;
-        });
+        };
+
+        if (finalFailureChance >= 1.0 || Math.random() < finalFailureChance) {
+            scheduleFailure(entity, finalDuration, success);
+            return;
+        }
+
+        ServerScheduler.scheduleDelayed(finalDuration, success);
     }
 
     private static StartAdvanceSequencePathwayEvent postAdvancementEvent(LivingEntity entity, int sequence,
@@ -237,11 +245,42 @@ public class AdvancementUtil {
         scheduleRandomDamage(entity, duration, sequence);
     }
 
-    private static void scheduleFailure(LivingEntity entity, int duration) {
+    /** Quantos ticks o Beyonder passou em Cogitação desde que a ascensão começou: [tick do começo, ticks cogitando] */
+    private static final java.util.Map<UUID, int[]> COGITATION = new java.util.concurrent.ConcurrentHashMap<>();
+
+    /** Chamado pela Cogitação a cada tick dela, durante uma ascensão */
+    public static void noteCogitation(LivingEntity entity, int ticks) {
+        int[] c = COGITATION.get(entity.getUUID());
+        if (c != null) c[1] += ticks;
+    }
+
+    /**
+     * Quem cogita durante a ascensão pode escapar de uma falha: cogitando ao menos 40% do tempo até ali, a chance de se
+     * salvar é de 50%, subindo até 90% para quem cogitou o tempo todo.
+     */
+    private static boolean savedByCogitation(LivingEntity entity) {
+        int[] c = COGITATION.get(entity.getUUID());
+        if (c == null || entity.getServer() == null) return false;
+        int elapsed = Math.max(1, entity.getServer().getTickCount() - c[0]);
+        double fraction = Math.min(1.0, c[1] / (double) elapsed);
+        if (fraction < 0.4) return false;
+        double chance = Math.min(0.9, 0.5 + (fraction - 0.4) * (0.4 / 0.6));
+        return Math.random() < chance;
+    }
+
+    private static void scheduleFailure(LivingEntity entity, int duration, Runnable success) {
         int deathTime = (int) (Math.random() * duration);
         ServerScheduler.scheduleDelayed(deathTime, () -> {
             if (!activeAdvancements.containsKey(entity.getUUID())) return;
+            if (!entity.isDeadOrDying() && savedByCogitation(entity)) {
+                // a mente se manteve firme: a ascensão segue até o fim
+                if (entity instanceof ServerPlayer player)
+                    player.displayClientMessage(net.minecraft.network.chat.Component.translatable("lotm.advancement.saved_by_cogitation").withColor(0xB9E3FF), true);
+                ServerScheduler.scheduleDelayed(Math.max(1, duration - deathTime), success);
+                return;
+            }
             activeAdvancements.remove(entity.getUUID());
+            COGITATION.remove(entity.getUUID());
             if (!entity.isDeadOrDying())
                 entity.hurt(ModDamageTypes.source(entity.level(), ModDamageTypes.LOOSING_CONTROL), Float.MAX_VALUE);
         });

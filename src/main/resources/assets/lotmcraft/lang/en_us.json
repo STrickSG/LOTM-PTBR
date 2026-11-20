@@ -5957,5 +5957,7 @@
   "lotm.corruption": "Corruption",
   "lotm.characteristics": "Characteristics",
   "lotm.characteristics.corruption": "Corruption: %s%%",
-  "lotm.characteristics.rate": "Rises %s%% per day"
+  "lotm.characteristics.rate": "Rises %s%% per day",
+  "lotm.advancement.saved_by_cogitation": "Your mind held firm in Cogitation: the advancement continues.",
+  "lotmcraft.corruption.lost": "Corruption has taken over. You are no longer yourself."
 }

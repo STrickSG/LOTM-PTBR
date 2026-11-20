@@ -57,13 +57,18 @@ public final class Corruption {
     }
 
     public static void set(ServerPlayer player, float value) {
-        float v = Math.max(0f, Math.min(1f, value));
+        float v = Math.max(floor(player), Math.min(1f, value));
         CompoundTag persisted = player.getPersistentData().getCompound(Player.PERSISTED_NBT_TAG);
         float old = persisted.getFloat(KEY);
         persisted.putFloat(KEY, v);
         player.getPersistentData().put(Player.PERSISTED_NBT_TAG, persisted);
-        if (Math.abs(old - v) > 1e-6f) sync(player);
+        // não manda pacote a cada pedacinho: só quando muda o bastante para aparecer na barra
+        if (v >= 1f && old < 1f) LostToCorruption.lose(player);
+        Float sent = LAST_SENT.get(player.getUUID());
+        if (sent == null || Math.abs(sent - v) >= 0.0005f || (v == 0f && sent != 0f)) sync(player);
     }
+
+    private static final Map<UUID, Float> LAST_SENT = new HashMap<>();
 
     public static void add(ServerPlayer player, float amount) {
         if (!BeyonderData.isBeyonder(player)) return;
@@ -71,7 +76,21 @@ public final class Corruption {
     }
 
     private static void sync(ServerPlayer player) {
+        LAST_SENT.put(player.getUUID(), get(player));
         PacketHandler.sendToPlayer(player, new CorruptionSyncPacket(get(player)));
+    }
+
+    /**
+     * O piso da corrupção: com características sobressalentes no corpo ela não desce abaixo do peso delas. Só volta ao
+     * normal tirando as sobressalentes ou com âncoras (os fiéis): 100 fiéis zeram o piso.
+     */
+    public static float floor(ServerPlayer player) {
+        if (!BeyonderData.isBeyonder(player)) return 0f;
+        float weight = Math.min(1f, stackWeight(BeyonderData.getCharStacks(player)));
+        if (weight <= 0f) return 0f;
+        int anchors = de.jakob.lotm.addons.rituals.Believers.count(player);
+        float relief = Math.min(1f, anchors / 100f);
+        return weight * (1f - relief);
     }
 
     /** Quanto as características acumuladas pesam: cada cópia extra, mais quanto mais alta a Sequência dela */
