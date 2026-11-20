@@ -50,8 +50,9 @@ public class EyeOfDeathOverlayRenderer {
         LivingEntity entity = entitiesLookedAt.get(mc.player.getUUID());
         if (entity == null) return;
 
-        int width = screenWidth / 3;
-        int height = 42;
+        java.util.List<String> extra = VisionInfo.death(entity, de.jakob.lotm.util.ClientBeyonderCache.getSequence(mc.player.getUUID()));
+        int width = VisionInfo.width(mc.font, extra, screenWidth / 3);
+        int height = 42 + extra.size() * VisionInfo.LINE_HEIGHT;
         int x = screenWidth / 2 - width / 2;
         int y = 12;
 
@@ -60,6 +61,7 @@ public class EyeOfDeathOverlayRenderer {
         String name = entity.getName().getString();
         guiGraphics.drawString(mc.font, name, x + width / 2 - mc.font.width(name) / 2 + 1, y + 7 + 1, 0x55000000);
         guiGraphics.drawCenteredString(mc.font, name, x + width / 2, y + 7, 0xFF95bfed);
+        VisionInfo.draw(guiGraphics, mc.font, extra, x + width / 2, y + 19, 0xFFD5E6F7);
 
         int barWidth = (int) (width / 1.3);
         int barHeight = 12;

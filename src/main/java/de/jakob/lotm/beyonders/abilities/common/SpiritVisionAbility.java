@@ -37,6 +37,16 @@ import org.joml.Vector3f;
 import java.util.*;
 
 public class SpiritVisionAbility extends ToggleAbility {
+    /** Alcance por sequência (índice = sequência): o Vidente começa enxergando de perto */
+    private static final int[] RANGE = {64, 60, 54, 48, 40, 32, 24, 20, 14, 10};
+
+    /** Cresce com a sequência e um pouco com a digestão */
+    public static int range(ServerPlayer player) {
+        int seq = Math.clamp(BeyonderData.getSequence(player), 0, 9);
+        float digestion = Math.clamp(BeyonderData.getDigestionProgress(player), 0f, 1f);
+        return Math.round(RANGE[seq] * (0.85f + 0.15f * digestion));
+    }
+
     /** A cor do contorno que cada ser tem agora, para quem está olhando */
     private final Map<UUID, Map<Entity, PlayerTeam>> outlined = new HashMap<>();
     private static final String MALICE_TEAM = "lotm_malice_black";
@@ -124,7 +134,8 @@ public class SpiritVisionAbility extends ToggleAbility {
         if (!(entity instanceof ServerPlayer player))
             return;
 
-        LivingEntity lookedAt = AbilityUtil.getTargetEntity(entity, 40, 1.2f, false, true);
+        int range = range(player);
+        LivingEntity lookedAt = AbilityUtil.getTargetEntity(entity, range, 1.2f, false, true);
 
         if (lookedAt != null) {
             if (VisionaryHandler.shouldStayInvisible(BeyonderData.getSequence(entity), lookedAt)|| PhantomDetectionUtil.isHiddenFromSpiritVision(entity, lookedAt))
@@ -148,7 +159,7 @@ public class SpiritVisionAbility extends ToggleAbility {
         entity.addEffect(new MobEffectInstance(
                 MobEffects.NIGHT_VISION, 20 * 25, 1, false, false, false));
 
-        List<LivingEntity> nearbyEntities = AbilityUtil.getNearbyEntities(entity, (ServerLevel) level, entity.getEyePosition(), 30, false, true)
+        List<LivingEntity> nearbyEntities = AbilityUtil.getNearbyEntities(entity, (ServerLevel) level, entity.getEyePosition(), range, false, true)
                 .stream()
                 .filter(nearbyEntity -> {
                     return !VisionaryHandler.shouldStayInvisible(BeyonderData.getSequence(entity), nearbyEntity) && !PhantomDetectionUtil.isHiddenFromSpiritVision(entity, nearbyEntity);
@@ -161,8 +172,11 @@ public class SpiritVisionAbility extends ToggleAbility {
             setGlowingForPlayer(nearbyEntity, (ServerPlayer) entity, true);
         }
 
-        glowingEntities.putIfAbsent(entity.getUUID(), new HashSet<>(Set.of()));
-        glowingEntities.get(entity.getUUID()).addAll(nearbyEntities);
+        // quem saiu do alcance para de brilhar
+        Set<Entity> glowing = glowingEntities.computeIfAbsent(entity.getUUID(), k -> new HashSet<>());
+        for (Entity e : glowing) if (!nearbyEntities.contains(e)) setGlowingForPlayer(e, player, false);
+        glowing.clear();
+        glowing.addAll(nearbyEntities);
 
     }
 

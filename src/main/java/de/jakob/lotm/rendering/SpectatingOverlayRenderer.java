@@ -44,8 +44,10 @@ public class SpectatingOverlayRenderer {
         if (entitiesLookedAtByPlayerWithActiveSpectating.containsKey(mc.player.getUUID())) {
             LivingEntity entity = entitiesLookedAtByPlayerWithActiveSpectating.get(mc.player.getUUID());
             if (entity != null) {
-                int width = screenWidth / 3;
-                int height = 42;
+                int viewerSeq = ClientBeyonderCache.getSequence(mc.player.getUUID());
+                java.util.List<String> extra = VisionInfo.spectating(entity, viewerSeq);
+                int width = VisionInfo.width(mc.font, extra, screenWidth / 3);
+                int height = 42 + extra.size() * VisionInfo.LINE_HEIGHT;
                 int x = screenWidth / 2 - width / 2;
                 int y = 12;
 
@@ -54,6 +56,7 @@ public class SpectatingOverlayRenderer {
                 String name = entity.getName().getString();
                 guiGraphics.drawString(mc.font, name, x + width / 2 - mc.font.width(name) / 2 + 1, y + 7 + 1, 0x55000000);
                 guiGraphics.drawCenteredString(mc.font, name, x + width / 2, y + 7, 0xFFf7cd83);
+                VisionInfo.draw(guiGraphics, mc.font, extra, x + width / 2, y + 19, 0xFFF3E3C2);
 
                 int barWidth = (int) (width / 1.3);
                 int barHeight = 12;
@@ -64,7 +67,7 @@ public class SpectatingOverlayRenderer {
                         entity.getHealth(), entity.getMaxHealth(),
                         0xFFFF0000, 0xFFe43fa3);
 
-                displayStats(guiGraphics, entity, screenWidth);
+                displayStats(guiGraphics, entity, screenWidth, viewerSeq);
             }
         }
     }
@@ -112,11 +115,13 @@ public class SpectatingOverlayRenderer {
             Attributes.MOVEMENT_SPEED.value(), Attributes.ATTACK_DAMAGE.value(), Attributes.JUMP_STRENGTH.value(), Attributes.ARMOR.value()
     };
 
-    private static void displayStats(GuiGraphics guiGraphics, LivingEntity entity, int screenWidth) {
+    private static void displayStats(GuiGraphics guiGraphics, LivingEntity entity, int screenWidth, int viewerSeq) {
         Collection<AttributeInstance> attributes = BuiltInRegistries.ATTRIBUTE.holders()
                 .map(entity::getAttribute)
                 .filter(Objects::nonNull)
                 .filter(a -> {
+                    // no começo só a velocidade e a força; o resto a partir do Psiquiatra (7)
+                    if (viewerSeq > 7 && a.getAttribute().value() != Attributes.MOVEMENT_SPEED.value() && a.getAttribute().value() != Attributes.ATTACK_DAMAGE.value()) return false;
                     for (Attribute at : attributesThatShouldGetDisplayed) {
                         if (at == a.getAttribute().value()) return true;
                     }
@@ -136,7 +141,7 @@ public class SpectatingOverlayRenderer {
         int padding = 12;
         int lineSpacing = font.lineHeight + 5;
         int parameterCount = attributes.size();
-        if (ClientBeyonderCache.isBeyonder(entity.getUUID())) parameterCount += 3;
+        
 
         int panelWidth = maxTextWidth + padding * 2;
         int panelHeight = parameterCount * lineSpacing + padding * 2 - 5;
@@ -155,25 +160,6 @@ public class SpectatingOverlayRenderer {
             y += lineSpacing;
         }
 
-        if (ClientBeyonderCache.isBeyonder(entity.getUUID())) {
-            String pathway = ClientBeyonderCache.getPathway(entity.getUUID());
-            if (!BeyonderData.pathwayInfos.containsKey(pathway)) return;
-            String pathwayName = BeyonderData.pathwayInfos.get(pathway).getName();
-            int sequence = ClientBeyonderCache.getSequence(entity.getUUID());
-            float spirituality = ClientBeyonderCache.getSpirituality(entity.getUUID());
-
-            String[] beyonderLines = {
-                    Component.translatable("lotm.pathway").getString() + ": " + pathwayName,
-                    Component.translatable("lotm.sequence").getString() + ": " + sequence,
-                    Component.translatable("lotm.spirituality").getString() + ": " + formatValue(spirituality)
-            };
-
-            for (String line : beyonderLines) {
-                guiGraphics.drawString(font, line, textX + 1, y + 1, 0x55000000);
-                guiGraphics.drawString(font, line, textX, y, 0xFFf7cd83);
-                y += lineSpacing;
-            }
-        }
     }
 
     private static double formatValue(double value) {

@@ -55,8 +55,10 @@ public class SpiritVisionOverlayRenderer {
         LivingEntity entity = entitiesLookedAt.get(mc.player.getUUID());
         if (entity == null) return;
 
-        int width = screenWidth / 3;
-        int height = 42;
+        // Quanto mais alta a sequência, mais linhas de informação
+        List<String> extra = VisionInfo.spirit(entity, ClientBeyonderCache.getSequence(mc.player.getUUID()));
+        int width = VisionInfo.width(mc.font, extra, screenWidth / 3);
+        int height = 42 + extra.size() * VisionInfo.LINE_HEIGHT;
         int x = screenWidth / 2 - width / 2;
         int y = 12;
 
@@ -90,6 +92,7 @@ public class SpiritVisionOverlayRenderer {
         if (!VisionaryHandler.shouldStayInvisible(ClientBeyonderCache.getSequence(mc.player.getUUID()), entity)){
             guiGraphics.drawString(mc.font, name, x + width / 2 - mc.font.width(name) / 2 + 1, y + 7 + 1, 0x55000000);
             guiGraphics.drawCenteredString(mc.font, name, x + width / 2, y + 7, ACCENT_LIGHT);
+            VisionInfo.draw(guiGraphics, mc.font, extra, x + width / 2, y + 19, 0xFFE6DAF5);
 
             int barWidth = (int) (width / 1.3);
             int barHeight = 12;
