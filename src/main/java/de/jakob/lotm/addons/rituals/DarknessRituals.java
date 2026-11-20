@@ -46,7 +46,7 @@ import java.util.UUID;
  * Rituais de avanço da Escuridão. Cada um aceita vários jeitos, de qualquer Caminho:
  * <ul>
  *   <li>5, Bruxo Espiritual: no Mundo Espiritual, achar a informação do seu verdadeiro eu, fundir-se com ela e beber lá.</li>
- *   <li>4, Vigia da Noite: um círculo mágico (velas acesas, redstone, fogo de alma) e o sangue de uma linhagem divina (uma Característica).</li>
+ *   <li>4, Vigia da Noite: um círculo de Características (linhagens dos deuses) em volta de você, que se desfaz depois do ritual.</li>
  *   <li>3, Bispo do Horror: beber à beira da morte (pouca vida e algo ferindo agora, ou um Totem acabou de salvar).</li>
  *   <li>2, Servo da Ocultação: 3 dias sozinho, no escuro e em silêncio, sem enlouquecer.</li>
  *   <li>1, Cavaleiro do Infortúnio: o infortúnio de um Arcanjo ou de uma civilização é você.</li>
@@ -57,7 +57,7 @@ public final class DarknessRituals {
     private DarknessRituals() {}
 
     public static final int SELF_MIN = 80, SELF_MAX = 160, SELF_REACH = 3, SELF_HINT_SECONDS = 10;
-    public static final int CIRCLE_MIN = 2, CIRCLE_MAX = 5, CIRCLE_MARKS = 8;
+    public static final int CIRCLE_MIN = 2, CIRCLE_MAX = 5;
     public static final float HORROR_HEALTH = 0.25f;
     public static final int HORROR_HURT_WINDOW = 20 * 5, TOTEM_WINDOW = 20 * 30;
     public static final int ISOLATION_NEEDED = 24000 * 3, ISOLATION_RADIUS = 48, DARK_LIGHT = 4, GRACE_SECONDS = 10;
@@ -162,46 +162,132 @@ public final class DarknessRituals {
                 Component.translatable("lotmcraft.darkness.dir_" + direction), (int) Math.sqrt(dx * dx + dz * dz)).withColor(COLOR), false);
     }
 
-    // ------------------------------------------------------------------ 4, Vigia da Noite: o círculo e o sangue
+    // ------------------------------------------------------------------ 4, Vigia da Noite: o círculo de características
 
-    private static boolean mark(BlockState state) {
-        if (state.is(BlockTags.CANDLES)) return state.getValue(CandleBlock.LIT);
-        if (state.is(Blocks.SOUL_CAMPFIRE)) return state.getValue(CampfireBlock.LIT);
-        return state.is(Blocks.REDSTONE_WIRE) || state.is(Blocks.SOUL_LANTERN) || state.is(Blocks.SOUL_TORCH) || state.is(Blocks.SOUL_WALL_TORCH)
-                || state.is(Blocks.SOUL_FIRE);
+    /** Os Deuses da Noite Eterna: quem trocou de Caminho usa só as linhagens deles */
+    private static final Set<String> DARK_GROUP = Set.of("darkness", "death", "twilight_giant");
+    public static final int CIRCLE_CHARACTERISTICS = 4;
+
+    /** Uma característica do círculo: solta no chão ou numa moldura */
+    private record Bloodline(Entity holder, BeyonderCharacteristicItem item) {}
+
+    /** As características em volta de você, de 2 a 5 blocos, que servem para o seu círculo */
+    private static java.util.List<Bloodline> bloodlines(ServerPlayer player) {
+        boolean switched = BeyonderData.hasSwitchedPathway(player);
+        java.util.List<Bloodline> found = new java.util.ArrayList<>();
+        for (Entity e : player.serverLevel().getEntities(player, player.getBoundingBox().inflate(CIRCLE_MAX + 1, 2, CIRCLE_MAX + 1))) {
+            net.minecraft.world.item.ItemStack stack = e instanceof net.minecraft.world.entity.item.ItemEntity item ? item.getItem()
+                    : e instanceof net.minecraft.world.entity.decoration.ItemFrame frame ? frame.getItem() : net.minecraft.world.item.ItemStack.EMPTY;
+            if (!(stack.getItem() instanceof BeyonderCharacteristicItem characteristic)) continue;
+            double d = Math.hypot(e.getX() - player.getX(), e.getZ() - player.getZ());
+            if (d < CIRCLE_MIN - .5 || d > CIRCLE_MAX + .5) continue;
+            if (switched && !DARK_GROUP.contains(characteristic.getPathway())) continue;
+            found.add(new Bloodline(e, characteristic));
+        }
+        return found;
     }
 
-    /** Marcas do círculo em volta de você (de 2 a 5 blocos), espalhadas pelos quatro lados */
+    /** Quantas características formam o círculo (0 se falta algum lado) */
     public static int circleMarks(ServerPlayer player) {
-        ServerLevel level = player.serverLevel();
-        BlockPos center = player.blockPosition();
-        int count = 0;
+        java.util.List<Bloodline> found = bloodlines(player);
         boolean[] sides = new boolean[4];
-        for (int dx = -CIRCLE_MAX; dx <= CIRCLE_MAX; dx++) {
-            for (int dz = -CIRCLE_MAX; dz <= CIRCLE_MAX; dz++) {
-                double d = Math.sqrt(dx * dx + dz * dz);
-                if (d < CIRCLE_MIN || d > CIRCLE_MAX + .5) continue;
-                for (int dy = -1; dy <= 1; dy++) {
-                    if (!mark(level.getBlockState(center.offset(dx, dy, dz)))) continue;
-                    count++;
-                    sides[(dx >= 0 ? 1 : 0) + (dz >= 0 ? 2 : 0)] = true;
-                    break;
-                }
-            }
+        for (Bloodline b : found) {
+            double dx = b.holder().getX() - player.getX(), dz = b.holder().getZ() - player.getZ();
+            // norte, sul, leste, oeste
+            sides[Math.abs(dx) > Math.abs(dz) ? (dx > 0 ? 2 : 3) : (dz > 0 ? 1 : 0)] = true;
         }
         for (boolean side : sides) if (!side) return 0;
-        return count;
-    }
-
-    private static boolean divineBlood(ServerPlayer player) {
-        for (int i = 0; i < player.getInventory().getContainerSize(); i++) {
-            if (player.getInventory().getItem(i).getItem() instanceof BeyonderCharacteristicItem) return true;
-        }
-        return false;
+        return found.size();
     }
 
     public static boolean circleDrawn(ServerPlayer player) {
-        return divineBlood(player) && circleMarks(player) >= CIRCLE_MARKS;
+        return circleMarks(player) >= CIRCLE_CHARACTERISTICS;
+    }
+
+    /**
+     * Depois do ritual, o círculo se desfaz: a tinta da noite corre de característica em característica, a névoa e as
+     * almas fluem para o centro e elas se desfazem uma a uma, a noite cai sobre o círculo e as estrelas sobem.
+     */
+    public static void performCircle(ServerPlayer player) {
+        ServerLevel level = player.serverLevel();
+        java.util.List<Bloodline> found = new java.util.ArrayList<>(bloodlines(player));
+        if (found.isEmpty()) return;
+        net.minecraft.world.phys.Vec3 center = player.position();
+        // em ordem, dando a volta no círculo
+        found.sort(java.util.Comparator.comparingDouble(b -> Math.atan2(b.holder().getZ() - center.z, b.holder().getX() - center.x)));
+        for (Bloodline b : found) {
+            if (b.holder() instanceof net.minecraft.world.entity.item.ItemEntity item) {
+                item.setPickUpDelay(200);
+                item.setNoGravity(true);
+                item.setDeltaMovement(net.minecraft.world.phys.Vec3.ZERO);
+            }
+        }
+        var dark = new net.minecraft.core.particles.DustParticleOptions(new org.joml.Vector3f(0.16f, 0.08f, 0.28f), 1.6f);
+        var ink = ParticleTypes.SQUID_INK;
+        double radius = found.stream().mapToDouble(b -> Math.hypot(b.holder().getX() - center.x, b.holder().getZ() - center.z)).average().orElse(3);
+        // 1: a tinta da noite fecha o círculo
+        for (int step = 0; step < 30; step++) {
+            final int s = step;
+            de.jakob.lotm.util.scheduling.ServerScheduler.scheduleDelayed(step, () -> {
+                for (int k = 0; k < 4; k++) {
+                    double angle = (s * 4 + k) / 120.0 * Math.PI * 2;
+                    double x = center.x + Math.cos(angle) * radius, z = center.z + Math.sin(angle) * radius;
+                    level.sendParticles(ink, x, center.y + .1, z, 1, 0, 0, 0, 0);
+                    level.sendParticles(dark, x, center.y + .15, z, 1, .05, 0, .05, 0);
+                    if ((s + k) % 5 == 0) level.sendParticles(ParticleTypes.END_ROD, x, center.y + .3, z, 1, 0, .02, 0, 0);
+                }
+                if (s % 10 == 0) level.playSound(null, center.x, center.y, center.z, net.minecraft.sounds.SoundEvents.AMETHYST_BLOCK_CHIME,
+                        net.minecraft.sounds.SoundSource.PLAYERS, .8f, .5f);
+            });
+        }
+        // 2: as linhagens fluem para o centro e se desfazem, uma a uma
+        for (int i = 0; i < found.size(); i++) {
+            Bloodline b = found.get(i);
+            int start = 30 + i * 12;
+            for (int t = 0; t < 12; t++) {
+                final int tt = t;
+                de.jakob.lotm.util.scheduling.ServerScheduler.scheduleDelayed(start + t, () -> {
+                    net.minecraft.world.phys.Vec3 from = b.holder().position().add(0, .3, 0);
+                    net.minecraft.world.phys.Vec3 to = player.position().add(0, 1, 0);
+                    for (int k = 0; k < 6; k++) {
+                        double f = (tt * 6 + k) / 72.0;
+                        net.minecraft.world.phys.Vec3 p = from.lerp(to, f).add(0, Math.sin(f * Math.PI) * .8, 0);
+                        level.sendParticles(k % 2 == 0 ? ParticleTypes.SMOKE : ParticleTypes.SOUL, p.x, p.y, p.z, 1, .02, .02, .02, 0);
+                    }
+                    if (tt == 11) {
+                        level.sendParticles(ParticleTypes.SCULK_SOUL, from.x, from.y, from.z, 12, .2, .3, .2, .02);
+                        level.sendParticles(dark, from.x, from.y, from.z, 20, .25, .25, .25, 0);
+                        level.playSound(null, from.x, from.y, from.z, net.minecraft.sounds.SoundEvents.SOUL_ESCAPE.value(),
+                                net.minecraft.sounds.SoundSource.PLAYERS, 1f, .7f);
+                        if (b.holder() instanceof net.minecraft.world.entity.decoration.ItemFrame frame) frame.setItem(net.minecraft.world.item.ItemStack.EMPTY);
+                        else b.holder().discard();
+                    }
+                });
+            }
+        }
+        // 3: a noite cai sobre o círculo
+        int night = 30 + found.size() * 12;
+        for (int t = 0; t < 40; t++) {
+            final int tt = t;
+            de.jakob.lotm.util.scheduling.ServerScheduler.scheduleDelayed(night + t, () -> {
+                double r = radius + 1;
+                for (int k = 0; k < 24; k++) {
+                    double theta = player.getRandom().nextDouble() * Math.PI * 2;
+                    double phi = player.getRandom().nextDouble() * Math.PI / 2;
+                    double x = center.x + r * Math.cos(theta) * Math.cos(phi), y = center.y + r * Math.sin(phi), z = center.z + r * Math.sin(theta) * Math.cos(phi);
+                    level.sendParticles(dark, x, y, z, 1, 0, 0, 0, 0);
+                    if (k % 6 == 0) level.sendParticles(ParticleTypes.END_ROD, x, y, z, 1, 0, 0, 0, 0);
+                }
+                if (tt == 0) level.playSound(null, center.x, center.y, center.z, net.minecraft.sounds.SoundEvents.BELL_RESONATE,
+                        net.minecraft.sounds.SoundSource.PLAYERS, .6f, .5f);
+            });
+        }
+        // 4: as estrelas sobem e o círculo se desfaz
+        de.jakob.lotm.util.scheduling.ServerScheduler.scheduleDelayed(night + 40, () -> {
+            level.sendParticles(ParticleTypes.END_ROD, center.x, center.y + 1, center.z, 40, radius / 2, .5, radius / 2, .08);
+            level.playSound(null, center.x, center.y, center.z, net.minecraft.sounds.SoundEvents.AMETHYST_BLOCK_RESONATE,
+                    net.minecraft.sounds.SoundSource.PLAYERS, 1f, .6f);
+        });
     }
 
     // ------------------------------------------------------------------ 3, Bispo do Horror: diante da morte

@@ -292,9 +292,12 @@ Escuridão.
   A cada 10 segundos você sente se está muito longe, longe, perto ou bem aqui, e se chegou mais perto ou mais longe;
   a 64 blocos aparece uma luz. Um poder de adivinhação de qualquer Caminho (Adivinhação, Profecia, Visão Espiritual...)
   usado lá mostra a direção e a distância. A até 3 blocos dela, você se funde. Beber ainda no Mundo Espiritual.
-- Sequência 4, Vigia da Noite: um círculo mágico em volta de você, de 2 a 5 blocos de distância, com pelo menos
-  8 marcas e marcas dos quatro lados: velas acesas (de qualquer cor), pó de redstone, lanternas, tochas, fogo ou
-  fogueira de alma. E o sangue de uma linhagem divina: qualquer Característica Beyonder no inventário. Beber no meio.
+- Sequência 4, Vigia da Noite: desenhar o círculo com as linhagens dos deuses: pelo menos 4 Características Beyonder
+  (de qualquer Caminho) em volta de você, de 2 a 5 blocos de distância, uma em cada lado (norte, sul, leste, oeste),
+  soltas no chão ou em molduras. Quem trocou de Caminho só pode usar as da Escuridão, da Morte ou do Gigante do
+  Crepúsculo. Beber no meio do círculo. Com o ritual, o círculo se desfaz: a tinta da noite corre de uma
+  característica a outra, a névoa e as almas fluem até você e elas se desfazem uma a uma, a noite cai sobre o círculo
+  e as estrelas sobem. As características somem. (Item solto no chão some sozinho em 5 minutos; em moldura, não.)
 - Sequência 3, Bispo do Horror: beber à beira da morte: com no máximo 25% da vida e tendo levado dano nos últimos
   5 segundos (de qualquer coisa: monstros, queda, lava, poderes...), ou até 30 segundos depois de um Totem da
   Imortalidade te salvar.

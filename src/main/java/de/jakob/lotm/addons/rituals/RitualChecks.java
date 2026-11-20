@@ -86,7 +86,12 @@ public final class RitualChecks {
         if ("tyrant".equals(pathway) && sequence == 1) return TyrantRituals.angelsDisrupted(player) >= TyrantRituals.ANGELS_NEEDED;
         // Escuridão: Bruxo Espiritual, Vigia da Noite, Bispo do Horror, Servo da Ocultação e Cavaleiro do Infortúnio
         if ("darkness".equals(pathway) && sequence == 5) return DarknessRituals.mergedWithSelf(player);
-        if ("darkness".equals(pathway) && sequence == 4) return DarknessRituals.circleDrawn(player);
+        if ("darkness".equals(pathway) && sequence == 4) {
+            // o círculo de características se desfaz com o ritual
+            if (!DarknessRituals.circleDrawn(player)) return false;
+            DarknessRituals.performCircle(player);
+            return true;
+        }
         if ("darkness".equals(pathway) && sequence == 3) return DarknessRituals.facingDeath(player);
         if ("darkness".equals(pathway) && sequence == 2) return DarknessRituals.concealed(player);
         if ("darkness".equals(pathway) && sequence == 1) return DarknessRituals.misfortuneBrought(player);
