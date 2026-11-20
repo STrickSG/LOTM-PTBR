@@ -68,7 +68,7 @@ public final class AstralWorldEffects {
 
     /** Do lado de dentro da Barreira: o Sol Ardente Eterno */
     private static final SkyImage[] INSIDE = {
-            new SkyImage(tex("sun"), 324f, 75f, 0f, 12f, 1f, true, 0.04f, 0f),
+            new SkyImage(tex("sun"), 324f, 72f, 0f, 22f, 1f, true, 0.04f, 0f),
     };
 
     private static final int STARS = 700;
