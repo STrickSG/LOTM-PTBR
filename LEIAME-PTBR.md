@@ -336,6 +336,32 @@ Coletivo (abaixo).
   você o influenciar no Mar, a felicidade dele subir a 7 ou mais (ou cair a 3 ou menos), ou ele ganhar nível numa
   habilidade. Beber quando a história inteira se cumprir.
 
+## Rituais de avanço da Roda da Fortuna
+
+Mesmas regras dos outros: pergaminho, Fórmula Completa ou Carta da Roda da Fortuna na Sequência certa. A Carta pede
+as receitas das Sequências 9 a 6 e as Fórmulas Completas das Sequências 5 a 1.
+
+Em azar quer dizer: com o efeito Azar (poção, flecha, poder) ou vestindo um item amaldiçoado (Maldição do Ligamento
+ou do Desaparecimento).
+
+- Sequência 5, Vencedor: 3 dias do Minecraft (o "mês") em azar, sem parar. Qualquer sorte zera: o efeito Sorte,
+  Herói da Vila, um Totem da Imortalidade ou um tesouro pescado. Ficar sem azar também zera.
+- Sequência 4, Mago do Infortúnio: em azar e sem nenhum preparo (sem armadura, a não ser amaldiçoada, e sem
+  Resistência, Resistência ao Fogo, Regeneração, Absorção, Vida Extra, Queda Lenta ou Respiração), levar de uma vez
+  pelo menos metade da vida de uma calamidade (explosão, raio, fogo, queda, afogamento, congelamento, bloco caindo ou
+  poderes) e sobreviver, sem Totem. Beber em até 1 minuto.
+- Sequência 3, Caminhante do Caos: clicar com um livro assinado (o seu destino) numa magnetita ou num sinalizador:
+  o farol fica fixado. Ir a pelo menos 500 blocos dele (ou a outra dimensão) e voltar, e beber a até 4 blocos dele,
+  em até 10 dias depois de fixá-lo.
+- Sequência 2, Adivinho: escrever e assinar um livro com o nome de uma colônia (de qualquer um) e o que vai
+  acontecer com ela: "cresce" (pelo menos 5 moradores a mais), "cai" (perde metade dos moradores, é conquistada ou
+  some), "prospera" (felicidade geral sobe a 7 ou mais) ou "sofre" (felicidade geral cai a 3 ou menos). Com o livro
+  no inventário, você "vê" a revelação. Beber quando ela se cumprir.
+- Sequência 1, Serpente de Mercúrio: agachado, usar um livro comum tendo experiência: ele vira o Livro das Memórias
+  e guarda toda a sua experiência (você fica com zero). Beber com zero de experiência e o livro no inventário; o
+  livro é consumido e, ao avançar, toda a experiência volta para você. Outro jeito: beber no Mar do Subconsciente
+  com um Beyonder Visionário (jogador ou Beyonder Errante) a até 16 blocos.
+
 ## Mar do Subconsciente Coletivo
 
 Uma dimensão nova: um mar escuro e parado, sob uma noite sem estrelas, onde as mentes de quem dorme aparecem como

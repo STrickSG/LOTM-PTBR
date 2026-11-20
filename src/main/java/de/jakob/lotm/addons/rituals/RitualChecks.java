@@ -101,6 +101,12 @@ public final class RitualChecks {
         if ("visionary".equals(pathway) && sequence == 3) return VisionaryRituals.sameDream(player) >= VisionaryRituals.SAME_DREAM;
         if ("visionary".equals(pathway) && sequence == 2) return de.jakob.lotm.addons.subconscious.SubconsciousSea.marked(player) >= VisionaryRituals.MARKS_NEEDED;
         if ("visionary".equals(pathway) && sequence == 1) return VisionaryRituals.storyComplete(player);
+        // Roda da Fortuna: Vencedor, Mago do Infortúnio, Caminhante do Caos, Adivinho e Serpente de Mercúrio
+        if ("wheel_of_fortune".equals(pathway) && sequence == 5) return WheelOfFortuneRituals.monthOfMisfortune(player);
+        if ("wheel_of_fortune".equals(pathway) && sequence == 4) return WheelOfFortuneRituals.survivedCalamity(player);
+        if ("wheel_of_fortune".equals(pathway) && sequence == 3) return WheelOfFortuneRituals.atNode(player);
+        if ("wheel_of_fortune".equals(pathway) && sequence == 2) return WheelOfFortuneRituals.revelationCameTrue(player);
+        if ("wheel_of_fortune".equals(pathway) && sequence == 1) return WheelOfFortuneRituals.memoriesReady(player);
         return false;
     }
 

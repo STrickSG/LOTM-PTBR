@@ -15,19 +15,19 @@
       "item": "lotmcraft:calamity_priest"
     },
     {
-      "item": "lotmcraft:winner"
+      "item": "lotmcraft:winner_complete_formula"
     },
     {
-      "item": "lotmcraft:misfortune_mage"
+      "item": "lotmcraft:misfortune_mage_complete_formula"
     },
     {
-      "item": "lotmcraft:chaoswalker"
+      "item": "lotmcraft:chaoswalker_complete_formula"
     },
     {
-      "item": "lotmcraft:soothsayer"
+      "item": "lotmcraft:soothsayer_complete_formula"
     },
     {
-      "item": "lotmcraft:snake_of_mercury"
+      "item": "lotmcraft:snake_of_mercury_complete_formula"
     }
   ],
   "result": {

@@ -217,7 +217,27 @@ public final class AdvancementRituals {
             // Visionário, Sequência 1 (Autor): um romance com pessoas reais, e o destino delas seguindo a história
             new Ritual("visionary", 1, () -> List.of(
                     new ItemStack(Items.WRITABLE_BOOK),
-                    new ItemStack(PotionItemHandler.AUTHOR_POTION.get())))
+                    new ItemStack(PotionItemHandler.AUTHOR_POTION.get()))),
+            // Roda da Fortuna, Sequência 5 (Vencedor): um mês em azar, sem nenhuma sorte
+            new Ritual("wheel_of_fortune", 5, () -> List.of(
+                    new ItemStack(Items.COBWEB),
+                    new ItemStack(PotionItemHandler.WINNER_POTION.get()))),
+            // Roda da Fortuna, Sequência 4 (Mago do Infortúnio): no fundo do azar, sobreviver a uma calamidade sem preparo
+            new Ritual("wheel_of_fortune", 4, () -> List.of(
+                    new ItemStack(Items.ANVIL),
+                    new ItemStack(PotionItemHandler.MISFORTUNE_MAGE_POTION.get()))),
+            // Roda da Fortuna, Sequência 3 (Caminhante do Caos): fixar um farol que o destino vai alcançar
+            new Ritual("wheel_of_fortune", 3, () -> List.of(
+                    new ItemStack(Items.LODESTONE),
+                    new ItemStack(PotionItemHandler.CHAOSWALKER_POTION.get()))),
+            // Roda da Fortuna, Sequência 2 (Adivinho): uma revelação sobre uma nação que acontece como foi vista
+            new Ritual("wheel_of_fortune", 2, () -> List.of(
+                    new ItemStack(Items.AMETHYST_SHARD),
+                    new ItemStack(PotionItemHandler.SOOTHSAYER_POTION.get()))),
+            // Roda da Fortuna, Sequência 1 (Serpente de Mercúrio): tirar todas as memórias, beber e devolvê-las
+            new Ritual("wheel_of_fortune", 1, () -> List.of(
+                    new ItemStack(Items.BOOK),
+                    new ItemStack(PotionItemHandler.SNAKE_OF_MERCURY_POTION.get())))
     );
 
     public static List<Ritual> all() {

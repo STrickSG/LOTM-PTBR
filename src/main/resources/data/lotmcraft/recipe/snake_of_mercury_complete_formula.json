@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    {
+      "item": "lotmcraft:snake_of_mercury"
+    },
+    {
+      "item": "lotmcraft:snake_of_mercury_ritual"
+    }
+  ],
+  "result": {
+    "id": "lotmcraft:snake_of_mercury_complete_formula",
+    "count": 1
+  }
+}

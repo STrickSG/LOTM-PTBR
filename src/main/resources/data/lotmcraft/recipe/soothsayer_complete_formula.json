@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    {
+      "item": "lotmcraft:soothsayer"
+    },
+    {
+      "item": "lotmcraft:soothsayer_ritual"
+    }
+  ],
+  "result": {
+    "id": "lotmcraft:soothsayer_complete_formula",
+    "count": 1
+  }
+}
