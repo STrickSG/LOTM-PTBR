@@ -337,6 +337,28 @@ public final class ColonistBeyonders extends SavedData {
         entity.setTarget(previous);
     }
 
+    /** Colono Beyonder morto solta a característica da Sequência dele, como qualquer Beyonder */
+    @SubscribeEvent
+    public static void onDeath(net.neoforged.neoforge.event.entity.living.LivingDeathEvent event) {
+        if (!(event.getEntity() instanceof AbstractEntityCitizen entity) || !(entity.level() instanceof ServerLevel level)) return;
+        ICitizenData citizen = Colonists.data(entity);
+        if (citizen == null) return;
+        ColonistBeyonders data = get(level.getServer());
+        Info info = data.colonists.remove(citizen.getUUID());
+        if (info == null) return;
+        data.setDirty();
+        RESCUES.remove(citizen.getUUID());
+        var characteristic = de.jakob.lotm.beyonders.potions.BeyonderCharacteristicItemHandler.selectCharacteristicOfPathwayAndSequence(info.pathway(), info.sequence());
+        if (characteristic == null) return;
+        ItemStack stack = new ItemStack(characteristic);
+        // os outros colonos recolhem tudo o que cai no chão: quem matou (se foi um jogador) já leva a característica
+        if (event.getSource().getEntity() instanceof net.minecraft.world.entity.player.Player killer) {
+            if (!killer.getInventory().add(stack)) killer.drop(stack, false);
+        } else {
+            level.addFreshEntity(new net.minecraft.world.entity.item.ItemEntity(level, entity.getX(), entity.getY() + 0.5, entity.getZ(), stack));
+        }
+    }
+
     /** Colono Beyonder só fere monstros: nunca pessoas, colonos, animais ou aldeões */
     @SubscribeEvent
     public static void onDamage(LivingIncomingDamageEvent event) {
