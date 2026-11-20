@@ -846,7 +846,22 @@ public class ClientHandler {
 
     }
 
+    /** O pacote de cada efeito cancelável, para recriá-lo quando o pedaço do mundo volta a carregar */
+    private static final HashMap<UUID, PlayCancellablePhotonBlockEffectPacket> blockEffectPackets = new HashMap<>();
+    /** Efeitos parados porque o pedaço do mundo onde estão descarregou */
+    private static final java.util.Set<UUID> suspendedBlockEffects = new java.util.HashSet<>();
+
     public static void playCancellablePhotonBlockEffect(PlayCancellablePhotonBlockEffectPacket packet) {
+        destroyBlockEffect(packet.effectUUID());
+        blockEffectPackets.put(packet.effectUUID(), packet);
+        if (Minecraft.getInstance().level != null && Minecraft.getInstance().level.isLoaded(packet.pos())) {
+            startCancellableBlockEffect(packet);
+        } else {
+            suspendedBlockEffects.add(packet.effectUUID());
+        }
+    }
+
+    private static void startCancellableBlockEffect(PlayCancellablePhotonBlockEffectPacket packet) {
         FX fx = FXHelper.getFX(ResourceLocation.fromNamespaceAndPath(LOTMCraft.MOD_ID, packet.effectPath()));
         if (fx != null) {
             BlockEffectExecutor fxExecutor = new BlockEffectExecutor(fx, Minecraft.getInstance().level, packet.pos());
@@ -864,7 +879,42 @@ public class ClientHandler {
             fxExecutor.start();
             activeBlockEffects.put(packet.effectUUID(), fxExecutor);
         }
+    }
 
+    /** Apaga o efeito na hora, sem deixar restos (o Photon, sozinho, deixa o domo preto quando o pedaço descarrega) */
+    private static void destroyBlockEffect(UUID effectUUID) {
+        BlockEffectExecutor executor = activeBlockEffects.remove(effectUUID);
+        if (executor != null && executor.getRuntime() != null) executor.getRuntime().destroy(true);
+    }
+
+    /**
+     * A cada tick: um efeito cujo pedaço do mundo descarregou (você se afastou) é apagado por inteiro e fica guardado;
+     * quando o pedaço volta a carregar (você voltou), ele é recriado do zero. Se você trocou de mundo, ele é esquecido:
+     * o servidor manda de novo quando você voltar para perto.
+     */
+    public static void tickBlockEffects() {
+        if (blockEffectPackets.isEmpty()) return;
+        var level = Minecraft.getInstance().level;
+        for (UUID id : new java.util.ArrayList<>(blockEffectPackets.keySet())) {
+            PlayCancellablePhotonBlockEffectPacket packet = blockEffectPackets.get(id);
+            BlockEffectExecutor executor = activeBlockEffects.get(id);
+            if (level == null || (executor != null && executor.level != level)) {
+                destroyBlockEffect(id);
+                blockEffectPackets.remove(id);
+                suspendedBlockEffects.remove(id);
+                continue;
+            }
+            boolean loaded = level.isLoaded(packet.pos());
+            if (suspendedBlockEffects.contains(id)) {
+                if (loaded) {
+                    suspendedBlockEffects.remove(id);
+                    startCancellableBlockEffect(packet);
+                }
+            } else if (!loaded) {
+                destroyBlockEffect(id);
+                suspendedBlockEffects.add(id);
+            }
+        }
     }
 
     public static void playPhotonEntityEffect(PlayPhotonEntityEffectPacket packet) {
@@ -900,16 +950,9 @@ public class ClientHandler {
         }
     }
     public static void cancelBlockEffect(UUID effectUUID) {
-        System.out.println("Canceling block effect with UUID: " + effectUUID);
-        BlockEffectExecutor executor = activeBlockEffects.get(effectUUID);
-        if(executor != null) {
-            System.out.println("Found executor for block effect UUID: " + effectUUID);
-            FXRuntime runtime = executor.getRuntime();
-            if (runtime != null) {
-                runtime.destroy(true);
-            }
-            activeBlockEffects.remove(effectUUID);
-        }
+        blockEffectPackets.remove(effectUUID);
+        suspendedBlockEffects.remove(effectUUID);
+        destroyBlockEffect(effectUUID);
     }
     public static void handleControllingSync(SyncControllingPacket packet) {
         Player player = getPlayer();

@@ -108,8 +108,8 @@ public class SpatialCageAbility extends SelectableAbility {
         Level level = serverLevel;
         Vec3 center = BlockPos.containing(targetLoc).getCenter();
         UUID effectId = openFront
-                ? FxHandler.playCancellable(serverLevel, "spatial_cage_open", center, 1, FxHandler.yawTowards(Vec3.atLowerCornerOf(frontDirection.getNormal())))
-                : FxHandler.playCancellable(serverLevel, "spatial_cage", center, 1);
+                ? FxHandler.playPersistent(serverLevel, "spatial_cage_open", center, 1, FxHandler.yawTowards(Vec3.atLowerCornerOf(frontDirection.getNormal())))
+                : FxHandler.playPersistent(serverLevel, "spatial_cage", center, 1, null);
 
         SpatialCage cage = new SpatialCage(serverLevel, targetLoc, openFront, RADIUS, frontDirection, entity.getUUID(),
                 seq, center, effectId, openFront ? OPEN_FRONT_TICKS : SURROUND_TICKS);

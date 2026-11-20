@@ -97,7 +97,7 @@ public class SpaceFragmentationAbility extends SelectableAbility {
         timeStop.setPos(center);
         level.addFreshEntity(timeStop);
 
-        UUID tear = FxHandler.playCancellable(level, "shatter_space", center, 1);
+        UUID tear = FxHandler.playPersistent(level, "shatter_space", center, 1, null);
         Runnable sealSpace = () -> {
             FxHandler.cancel(level, tear);
             FxHandler.play(level, "shatter_space_end", center, 1);
