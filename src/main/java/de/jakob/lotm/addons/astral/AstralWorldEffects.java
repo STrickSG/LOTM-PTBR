@@ -42,32 +42,36 @@ public final class AstralWorldEffects {
 
     /** O Cosmos atrás da Barreira: a galáxia, as nebulosas, astros comuns e, enormes e colados nela, os Deuses Exteriores */
     private static final SkyImage[] COSMOS = {
-            new SkyImage(tex("galaxy"), 30f, 62f, 18f, 46f, 4f, true, 0f, 0f),
-            new SkyImage(tex("galaxy"), 210f, 62f, -18f, 46f, 4f, true, 0f, 0f),
-            new SkyImage(tex("nebula_violet"), 75f, 40f, 0f, 48f, 1f, true, 0f, 0f),
-            new SkyImage(tex("nebula_teal"), 200f, 55f, 30f, 56f, 1f, true, 0f, 0f),
-            new SkyImage(tex("nebula_crimson"), 310f, 30f, 70f, 40f, 1f, true, 0f, 0f),
-            new SkyImage(tex("planet_gas"), 160f, 82f, 0f, 7f, 1f, false, 0f, 0f),
-            new SkyImage(tex("planet_ring"), 285f, 84f, 10f, 6f, 1f, false, 0f, 0f),
-            // os Deuses Exteriores
-            new SkyImage(tex("outer_depravity"), 335f, 58f, 0f, 38f, 1f, false, 0.25f, 0f),
-            new SkyImage(tex("outer_desire"), 265f, 70f, 0f, 34f, 1f, false, 0.15f, 0.002f),
-            new SkyImage(tex("outer_chaos"), 20f, 24f, 0f, 26f, 1f, false, 0f, 0.004f),
-            new SkyImage(tex("outer_hunger"), 110f, 64f, 15f, 40f, 1f, false, 0.1f, 0f),
-            new SkyImage(tex("outer_inevitability"), 190f, 30f, 0f, 30f, 1f, true, 0f, 0.01f),
-            new SkyImage(tex("outer_supernova"), 70f, 80f, 0f, 30f, 1f, true, 0.3f, 0f),
-            new SkyImage(tex("outer_ravings"), 230f, 78f, 0f, 24f, 1f, true, 0.35f, 0.003f),
-            new SkyImage(tex("outer_decay"), 150f, 46f, 0f, 30f, 1f, false, 0f, 0.001f),
-            new SkyImage(tex("outer_overseer"), 0f, 2f, 0f, 22f, 1f, false, 0.08f, 0f),
-            new SkyImage(tex("outer_fate"), 300f, 82f, 0f, 22f, 1f, false, 0f, 0.006f),
+            new SkyImage(tex("galaxy"), 60f, 70f, 20f, 18f, 1f, true, 0f, 0.0005f),
+            new SkyImage(tex("galaxy_pink"), 250f, 66f, -40f, 16f, 1f, true, 0f, -0.0004f),
+            new SkyImage(tex("galaxy_teal"), 160f, 30f, 10f, 14f, 1f, true, 0f, 0.0006f),
+            new SkyImage(tex("galaxy_pink"), 340f, 110f, 60f, 12f, 1f, true, 0f, 0.0003f),
+            new SkyImage(tex("galaxy_teal"), 100f, 125f, -20f, 13f, 1f, true, 0f, -0.0005f),
+            new SkyImage(tex("galaxy"), 200f, 140f, 30f, 15f, 1f, true, 0f, 0.0004f),
+            new SkyImage(tex("nebula_violet"), 160f, 60f, 0f, 30f, 1f, true, 0f, 0f),
+            new SkyImage(tex("nebula_teal"), 300f, 100f, 30f, 28f, 1f, true, 0f, 0f),
+            new SkyImage(tex("nebula_crimson"), 20f, 105f, 70f, 26f, 1f, true, 0f, 0f),
+            new SkyImage(tex("planet_gas"), 130f, 115f, 0f, 6f, 1f, false, 0f, 0f),
+            new SkyImage(tex("planet_ring"), 230f, 120f, 10f, 5f, 1f, false, 0f, 0f),
+            // os Deuses Exteriores, espalhados por todo o céu
+            new SkyImage(tex("outer_depravity"), 0f, 60f, 0f, 16f, 1f, false, 0.25f, 0f),
+            new SkyImage(tex("outer_desire"), 36f, 100f, 0f, 13f, 1f, false, 0.15f, 0.002f),
+            new SkyImage(tex("outer_chaos"), 72f, 40f, 0f, 12f, 1f, false, 0f, 0.004f),
+            new SkyImage(tex("outer_hunger"), 108f, 80f, 15f, 15f, 1f, false, 0.1f, 0f),
+            new SkyImage(tex("outer_inevitability"), 144f, 50f, 0f, 14f, 1f, true, 0f, 0.01f),
+            new SkyImage(tex("outer_supernova"), 180f, 95f, 0f, 12f, 1f, true, 0.3f, 0f),
+            new SkyImage(tex("outer_ravings"), 216f, 45f, 0f, 11f, 1f, true, 0.35f, 0.003f),
+            new SkyImage(tex("outer_decay"), 252f, 85f, 0f, 13f, 1f, false, 0f, 0.001f),
+            new SkyImage(tex("outer_overseer"), 0f, 4f, 0f, 12f, 1f, false, 0.08f, 0f),
+            new SkyImage(tex("outer_fate"), 288f, 55f, 0f, 11f, 1f, false, 0f, 0.006f),
     };
 
     /** Do lado de dentro da Barreira: o Sol Ardente Eterno */
     private static final SkyImage[] INSIDE = {
-            new SkyImage(tex("sun"), 140f, 35f, 0f, 20f, 1f, true, 0.04f, 0f),
+            new SkyImage(tex("sun"), 324f, 75f, 0f, 12f, 1f, true, 0.04f, 0f),
     };
 
-    private static final int STARS = 1600;
+    private static final int STARS = 700;
     private static final float[][] STAR = new float[STARS][];
 
     static {
@@ -123,14 +127,30 @@ public final class AstralWorldEffects {
             RenderSystem.depthMask(false);
             RenderSystem.enableBlend();
 
-            // estrelas: asteriscos de giz, piscando devagar
+            // o fundo: a folha inteira pintada de escuro a giz de cera
+            RenderSystem.defaultBlendFunc();
+            RenderSystem.setShader(GameRenderer::getPositionTexColorShader);
+            for (int face = 0; face < 6; face++) {
+                Matrix4f m = new Matrix4f(modelViewMatrix);
+                switch (face) {
+                    case 1 -> m.rotateX(Mth.PI);
+                    case 2 -> m.rotateX(Mth.HALF_PI);
+                    case 3 -> m.rotateX(-Mth.HALF_PI);
+                    case 4 -> m.rotateZ(Mth.HALF_PI);
+                    case 5 -> m.rotateZ(-Mth.HALF_PI);
+                    default -> { }
+                }
+                quad(m, tex("sky"), 120f, 120f, 120f, 0f, 0f, 3f, 3f, 1f, 1f, 1f, 1f);
+            }
+
+            // estrelas: estrelinhas de giz, piscando devagar
             RenderSystem.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE);
             RenderSystem.setShader(GameRenderer::getPositionTexColorShader);
             RenderSystem.setShaderTexture(0, tex("star"));
             BufferBuilder stars = Tesselator.getInstance().begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX_COLOR);
             for (float[] s : STAR) {
                 float twinkle = 0.55f + 0.45f * Mth.sin(time * 0.05f + s[7]);
-                star(stars, modelViewMatrix, s[0] * 100, s[1] * 100, s[2] * 100, s[3] * 2.4f, s[4], s[5], s[6], twinkle);
+                star(stars, modelViewMatrix, s[0] * 100, s[1] * 100, s[2] * 100, 0.6f + s[3] * 3f, 1f, 1f, 1f, twinkle);
             }
             BufferUploader.drawWithShader(stars.buildOrThrow());
 
