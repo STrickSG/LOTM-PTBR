@@ -57,6 +57,7 @@ public class AbilityHandler {
         abilities.add(new SpiritVisionAbility("spirit_vision_ability"));
         abilities.add(new CurseOfMisfortuneAbility("curse_of_misfortune_ability"));
         abilities.add(new AngelAuthorityAbility("angel_authority_ability"));
+        abilities.add(new de.jakob.lotm.beyonders.abilities.common.DivineAuthorityAbility("divine_authority_ability"));
         abilities.add(new AngelFlightAbility("angel_authority_flight"));
         abilities.add(new MythicalCreatureFormAbility("mythical_creature_form_ability"));
         abilities.add(new LuckPerceptionAbility("luck_perception_ability"));

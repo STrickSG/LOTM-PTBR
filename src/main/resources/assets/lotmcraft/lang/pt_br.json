@@ -5744,5 +5744,13 @@
   "lotmcraft.colonist_beyonder.no_spirituality": "Espiritualidade insuficiente: precisa de %s.",
   "lotmcraft.colonist_beyonder.saved": "Você estabilizou a mente de %s. A poção foi digerida em segurança.",
   "lotmcraft.colonist_beyonder.lost": "%s perdeu o controle.",
-  "lotmcraft.colonist_beyonder.lost_name": "%s (Descontrolado)"
+  "lotmcraft.colonist_beyonder.lost_name": "%s (Descontrolado)",
+  "lotmcraft.divine_authority_ability": "Autoridade Divina",
+  "lotmcraft.divine_authority_ability.description": "Poder de um Deus sobre os Beyonders abaixo dele. Só para quem é Sequência 0",
+  "ability.lotmcraft.divine_authority.extract_characteristic": "Extrair Característica",
+  "ability.lotmcraft.divine_authority.no_target": "Nenhum Beyonder na sua mira.",
+  "ability.lotmcraft.divine_authority.too_strong": "Só é possível extrair de quem está abaixo de você.",
+  "ability.lotmcraft.divine_authority.failed": "A característica não se soltou.",
+  "ability.lotmcraft.divine_authority.extracted": "Você arrancou a característica de %s.",
+  "ability.lotmcraft.divine_authority.victim": "Um Deus arrancou a sua característica."
 }

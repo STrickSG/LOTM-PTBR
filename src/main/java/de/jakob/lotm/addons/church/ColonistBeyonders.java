@@ -118,6 +118,19 @@ public final class ColonistBeyonders extends SavedData {
         BeyonderData.setBeyonder(entity, info.pathway(), info.sequence(), true, false, true, false, true, false);
     }
 
+    /** A característica de um colono Beyonder foi arrancada: ele cai uma Sequência (na 9, deixa de ser Beyonder) */
+    public static void regress(MinecraftServer server, LivingEntity entity) {
+        if (!(entity instanceof AbstractEntityCitizen) || server == null) return;
+        ICitizenData citizen = Colonists.data(entity);
+        if (citizen == null) return;
+        ColonistBeyonders data = get(server);
+        Info info = data.colonists.get(citizen.getUUID());
+        if (info == null) return;
+        if (info.sequence() >= 9) data.colonists.remove(citizen.getUUID());
+        else data.colonists.put(citizen.getUUID(), new Info(info.pathway(), info.sequence() + 1, info.potionDay()));
+        data.setDirty();
+    }
+
     // ---------------------------------------------------------------- a poção
 
     @SubscribeEvent

@@ -5945,5 +5945,13 @@
   "lotmcraft.colonist_beyonder.no_spirituality": "Not enough spirituality: you need %s.",
   "lotmcraft.colonist_beyonder.saved": "You stabilized %s's mind. The potion was digested safely.",
   "lotmcraft.colonist_beyonder.lost": "%s lost control.",
-  "lotmcraft.colonist_beyonder.lost_name": "%s (Out of Control)"
+  "lotmcraft.colonist_beyonder.lost_name": "%s (Out of Control)",
+  "lotmcraft.divine_authority_ability": "Divine Authority",
+  "lotmcraft.divine_authority_ability.description": "A God's power over the Beyonders below them. Only for Sequence 0",
+  "ability.lotmcraft.divine_authority.extract_characteristic": "Extract Characteristic",
+  "ability.lotmcraft.divine_authority.no_target": "No Beyonder in your sight.",
+  "ability.lotmcraft.divine_authority.too_strong": "You can only extract from those below you.",
+  "ability.lotmcraft.divine_authority.failed": "The characteristic did not come loose.",
+  "ability.lotmcraft.divine_authority.extracted": "You tore out %s's characteristic.",
+  "ability.lotmcraft.divine_authority.victim": "A God tore out your characteristic."
 }
