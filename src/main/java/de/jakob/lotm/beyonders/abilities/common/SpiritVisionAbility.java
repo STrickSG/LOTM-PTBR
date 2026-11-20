@@ -37,10 +37,21 @@ import org.joml.Vector3f;
 import java.util.*;
 
 public class SpiritVisionAbility extends ToggleAbility {
-    private final Map<UUID, Set<Entity>> seedOutlined = new HashMap<>();
+    /** A cor do contorno que cada ser tem agora, para quem está olhando */
+    private final Map<UUID, Map<Entity, PlayerTeam>> outlined = new HashMap<>();
     private static final String MALICE_TEAM = "lotm_malice_black";
     private static final PlayerTeam MALICE_TEAM_OBJ = new PlayerTeam(new Scoreboard(), MALICE_TEAM);
-    static { MALICE_TEAM_OBJ.setColor(ChatFormatting.BLACK); }
+    // Aura branca = pacífico, vermelha = agressivo, amarela = neutro
+    private static final PlayerTeam PEACEFUL_TEAM = new PlayerTeam(new Scoreboard(), "lotm_sv_peaceful");
+    private static final PlayerTeam HOSTILE_TEAM = new PlayerTeam(new Scoreboard(), "lotm_sv_hostile");
+    private static final PlayerTeam NEUTRAL_TEAM = new PlayerTeam(new Scoreboard(), "lotm_sv_neutral");
+    private static final PlayerTeam[] ALL_TEAMS = {MALICE_TEAM_OBJ, PEACEFUL_TEAM, HOSTILE_TEAM, NEUTRAL_TEAM};
+    static {
+        MALICE_TEAM_OBJ.setColor(ChatFormatting.BLACK);
+        PEACEFUL_TEAM.setColor(ChatFormatting.WHITE);
+        HOSTILE_TEAM.setColor(ChatFormatting.RED);
+        NEUTRAL_TEAM.setColor(ChatFormatting.YELLOW);
+    }
     public SpiritVisionAbility(String id) {
         super(id);
 
@@ -145,8 +156,8 @@ public class SpiritVisionAbility extends ToggleAbility {
                 .toList();
 
 
+        updateOutlines(player, nearbyEntities);
         for (LivingEntity nearbyEntity : nearbyEntities) {
-            updateSeedOutlines(player, nearbyEntities);
             setGlowingForPlayer(nearbyEntity, (ServerPlayer) entity, true);
         }
 
@@ -202,11 +213,9 @@ public class SpiritVisionAbility extends ToggleAbility {
             if (glowingEntities.containsKey(entity.getUUID()))
                 glowingEntities.get(entity.getUUID()).forEach(e -> setGlowingForPlayer(e, player, false));
             glowingEntities.remove(entity.getUUID());
-            Set<Entity> outlined = seedOutlined.remove(entity.getUUID());
-            if (outlined != null && !outlined.isEmpty()) {
-                outlined.forEach(e -> setSeedOutline(player, e, false));
-                player.connection.send(ClientboundSetPlayerTeamPacket.createRemovePacket(MALICE_TEAM_OBJ));
-            }
+            // apagar os times apaga os contornos coloridos junto
+            if (outlined.remove(entity.getUUID()) != null)
+                for (PlayerTeam team : ALL_TEAMS) player.connection.send(ClientboundSetPlayerTeamPacket.createRemovePacket(team));
 
             PacketHandler.sendToPlayer(player, new SyncSpiritVisionAbilityPacket(false, -1));
 
@@ -228,18 +237,36 @@ public class SpiritVisionAbility extends ToggleAbility {
     protected float getSpiritualityCost() {
         return .5f;
     }
-    private static void setSeedOutline(ServerPlayer viewer, Entity e, boolean on) {
-        viewer.connection.send(ClientboundSetPlayerTeamPacket.createPlayerPacket(MALICE_TEAM_OBJ, e.getScoreboardName(), on ? ClientboundSetPlayerTeamPacket.Action.ADD : ClientboundSetPlayerTeamPacket.Action.REMOVE));
+    /** Branco = pacífico, vermelho = agressivo (ou com raiva), amarelo = neutro; a semente da malícia continua negra */
+    private static PlayerTeam teamFor(ServerPlayer viewer, LivingEntity e) {
+        if (MaliceSeedAbility.canObserverSeeSeed(viewer, e)) return MALICE_TEAM_OBJ;
+        if (e instanceof net.minecraft.world.entity.NeutralMob n) return n.isAngry() ? HOSTILE_TEAM : NEUTRAL_TEAM;
+        if (e instanceof net.minecraft.world.entity.monster.Enemy) return HOSTILE_TEAM;
+        if (e instanceof net.minecraft.world.entity.Mob m && m.getTarget() != null) return HOSTILE_TEAM;
+        if (e instanceof net.minecraft.world.entity.player.Player) return NEUTRAL_TEAM;
+        return PEACEFUL_TEAM;
     }
-    private void updateSeedOutlines(ServerPlayer viewer, List<LivingEntity> nearby) {
-        Set<Entity> previous = seedOutlined.computeIfAbsent(viewer.getUUID(), k -> new HashSet<>());
-        Set<Entity> current = new HashSet<>();
-        for (LivingEntity e : nearby) {if (MaliceSeedAbility.canObserverSeeSeed(viewer, e)) current.add(e);}
-        if (previous.isEmpty() && !current.isEmpty()) {viewer.connection.send(ClientboundSetPlayerTeamPacket.createAddOrModifyPacket(MALICE_TEAM_OBJ, true));}
-        for (Entity e : current) if (!previous.contains(e)) setSeedOutline(viewer, e, true);
-        for (Entity e : previous) if (!current.contains(e)) setSeedOutline(viewer, e, false);
+
+    private void updateOutlines(ServerPlayer viewer, List<LivingEntity> nearby) {
+        Map<Entity, PlayerTeam> previous = outlined.get(viewer.getUUID());
+        if (previous == null) {
+            previous = new HashMap<>();
+            outlined.put(viewer.getUUID(), previous);
+            for (PlayerTeam team : ALL_TEAMS) viewer.connection.send(ClientboundSetPlayerTeamPacket.createAddOrModifyPacket(team, true));
+        }
+        Map<Entity, PlayerTeam> current = new HashMap<>();
+        for (LivingEntity e : nearby) current.put(e, teamFor(viewer, e));
+        for (Map.Entry<Entity, PlayerTeam> en : current.entrySet()) {
+            // entrar num time novo já tira do antigo no cliente
+            if (previous.get(en.getKey()) != en.getValue())
+                viewer.connection.send(ClientboundSetPlayerTeamPacket.createPlayerPacket(en.getValue(), en.getKey().getScoreboardName(), ClientboundSetPlayerTeamPacket.Action.ADD));
+        }
+        for (Map.Entry<Entity, PlayerTeam> en : previous.entrySet()) {
+            if (!current.containsKey(en.getKey()))
+                viewer.connection.send(ClientboundSetPlayerTeamPacket.createPlayerPacket(en.getValue(), en.getKey().getScoreboardName(), ClientboundSetPlayerTeamPacket.Action.REMOVE));
+        }
         previous.clear();
-        previous.addAll(current);
+        previous.putAll(current);
     }
 
 }
