@@ -36,7 +36,8 @@ public class ExpelCharacteristicScreen extends Screen {
     private static final int TEXT_HEADING = 0xFFF4D58A, TEXT_NORMAL = 0xFFE8CF94, TEXT_BODY = 0xFFD8D0BC, TEXT_DIM = 0xFF8C8672;
     private static final int W = 250, ROW = 30, HEADER = 50;
 
-    private record Row(int sequence, int extras) {}
+    /** path vazio = do próprio caminho */
+    private record Row(int sequence, int extras, String path) {}
 
     private final String pathway;
     private final List<Row> rows = new ArrayList<>();
@@ -49,7 +50,13 @@ public class ExpelCharacteristicScreen extends Screen {
         ListTag list = data.getList("options", Tag.TAG_COMPOUND);
         for (int i = 0; i < list.size(); i++) {
             CompoundTag tag = list.getCompound(i);
-            if (!tag.getBoolean("regress")) rows.add(new Row(tag.getInt("seq"), tag.getInt("stacks")));
+            if (!tag.getBoolean("regress")) rows.add(new Row(tag.getInt("seq"), tag.getInt("stacks"), ""));
+        }
+        // as de Sequência 1 dos caminhos vizinhos
+        ListTag neighbors = data.getList("neighbors", Tag.TAG_COMPOUND);
+        for (int i = 0; i < neighbors.size(); i++) {
+            CompoundTag tag = neighbors.getCompound(i);
+            rows.add(new Row(1, tag.getInt("stacks"), tag.getString("path")));
         }
     }
 
@@ -60,18 +67,19 @@ public class ExpelCharacteristicScreen extends Screen {
         top = (this.height - h) / 2;
         int y = top + HEADER;
         for (Row r : rows) {
-            final int seq = r.sequence();
+            final Row row = r;
             addRenderableWidget(new BrassButton(left + W - 80, y + 5, 66, 20,
-                    Component.translatable("gui.lotmcraft.expel_characteristic.button"), () -> expel(seq)));
+                    Component.translatable("gui.lotmcraft.expel_characteristic.button"), () -> expel(row)));
             y += ROW;
         }
         addRenderableWidget(new BrassButton(left + W / 2 - 38, top + h - 30, 76, 20,
                 Component.translatable("gui.lotmcraft.expel_characteristic.close"), this::onClose));
     }
 
-    private void expel(int sequence) {
+    private void expel(Row row) {
         CompoundTag tag = new CompoundTag();
-        tag.putInt("seq", sequence);
+        tag.putInt("seq", row.sequence());
+        if (!row.path().isEmpty()) tag.putString("path", row.path());
         PacketHandler.sendToServer(new ErrorActionPacket("self_char", tag));
         onClose();
     }
@@ -118,11 +126,11 @@ public class ExpelCharacteristicScreen extends Screen {
             g.blitSprite(INSET, left + 12, y, W - 24, ROW - 2);
             // a característica num encaixe
             g.blitSprite(SLOT, left + 17, y + 5, 18, 18);
-            var item = BeyonderCharacteristicItemHandler.selectCharacteristicOfPathwayAndSequence(pathway, r.sequence());
+            var item = BeyonderCharacteristicItemHandler.selectCharacteristicOfPathwayAndSequence(r.path().isEmpty() ? pathway : r.path(), r.sequence());
             if (item != null) g.renderItem(new ItemStack(item), left + 18, y + 6);
 
             // nome da Sequência e quantas características extras
-            String name = BeyonderData.getSequenceName(pathway, r.sequence());
+            String name = BeyonderData.getSequenceName(r.path().isEmpty() ? pathway : r.path(), r.sequence());
             Component line = Component.literal(r.sequence() + " · " + name);
             int nameX = left + 40, maxW = W - 40 - 118;
             float sc = Math.min(1f, maxW / (float) Math.max(1, font.width(line)));

@@ -478,6 +478,12 @@ public class PacketHandler {
         );
 
         registrar.playToClient(
+                de.jakob.lotm.addons.characteristics.NeighborCharsSyncPacket.TYPE,
+                de.jakob.lotm.addons.characteristics.NeighborCharsSyncPacket.STREAM_CODEC,
+                de.jakob.lotm.addons.characteristics.NeighborCharsSyncPacket::handle
+        );
+
+        registrar.playToClient(
                 SyncSpiritVisionAbilityPacket.TYPE,
                 SyncSpiritVisionAbilityPacket.STREAM_CODEC,
                 SyncSpiritVisionAbilityPacket::handle

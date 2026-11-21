@@ -54,7 +54,8 @@ public final class ErrorServerActions {
             }
             case "self_char" -> {
                 if (has(player, "steal_characteristic_ability")) {
-                    StealCharacteristicAbility.get().extractFromSelf(player, data.getInt("seq"));
+                    if (data.contains("path")) StealCharacteristicAbility.get().extractNeighborFromSelf(player, data.getString("path"));
+                    else StealCharacteristicAbility.get().extractFromSelf(player, data.getInt("seq"));
                 }
             }
             default -> LOTMCraft.LOGGER.debug("Unknown error pathway action {}", key);

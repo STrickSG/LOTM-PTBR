@@ -86,11 +86,14 @@ public final class Corruption {
      */
     public static float floor(ServerPlayer player) {
         if (!BeyonderData.isBeyonder(player)) return 0f;
-        float weight = Math.min(1f, stackWeight(BeyonderData.getCharStacks(player)));
+        if (de.jakob.lotm.addons.characteristics.NeighborCharacteristics.isOverloaded(player)) return 1f;
+        float weight = Math.min(1f, stackWeight(BeyonderData.getCharStacks(player))
+                + de.jakob.lotm.addons.characteristics.NeighborCharacteristics.weight(player));
         if (weight <= 0f) return 0f;
         int anchors = de.jakob.lotm.addons.rituals.Believers.count(player);
         float relief = Math.min(1f, anchors / 100f);
-        return weight * (1f - relief);
+        // o peso sozinho não leva a 100%: chegar lá é o crescimento com o tempo (ou a sobrecarga)
+        return Math.min(0.9f, weight * (1f - relief));
     }
 
     /** Quanto as características acumuladas pesam: cada cópia extra, mais quanto mais alta a Sequência dela */
@@ -103,7 +106,10 @@ public final class Corruption {
 
     /** Quanto sobe por dia de jogo (20 minutos) */
     public static float dailyGrowth(LivingEntity entity) {
-        return dailyGrowth(BeyonderData.getSequence(entity), BeyonderData.getCharStacks(entity));
+        float base = dailyGrowth(BeyonderData.getSequence(entity), BeyonderData.getCharStacks(entity));
+        if (!(entity instanceof net.minecraft.world.entity.player.Player p)) return base;
+        float own = 0.01f + 0.004f * (9 - Math.max(0, Math.min(9, BeyonderData.getSequence(entity))));
+        return base + own * 4f * de.jakob.lotm.addons.characteristics.NeighborCharacteristics.weight(p);
     }
 
     public static float dailyGrowth(int seq, int[] stacks) {

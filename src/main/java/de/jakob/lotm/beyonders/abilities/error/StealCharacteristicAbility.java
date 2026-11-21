@@ -204,8 +204,33 @@ public class StealCharacteristicAbility extends SelectableAbility {
         data.putString("pathway", BeyonderData.getPathway(player));
         data.put("options", options);
         data.putBoolean("extrasOnly", !allowRegress);
+        if (!allowRegress) {
+            ListTag neighbors = new ListTag();
+            for (var e : de.jakob.lotm.addons.characteristics.NeighborCharacteristics.all(player).entrySet()) {
+                CompoundTag n = new CompoundTag();
+                n.putString("path", e.getKey());
+                n.putInt("stacks", e.getValue());
+                neighbors.add(n);
+            }
+            data.put("neighbors", neighbors);
+        }
         openMenus.put(player.getUUID(), player.serverLevel().getGameTime() + 20 * 60);
         ErrorUtil.send(player, "self_characteristic", data);
+    }
+
+    /** Tira do corpo uma característica de Sequência 1 de um caminho vizinho (Autoridade Angelical) */
+    public void extractNeighborFromSelf(ServerPlayer player, String pathway) {
+        Long until = openMenus.remove(player.getUUID());
+        extrasOnly.remove(player.getUUID());
+        if (until == null || until < player.serverLevel().getGameTime()) return;
+        ItemStack characteristic = de.jakob.lotm.addons.characteristics.NeighborCharacteristics.remove(player, pathway);
+        if (characteristic.isEmpty()) return;
+        var sanity = player.getData(ModAttachments.SANITY_COMPONENT);
+        sanity.setSanityAndSync(sanity.getSanity() - 0.05f, player);
+        ErrorUtil.giveOrDrop(player, characteristic);
+        de.jakob.lotm.addons.corruption.Corruption.set(player, de.jakob.lotm.addons.corruption.Corruption.get(player));
+        FxHandler.playOnEntity(player.serverLevel(), "characteristic_theft", player, player.getBbHeight() * 0.5, 1);
+        player.serverLevel().playSound(null, player.blockPosition(), SoundEvents.SOUL_ESCAPE.value(), SoundSource.PLAYERS, 1.2f, 0.7f);
     }
 
     public void extractFromSelf(ServerPlayer player, int sequence) {

@@ -67,6 +67,17 @@ public class BeyonderCharacteristicItem extends Item {
         int seq = beChar.getSequence();
         String path = beChar.getPathway();
 
+        // um Anjo (Seq 1) consome a de Sequência 1 de um caminho vizinho: não muda de caminho,
+        // só ganha as habilidades e passivas dessa Sequência do vizinho (e o peso dela na corrupção)
+        if (seq == 1 && player instanceof net.minecraft.server.level.ServerPlayer sp
+                && de.jakob.lotm.addons.characteristics.NeighborCharacteristics.canAbsorb(sp, path)
+                && BeyonderData.getDigestionProgress(player) == 1.0) {
+            de.jakob.lotm.addons.characteristics.NeighborCharacteristics.add(sp, path);
+            BeyonderData.setDigestionProgress(player, 0);
+            player.setItemInHand(hand, ItemStack.EMPTY);
+            return InteractionResultHolder.success(ItemStack.EMPTY);
+        }
+
         if(path.equals(BeyonderData.getPathway(player))){
             if(seq >= BeyonderData.getSequence(player)){
                 var stacks = BeyonderData.getCharStacks(player);

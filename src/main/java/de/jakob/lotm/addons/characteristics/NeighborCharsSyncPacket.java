@@ -1,0 +1,31 @@
+package de.jakob.lotm.addons.characteristics;
+
+import de.jakob.lotm.LOTMCraft;
+import io.netty.buffer.ByteBuf;
+import net.minecraft.network.codec.ByteBufCodecs;
+import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
+import net.minecraft.resources.ResourceLocation;
+import net.neoforged.neoforge.network.handling.IPayloadContext;
+
+import java.util.List;
+import java.util.Set;
+
+/** Servidor -> cliente: de quais caminhos vizinhos o jogador guarda características de Sequência 1 (para as habilidades) */
+public record NeighborCharsSyncPacket(List<String> pathways) implements CustomPacketPayload {
+    public static final Type<NeighborCharsSyncPacket> TYPE = new Type<>(ResourceLocation.fromNamespaceAndPath(LOTMCraft.MOD_ID, "neighbor_chars_sync"));
+    public static final StreamCodec<ByteBuf, NeighborCharsSyncPacket> STREAM_CODEC =
+            ByteBufCodecs.STRING_UTF8.apply(ByteBufCodecs.list()).map(NeighborCharsSyncPacket::new, NeighborCharsSyncPacket::pathways);
+
+    /** O que o cliente sabe do próprio jogador */
+    public static volatile Set<String> clientPathways = Set.of();
+
+    @Override
+    public Type<? extends CustomPacketPayload> type() {
+        return TYPE;
+    }
+
+    public static void handle(NeighborCharsSyncPacket packet, IPayloadContext context) {
+        context.enqueueWork(() -> clientPathways = Set.copyOf(packet.pathways()));
+    }
+}

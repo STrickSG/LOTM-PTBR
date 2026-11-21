@@ -89,6 +89,13 @@ public final class LostToCorruption {
     }
 
     /** Sem controle do corpo: parado, sem habilidades */
+    /** Voltou a ser quem era sem morrer (tirou as características que o sobrecarregavam) */
+    public static void recover(ServerPlayer player) {
+        if (!isLost(player)) return;
+        restore(player);
+        Corruption.set(player, 0f);
+    }
+
     @SubscribeEvent
     public static void onTick(PlayerTickEvent.Post event) {
         if (!(event.getEntity() instanceof ServerPlayer player) || !isLost(player)) return;
@@ -134,6 +141,7 @@ public final class LostToCorruption {
     @SubscribeEvent
     public static void onDeath(LivingDeathEvent event) {
         if (event.getEntity() instanceof ServerPlayer player && isLost(player)) {
+            de.jakob.lotm.addons.characteristics.NeighborCharacteristics.onDeathOverloaded(player);
             restore(player);
             Corruption.set(player, 0f);
         }

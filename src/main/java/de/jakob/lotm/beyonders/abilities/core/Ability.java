@@ -360,6 +360,14 @@ public abstract class Ability {
             }
         }
 
+        // características de Sequência 1 de caminhos vizinhos guardadas no corpo: as habilidades e passivas dessa Sequência
+        if (entity instanceof Player holder) {
+            for (String neighbor : de.jakob.lotm.addons.characteristics.NeighborCharacteristics.pathwaysOf(holder)) {
+                Integer req = requirements.get(neighbor);
+                if (req != null && req == 1) return true;
+            }
+        }
+
         // Check sefirot
         if(entity instanceof Player player) {
             String[] sefirotPathways = SefirahHandler.getAdditionalPathwaysForPlayer(player);
@@ -406,7 +414,8 @@ public abstract class Ability {
         if(!canBeUsedWhileControlling && entity instanceof Player player && ControllingUtils.isControlling(player)) return false;
 
         DisabledAbilitiesComponent disabledComponent = entity.getData(ModAttachments.DISABLED_ABILITIES_COMPONENT);
-        if((disabledComponent.isAbilityUsageDisabled() || disabledComponent.isSpecificAbilityDisabled(this.getId())) && !this.canAlwaysBeUsed) return false;
+        if((disabledComponent.isAbilityUsageDisabled() || disabledComponent.isSpecificAbilityDisabled(this.getId())) && !this.canAlwaysBeUsed
+                && !de.jakob.lotm.addons.characteristics.NeighborCharacteristics.mayUseWhileOverloaded(entity, this.getId())) return false;
 
         if(LOTMCraft.abilityHandler.isDisabled(this)) return false;
 

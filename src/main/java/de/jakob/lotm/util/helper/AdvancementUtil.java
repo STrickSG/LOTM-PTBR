@@ -129,8 +129,10 @@ public class AdvancementUtil {
 
     private static void advancePathwaySwitch(LivingEntity entity, String pathway, int sequence,
                                              String prevPathway, int prevSequence) {
-        boolean isSameDomainSwitch = prevSequence <= 5 && sequence == (prevSequence - 1) && sameDomain(prevPathway, pathway);
+        // troca de caminho: só para um vizinho, do 5 para o 4, do 4 para o 3 ou do 3 para o 2
+        boolean isSameDomainSwitch = prevSequence >= 3 && prevSequence <= 5 && sequence == (prevSequence - 1) && sameDomain(prevPathway, pathway);
         double failureChance = isSameDomainSwitch && !hasSwitchedPathway(entity) ? 0.0 : 1.0;
+        if (failureChance >= 1.0) NO_RESCUE.add(entity.getUUID());
 
         Runnable onSuccess = isSameDomainSwitch
                 ? () -> playerMap.recordPathwaySwitch(entity, prevSequence, prevPathway)
@@ -259,6 +261,7 @@ public class AdvancementUtil {
      * salvar é de 50%, subindo até 90% para quem cogitou o tempo todo.
      */
     private static boolean savedByCogitation(LivingEntity entity) {
+        if (NO_RESCUE.remove(entity.getUUID())) return false;
         int[] c = COGITATION.get(entity.getUUID());
         if (c == null || entity.getServer() == null) return false;
         int elapsed = Math.max(1, entity.getServer().getTickCount() - c[0]);
@@ -292,6 +295,21 @@ public class AdvancementUtil {
                     entity.getId(), ChangePlayerPerspectivePacket.PERSPECTIVE.THIRD.getValue()));
         }
     }
+
+    /** Os caminhos vizinhos (do mesmo grupo), sem o próprio */
+    public static Set<String> neighbors(String pathway) {
+        for (HashSet<String> domain : PATHWAY_DOMAINS) {
+            if (domain.contains(pathway)) {
+                Set<String> out = new HashSet<>(domain);
+                out.remove(pathway);
+                return out;
+            }
+        }
+        return Set.of();
+    }
+
+    /** Ascensões que não podem dar certo: a Cogitação não salva */
+    private static final Set<UUID> NO_RESCUE = java.util.concurrent.ConcurrentHashMap.newKeySet();
 
     private static boolean sameDomain(String pathway1, String pathway2) {
         for (HashSet<String> domain : PATHWAY_DOMAINS) {

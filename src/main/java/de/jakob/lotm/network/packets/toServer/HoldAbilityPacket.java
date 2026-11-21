@@ -63,7 +63,8 @@ public record HoldAbilityPacket(String abilityId, int state, boolean start) impl
             UUID id = player.getUUID();
 
             DisabledAbilitiesComponent disabled = player.getData(ModAttachments.DISABLED_ABILITIES_COMPONENT);
-            boolean sealed = !ability.canAlwaysBeUsed && (disabled.isAbilityUsageDisabled() || disabled.isSpecificAbilityDisabled(ability.getId()));
+            boolean sealed = !ability.canAlwaysBeUsed && (disabled.isAbilityUsageDisabled() || disabled.isSpecificAbilityDisabled(ability.getId()))
+                    && !de.jakob.lotm.addons.characteristics.NeighborCharacteristics.mayUseWhileOverloaded(player, ability.getId());
             if (sealed) {
                 PacketHandler.sendToPlayer(player, new HoldCastProgressPacket(charge.getOrDefault(id, 0f), needed));
                 return;
