@@ -131,7 +131,9 @@ public final class NeighborCharacteristics {
         String own = BeyonderData.getPathway(player);
         Set<String> neighbors = AdvancementUtil.neighbors(own);
         if (neighbors.isEmpty()) return false;
-        if (1 + BeyonderData.getCharStack(player, 1) < FULL) return false;
+        // o Deus é a soma das 3 de Sequência 1 do próprio caminho com a Unicidade (não existe característica de Seq 0)
+        int ownCount = seq == 0 ? FULL : 1 + BeyonderData.getCharStack(player, 1);
+        if (ownCount < FULL) return false;
         for (String n : neighbors) if (get(player, n) < FULL) return false;
         return true;
     }

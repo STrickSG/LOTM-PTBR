@@ -1571,6 +1571,21 @@ public class IntrospectScreen extends AbstractContainerScreen<IntrospectMenu> {
         int y = panelY + 19;
         for (int seq = 9; seq >= current && seq >= 0; seq--) {
             int extra = stacks != null && seq < stacks.length ? Math.max(0, stacks[seq]) : 0;
+            // o Deus é a soma das 3 de Sequência 1 com a Unicidade: não existe característica de Sequência 0
+            if (current == 0 && seq == 1) extra = Math.max(extra, 2);
+            if (seq == 0) {
+                var uniq = net.minecraft.core.registries.BuiltInRegistries.ITEM.get(net.minecraft.resources.ResourceLocation.fromNamespaceAndPath(LOTMCraft.MOD_ID, pathway + "_uniqueness"));
+                if (uniq != net.minecraft.world.item.Items.AIR) {
+                    g.pose().pushPose();
+                    g.pose().translate(panelX + 5, y, 0);
+                    g.pose().scale(0.875f, 0.875f, 1f);
+                    g.renderItem(new ItemStack(uniq), 0, 0);
+                    g.pose().popPose();
+                }
+                g.drawString(this.font, Component.translatable("lotm.characteristics.uniqueness"), panelX + 22, y + 4, TEXT_HEADING, true);
+                y += 18;
+                continue;
+            }
             var item = de.jakob.lotm.beyonders.potions.BeyonderCharacteristicItemHandler.selectCharacteristicOfPathwayAndSequence(pathway, seq);
             if (item != null) {
                 g.pose().pushPose();

@@ -5800,5 +5800,6 @@
   "gui.lotmcraft.expel_characteristic.none": "Não há características extras no seu corpo.",
   "gui.lotmcraft.expel_characteristic.info": "%s extra(s) · +%s%% de corrupção",
   "lotmcraft.characteristics.overload": "As características do grupo inteiro se juntaram no seu corpo. Você perdeu o controle.",
-  "lotmcraft.characteristics.overload_end": "As características sobressalentes saíram. Você volta a ser você mesmo."
+  "lotmcraft.characteristics.overload_end": "As características sobressalentes saíram. Você volta a ser você mesmo.",
+  "lotm.characteristics.uniqueness": "Unicidade"
 }
