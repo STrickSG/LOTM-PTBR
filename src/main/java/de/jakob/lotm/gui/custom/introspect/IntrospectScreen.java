@@ -1560,7 +1560,8 @@ public class IntrospectScreen extends AbstractContainerScreen<IntrospectMenu> {
         int current = menu.getSequence();
         int[] stacks = this.minecraft != null && this.minecraft.player != null
                 ? ClientBeyonderCache.getCharStacks(this.minecraft.player.getUUID()) : new int[10];
-        int rows = Math.max(0, 9 - current + 1);
+        var neighbors = de.jakob.lotm.addons.characteristics.NeighborCharsSyncPacket.clientCounts;
+        int rows = Math.max(0, 9 - current + 1) + neighbors.size();
         int panelH = 22 + rows * 18 + 36;
 
         drawDrawer(g, panelX, panelY, panelW, panelH);
@@ -1598,6 +1599,34 @@ public class IntrospectScreen extends AbstractContainerScreen<IntrospectMenu> {
                 g.drawString(this.font, w, 0, 0, 0xFFC0506E, true);
                 g.pose().popPose();
             }
+            y += 18;
+        }
+
+        // as de Sequência 1 dos caminhos vizinhos guardadas no corpo
+        for (var e : neighbors.entrySet()) {
+            var item = de.jakob.lotm.beyonders.potions.BeyonderCharacteristicItemHandler.selectCharacteristicOfPathwayAndSequence(e.getKey(), 1);
+            if (item != null) {
+                g.pose().pushPose();
+                g.pose().translate(panelX + 5, y, 0);
+                g.pose().scale(0.875f, 0.875f, 1f);
+                g.renderItem(new ItemStack(item), 0, 0);
+                g.pose().popPose();
+            }
+            Component line = Component.literal("1 · " + BeyonderData.getSequenceName(e.getKey(), 1));
+            int maxW = panelW - 24 - 34;
+            float sc = Math.min(1f, maxW / (float) Math.max(1, this.font.width(line)));
+            g.pose().pushPose();
+            g.pose().translate(panelX + 22, y + 4, 0);
+            g.pose().scale(sc, sc, 1f);
+            g.drawString(this.font, line, 0, 0, 0xFFB9A7E8, true);
+            g.pose().popPose();
+            g.drawString(this.font, Component.literal("×" + e.getValue()).withStyle(ChatFormatting.LIGHT_PURPLE), panelX + panelW - 32, y + 4, TEXT_NORMAL, true);
+            Component w = Component.literal("+" + Math.round(e.getValue() * de.jakob.lotm.addons.characteristics.NeighborCharacteristics.WEIGHT * 100) + "%");
+            g.pose().pushPose();
+            g.pose().translate(panelX + panelW - 6 - this.font.width(w) * 0.75f, y + 13, 0);
+            g.pose().scale(0.75f, 0.75f, 1f);
+            g.drawString(this.font, w, 0, 0, 0xFFC0506E, true);
+            g.pose().popPose();
             y += 18;
         }
 

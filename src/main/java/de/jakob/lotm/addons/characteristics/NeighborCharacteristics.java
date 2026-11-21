@@ -21,7 +21,7 @@ import java.util.Map;
 import java.util.Set;
 
 /**
- * Características de Sequência 1 de caminhos vizinhos, guardadas no corpo de um Anjo (Seq 1).
+ * Características de Sequência 1 de caminhos vizinhos, guardadas no corpo de um Anjo (Seq 1) ou de um Deus (Seq 0).
  * Não há limite de quantas, mas cada uma pesa na corrupção como uma extra de Sequência 1.
  * Juntar o conjunto inteiro do grupo (3 do próprio caminho e 3 de cada vizinho) é a sobrecarga:
  * perde o controle na hora, a corrupção vai a 100% e só volta quando as extras saírem do corpo
@@ -56,7 +56,7 @@ public final class NeighborCharacteristics {
     }
 
     public static void sync(ServerPlayer player) {
-        de.jakob.lotm.network.PacketHandler.sendToPlayer(player, new NeighborCharsSyncPacket(java.util.List.copyOf(all(player).keySet())));
+        de.jakob.lotm.network.PacketHandler.sendToPlayer(player, new NeighborCharsSyncPacket(all(player).entrySet().stream().map(e -> e.getKey() + "=" + e.getValue()).toList()));
     }
 
     @SubscribeEvent
@@ -86,9 +86,10 @@ public final class NeighborCharacteristics {
         if (p instanceof ServerPlayer sp) sync(sp);
     }
 
-    /** Só um Anjo (Seq 1) pode guardar a de Sequência 1 de um caminho vizinho, e só se não houver Deus desse caminho */
+    /** Anjo (Seq 1) ou Deus (Seq 0) guardam a de Sequência 1 de um caminho vizinho, se não houver Deus desse caminho */
     public static boolean canAbsorb(ServerPlayer player, String pathway) {
-        if (BeyonderData.getSequence(player) != 1) return false;
+        int seq = BeyonderData.getSequence(player);
+        if (seq != 1 && seq != 0) return false;
         String own = BeyonderData.getPathway(player);
         if (own.equals(pathway) || !AdvancementUtil.neighbors(own).contains(pathway)) return false;
         var map = BeyonderData.playerMap;
@@ -125,7 +126,8 @@ public final class NeighborCharacteristics {
 
     /** O conjunto inteiro do grupo: 3 do próprio caminho e 3 de cada vizinho */
     public static boolean hasFullSet(ServerPlayer player) {
-        if (BeyonderData.getSequence(player) != 1) return false;
+        int seq = BeyonderData.getSequence(player);
+        if (seq != 1 && seq != 0) return false;
         String own = BeyonderData.getPathway(player);
         Set<String> neighbors = AdvancementUtil.neighbors(own);
         if (neighbors.isEmpty()) return false;

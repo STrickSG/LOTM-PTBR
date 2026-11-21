@@ -19,6 +19,7 @@ public record NeighborCharsSyncPacket(List<String> pathways) implements CustomPa
 
     /** O que o cliente sabe do próprio jogador */
     public static volatile Set<String> clientPathways = Set.of();
+    public static volatile java.util.Map<String, Integer> clientCounts = java.util.Map.of();
 
     @Override
     public Type<? extends CustomPacketPayload> type() {
@@ -26,6 +27,14 @@ public record NeighborCharsSyncPacket(List<String> pathways) implements CustomPa
     }
 
     public static void handle(NeighborCharsSyncPacket packet, IPayloadContext context) {
-        context.enqueueWork(() -> clientPathways = Set.copyOf(packet.pathways()));
+        context.enqueueWork(() -> {
+            java.util.Map<String, Integer> counts = new java.util.LinkedHashMap<>();
+            for (String s : packet.pathways()) {
+                int i = s.indexOf('=');
+                if (i > 0) counts.put(s.substring(0, i), Integer.parseInt(s.substring(i + 1)));
+            }
+            clientCounts = counts;
+            clientPathways = Set.copyOf(counts.keySet());
+        });
     }
 }
