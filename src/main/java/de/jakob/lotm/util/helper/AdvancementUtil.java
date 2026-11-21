@@ -136,7 +136,7 @@ public class AdvancementUtil {
                                              String prevPathway, int prevSequence) {
         // troca de caminho: só para um vizinho, do 5 para o 4, do 4 para o 3 ou do 3 para o 2
         boolean isSameDomainSwitch = prevSequence >= 3 && prevSequence <= 5 && sequence == (prevSequence - 1) && sameDomain(prevPathway, pathway);
-        double failureChance = isSameDomainSwitch && !hasSwitchedPathway(entity) ? 0.0 : 1.0;
+        double failureChance = isSameDomainSwitch && canSwitchAgain(entity, prevSequence) ? 0.0 : 1.0;
         if (failureChance >= 1.0) NO_RESCUE.add(entity.getUUID());
 
         Runnable onSuccess = isSameDomainSwitch
@@ -311,6 +311,28 @@ public class AdvancementUtil {
             }
         }
         return Set.of();
+    }
+
+    /**
+     * Até duas trocas de caminho, com uma Sequência de intervalo entre elas: quem trocou do 5 para o 4
+     * só pode trocar de novo do 3 para o 2 (ex.: Caçador 5 → Demônia 4 … Demônia 3 → Caçador 2).
+     */
+    private static boolean canSwitchAgain(LivingEntity entity, int fromSequence) {
+        String[] history = BeyonderData.getPathwayHistory(entity);
+        String current = getPathway(entity);
+        int switches = 0, lastFrom = Integer.MAX_VALUE;
+        String below = current;                     // o caminho na Sequência logo abaixo da que está sendo olhada
+        for (int i = Math.min(fromSequence, 9); i <= 9; i++) {
+            String at = history != null && i < history.length && history[i] != null && !history[i].isEmpty() ? history[i] : (i == fromSequence ? current : null);
+            if (at == null) continue;
+            if (i > fromSequence && below != null && !at.equals(below)) {
+                switches++;
+                lastFrom = Math.min(lastFrom, i);   // trocou ao sair da Sequência i
+            }
+            below = at;
+        }
+        if (switches == 0) return true;
+        return switches == 1 && fromSequence <= lastFrom - 2;
     }
 
     /** Ascensões que não podem dar certo: a Cogitação não salva */
