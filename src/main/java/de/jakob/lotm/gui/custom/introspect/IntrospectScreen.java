@@ -1633,6 +1633,9 @@ public class IntrospectScreen extends AbstractContainerScreen<IntrospectMenu> {
         g.fill(panelX + 6, y + 1, panelX + panelW - 6, y + 2, 0x60F4D58A);
         float corruption = de.jakob.lotm.addons.corruption.CorruptionSyncPacket.clientValue;
         float daily = de.jakob.lotm.addons.corruption.Corruption.dailyGrowth(current, stacks);
+        int neighborTotal = 0;
+        for (int n : neighbors.values()) neighborTotal += n;
+        daily += (0.01f + 0.004f * (9 - Math.max(0, Math.min(9, current)))) * 4f * neighborTotal * de.jakob.lotm.addons.characteristics.NeighborCharacteristics.WEIGHT;
         g.drawString(this.font, Component.translatable("lotm.characteristics.corruption", (int) (corruption * 100)), panelX + 6, y + 6, 0xFFD06A8A, true);
         g.drawString(this.font, Component.translatable("lotm.characteristics.rate", String.format(java.util.Locale.ROOT, "%.1f", daily * 100)), panelX + 6, y + 18, TEXT_DIM, true);
     }
