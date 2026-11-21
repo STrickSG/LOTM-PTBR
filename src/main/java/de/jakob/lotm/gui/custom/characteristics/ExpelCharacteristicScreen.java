@@ -8,33 +8,40 @@ import de.jakob.lotm.network.packets.error.ErrorActionPacket;
 import de.jakob.lotm.util.BeyonderData;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.client.gui.components.Button;
+import net.minecraft.client.gui.components.AbstractButton;
+import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.Mth;
 import net.minecraft.world.item.ItemStack;
 
 import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Expelir Característica (Autoridade Angelical): lista as características acumuladas no corpo,
- * com o ícone, o nome da Sequência, quantas cópias extras há e quanto cada uma pesa na corrupção.
- * Só as extras podem sair; a característica da Sequência atual fica.
+ * Expelir Característica (Autoridade Angelical), no visual de latão da Introspecção:
+ * moldura, emblema do caminho, placa com o título, cada característica num encaixe com o tubo
+ * da corrupção que ela pesa e botões de latão. Só as extras podem sair.
  */
 public class ExpelCharacteristicScreen extends Screen {
-    private static final ResourceLocation DRAWER = ResourceLocation.fromNamespaceAndPath(LOTMCraft.MOD_ID, "introspect/drawer");
-    private static final int TEXT_HEADING = 0xFFF4D58A, TEXT_BODY = 0xFFD8D0BC, TEXT_DIM = 0xFF8C8672;
-    private static final int W = 230, ROW = 24;
+    private static ResourceLocation spr(String n) { return ResourceLocation.fromNamespaceAndPath(LOTMCraft.MOD_ID, "introspect/" + n); }
+    private static final ResourceLocation FRAME = spr("frame"), INSET = spr("panel_inset"), NAMEPLATE = spr("nameplate"),
+            DIVIDER = spr("divider"), SLOT = spr("slot_idle"), COUNTER = spr("counter_plate"),
+            BTN_IDLE = spr("mini_btn_idle"), BTN_HOVER = spr("mini_btn_hover"), BTN_PRESSED = spr("mini_btn_pressed"), COG = spr("cog_small");
+
+    private static final int TEXT_HEADING = 0xFFF4D58A, TEXT_NORMAL = 0xFFE8CF94, TEXT_BODY = 0xFFD8D0BC, TEXT_DIM = 0xFF8C8672;
+    private static final int W = 250, ROW = 30, HEADER = 50;
 
     private record Row(int sequence, int extras) {}
 
     private final String pathway;
     private final List<Row> rows = new ArrayList<>();
-    private int left, top, height;
+    private int left, top, h;
+    private float ticks;
 
     public ExpelCharacteristicScreen(CompoundTag data) {
         super(Component.translatable("gui.lotmcraft.expel_characteristic.title"));
@@ -48,18 +55,18 @@ public class ExpelCharacteristicScreen extends Screen {
 
     @Override
     protected void init() {
-        height = 34 + Math.max(1, rows.size()) * ROW + 28;
+        h = HEADER + Math.max(1, rows.size()) * ROW + 40;
         left = (this.width - W) / 2;
-        top = (this.height - height) / 2;
-        int y = top + 26;
+        top = (this.height - h) / 2;
+        int y = top + HEADER;
         for (Row r : rows) {
             final int seq = r.sequence();
-            addRenderableWidget(Button.builder(Component.translatable("gui.lotmcraft.expel_characteristic.button"), b -> expel(seq))
-                    .bounds(left + W - 62, y + 2, 54, 18).build());
+            addRenderableWidget(new BrassButton(left + W - 80, y + 5, 66, 20,
+                    Component.translatable("gui.lotmcraft.expel_characteristic.button"), () -> expel(seq)));
             y += ROW;
         }
-        addRenderableWidget(Button.builder(Component.translatable("gui.lotmcraft.expel_characteristic.close"), b -> onClose())
-                .bounds(left + W / 2 - 40, top + height - 24, 80, 18).build());
+        addRenderableWidget(new BrassButton(left + W / 2 - 38, top + h - 30, 76, 20,
+                Component.translatable("gui.lotmcraft.expel_characteristic.close"), this::onClose));
     }
 
     private void expel(int sequence) {
@@ -70,41 +77,64 @@ public class ExpelCharacteristicScreen extends Screen {
     }
 
     @Override
+    public void tick() { ticks++; }
+
+    @Override
     public void renderBackground(GuiGraphics g, int mouseX, int mouseY, float partial) {
         super.renderBackground(g, mouseX, mouseY, partial);
         RenderSystem.enableBlend();
-        g.blitSprite(DRAWER, left, top, W, height);
+        RenderSystem.setShaderColor(1f, 1f, 1f, 1f);
+        g.blitSprite(FRAME, left, top, W, h);
+
+        // engrenagens girando nos cantos de cima, como na Introspecção
+        float t = ticks + partial;
+        for (int[] c : new int[][]{{left - 6, top - 6, 1}, {left + W - 18, top - 6, -1}}) {
+            g.pose().pushPose();
+            g.pose().translate(c[0] + 12, c[1] + 12, 0);
+            g.pose().mulPose(com.mojang.math.Axis.ZP.rotationDegrees(t * 1.5f * c[2]));
+            g.blitSprite(COG, -12, -12, 24, 24);
+            g.pose().popPose();
+        }
+        renderContent(g, partial);
     }
 
-    @Override
-    public void render(GuiGraphics g, int mouseX, int mouseY, float partial) {
-        super.render(g, mouseX, mouseY, partial);
-        g.drawString(font, title.copy().withStyle(ChatFormatting.BOLD), left + 8, top + 8, TEXT_HEADING, true);
-        g.fill(left + 4, top + 20, left + W - 4, top + 21, 0x66D9A94F);
+    /** O conteúdo fica embaixo dos botões: é desenhado junto com o fundo */
+    private void renderContent(GuiGraphics g, float partial) {
+        
+        // a placa com o título
+        int px = left + 14, pw = W - 28;
+        g.blitSprite(NAMEPLATE, px, top + 15, pw, 20);
+        Component title = this.title.copy().withStyle(ChatFormatting.BOLD);
+        g.drawString(font, title, px + (pw - font.width(title)) / 2, top + 21, TEXT_HEADING, false);
+        g.blitSprite(DIVIDER, left + 12, top + HEADER - 8, W - 24, 5);
 
-        int y = top + 26;
+        int y = top + HEADER;
         if (rows.isEmpty()) {
-            g.drawString(font, Component.translatable("gui.lotmcraft.expel_characteristic.none"), left + 10, y + 7, TEXT_DIM, true);
+            g.blitSprite(INSET, left + 12, y, W - 24, ROW - 4);
+            Component none = Component.translatable("gui.lotmcraft.expel_characteristic.none");
+            g.drawString(font, none, left + (W - font.width(none)) / 2, y + 9, TEXT_DIM, false);
         }
         for (Row r : rows) {
+            g.blitSprite(INSET, left + 12, y, W - 24, ROW - 2);
+            // a característica num encaixe
+            g.blitSprite(SLOT, left + 17, y + 5, 18, 18);
             var item = BeyonderCharacteristicItemHandler.selectCharacteristicOfPathwayAndSequence(pathway, r.sequence());
-            if (item != null) g.renderItem(new ItemStack(item), left + 8, y + 3);
+            if (item != null) g.renderItem(new ItemStack(item), left + 18, y + 6);
+
+            // nome da Sequência e quantas características extras
             String name = BeyonderData.getSequenceName(pathway, r.sequence());
             Component line = Component.literal(r.sequence() + " · " + name);
-            int maxW = W - 30 - 70;
+            int nameX = left + 40, maxW = W - 40 - 118;
             float sc = Math.min(1f, maxW / (float) Math.max(1, font.width(line)));
             g.pose().pushPose();
-            g.pose().translate(left + 28, y + 3, 0);
+            g.pose().translate(nameX, y + 10, 0);
             g.pose().scale(sc, sc, 1f);
             g.drawString(font, line, 0, 0, TEXT_BODY, true);
             g.pose().popPose();
-            int pct = Math.round(r.extras() * (0.04f + 0.02f * (9 - r.sequence())) * 100);
-            Component info = Component.translatable("gui.lotmcraft.expel_characteristic.info", r.extras(), pct);
-            g.pose().pushPose();
-            g.pose().translate(left + 28, y + 13, 0);
-            g.pose().scale(0.8f, 0.8f, 1f);
-            g.drawString(font, info, 0, 0, 0xFFD06A8A, true);
-            g.pose().popPose();
+            int cx = left + W - 112;
+            g.blitSprite(COUNTER, cx, y + 7, 28, 14);
+            String count = "×" + r.extras();
+            g.drawString(font, count, cx + 14 - font.width(count) / 2, y + 10, TEXT_NORMAL, false);
             y += ROW;
         }
     }
@@ -112,5 +142,37 @@ public class ExpelCharacteristicScreen extends Screen {
     @Override
     public boolean isPauseScreen() {
         return false;
+    }
+
+    /** Botão de latão (as abas da Introspecção), no lugar do botão cinza do Minecraft */
+    private class BrassButton extends AbstractButton {
+        private final Runnable action;
+
+        BrassButton(int x, int y, int w, int h, Component text, Runnable action) {
+            super(x, y, w, h, text);
+            this.action = action;
+        }
+
+        @Override
+        public void onPress() { action.run(); }
+
+        @Override
+        protected void renderWidget(GuiGraphics g, int mouseX, int mouseY, float partial) {
+            RenderSystem.enableBlend();
+            RenderSystem.setShaderColor(1f, 1f, 1f, 1f);
+            // a placa de latão com borda (a mesma do título); clareia quando o mouse passa
+            boolean hover = isHoveredOrFocused();
+            if (hover) RenderSystem.setShaderColor(1.25f, 1.15f, 0.9f, 1f);
+            g.blitSprite(NAMEPLATE, getX(), getY(), width, height);
+            RenderSystem.setShaderColor(1f, 1f, 1f, 1f);
+            Component m = getMessage().copy().withStyle(ChatFormatting.BOLD);
+            int color = isHoveredOrFocused() ? 0xFFFFF2C8 : TEXT_HEADING;
+            g.drawString(font, m, getX() + (width - font.width(m)) / 2, getY() + (height - 8) / 2, color, true);
+        }
+
+        @Override
+        protected void updateWidgetNarration(NarrationElementOutput out) {
+            defaultButtonNarrationText(out);
+        }
     }
 }
