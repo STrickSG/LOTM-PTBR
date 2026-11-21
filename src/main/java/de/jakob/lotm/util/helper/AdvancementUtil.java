@@ -46,11 +46,16 @@ public class AdvancementUtil {
         return activeAdvancements.containsKey(entity);
     }
 
+    /** Os grupos de caminhos vizinhos (a Roda da Fortuna é um caminho solo) */
     private static final List<HashSet<String>> PATHWAY_DOMAINS = List.of(
             new HashSet<>(Set.of("fool", "error", "door")),
+            new HashSet<>(Set.of("visionary", "sun", "tyrant", "white_tower", "hanged_man")),
+            new HashSet<>(Set.of("darkness", "death", "twilight_giant")),
             new HashSet<>(Set.of("red_priest", "demoness")),
-            new HashSet<>(Set.of("sun", "tyrant", "visionary")),
-            new HashSet<>(Set.of("darkness", "death"))
+            new HashSet<>(Set.of("mother", "moon")),
+            new HashSet<>(Set.of("abyss", "chained")),
+            new HashSet<>(Set.of("black_emperor", "justiciar")),
+            new HashSet<>(Set.of("hermit", "paragon"))
     );
 
 
