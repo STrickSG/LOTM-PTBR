@@ -147,7 +147,9 @@ public final class ErrorClientHandler {
             case "deceit_prepare" -> mc.setScreen(new DeceitPrepareScreen(data.getCompound("config")));
             case "deceit_wheel" -> mc.setScreen(new DeceitWheelScreen(data.getCompound("config"), data.getBoolean("area")));
             case "trap_setup" -> mc.setScreen(new TrapSetupScreen(data));
-            case "self_characteristic" -> mc.setScreen(new SelfCharacteristicScreen(data));
+            case "self_characteristic" -> mc.setScreen(data.getBoolean("extrasOnly")
+                    ? new de.jakob.lotm.gui.custom.characteristics.ExpelCharacteristicScreen(data)   // Autoridade Angelical
+                    : new SelfCharacteristicScreen(data));
             case "deceit" -> handleDeceit(mc, data, now);
             default -> {
             }

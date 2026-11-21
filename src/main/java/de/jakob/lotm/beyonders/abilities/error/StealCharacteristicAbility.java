@@ -170,6 +170,15 @@ public class StealCharacteristicAbility extends SelectableAbility {
     }
 
     private void openSelfMenu(ServerPlayer player) {
+        openSelfMenu(player, true);
+    }
+
+    /** Quem abriu o menu só para tirar as características extras (Autoridade Angelical): esses não podem regredir */
+    private final java.util.Set<java.util.UUID> extrasOnly = new java.util.HashSet<>();
+
+    /** Abre o menu para tirar uma característica de si; sem allowRegress só aparecem as extras acumuladas */
+    public void openSelfMenu(ServerPlayer player, boolean allowRegress) {
+        if (allowRegress) extrasOnly.remove(player.getUUID()); else extrasOnly.add(player.getUUID());
         int seq = BeyonderData.getSequence(player);
         ListTag options = new ListTag();
 
@@ -184,7 +193,7 @@ public class StealCharacteristicAbility extends SelectableAbility {
             }
         }
 
-        if (seq >= 1 && seq <= 9 && BeyonderData.getCharStack(player, seq) == 0) {
+        if (allowRegress && seq >= 1 && seq <= 9 && BeyonderData.getCharStack(player, seq) == 0) {
             CompoundTag option = new CompoundTag();
             option.putInt("seq", seq);
             option.putBoolean("regress", true);
@@ -194,6 +203,7 @@ public class StealCharacteristicAbility extends SelectableAbility {
         CompoundTag data = new CompoundTag();
         data.putString("pathway", BeyonderData.getPathway(player));
         data.put("options", options);
+        data.putBoolean("extrasOnly", !allowRegress);
         openMenus.put(player.getUUID(), player.serverLevel().getGameTime() + 20 * 60);
         ErrorUtil.send(player, "self_characteristic", data);
     }
@@ -204,6 +214,7 @@ public class StealCharacteristicAbility extends SelectableAbility {
 
         int seq = BeyonderData.getSequence(player);
         if (sequence < Math.max(1, seq) || sequence > 9) return;
+        if (extrasOnly.remove(player.getUUID()) && BeyonderData.getCharStack(player, sequence) <= 0) return;
 
         ItemStack characteristic = extractCharacteristic(player, sequence);
         if (characteristic.isEmpty()) return;

@@ -193,6 +193,7 @@
   "ability.lotmcraft.angel_authority.artifact_shattering": "Artifact Shattering",
   "ability.lotmcraft.angel_authority.flight": "Flight",
   "ability.lotmcraft.angel_authority.astral_world_passage": "Astral World Passage",
+  "ability.lotmcraft.angel_authority.expel_characteristic": "Expel Characteristic",
 
   "lotmcraft.evil_detection_ability": "Evil Detection",
   "lotmcraft.evil_detection_ability.description": "Highlight all evil and undead entities around you",
@@ -5993,5 +5994,10 @@
   "lotmcraft.vision.short.nature.living": "Living",
   "lotmcraft.vision.short.not_beyonder": "Not a Beyonder",
   "lotmcraft.vision.short.beyonder": "Beyonder",
-  "lotmcraft.vision.pathway_title": "%s Pathway"
+  "lotmcraft.vision.pathway_title": "%s Pathway",
+  "gui.lotmcraft.expel_characteristic.title": "Expel Characteristic",
+  "gui.lotmcraft.expel_characteristic.button": "Expel",
+  "gui.lotmcraft.expel_characteristic.close": "Close",
+  "gui.lotmcraft.expel_characteristic.none": "There are no extra characteristics in your body.",
+  "gui.lotmcraft.expel_characteristic.info": "%s extra · +%s%% corruption"
 }

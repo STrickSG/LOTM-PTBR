@@ -69,7 +69,8 @@ public class AngelAuthorityAbility extends SelectableAbility {
         return new String[]{"ability.lotmcraft.angel_authority.spirit_world_passage",
                 "ability.lotmcraft.angel_authority.artifact_shattering",
                 "ability.lotmcraft.angel_authority.flight",
-                "ability.lotmcraft.angel_authority.astral_world_passage"
+                "ability.lotmcraft.angel_authority.astral_world_passage",
+                "ability.lotmcraft.angel_authority.expel_characteristic"
         };
     }
 
@@ -90,6 +91,11 @@ public class AngelAuthorityAbility extends SelectableAbility {
 
                 case 3:
                     this.astralWorldPassage(player);
+                    break;
+
+                case 4:
+                    // tira de si uma das características acumuladas (não deixa regredir de Sequência)
+                    de.jakob.lotm.beyonders.abilities.error.StealCharacteristicAbility.get().openSelfMenu(player, false);
                     break;
 
             }
