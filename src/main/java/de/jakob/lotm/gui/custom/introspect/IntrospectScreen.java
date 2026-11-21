@@ -1555,9 +1555,15 @@ public class IntrospectScreen extends AbstractContainerScreen<IntrospectMenu> {
     private void renderCharacteristicsPanel(GuiGraphics g) {
         int panelX = this.leftPos + this.imageWidth + 5;
         int panelY = this.topPos;
-        int panelW = ACTING_PANEL_WIDTH + 20;
         String pathway = menu.getPathway();
         int current = menu.getSequence();
+        // larga só o bastante para o nome mais comprido não encolher (com um teto)
+        int longest = 0;
+        for (int sq = 9; sq >= Math.max(1, current); sq--)
+            longest = Math.max(longest, this.font.width(sq + " · " + BeyonderData.getSequenceName(pathway, sq)));
+        for (String n : de.jakob.lotm.addons.characteristics.NeighborCharsSyncPacket.clientCounts.keySet())
+            longest = Math.max(longest, this.font.width("1 · " + BeyonderData.getSequenceName(n, 1)));
+        int panelW = Math.max(ACTING_PANEL_WIDTH + 20, Math.min(ACTING_PANEL_WIDTH + 90, longest + 58));
         int[] stacks = this.minecraft != null && this.minecraft.player != null
                 ? ClientBeyonderCache.getCharStacks(this.minecraft.player.getUUID()) : new int[10];
         var neighbors = de.jakob.lotm.addons.characteristics.NeighborCharsSyncPacket.clientCounts;
