@@ -1552,6 +1552,13 @@ public class IntrospectScreen extends AbstractContainerScreen<IntrospectMenu> {
      * Características: as que estão no corpo, da Sequência 9 até a atual, com quantas cópias de cada e quanto as cópias
      * extras pesam na corrupção. Embaixo, a corrupção total e quanto ela sobe por dia.
      */
+    /** O caminho que a pessoa tinha naquela Sequência (quem trocou de caminho tem mais de um) */
+    private String pathOf(int seq, String fallback) {
+        if (this.minecraft == null || this.minecraft.player == null) return fallback;
+        String[] h = ClientBeyonderCache.getPathwayHistory(this.minecraft.player.getUUID());
+        return h != null && seq >= 0 && seq < h.length && h[seq] != null && !h[seq].isEmpty() ? h[seq] : fallback;
+    }
+
     private void renderCharacteristicsPanel(GuiGraphics g) {
         int panelX = this.leftPos + this.imageWidth + 5;
         int panelY = this.topPos;
@@ -1560,7 +1567,7 @@ public class IntrospectScreen extends AbstractContainerScreen<IntrospectMenu> {
         // larga só o bastante para o nome mais comprido não encolher (com um teto)
         int longest = 0;
         for (int sq = 9; sq >= Math.max(1, current); sq--)
-            longest = Math.max(longest, this.font.width(sq + " · " + BeyonderData.getSequenceName(pathway, sq)));
+            longest = Math.max(longest, this.font.width(sq + " · " + BeyonderData.getSequenceName(pathOf(sq, pathway), sq)));
         for (String n : de.jakob.lotm.addons.characteristics.NeighborCharsSyncPacket.clientCounts.keySet())
             longest = Math.max(longest, this.font.width("1 · " + BeyonderData.getSequenceName(n, 1)));
         int panelW = Math.max(ACTING_PANEL_WIDTH + 20, Math.min(ACTING_PANEL_WIDTH + 90, longest + 58));
@@ -1592,7 +1599,8 @@ public class IntrospectScreen extends AbstractContainerScreen<IntrospectMenu> {
                 y += 18;
                 continue;
             }
-            var item = de.jakob.lotm.beyonders.potions.BeyonderCharacteristicItemHandler.selectCharacteristicOfPathwayAndSequence(pathway, seq);
+            String seqPath = pathOf(seq, pathway);
+            var item = de.jakob.lotm.beyonders.potions.BeyonderCharacteristicItemHandler.selectCharacteristicOfPathwayAndSequence(seqPath, seq);
             if (item != null) {
                 g.pose().pushPose();
                 g.pose().translate(panelX + 5, y, 0);
@@ -1600,7 +1608,7 @@ public class IntrospectScreen extends AbstractContainerScreen<IntrospectMenu> {
                 g.renderItem(new ItemStack(item), 0, 0);
                 g.pose().popPose();
             }
-            String name = BeyonderData.getSequenceName(pathway, seq);
+            String name = BeyonderData.getSequenceName(seqPath, seq);
             Component line = Component.literal(seq + " · " + name);
             int maxW = panelW - 24 - 34;
             float sc = Math.min(1f, maxW / (float) Math.max(1, this.font.width(line)));

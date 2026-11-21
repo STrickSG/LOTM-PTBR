@@ -143,6 +143,10 @@ public class StealCharacteristicAbility extends SelectableAbility {
 
     public static ItemStack extractCharacteristic(LivingEntity entity, int sequence) {
         String pathway = BeyonderData.getPathway(entity);
+        // quem trocou de caminho tem, em cada Sequência, a característica do caminho que tinha nela
+        String[] history = BeyonderData.getPathwayHistory(entity);
+        if (history != null && sequence >= 0 && sequence < history.length && history[sequence] != null && !history[sequence].isEmpty())
+            pathway = history[sequence];
         BeyonderCharacteristicItem item = BeyonderCharacteristicItemHandler.selectCharacteristicOfPathwayAndSequence(pathway, sequence);
         if (item == null) return ItemStack.EMPTY;
 
@@ -189,6 +193,8 @@ public class StealCharacteristicAbility extends SelectableAbility {
                 option.putInt("seq", s);
                 option.putBoolean("regress", false);
                 option.putInt("stacks", stacks);
+                String[] hist = BeyonderData.getPathwayHistory(player);
+                if (hist != null && s < hist.length && hist[s] != null && !hist[s].isEmpty()) option.putString("path", hist[s]);
                 options.add(option);
             }
         }

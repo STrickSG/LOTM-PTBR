@@ -37,7 +37,7 @@ public class ExpelCharacteristicScreen extends Screen {
     private static final int W = 250, ROW = 30, HEADER = 50;
 
     /** path vazio = do próprio caminho */
-    private record Row(int sequence, int extras, String path) {}
+    private record Row(int sequence, int extras, String path, String shownPath) {}
 
     private final String pathway;
     private final List<Row> rows = new ArrayList<>();
@@ -50,13 +50,13 @@ public class ExpelCharacteristicScreen extends Screen {
         ListTag list = data.getList("options", Tag.TAG_COMPOUND);
         for (int i = 0; i < list.size(); i++) {
             CompoundTag tag = list.getCompound(i);
-            if (!tag.getBoolean("regress")) rows.add(new Row(tag.getInt("seq"), tag.getInt("stacks"), ""));
+            if (!tag.getBoolean("regress")) rows.add(new Row(tag.getInt("seq"), tag.getInt("stacks"), "", tag.getString("path")));
         }
         // as de Sequência 1 dos caminhos vizinhos
         ListTag neighbors = data.getList("neighbors", Tag.TAG_COMPOUND);
         for (int i = 0; i < neighbors.size(); i++) {
             CompoundTag tag = neighbors.getCompound(i);
-            rows.add(new Row(1, tag.getInt("stacks"), tag.getString("path")));
+            rows.add(new Row(1, tag.getInt("stacks"), tag.getString("path"), tag.getString("path")));
         }
     }
 
@@ -126,11 +126,11 @@ public class ExpelCharacteristicScreen extends Screen {
             g.blitSprite(INSET, left + 12, y, W - 24, ROW - 2);
             // a característica num encaixe
             g.blitSprite(SLOT, left + 17, y + 5, 18, 18);
-            var item = BeyonderCharacteristicItemHandler.selectCharacteristicOfPathwayAndSequence(r.path().isEmpty() ? pathway : r.path(), r.sequence());
+            var item = BeyonderCharacteristicItemHandler.selectCharacteristicOfPathwayAndSequence(r.shownPath().isEmpty() ? pathway : r.shownPath(), r.sequence());
             if (item != null) g.renderItem(new ItemStack(item), left + 18, y + 6);
 
             // nome da Sequência e quantas características extras
-            String name = BeyonderData.getSequenceName(r.path().isEmpty() ? pathway : r.path(), r.sequence());
+            String name = BeyonderData.getSequenceName(r.shownPath().isEmpty() ? pathway : r.shownPath(), r.sequence());
             Component line = Component.literal(r.sequence() + " · " + name);
             int nameX = left + 40, maxW = W - 40 - 118;
             float sc = Math.min(1f, maxW / (float) Math.max(1, font.width(line)));
