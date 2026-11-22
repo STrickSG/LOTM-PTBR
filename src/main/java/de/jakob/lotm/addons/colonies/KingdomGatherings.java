@@ -91,8 +91,12 @@ public final class KingdomGatherings {
         return t >= START && t < END && nextDay(colony, dayTime) == dayTime / 24000L;
     }
 
-    /** A casa onde vai ser a reunião deste dia: uma das casas do reino, a cada semana uma; senão a prefeitura */
+    /** A casa onde vai ser a reunião: a casa de reunião do reino (com o porão); se ainda não houver, uma casa qualquer */
     public static BlockPos place(IColony colony, long day) {
+        if (colony.getWorld() != null && colony.getWorld().getServer() != null) {
+            CompoundTag house = data(colony.getWorld().getServer()).houses.get(colony.getID());
+            if (house != null) return BlockPos.of(house.getLong("Door"));
+        }
         List<IBuilding> houses = new ArrayList<>();
         for (IBuilding b : colony.getServerBuildingManager().getBuildings().values()) {
             String name = b.getSchematicName();
@@ -114,6 +118,7 @@ public final class KingdomGatherings {
         for (IColony colony : IColonyManager.getInstance().getAllColonies()) {
             if (!(colony.getWorld() instanceof ServerLevel world) || !NpcKingdoms.isKingdom(world, colony)) continue;
             seed(server, world, colony);
+            buildHouse(server, world, colony);
             long day = time / 24000L;
             if (isGatheringNow(colony, time) && !Long.valueOf(day).equals(STOCKED.get(colony.getID()))) stock(server, colony, day);
         }
@@ -227,9 +232,122 @@ public final class KingdomGatherings {
         BlockPos at = placeFor(entity);
         if (at == null) return CitizenAIState.IDLE;
         if (entity.isSleeping()) entity.stopSleeping();
-        if (EntityNavigationUtils.walkToPos(entity, at, 4, true) && entity.getRandom().nextInt(4) == 0)
-            EntityNavigationUtils.walkToRandomPosAround(entity, at, 4, 0.6);
+        BlockPos stall = stallFor(entity);
+        if (stall == null) {
+            if (EntityNavigationUtils.walkToPos(entity, at, 4, true) && entity.getRandom().nextInt(4) == 0)
+                EntityNavigationUtils.walkToRandomPosAround(entity, at, 4, 0.6);
+            return MarketState.MARKET;
+        }
+        if (EntityNavigationUtils.walkToPos(entity, stall, 0, true)) {
+            entity.getNavigation().stop();
+        } else if (entity.level().getDayTime() % 24000L > START + 2000 && !entity.blockPosition().closerThan(stall, 3)) {
+            // quem não achou o caminho (porta, escada) chega de qualquer jeito: a reunião não espera
+            entity.teleportTo(stall.getX() + 0.5, stall.getY(), stall.getZ() + 0.5);
+        }
         return MarketState.MARKET;
+    }
+
+    /** A banca deste vendedor no porão: os Beyonders do reino, em ordem, cada um na sua */
+    private static BlockPos stallFor(EntityCitizen entity) {
+        if (!(entity.level() instanceof ServerLevel level)) return null;
+        ICitizenData me = entity.getCitizenData();
+        CompoundTag house = data(level.getServer()).houses.get(me.getColony().getID());
+        if (house == null) return null;
+        long[] spots = house.getLongArray("Stalls");
+        if (spots.length == 0) return null;
+        List<UUID> sellers = new ArrayList<>();
+        for (ICitizenData c : me.getColony().getCitizenManager().getCitizens())
+            if (ColonistBeyonders.info(level.getServer(), c.getUUID()) != null) sellers.add(c.getUUID());
+        Collections.sort(sellers);
+        int i = sellers.indexOf(me.getUUID());
+        if (i < 0 || i >= spots.length) return null;   // mais vendedores que bancas: os outros ficam pela sala
+        return BlockPos.of(spots[i]);
+    }
+
+    // ---------------------------------------------------------------- a casa de reunião do reino
+
+    private static final String[] HOUSES = {"gathering/house1.blueprint", "gathering/house2.blueprint", "gathering/house3.blueprint", "gathering/house4.blueprint"};
+
+    /** Uma vez por reino: escolhe uma das quatro casas e a constrói perto da prefeitura, num lugar plano e livre */
+    private static void buildHouse(MinecraftServer server, ServerLevel level, IColony colony) {
+        Data data = data(server);
+        if (data.houses.containsKey(colony.getID())) return;
+        BlockPos hall = colony.getCenter();
+        if (!level.isLoaded(hall)) return;
+        String path = HOUSES[Math.floorMod(colony.getID() * 7 + (int) (level.getSeed() & 0xFF), HOUSES.length)];
+        var blueprint = com.ldtteam.structurize.storage.StructurePacks.getBlueprint("LOTM", path, level.registryAccess());
+        if (blueprint == null) return;
+        BlockPos offset = blueprint.getPrimaryBlockOffset();
+        int sx = blueprint.getSizeX(), sz = blueprint.getSizeZ();
+        Random random = new Random(colony.getID() * 31L + level.getSeed());
+        double start = random.nextDouble() * Math.PI * 2;
+        for (int r : new int[]{30, 38, 46, 54}) for (int k = 0; k < 16; k++) {
+            double a = start + Math.PI * 2 * k / 16;
+            int ax = hall.getX() + (int) (Math.cos(a) * r), az = hall.getZ() + (int) (Math.sin(a) * r);
+            int x0 = ax - offset.getX(), z0 = az - offset.getZ();
+            int[][] probes = {{x0, z0}, {x0 + sx - 1, z0}, {x0, z0 + sz - 1}, {x0 + sx - 1, z0 + sz - 1}, {x0 + sx / 2, z0 + sz / 2}};
+            boolean ok = true;
+            int lo = Integer.MAX_VALUE, hi = Integer.MIN_VALUE;
+            List<Integer> heights = new ArrayList<>();
+            for (int[] p : probes) {
+                BlockPos q = new BlockPos(p[0], 0, p[1]);
+                if (!level.isLoaded(q)) { ok = false; break; }
+                int h = level.getHeight(net.minecraft.world.level.levelgen.Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, p[0], p[1]) - 1;
+                if (!level.getFluidState(new BlockPos(p[0], h, p[1])).isEmpty()) { ok = false; break; }
+                heights.add(h);
+                lo = Math.min(lo, h); hi = Math.max(hi, h);
+            }
+            if (!ok || hi - lo > 4) continue;
+            // longe dos prédios da colônia
+            for (IBuilding b : colony.getServerBuildingManager().getBuildings().values()) {
+                var c = b.getCorners();
+                if (c == null || c.getA() == null) continue;
+                int bx0 = Math.min(c.getA().getX(), c.getB().getX()) - 3, bx1 = Math.max(c.getA().getX(), c.getB().getX()) + 3;
+                int bz0 = Math.min(c.getA().getZ(), c.getB().getZ()) - 3, bz1 = Math.max(c.getA().getZ(), c.getB().getZ()) + 3;
+                if (x0 <= bx1 && x0 + sx - 1 >= bx0 && z0 <= bz1 && z0 + sz - 1 >= bz0) { ok = false; break; }
+            }
+            if (!ok) continue;
+            Collections.sort(heights);
+            BlockPos anchor = new BlockPos(ax, heights.get(heights.size() / 2), az);
+            data.houses.put(colony.getID(), place(level, blueprint, anchor));
+            data.setDirty();
+            LOTMCraft.LOGGER.info("Reino {}: casa de reunião {} em {}", colony.getName(), path, anchor);
+            return;
+        }
+    }
+
+    /** Põe a casa bloco a bloco e anota a porta e as bancas (o lugar do vendedor, na frente de cada estandarte) */
+    private static CompoundTag place(ServerLevel level, com.ldtteam.structurize.blueprints.v1.Blueprint blueprint, BlockPos anchor) {
+        BlockPos origin = anchor.subtract(blueprint.getPrimaryBlockOffset());
+        int below = blueprint.getPrimaryBlockOffset().getY();
+        List<Long> stalls = new ArrayList<>();
+        for (var info : blueprint.getBlockInfoAsList()) {
+            var state = info.getState();
+            var id = net.minecraft.core.registries.BuiltInRegistries.BLOCK.getKey(state.getBlock());
+            BlockPos world = origin.offset(info.getPos());
+            if ("structurize".equals(id.getNamespace())) {
+                if (id.getPath().contains("solid")) level.setBlock(world, net.minecraft.world.level.block.Blocks.DIRT.defaultBlockState(), 2);
+                continue;
+            }
+            level.setBlock(world, state, 2);
+            if (info.hasTileEntityData()) {
+                CompoundTag tile = blueprint.getTileEntityData(world, info.getPos());
+                var entity = level.getBlockEntity(world);
+                if (tile != null && entity != null) entity.loadWithComponents(tile, level.registryAccess());
+            }
+            if (info.getPos().getY() < below && state.getBlock() instanceof net.minecraft.world.level.block.WallBannerBlock)
+                stalls.add(world.below(2).relative(state.getValue(net.minecraft.world.level.block.WallBannerBlock.FACING)).asLong());
+        }
+        Collections.sort(stalls);
+        CompoundTag tag = new CompoundTag();
+        tag.putLong("Door", anchor.above().asLong());
+        tag.putLongArray("Stalls", stalls.stream().mapToLong(Long::longValue).toArray());
+        return tag;
+    }
+
+    /** O vendedor está na casa de reunião (no porão ou na sala) */
+    private static boolean inHouse(IColony colony, long day, BlockPos pos) {
+        return pos.closerThan(place(colony, day), 24);
     }
 
     // ---------------------------------------------------------------- comprar
@@ -247,7 +365,7 @@ public final class KingdomGatherings {
         event.setCancellationResult(InteractionResult.CONSUME);
         IColony colony = data.getColony();
         long now = level.getDayTime(), today = now / 24000L;
-        if (isGatheringNow(colony, now) && entity.blockPosition().closerThan(place(colony, today), 16)) {
+        if (isGatheringNow(colony, now) && inHouse(colony, today, entity.blockPosition())) {
             boolean invited = false;
             for (ItemStack s : player.getInventory().items) if (GatheringInvitationItem.isFor(s, colony.getID(), today)) invited = true;
             if (!invited) {
@@ -286,16 +404,23 @@ public final class KingdomGatherings {
 
     private static final class Data extends SavedData {
         private final Set<Integer> seeded = new HashSet<>();
+        /** colônia -> a casa de reunião (Door, Stalls) */
+        private final Map<Integer, CompoundTag> houses = new HashMap<>();
 
         static Data load(CompoundTag tag, HolderLookup.Provider provider) {
             Data d = new Data();
             for (int id : tag.getIntArray("Seeded")) d.seeded.add(id);
+            CompoundTag h = tag.getCompound("Houses");
+            for (String k : h.getAllKeys()) d.houses.put(Integer.parseInt(k), h.getCompound(k));
             return d;
         }
 
         @Override
         public CompoundTag save(CompoundTag tag, HolderLookup.Provider provider) {
             tag.put("Seeded", new IntArrayTag(seeded.stream().mapToInt(Integer::intValue).toArray()));
+            CompoundTag h = new CompoundTag();
+            houses.forEach((k, v) -> h.put(String.valueOf(k), v));
+            tag.put("Houses", h);
             return tag;
         }
     }
