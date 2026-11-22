@@ -32,10 +32,16 @@ public final class ChurchRegistry {
             () -> new ChurchAltarBlock(BlockBehaviour.Properties.of().strength(3f, 6f).sound(SoundType.STONE).noOcclusion().lightLevel(s -> 10)));
     public static final DeferredHolder<Item, BlockItem> ALTAR_ITEM = ITEMS.register("church_altar", () -> new BlockItem(ALTAR.get(), new Item.Properties()));
 
+    /** Os fiéis escolhidos pelo Deus moram e dormem no templo */
+    public static final BuildingEntry.ModuleProducer<ChurchLivingModule, com.minecolonies.core.colony.buildings.moduleviews.LivingBuildingModuleView> LIVING =
+            new BuildingEntry.ModuleProducer<>("church_living", ChurchLivingModule::new, () -> com.minecolonies.core.colony.buildings.moduleviews.LivingBuildingModuleView::new);
+
     public static final DeferredHolder<BuildingEntry, BuildingEntry> CHURCH = BUILDINGS.register(ChurchBuilding.SCHEMATIC, () -> new BuildingEntry.Builder()
             .setBuildingBlock(CHURCH_HUT.get())
             .setBuildingProducer(ChurchBuilding::new)
             .setBuildingViewProducer(() -> ChurchBuilding.View::new)
+            .addBuildingModuleProducer(com.minecolonies.core.colony.buildings.modules.BuildingModules.BED)
+            .addBuildingModuleProducer(LIVING)
             .setRegistryName(ResourceLocation.fromNamespaceAndPath(LOTMCraft.MOD_ID, ChurchBuilding.SCHEMATIC))
             .createBuildingEntry());
 

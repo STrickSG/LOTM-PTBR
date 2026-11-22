@@ -91,6 +91,11 @@ public class ChurchScreen extends Screen {
                 var m = list.get(scroll + i);
                 int y = top + 86 + i * 14;
                 if (members.canEdit()) {
+                    Button home = Button.builder(Component.literal(m.home() ? "⌂" : "+"), b -> PacketDistributor.sendToServer(new ChurchActionPacket(view.getPosition(), "home", m.id().toString(), "")))
+                            .bounds(left + W - 63, y - 2, 11, 12)
+                            .tooltip(net.minecraft.client.gui.components.Tooltip.create(Component.translatable(m.home() ? "lotmcraft.church.home.tooltip_leave" : "lotmcraft.church.home.tooltip_move")))
+                            .build();
+                    addRenderableWidget(home);
                     addRenderableWidget(Button.builder(Component.literal("<"), b -> cycle(m, -1)).bounds(left + W - 50, y - 2, 11, 12).build());
                     addRenderableWidget(Button.builder(Component.literal(">"), b -> cycle(m, 1)).bounds(left + W - 37, y - 2, 11, 12).build());
                 }
@@ -216,10 +221,20 @@ public class ChurchScreen extends Screen {
                     String[] b = m.beyonder().split(":");
                     name = name.copy().append(Component.literal(" · ").withColor(DIM)).append(Component.translatable("lotmcraft.church.member_seq", b[1]).withColor(0x8A5A00));
                 }
-                small(g, name, left + 24, ry, 0.85f, TEXT, W - 82 - roleW);
-                small(g, role, left + W - 54 - roleW, ry + 1, 0.8f, "believer".equals(m.role()) ? DIM : GOLD, roleW + 2);
+                int edit = members.canEdit() ? 13 : 0;
+                if (m.home()) name = Component.literal("⌂ ").withColor(GOLD).append(name);
+                small(g, name, left + 24, ry, 0.85f, TEXT, W - 82 - roleW - edit);
+                small(g, role, left + W - 54 - roleW - edit, ry + 1, 0.8f, "believer".equals(m.role()) ? DIM : GOLD, roleW + 2);
             }
-            if (list.size() > ROWS) g.drawCenteredString(font, Component.literal((scroll + 1) + "-" + Math.min(list.size(), scroll + ROWS) + " / " + list.size()), left + W / 2, top + 86 + ROWS * 14, DIM);
+            if (members.beds() > 0) {
+                // as camas à esquerda; a página (quando há mais fiéis que linhas) vai para a direita
+                long living = list.stream().filter(ChurchMembersPacket.Member::home).count();
+                small(g, Component.translatable("lotmcraft.church.home.beds", living, members.beds()), left + 24, top + 86 + ROWS * 14 + 1, 0.8f, DIM, W - 100);
+                if (list.size() > ROWS) {
+                    String page = (scroll + 1) + "-" + Math.min(list.size(), scroll + ROWS) + " / " + list.size();
+                    g.drawString(font, page, left + W - 24 - font.width(page), top + 86 + ROWS * 14, DIM, false);
+                }
+            } else if (list.size() > ROWS) g.drawCenteredString(font, Component.literal((scroll + 1) + "-" + Math.min(list.size(), scroll + ROWS) + " / " + list.size()), left + W / 2, top + 86 + ROWS * 14, DIM);
         } else {
             line(g, Component.translatable("lotmcraft.church.anchors.total", members.total()), y);
             line(g, Component.translatable("lotmcraft.church.anchors.floor", String.format("%.1f", members.floorPercent() / 10f)), y + 12);

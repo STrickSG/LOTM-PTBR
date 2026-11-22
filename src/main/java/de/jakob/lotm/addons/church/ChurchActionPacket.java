@@ -85,6 +85,7 @@ public record ChurchActionPacket(BlockPos temple, String action, String name, St
             case "preach" -> preach(player, colony, temple);
             case "members" -> sendMembers(player, colony, temple);
             case "role" -> setRole(player, colony, temple, packet.name(), packet.kind());
+            case "home" -> toggleHome(player, colony, temple, packet.name());
             default -> { }
         }
     }
@@ -105,6 +106,28 @@ public record ChurchActionPacket(BlockPos temple, String action, String name, St
         sendMembers(player, colony, temple);
     }
 
+    /** Morar no templo (ou voltar a morar fora): só fiéis da Igreja do templo, e só se houver cama livre */
+    private static void toggleHome(ServerPlayer player, IColony colony, ChurchBuilding temple, String citizenId) {
+        UUID god = temple.getGod();
+        if (god == null || !player.getUUID().equals(god)) return;
+        UUID id;
+        try { id = UUID.fromString(citizenId); } catch (IllegalArgumentException e) { return; }
+        var citizen = colony.getCitizenManager().getCitizens().stream().filter(c -> c.getUUID().equals(id)).findFirst().orElse(null);
+        ChurchLivingModule living = temple.getFirstModuleOccurance(ChurchLivingModule.class);
+        if (citizen == null || living == null || !god.equals(Believers.godOfCitizen(player.server, id))) return;
+        if (living.hasAssignedCitizen(citizen)) {
+            living.removeCitizen(citizen);
+            say(player, Component.translatable("lotmcraft.church.home.left", Believers.originalName(player.server, citizen)), 0xFFE29A);
+        } else if (living.getModuleMax() == 0) {
+            say(player, Component.translatable("lotmcraft.church.home.no_beds"), 0xFF7A7A);
+        } else if (!living.moveIn(citizen)) {
+            say(player, Component.translatable("lotmcraft.church.home.full", living.getModuleMax()), 0xFF7A7A);
+        } else {
+            say(player, Component.translatable("lotmcraft.church.home.moved", Believers.originalName(player.server, citizen)), 0xFFE29A);
+        }
+        sendMembers(player, colony, temple);
+    }
+
     static void sendMembers(ServerPlayer player, IColony colony, ChurchBuilding temple) {
         UUID god = temple.getGod();
         var members = new java.util.ArrayList<ChurchMembersPacket.Member>();
@@ -119,7 +142,7 @@ public record ChurchActionPacket(BlockPos temple, String action, String name, St
                 {
                     ColonistBeyonders.Info b = ColonistBeyonders.info(player.server, citizen.getUUID());
                     members.add(new ChurchMembersPacket.Member(citizen.getUUID(), Believers.originalName(player.server, citizen), Believers.roleOf(player.server, citizen.getUUID()),
-                            b == null ? "" : b.pathway() + ":" + b.sequence()));
+                            b == null ? "" : b.pathway() + ":" + b.sequence(), citizen.getHomeBuilding() == temple));
                 }
             }
             for (var other : IColonyManager.getInstance().getAllColonies()) {
@@ -132,8 +155,10 @@ public record ChurchActionPacket(BlockPos temple, String action, String name, St
             preached = temple.getLastPreachDay() == player.server.overworld().getDayTime() / 24000L;
         }
         members.sort(java.util.Comparator.comparingInt((ChurchMembersPacket.Member m) -> -ChurchRoles.of(Churches.CHURCH).indexOf(m.role())).thenComparing(ChurchMembersPacket.Member::name));
+        ChurchLivingModule living = temple.getFirstModuleOccurance(ChurchLivingModule.class);
+        int beds = living == null ? 0 : living.getModuleMax();
         de.jakob.lotm.network.PacketHandler.sendToPlayer(player, new ChurchMembersPacket(temple.getPosition(), members, total, floor, colonies,
-                player.getUUID().equals(god), preached));
+                player.getUUID().equals(god), preached, beds));
     }
 
     /** O Deus dá um cargo a um fiel desta colônia (respeitando o limite do cargo) */

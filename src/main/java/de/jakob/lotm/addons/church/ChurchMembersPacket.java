@@ -16,12 +16,17 @@ import java.util.UUID;
 /** Servidor -> cliente: os fiéis desta colônia, para as abas "Fiéis" e "Âncoras" do menu */
 public record ChurchMembersPacket(BlockPos temple, List<Member> members, int total, int floorPercent, List<String> colonies, int flags)
         implements CustomPacketPayload {
-    public ChurchMembersPacket(BlockPos temple, List<Member> members, int total, int floorPercent, List<String> colonies, boolean canEdit, boolean preachedToday) {
-        this(temple, members, total, floorPercent, colonies, (canEdit ? 1 : 0) | (preachedToday ? 2 : 0));
+    public ChurchMembersPacket(BlockPos temple, List<Member> members, int total, int floorPercent, List<String> colonies, boolean canEdit, boolean preachedToday, int beds) {
+        this(temple, members, total, floorPercent, colonies, (canEdit ? 1 : 0) | (preachedToday ? 2 : 0) | (beds << 8));
     }
 
     public boolean canEdit() {
         return (flags & 1) != 0;
+    }
+
+    /** Quantas camas o templo tem */
+    public int beds() {
+        return flags >>> 8;
     }
 
     public boolean preachedToday() {
@@ -29,10 +34,11 @@ public record ChurchMembersPacket(BlockPos temple, List<Member> members, int tot
     }
 
     /** beyonder: "caminho:sequência", ou vazio se o colono não é Beyonder */
-    public record Member(UUID id, String name, String role, String beyonder) {
+    /** home: mora no templo */
+    public record Member(UUID id, String name, String role, String beyonder, boolean home) {
         static final StreamCodec<ByteBuf, Member> CODEC = StreamCodec.composite(
                 UUIDUtil.STREAM_CODEC, Member::id, ByteBufCodecs.STRING_UTF8, Member::name, ByteBufCodecs.STRING_UTF8, Member::role,
-                ByteBufCodecs.STRING_UTF8, Member::beyonder, Member::new);
+                ByteBufCodecs.STRING_UTF8, Member::beyonder, ByteBufCodecs.BOOL, Member::home, Member::new);
     }
 
     public static final Type<ChurchMembersPacket> TYPE = new Type<>(ResourceLocation.fromNamespaceAndPath(LOTMCraft.MOD_ID, "church_members"));
