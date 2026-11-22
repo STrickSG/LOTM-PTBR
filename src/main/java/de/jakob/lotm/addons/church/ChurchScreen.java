@@ -26,7 +26,8 @@ public class ChurchScreen extends Screen {
     private ChurchMembersPacket members;
     private static final int ROWS = 8;
     private EditBox nameBox;
-    private boolean sect;
+    /** 0 = Igreja, 1 = Seita Sombria, 2 = Seita Tranquila */
+    private int kindChoice;
 
     public ChurchScreen(ChurchBuilding.View view) {
         super(Component.translatable("lotmcraft.church.title"));
@@ -79,7 +80,7 @@ public class ChurchScreen extends Screen {
         addRenderableWidget(tabButton(2, "lotmcraft.church.tab.anchors", left + 22 + tw * 2, tw));
         if (tab != 0 && members == null && consecrated()) requestMembers();
         if (tab == 1 && members != null) {
-            if (members.canEdit()) {
+            if (members.canEdit() && !Churches.SECT.equals(view.kind)) {   // a Seita e a Ordem não pregam
                 Button preach = Button.builder(Component.translatable(members.preachedToday() ? "lotmcraft.church.preach.done_today" : "lotmcraft.church.preach"),
                         b -> PacketDistributor.sendToServer(new ChurchActionPacket(view.getPosition(), "preach", "", ""))).bounds(left + 30, top + 64, W - 60, 16).build();
                 preach.active = !members.preachedToday();
@@ -111,7 +112,7 @@ public class ChurchScreen extends Screen {
                 addRenderableWidget(nameBox);
             }
             if (!consecrated()) {
-                addRenderableWidget(Button.builder(kindLabel(), b -> { sect = !sect; b.setMessage(kindLabel()); })
+                addRenderableWidget(Button.builder(kindLabel(), b -> { kindChoice = (kindChoice + 1) % 3; b.setMessage(kindLabel()); })
                         .bounds(left + 30, top + 170, W - 60, 16).build());
                 addRenderableWidget(Button.builder(Component.translatable("lotmcraft.church.consecrate"), b -> send("consecrate"))
                         .bounds(left + 30, top + 189, W - 60, 18).build());
@@ -125,7 +126,11 @@ public class ChurchScreen extends Screen {
     }
 
     private Component kindLabel() {
-        return Component.translatable(sect ? "lotmcraft.church.kind.sect" : "lotmcraft.church.kind.church");
+        return Component.translatable(switch (kindChoice) {
+            case 1 -> "lotmcraft.church.kind.sect_dark";
+            case 2 -> "lotmcraft.church.kind.sect_calm";
+            default -> "lotmcraft.church.kind.church";
+        });
     }
 
     private void cycle(ChurchMembersPacket.Member member, int dir) {
@@ -153,7 +158,12 @@ public class ChurchScreen extends Screen {
 
     private void send(String action) {
         String name = nameBox == null ? "" : nameBox.getValue();
-        PacketDistributor.sendToServer(new ChurchActionPacket(view.getPosition(), action, name, sect ? Churches.SECT : Churches.CHURCH));
+        String kind = switch (kindChoice) {
+            case 1 -> Churches.SECT + ":" + Churches.DARK;
+            case 2 -> Churches.SECT + ":" + Churches.CALM;
+            default -> Churches.CHURCH;
+        };
+        PacketDistributor.sendToServer(new ChurchActionPacket(view.getPosition(), action, name, kind));
         onClose();
     }
 
@@ -182,13 +192,21 @@ public class ChurchScreen extends Screen {
         int y = top + 64;
         if (tab == 0) {
             if (consecrated()) {
-                String kindKey = Churches.SECT.equals(view.kind) ? "lotmcraft.church.kind.sect" : "lotmcraft.church.kind.church";
+                String kindKey = !Churches.SECT.equals(view.kind) ? "lotmcraft.church.kind.church"
+                        : Churches.DARK.equals(view.nature) ? "lotmcraft.church.kind.sect_dark" : "lotmcraft.church.kind.sect_calm";
                 line(g, Component.translatable("lotmcraft.church.info.god", view.godName), y);
                 line(g, Component.translatable("lotmcraft.church.info.kind", Component.translatable(kindKey)), y + 12);
                 line(g, Component.translatable("lotmcraft.church.info.pathway", pathwayName(view.pathway)), y + 24);
                 line(g, Component.translatable("lotmcraft.church.info.temples", view.temples), y + 36);
                 line(g, Component.translatable("lotmcraft.church.info.level", view.getBuildingLevel()), y + 48);
                 if (isGod()) g.drawCenteredString(font, Component.translatable("lotmcraft.church.rename_hint"), left + W / 2, top + 138, DIM);
+                if (isGod() && Churches.SECT.equals(view.kind)) {
+                    int hy = y + 62;
+                    for (var l : font.split(Component.translatable(Churches.DARK.equals(view.nature) ? "lotmcraft.sect.hint.dark" : "lotmcraft.sect.hint.order"), W - 50)) {
+                        g.drawString(font, l, left + 25, hy, 0x7A1A3A, false);
+                        hy += 10;
+                    }
+                }
             } else {
                 for (var l : font.split(Component.translatable("lotmcraft.church.consecrate_hint", Churches.MAX_SEQUENCE), W - 50)) {
                     g.drawString(font, l, left + 25, y, TEXT, false);

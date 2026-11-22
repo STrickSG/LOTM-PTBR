@@ -42,6 +42,7 @@ public final class ChurchConversion {
             Long last = LAST_DAY.put(colony.getID(), day);
             if (last == null || last == day) continue; // primeiro contato: só anota o dia
             dailyRoll(server, colony, 1.0, null, 0);
+            SectRites.daily(server, colony);
         }
     }
 
@@ -76,8 +77,13 @@ public final class ChurchConversion {
                 UUID god = temple.getGod();
                 Churches.Info info = churches.info(god);
                 if (info == null || Believers.isWronged(server, citizen.getUUID(), god)) continue;
-                boolean sect = Churches.SECT.equals(info.kind());
+                boolean sect = info.isSect();
                 if (sect && "demoness".equals(info.pathway()) && !citizen.isFemale()) continue;
+                // a Seita só aceita Beyonders do próprio caminho; a Ordem, também dos caminhos vizinhos
+                if (sect) {
+                    ColonistBeyonders.Info b = ColonistBeyonders.info(server, citizen.getUUID());
+                    if (b != null && !info.accepts(b.pathway())) continue;
+                }
                 double chance = chance(server, colony, citizen, temple, god, sect) * multiplier;
                 if (random.nextDouble() >= chance) continue;
                 if (Believers.join(server, god, Churches.godName(server, god), citizen)) {
@@ -102,12 +108,17 @@ public final class ChurchConversion {
             members++;
             if (ChurchRoles.isClergy(Believers.roleOf(server, other.getUUID()))) clergy++;
         }
+        double h = Math.max(0, Math.min(10, happiness)) / 10.0;
+        if (sect) {
+            // a Seita não prega em público: atrai os infelizes e os desesperados, e os membros puxam os conhecidos
+            return (0.02 + 0.12 * (1 - h) + 0.15 * members / total + 0.02 * Math.min(5, clergy) + 0.01 * temple.getBuildingLevel())
+                    * SectRites.fervor(colony);
+        }
         double chance = 0.04
-                + 0.10 * Math.max(0, Math.min(10, happiness)) / 10.0
+                + 0.10 * h
                 + 0.15 * members / total
                 + 0.03 * Math.min(5, clergy)
                 + 0.02 * temple.getBuildingLevel();
-        chance *= ChurchPrayers.conversionMultiplier(colony);
-        return sect ? chance * 0.5 : chance;
+        return chance * ChurchPrayers.conversionMultiplier(colony);
     }
 }

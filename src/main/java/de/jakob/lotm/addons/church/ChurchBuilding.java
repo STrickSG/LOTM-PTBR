@@ -124,6 +124,7 @@ public class ChurchBuilding extends AbstractBuilding {
             buf.writeUtf(Churches.godName(server, god));
             buf.writeUtf(info == null ? "" : info.name());
             buf.writeUtf(info == null ? Churches.CHURCH : info.kind());
+            buf.writeUtf(info == null ? "" : info.nature());
             buf.writeUtf(info == null ? "" : info.pathway());
             buf.writeVarInt(server == null ? 0 : Churches.temples(server, god).size());
         }
@@ -132,7 +133,7 @@ public class ChurchBuilding extends AbstractBuilding {
     /** O que o cliente sabe do templo, para o menu */
     public static class View extends AbstractBuildingView {
         public UUID god;
-        public String godName = "", churchName = "", kind = Churches.CHURCH, pathway = "";
+        public String godName = "", churchName = "", kind = Churches.CHURCH, pathway = "", nature = "";
         public int temples;
 
         public View(IColonyView colony, BlockPos pos) {
@@ -147,11 +148,12 @@ public class ChurchBuilding extends AbstractBuilding {
                 godName = buf.readUtf();
                 churchName = buf.readUtf();
                 kind = buf.readUtf();
+                nature = buf.readUtf();
                 pathway = buf.readUtf();
                 temples = buf.readVarInt();
             } else {
                 god = null;
-                godName = churchName = pathway = "";
+                godName = churchName = pathway = nature = "";
                 kind = Churches.CHURCH;
                 temples = 0;
             }

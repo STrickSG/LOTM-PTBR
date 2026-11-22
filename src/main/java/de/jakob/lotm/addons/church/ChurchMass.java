@@ -73,13 +73,18 @@ public final class ChurchMass {
 
     /** O templo onde o fiel deve estar agora, ou null se não é hora (ou ele não é fiel, ou está em perigo) */
     public static ChurchBuilding templeFor(EntityCitizen entity) {
-        if (!(entity.level() instanceof ServerLevel level) || !isMassTime(level.getDayTime())) return null;
+        if (!(entity.level() instanceof ServerLevel level)) return null;
         ICitizenData data = entity.getCitizenData();
-        if (data == null || entity.isSleeping() || entity.getHealth() < entity.getMaxHealth() * 0.3f) return null;
+        if (data == null || entity.getHealth() < entity.getMaxHealth() * 0.3f) return null;
         IColony colony = data.getColony();
         if (colony == null || colony.getRaiderManager().isRaided()) return null;
+        // as reuniões secretas da Seita e da Ordem (os membros chamados e quem a Seita atraiu)
+        ChurchBuilding secret = SectGatherings.templeFor(level, data);
+        if (secret != null) return secret;
+        if (!isMassTime(level.getDayTime()) || entity.isSleeping()) return null;
         UUID god = Believers.godOfCitizen(level.getServer(), data.getUUID());
-        if (god == null) return null;
+        // a Seita e a Ordem não vão à missa pública
+        if (god == null || Believers.isSecret(level.getServer(), god)) return null;
         ChurchBuilding best = null;
         for (ChurchBuilding temple : ChurchConversion.temples(colony)) {
             if (!god.equals(temple.getGod())) continue;
@@ -95,6 +100,7 @@ public final class ChurchMass {
             if (entity.isPassenger()) entity.stopRiding();
             return CitizenAIState.IDLE;
         }
+        if (entity.isSleeping()) entity.stopSleeping();   // a reunião secreta é à noite: levanta da cama
         BlockPos altar = temple.getPosition();
         ServerLevel level = (ServerLevel) entity.level();
         BlockPos seat = seatFor(entity, temple, level);

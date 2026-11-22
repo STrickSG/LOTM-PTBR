@@ -134,7 +134,7 @@ public class HonorificNamesScreen extends AbstractContainerScreen<HonorificNames
                 int cost = de.jakob.lotm.addons.church.ChurchPrayers.cost(prayers.get(idx).petition());
                 this.addRenderableWidget(new MysticButton(
                         leftPos + PADDING + 8, entryY + 22, 108, 16,
-                        Component.translatable("lotmcraft.church.petition.grant", cost),
+                        cost == 0 ? Component.translatable("lotmcraft.church.petition.grant_free") : Component.translatable("lotmcraft.church.petition.grant", cost),
                         btn -> respondToPrayer(btnIdx, HonorificNamesRespondPacket.GRANT)));
                 this.addRenderableWidget(new MysticButton(
                         leftPos + PADDING + 8 + 112, entryY + 22, 108, 16,
@@ -379,7 +379,7 @@ public class HonorificNamesScreen extends AbstractContainerScreen<HonorificNames
             if (prayer.isPetition()) {
                 // o que o fiel pede, no lugar do caminho e da Sequência
                 String petitionLine = font.plainSubstrByWidth(Component.translatable("lotmcraft.church.petition.card", prayer.senderName(),
-                        Component.translatable("lotmcraft.church.petition." + prayer.petition())).getString(), CARD_W - 16);
+                        de.jakob.lotm.addons.church.ChurchPrayers.describe(prayer.petition())).getString(), CARD_W - 16);
                 gfx.drawString(font, petitionLine, PADDING + 8, entryRelY + 2, COL_GOLD, true);
                 gfx.drawString(font, String.format("@ %.0f, %.0f, %.0f", prayer.x(), prayer.y(), prayer.z()), PADDING + 8, entryRelY + 12, 0xFF9090BC, false);
                 continue;

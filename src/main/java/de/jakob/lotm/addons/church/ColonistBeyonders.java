@@ -152,8 +152,9 @@ public final class ColonistBeyonders extends SavedData {
         Churches.Info church = Churches.get(server).info(player.getUUID());
         String pathway = potion.getPathway();
         int sequence = potion.getSequence();
-        if (church != null && Churches.SECT.equals(church.kind()) && !pathway.equals(church.pathway())) {
-            say(player, "lotmcraft.colonist_beyonder.sect_pathway", 0xFF7A7A, Component.translatable("lotm.pathway." + church.pathway()));
+        if (church != null && !church.accepts(pathway)) {
+            say(player, church.isOrder() ? "lotmcraft.colonist_beyonder.order_pathway" : "lotmcraft.colonist_beyonder.sect_pathway", 0xFF7A7A,
+                    Component.translatable("lotm.pathway." + church.pathway()));
             return;
         }
         if (sequence < HIGHEST) {
@@ -191,6 +192,15 @@ public final class ColonistBeyonders extends SavedData {
         }
         advance(server, citizen, entity, pathway, sequence);
         say(player, "lotmcraft.colonist_beyonder.drank", 0xFFE29A, Believers.originalName(server, citizen), sequence, Component.translatable("lotm.pathway." + pathway));
+    }
+
+    /** Adianta a digestão do colono Beyonder em alguns dias (rituais da Seita) */
+    public static void hasten(MinecraftServer server, UUID citizen, int days) {
+        ColonistBeyonders data = get(server);
+        Info info = data.colonists.get(citizen);
+        if (info == null) return;
+        data.colonists.put(citizen, new Info(info.pathway(), info.sequence(), info.potionDay() - days));
+        data.setDirty();
     }
 
     private static void advance(MinecraftServer server, ICitizenData citizen, LivingEntity entity, String pathway, int sequence) {

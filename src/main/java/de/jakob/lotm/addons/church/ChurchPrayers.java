@@ -45,15 +45,41 @@ import java.util.UUID;
 public final class ChurchPrayers {
     private ChurchPrayers() {}
 
-    public static final String HEAL = "heal", FOOD = "food", PROTECT = "protect";
-    /** Quanto de espiritualidade custa atender cada pedido */
+    public static final String HEAL = "heal", FOOD = "food", PROTECT = "protect", POWER = "power";
+    /** O sacrifício que acompanha o pedido de uma Seita: "pedido:animal" ou "pedido:human" */
+    public static final String ANIMAL = "animal", HUMAN = "human";
+
+    public static String kindOf(String petition) {
+        int i = petition.indexOf(':');
+        return i < 0 ? petition : petition.substring(0, i);
+    }
+
+    public static String offeringOf(String petition) {
+        int i = petition.indexOf(':');
+        return i < 0 ? "" : petition.substring(i + 1);
+    }
+
+    /** Quanto de espiritualidade custa atender cada pedido; o sacrifício paga parte (animal) ou tudo (pessoa) */
     public static int cost(String petition) {
-        return switch (petition) {
+        int base = switch (kindOf(petition)) {
             case HEAL -> 120;
             case FOOD -> 80;
             case PROTECT -> 250;
+            case POWER -> 300;
             default -> 0;
         };
+        return switch (offeringOf(petition)) {
+            case HUMAN -> 0;
+            case ANIMAL -> base / 2;
+            default -> base;
+        };
+    }
+
+    /** "cura", ou "cura (sacrificaram um animal)" */
+    public static Component describe(String petition) {
+        Component what = Component.translatable("lotmcraft.church.petition." + kindOf(petition));
+        String offering = offeringOf(petition);
+        return offering.isEmpty() ? what : Component.translatable("lotmcraft.sect.offering." + offering, what);
     }
 
     /** A hora da missa: 18h (o dia começa às 6); os fiéis vão ao templo desde as 17h (ChurchMass) */
@@ -77,6 +103,14 @@ public final class ChurchPrayers {
     private static long lastMassDay = -1;
 
     // ---------------------------------------------------------------- consultas para outras partes
+
+    /** Soma um reforço às âncoras do Deus até o fim do dia seguinte (a reunião secreta da Seita) */
+    public static void addAnchorBonus(MinecraftServer server, UUID god, float bonus) {
+        long day = server.overworld().getDayTime() / 24000L;
+        Pair<Float, Long> m = mass.get(god);
+        float now = m != null && day <= m.getSecond() ? m.getFirst() : 0f;
+        mass.put(god, new Pair<>(Math.min(0.10f, now + bonus), day + 1));
+    }
 
     /** O reforço das âncoras deixado pela última missa (0 se já passou) */
     public static float massBonus(ServerPlayer god) {
@@ -117,6 +151,7 @@ public final class ChurchPrayers {
             UUID id = citizen.getUUID();
             UUID god = Believers.godOfCitizen(server, id);
             if (god == null || open.containsKey(id)) continue;
+            if (Believers.isSecret(server, god)) continue;   // a Seita e a Ordem pedem nas reuniões (SectGatherings)
             Long last = lastPetition.get(id);
             if (last != null && now - last < PETITION_COOLDOWN) continue;
             LivingEntity entity = citizen.getEntity().orElse(null);
@@ -133,7 +168,7 @@ public final class ChurchPrayers {
         }
     }
 
-    private static void pray(MinecraftServer server, UUID god, ICitizenData citizen, LivingEntity entity, String petition) {
+    static void pray(MinecraftServer server, UUID god, ICitizenData citizen, LivingEntity entity, String petition) {
         UUID id = citizen.getUUID();
         String name = Believers.originalName(server, citizen);
         HonorificNamesEventHandler.answerState.add(new Pair<>(god, id));
@@ -143,8 +178,8 @@ public final class ChurchPrayers {
         if (entity.level() instanceof ServerLevel level)
             level.sendParticles(ParticleTypes.END_ROD, entity.getX(), entity.getY(1.1), entity.getZ(), 8, 0.2, 0.3, 0.2, 0.02);
         ServerPlayer player = server.getPlayerList().getPlayer(god);
-        if (player != null) player.sendSystemMessage(Component.translatable("lotmcraft.church.petition.heard", name,
-                Component.translatable("lotmcraft.church.petition." + petition), cost(petition)).withColor(0xFFE29A));
+        if (player != null && !Believers.isSecret(server, god)) player.sendSystemMessage(Component.translatable("lotmcraft.church.petition.heard", name,
+                describe(petition), cost(petition)).withColor(0xFFE29A));
     }
 
     /** Pedidos sem resposta por um dia contam como ignorados */
@@ -168,11 +203,11 @@ public final class ChurchPrayers {
         ICitizenData citizen = find(id);
         if (grant) {
             int cost = cost(prayer.petition());
-            if (BeyonderData.getSpirituality(god) < cost) {
+            if (cost > 0 && BeyonderData.getSpirituality(god) < cost) {
                 god.sendSystemMessage(Component.translatable("lotmcraft.church.petition.no_spirituality", cost).withColor(0xFF7A7A));
                 return;   // o pedido continua pendente
             }
-            BeyonderData.reduceSpirituality(god, cost);
+            if (cost > 0) BeyonderData.reduceSpirituality(god, cost);
         }
         open.remove(id);
         HonorificNamesEventHandler.answerState.remove(new Pair<>(god.getUUID(), id));
@@ -186,7 +221,7 @@ public final class ChurchPrayers {
         ignored.remove(id);
         IColony colony = citizen.getColony();
         LivingEntity entity = citizen.getEntity().orElse(null);
-        switch (prayer.petition()) {
+        switch (kindOf(prayer.petition())) {
             case HEAL -> {
                 if (entity != null) {
                     entity.setHealth(entity.getMaxHealth());
@@ -194,6 +229,10 @@ public final class ChurchPrayers {
                 }
             }
             case FOOD -> citizen.increaseSaturation(20);
+            case POWER -> {
+                // o poder pedido: os membros adiantam a digestão
+                for (UUID member : Believers.members(server, god.getUUID())) ColonistBeyonders.hasten(server, member, 2);
+            }
             case PROTECT -> {
                 for (ICitizenData other : colony.getCitizenManager().getCitizens()) other.getEntity().ifPresent(e -> {
                     e.addEffect(new MobEffectInstance(MobEffects.DAMAGE_RESISTANCE, 20 * 180, 1));
@@ -208,7 +247,7 @@ public final class ChurchPrayers {
         }
         favor.put(colony.getID(), colony.getWorld().getGameTime() + 24000L * 3);
         god.sendSystemMessage(Component.translatable("lotmcraft.church.petition.granted", name,
-                Component.translatable("lotmcraft.church.petition." + prayer.petition())).withColor(0xFFE29A));
+                Component.translatable("lotmcraft.church.petition." + kindOf(prayer.petition()))).withColor(0xFFE29A));
     }
 
     private static void ignore(MinecraftServer server, UUID god, UUID citizenId) {
@@ -237,6 +276,7 @@ public final class ChurchPrayers {
         for (IColony colony : IColonyManager.getInstance().getAllColonies()) {
             for (ChurchBuilding temple : ChurchConversion.temples(colony)) {
                 UUID god = temple.getGod();
+                if (Believers.isSecret(server, god)) continue;
                 BlockPos at = temple.getPosition();
                 int attendees = 0;
                 for (ICitizenData citizen : colony.getCitizenManager().getCitizens()) {
@@ -261,7 +301,7 @@ public final class ChurchPrayers {
                 r[1] += attendees;
             }
         }
-        mass.clear();
+        mass.entrySet().removeIf(e -> e.getValue().getSecond() < day);
         for (var e : bonus.entrySet()) {
             float b = Math.min(0.10f, e.getValue());
             mass.put(e.getKey(), new Pair<>(b, day));

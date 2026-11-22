@@ -68,8 +68,10 @@ public record ChurchActionPacket(BlockPos temple, String action, String name, St
                         say(player, Component.translatable("lotmcraft.church.need_name"), 0xFF7A7A);
                         return;
                     }
-                    String kind = Churches.SECT.equals(packet.kind()) ? Churches.SECT : Churches.CHURCH;
-                    churches.found(player, name, kind, BeyonderData.getPathway(player));
+                    // "church", "sect:dark" ou "sect:calm"
+                    String kind = packet.kind().startsWith(Churches.SECT) ? Churches.SECT : Churches.CHURCH;
+                    String nature = packet.kind().endsWith(":" + Churches.DARK) ? Churches.DARK : Churches.CALM;
+                    churches.found(player, name, kind, BeyonderData.getPathway(player), nature);
                     Believers.refreshTitles(player.server, player.getUUID(), Churches.godName(player.server, player.getUUID()));
                 }
                 temple.setGod(player.getUUID());
@@ -84,7 +86,11 @@ public record ChurchActionPacket(BlockPos temple, String action, String name, St
                 Churches.temples(player.server, player.getUUID()).forEach(ChurchBuilding::markDirty);
                 say(player, Component.translatable("lotmcraft.church.renamed", name), 0xFFE29A);
             }
-            case "preach" -> preach(player, colony, temple);
+            case "preach" -> {
+                Churches.Info info = temple.getGod() == null ? null : churches.info(temple.getGod());
+                // a Seita e a Ordem não pregam: se reúnem em segredo algumas noites (SectGatherings)
+                if (info == null || !info.isSect()) preach(player, colony, temple);
+            }
             case "members" -> sendMembers(player, colony, temple);
             case "role" -> setRole(player, colony, temple, packet.name(), packet.kind());
             case "home" -> toggleHome(player, colony, temple, packet.name());
@@ -128,6 +134,10 @@ public record ChurchActionPacket(BlockPos temple, String action, String name, St
             say(player, Component.translatable("lotmcraft.church.home.moved", Believers.originalName(player.server, citizen)), 0xFFE29A);
         }
         sendMembers(player, colony, temple);
+    }
+
+    static void say(ServerPlayer player, String key, int color, Object... args) {
+        say(player, Component.translatable(key, args), color);
     }
 
     static void sendMembers(ServerPlayer player, IColony colony, ChurchBuilding temple) {
