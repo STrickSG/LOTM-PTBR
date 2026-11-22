@@ -19,6 +19,11 @@ public final class ChurchModels {
             "sol", "sun"
     );
 
+    /** O esconderijo da Seita ou da Ordem ("sol/hideout1.blueprint"): por fora, uma casa comum */
+    public static boolean isHideout(String blueprintPath) {
+        return blueprintPath != null && blueprintPath.replace('\\', '/').contains("/hideout");
+    }
+
     /** O Caminho do modelo deste caminho de planta ("sol/church1.blueprint" -> "sun"), ou null se não for um modelo do pacote */
     public static String pathwayOf(String blueprintPath) {
         if (blueprintPath == null || blueprintPath.isEmpty()) return null;

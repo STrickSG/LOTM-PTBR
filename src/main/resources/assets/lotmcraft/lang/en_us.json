@@ -5957,6 +5957,8 @@
   "lotmcraft.gathering.invitation_offer": "A whisper: \"There is a gathering...\"",
   "lotmcraft.gathering.title": "Beyonder Gathering",
   "lotmcraft.gathering.only_invited": "He pretends not to understand what you mean. Without an invitation, no one here sells anything.",
+  "lotmcraft.church.model.hideout_secret_only": "A hideout only serves a Sect or an Order. The Church gathers openly, in a church.",
+  "lotmcraft.church.model.church_open_only": "A church in plain sight does not serve a Sect or Order: build a hideout (sol/hideout).",
   "lotmcraft.church.home.moved": "%s now lives in the temple.",
   "lotmcraft.church.home.left": "%s no longer lives in the temple.",
   "lotmcraft.church.home.full": "There is no free bed in the temple (%s beds).",

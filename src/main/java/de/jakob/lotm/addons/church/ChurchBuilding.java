@@ -52,9 +52,9 @@ public class ChurchBuilding extends AbstractBuilding {
 
     /** A chave da mensagem de recusa, ou null se pode melhorar para este nível */
     public String upgradeRefusal(int next) {
-        if (next == 4) {
+        if (next == 4 && !ChurchModels.isHideout(getBlueprintPath())) {
             for (var other : getColony().getServerBuildingManager().getBuildings().values()) {
-                if (other == this || !(other instanceof ChurchBuilding church)) continue;
+                if (other == this || !(other instanceof ChurchBuilding church) || ChurchModels.isHideout(church.getBlueprintPath())) continue;
                 if (church.getBuildingLevel() >= 4 || church.getBuildingLevel() == 3 && church.isPendingConstruction())
                     return "lotmcraft.church.rule.one_cathedral";
             }

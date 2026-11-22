@@ -32,6 +32,8 @@ public class ChurchScreen extends Screen {
     public ChurchScreen(ChurchBuilding.View view) {
         super(Component.translatable("lotmcraft.church.title"));
         this.view = view;
+        // o esconderijo só serve à Seita e à Ordem; a igreja, só à Igreja
+        if (ChurchModels.isHideout(view.getStructurePath())) kindChoice = 1;
     }
 
     private static ResourceLocation panel(String pathway) {
@@ -112,7 +114,10 @@ public class ChurchScreen extends Screen {
                 addRenderableWidget(nameBox);
             }
             if (!consecrated()) {
-                addRenderableWidget(Button.builder(kindLabel(), b -> { kindChoice = (kindChoice + 1) % 3; b.setMessage(kindLabel()); })
+                addRenderableWidget(Button.builder(kindLabel(), b -> {
+                            kindChoice = ChurchModels.isHideout(view.getStructurePath()) ? (kindChoice == 1 ? 2 : 1) : 0;
+                            b.setMessage(kindLabel());
+                        })
                         .bounds(left + 30, top + 170, W - 60, 16).build());
                 addRenderableWidget(Button.builder(Component.translatable("lotmcraft.church.consecrate"), b -> send("consecrate"))
                         .bounds(left + 30, top + 189, W - 60, 18).build());

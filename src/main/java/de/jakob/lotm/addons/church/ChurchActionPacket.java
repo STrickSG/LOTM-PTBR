@@ -59,6 +59,16 @@ public record ChurchActionPacket(BlockPos temple, String action, String name, St
                     say(player, Component.translatable("lotmcraft.church.wrong_model", Component.translatable("lotm.pathway." + model)), 0xFF7A7A);
                     return;
                 }
+                // a Igreja se reúne em igrejas; a Seita e a Ordem, em esconderijos
+                {
+                    Churches.Info existing = churches.info(player.getUUID());
+                    boolean secret = existing != null ? existing.isSect() : packet.kind().startsWith(Churches.SECT);
+                    boolean hideout = ChurchModels.isHideout(temple.getBlueprintPath());
+                    if (secret != hideout) {
+                        say(player, Component.translatable(hideout ? "lotmcraft.church.model.hideout_secret_only" : "lotmcraft.church.model.church_open_only"), 0xFF7A7A);
+                        return;
+                    }
+                }
                 if (temple.getGod() != null && !temple.getGod().equals(player.getUUID())) {
                     say(player, Component.translatable("lotmcraft.church.already_consecrated"), 0xFF7A7A);
                     return;
