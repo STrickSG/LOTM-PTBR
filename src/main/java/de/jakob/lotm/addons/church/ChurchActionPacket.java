@@ -70,6 +70,7 @@ public record ChurchActionPacket(BlockPos temple, String action, String name, St
                     }
                     String kind = Churches.SECT.equals(packet.kind()) ? Churches.SECT : Churches.CHURCH;
                     churches.found(player, name, kind, BeyonderData.getPathway(player));
+                    Believers.refreshTitles(player.server, player.getUUID(), Churches.godName(player.server, player.getUUID()));
                 }
                 temple.setGod(player.getUUID());
                 player.serverLevel().sendParticles(ParticleTypes.END_ROD, packet.temple().getX() + 0.5, packet.temple().getY() + 1.2, packet.temple().getZ() + 0.5, 40, 0.5, 0.8, 0.5, 0.05);
@@ -79,6 +80,7 @@ public record ChurchActionPacket(BlockPos temple, String action, String name, St
             case "rename" -> {
                 if (!player.getUUID().equals(temple.getGod()) || name.isEmpty()) return;
                 churches.rename(player.getUUID(), name);
+                Believers.refreshTitles(player.server, player.getUUID(), Churches.godName(player.server, player.getUUID()));
                 Churches.temples(player.server, player.getUUID()).forEach(ChurchBuilding::markDirty);
                 say(player, Component.translatable("lotmcraft.church.renamed", name), 0xFFE29A);
             }
@@ -134,6 +136,8 @@ public record ChurchActionPacket(BlockPos temple, String action, String name, St
         var colonies = new java.util.ArrayList<String>();
         int total = 0, floor = 0;
         boolean preached = false;
+        // a Seita é escondida: só o próprio Deus vê quem são os membros
+        if (god != null && !player.getUUID().equals(god) && Believers.isSecret(player.server, god)) god = null;
         if (god != null) {
             var all = Believers.members(player.server, god);
             total = all.size();

@@ -81,6 +81,12 @@ public final class VisionInfo {
         // a espiritualidade só a Visão Espiritual enxerga
         if (kind == Kind.SPIRIT && viewerSeq <= 5 && beyonder)
             lines.add(new Line(t("spirituality", "Spi"), stronger ? UNKNOWN : String.valueOf(Math.round(ClientBeyonderCache.getSpirituality(id))), Icon.NONE));
+        // a Seita escondida: a visão enxerga a marca de quem pertence a ela
+        if (viewerSeq <= 7 && VisionTargetPacket.clientEntity == target.getId() && !VisionTargetPacket.clientSect.isEmpty()) {
+            String sect = VisionTargetPacket.clientSect;
+            if (sect.length() > 16) sect = sect.substring(0, 15) + "…";
+            lines.add(new Line(t("sect", "Sect"), sect, Icon.NONE));
+        }
         if (viewerSeq <= 7) footerColor = footer(footer, target, beyonder, stronger, targetSeq, viewerSeq <= 5, viewerSeq <= 3);
         return new Content(lines, footer, footerColor);
     }

@@ -135,7 +135,7 @@ public final class Believers {
         String old = citizen.getName();
         data.names.put(id, old);
         data.setDirty();
-        retitle(data, citizen, godName);
+        retitle(server, data, god, citizen, godName);
         return true;
     }
 
@@ -170,12 +170,33 @@ public final class Believers {
         if (ROLE_BELIEVER.equals(role)) data.roles.remove(citizen.getUUID());
         else data.roles.put(citizen.getUUID(), role);
         data.setDirty();
-        retitle(data, citizen, godName);
+        retitle(server, data, god, citizen, godName);
     }
 
-    /** O título depois do nome: "Fiel de X", ou o cargo ("Bispo de X") */
-    private static void retitle(Data data, ICitizenData citizen, String godName) {
+    /** Refaz o nome de todos os fiéis de um Deus (ao fundar a Igreja ou Seita, ou ao trocar o nome) */
+    public static void refreshTitles(MinecraftServer server, UUID god, String godName) {
+        Data data = data(server);
+        Set<UUID> mine = data.of(god);
+        if (mine.isEmpty()) return;
+        for (var colony : com.minecolonies.api.colony.IColonyManager.getInstance().getAllColonies())
+            for (ICitizenData citizen : colony.getCitizenManager().getCitizens())
+                if (mine.contains(citizen.getUUID())) retitle(server, data, god, citizen, godName);
+    }
+
+    /** A Seita é escondida: os membros não levam título no nome */
+    public static boolean isSecret(MinecraftServer server, UUID god) {
+        var info = de.jakob.lotm.addons.church.Churches.get(server).info(god);
+        return info != null && de.jakob.lotm.addons.church.Churches.SECT.equals(info.kind());
+    }
+
+    /** O título depois do nome: "Fiel de X", ou o cargo ("Bispo de X"); na Seita, o nome fica como era */
+    private static void retitle(MinecraftServer server, Data data, UUID god, ICitizenData citizen, String godName) {
         String old = data.names.getOrDefault(citizen.getUUID(), citizen.getName());
+        if (isSecret(server, god)) {
+            citizen.setName(old);
+            citizen.getEntity().ifPresent(entity -> entity.setCustomName(Component.literal(old)));
+            return;
+        }
         String role = data.roles.getOrDefault(citizen.getUUID(), ROLE_BELIEVER);
         String title = ROLE_BELIEVER.equals(role)
                 ? Component.translatable("lotmcraft.believers.title", godName).getString()
