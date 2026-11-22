@@ -46,8 +46,21 @@ public final class ChurchPrayers {
     private ChurchPrayers() {}
 
     public static final String HEAL = "heal", FOOD = "food", PROTECT = "protect", POWER = "power";
-    /** O sacrifício que acompanha o pedido de uma Seita: "pedido:animal" ou "pedido:human" */
-    public static final String ANIMAL = "animal", HUMAN = "human";
+    /** O sacrifício que acompanha o pedido de uma Seita: "pedido:animal", "pedido:human" ou "pedido:beyonderN" (N = Sequência) */
+    public static final String ANIMAL = "animal", HUMAN = "human", BEYONDER = "beyonder";
+
+    /** "animal", "human" ou "beyonder" (sem a Sequência) */
+    public static String offeringType(String petition) {
+        String o = offeringOf(petition);
+        return o.startsWith(BEYONDER) ? BEYONDER : o;
+    }
+
+    /** A Sequência do Beyonder sacrificado (10 se não foi um Beyonder) */
+    public static int sacrificedSequence(String petition) {
+        String o = offeringOf(petition);
+        if (!o.startsWith(BEYONDER)) return 10;
+        try { return Integer.parseInt(o.substring(BEYONDER.length())); } catch (NumberFormatException e) { return 10; }
+    }
 
     public static String kindOf(String petition) {
         int i = petition.indexOf(':');
@@ -68,8 +81,8 @@ public final class ChurchPrayers {
             case POWER -> 300;
             default -> 0;
         };
-        return switch (offeringOf(petition)) {
-            case HUMAN -> 0;
+        return switch (offeringType(petition)) {
+            case HUMAN, BEYONDER -> 0;
             case ANIMAL -> base / 2;
             default -> base;
         };
@@ -78,7 +91,7 @@ public final class ChurchPrayers {
     /** "cura", ou "cura (sacrificaram um animal)" */
     public static Component describe(String petition) {
         Component what = Component.translatable("lotmcraft.church.petition." + kindOf(petition));
-        String offering = offeringOf(petition);
+        String offering = offeringType(petition);
         return offering.isEmpty() ? what : Component.translatable("lotmcraft.sect.offering." + offering, what);
     }
 
@@ -232,6 +245,21 @@ public final class ChurchPrayers {
             case POWER -> {
                 // o poder pedido: os membros adiantam a digestão
                 for (UUID member : Believers.members(server, god.getUUID())) ColonistBeyonders.hasten(server, member, 2);
+                // com um Beyonder sacrificado, a bênção vem como poção no altar: o Deus não aparece, e o membro a bebe
+                if (BEYONDER.equals(offeringType(prayer.petition()))) {
+                    Churches.Info info = Churches.get(server).info(god.getUUID());
+                    int seq = ColonistBeyonders.bless(server, citizen, info == null ? BeyonderData.getPathway(god) : info.pathway(),
+                            sacrificedSequence(prayer.petition()), god.getUUID());
+                    if (seq > 0) {
+                        if (entity != null && entity.level() instanceof ServerLevel level) {
+                            level.sendParticles(ParticleTypes.WITCH, entity.getX(), entity.getY(1.0), entity.getZ(), 30, 0.4, 0.6, 0.4, 0.1);
+                            level.playSound(null, entity.blockPosition(), SoundEvents.GENERIC_DRINK, SoundSource.NEUTRAL, 1f, 0.8f);
+                        }
+                        god.sendSystemMessage(Component.translatable("lotmcraft.sect.blessing.potion", name, seq).withColor(0xD8B4FF));
+                    } else {
+                        god.sendSystemMessage(Component.translatable("lotmcraft.sect.blessing.too_weak", name).withColor(0xB0A0C0));
+                    }
+                }
             }
             case PROTECT -> {
                 for (ICitizenData other : colony.getCitizenManager().getCitizens()) other.getEntity().ifPresent(e -> {

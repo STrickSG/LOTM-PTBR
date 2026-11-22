@@ -203,6 +203,22 @@ public final class ColonistBeyonders extends SavedData {
         data.setDirty();
     }
 
+    /**
+     * A bênção da Seita: uma poção aparece no altar e o membro a bebe, subindo uma Sequência (ou virando Beyonder de
+     * Sequência 9 do caminho dado). A poção não pode ser mais forte que o Beyonder sacrificado (maxPotency), nem passar da
+     * Sequência 5 sem a Catedral Sagrada. Devolve a nova Sequência, ou -1 se não pôde.
+     */
+    public static int bless(MinecraftServer server, ICitizenData citizen, String pathway, int maxPotency, UUID god) {
+        Info current = info(server, citizen.getUUID());
+        String path = current == null ? pathway : current.pathway();
+        int next = current == null ? 9 : current.sequence() - 1;
+        if (next < HIGHEST || next < maxPotency) return -1;
+        if (next <= 4 && !ChurchBuilding.hasSacredCathedral(citizen.getColony(), god)) return -1;
+        LivingEntity entity = citizen.getEntity().orElse(null);
+        advance(server, citizen, entity, path, next);
+        return next;
+    }
+
     private static void advance(MinecraftServer server, ICitizenData citizen, LivingEntity entity, String pathway, int sequence) {
         ColonistBeyonders data = get(server);
         Info info = new Info(pathway, sequence, server.overworld().getDayTime() / 24000L);

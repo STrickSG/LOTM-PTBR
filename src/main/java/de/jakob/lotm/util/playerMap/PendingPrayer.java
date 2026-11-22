@@ -28,7 +28,7 @@ public record PendingPrayer(UUID senderUUID, String senderName, String senderPat
                 buf.readDouble(),
                 buf.readDouble(),
                 buf.readDouble(),
-                buf.readUtf(16)
+                buf.readUtf(32)
         );
     }
 
@@ -40,6 +40,6 @@ public record PendingPrayer(UUID senderUUID, String senderName, String senderPat
         buf.writeDouble(x);
         buf.writeDouble(y);
         buf.writeDouble(z);
-        buf.writeUtf(petition, 16);
+        buf.writeUtf(petition, 32);
     }
 }

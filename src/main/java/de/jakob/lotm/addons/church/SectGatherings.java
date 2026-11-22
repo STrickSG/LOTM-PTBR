@@ -171,10 +171,13 @@ public final class SectGatherings {
                     }
             }
             if (victim != null) {
-                offering = ChurchPrayers.HUMAN;
+                // um Beyonder sacrificado vale mais: o pedido de poder pode virar uma poção
+                ColonistBeyonders.Info b = ColonistBeyonders.info(server, g.victim);
+                int seq = b != null ? b.sequence() : de.jakob.lotm.util.BeyonderData.isBeyonder(victim) ? de.jakob.lotm.util.BeyonderData.getSequence(victim) : 10;
+                offering = seq <= 9 ? ChurchPrayers.BEYONDER + seq : ChurchPrayers.HUMAN;
                 ServerPlayer god = server.getPlayerList().getPlayer(g.god);
                 SectRites.humanSacrifice(server, g.god, god, colony, victim);
-                kill(victim, level);
+                vanish(colony, g.victim, victim, level);
             } else {
                 // sem pessoa (ou pedido comum): um animal de perto, ou uma oferenda
                 List<Animal> animals = level.getEntitiesOfClass(Animal.class, new AABB(g.temple).inflate(24));
@@ -217,13 +220,17 @@ public final class SectGatherings {
         return e.blockPosition().closerThan(temple, 24);
     }
 
-    /** Os colonos não podem ser feridos à toa pelo MineColonies: o sacrifício os mata diretamente */
-    private static void kill(LivingEntity victim, ServerLevel level) {
+    /**
+     * O sacrificado some sem deixar rastro: sem aviso de morte, sem sepultura e sem luto (a colônia não pode sair atrás da
+     * Seita). O MineColonies só fica sabendo que o colono não está mais lá.
+     */
+    private static void vanish(IColony colony, UUID id, LivingEntity victim, ServerLevel level) {
         level.sendParticles(ParticleTypes.SOUL_FIRE_FLAME, victim.getX(), victim.getY(0.5), victim.getZ(), 40, 0.4, 0.6, 0.4, 0.04);
         level.sendParticles(ParticleTypes.LARGE_SMOKE, victim.getX(), victim.getY(0.5), victim.getZ(), 20, 0.3, 0.4, 0.3, 0.02);
-        var source = victim.damageSources().magic();
-        victim.setHealth(0f);
-        victim.die(source);
+        ICitizenData data = null;
+        for (ICitizenData c : colony.getCitizenManager().getCitizens()) if (c.getUUID().equals(id)) data = c;
+        if (data != null) colony.getCitizenManager().removeCivilian(data);
+        if (!victim.isRemoved()) victim.discard();
     }
 
     private static IColony find(int id) {
