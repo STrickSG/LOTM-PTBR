@@ -72,7 +72,8 @@ public final class Believers {
      */
     public static float anchorFloor(net.minecraft.world.entity.LivingEntity entity) {
         if (!(entity instanceof ServerPlayer player) || !BeyonderData.isBeyonder(player) || BeyonderData.getSequence(player) > MAX_SEQUENCE) return 0f;
-        return ANCHOR_FLOOR * Math.min(count(player), NEEDED) / NEEDED;
+        // a missa do dia reforça as âncoras
+        return ANCHOR_FLOOR * Math.min(count(player), NEEDED) / NEEDED + de.jakob.lotm.addons.church.ChurchPrayers.massBonus(player);
     }
 
     public static boolean worshipsSelf(Player player) {
@@ -236,6 +237,11 @@ public final class Believers {
             citizen.getEntity().ifPresent(entity -> entity.setCustomName(Component.literal(titled)));
         }
         data.setDirty();
+    }
+
+    /** O fiel perde a fé (sem ficar magoado: pode voltar a crer depois) */
+    public static void leave(MinecraftServer server, ICitizenData citizen) {
+        forget(data(server), citizen, citizen.getEntity().orElse(null));
     }
 
     private static void forget(Data data, ICitizenData citizen, Entity colonist) {

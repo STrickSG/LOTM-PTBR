@@ -107,6 +107,7 @@ public final class ChurchConversion {
                 + 0.15 * members / total
                 + 0.03 * Math.min(5, clergy)
                 + 0.02 * temple.getBuildingLevel();
+        chance *= ChurchPrayers.conversionMultiplier(colony);
         return sect ? chance * 0.5 : chance;
     }
 }

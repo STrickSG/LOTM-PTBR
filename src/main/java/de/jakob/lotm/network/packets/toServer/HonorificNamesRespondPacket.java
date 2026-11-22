@@ -19,7 +19,12 @@ import de.jakob.lotm.util.LotmText;
  * @param senderUUID UUID of the player who sent the prayer (the one who typed the honorific name in chat)
  * @param teleport   true → teleport the sender to the target; false → queue a message transfer
  */
-public record HonorificNamesRespondPacket(UUID senderUUID, boolean teleport) implements CustomPacketPayload {
+public record HonorificNamesRespondPacket(UUID senderUUID, int action) implements CustomPacketPayload {
+    public static final int MESSAGE = 0, TELEPORT = 1, GRANT = 2, IGNORE = 3;
+
+    public boolean teleport() {
+        return action == TELEPORT;
+    }
 
     public static final CustomPacketPayload.Type<HonorificNamesRespondPacket> TYPE =
             new CustomPacketPayload.Type<>(
@@ -29,9 +34,9 @@ public record HonorificNamesRespondPacket(UUID senderUUID, boolean teleport) imp
             StreamCodec.of(
                     (buf, pkt) -> {
                         buf.writeUUID(pkt.senderUUID());
-                        buf.writeBoolean(pkt.teleport());
+                        buf.writeVarInt(pkt.action());
                     },
-                    buf -> new HonorificNamesRespondPacket(buf.readUUID(), buf.readBoolean())
+                    buf -> new HonorificNamesRespondPacket(buf.readUUID(), buf.readVarInt())
             );
 
     @Override
@@ -50,6 +55,15 @@ public record HonorificNamesRespondPacket(UUID senderUUID, boolean teleport) imp
             // Validate that this prayer is still pending
             Pair<UUID, UUID> key = new Pair<>(targetUUID, senderUUID);
             if (!HonorificNamesEventHandler.answerState.contains(key)) {
+                return;
+            }
+
+            // o pedido de um fiel da Igreja: atender ou ignorar
+            var petition = HonorificNamesEventHandler.getPendingPrayers(targetUUID).stream()
+                    .filter(p -> p.senderUUID().equals(senderUUID) && p.isPetition()).findFirst().orElse(null);
+            if (petition != null) {
+                if (pkt.action() == GRANT || pkt.action() == IGNORE)
+                    de.jakob.lotm.addons.church.ChurchPrayers.answer(target, petition, pkt.action() == GRANT);
                 return;
             }
 

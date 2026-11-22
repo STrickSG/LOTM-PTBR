@@ -129,15 +129,29 @@ public class HonorificNamesScreen extends AbstractContainerScreen<HonorificNames
             int entryY = listTop + i * PRAYER_ENTRY_H;
             int btnIdx = idx;
 
+            if (prayers.get(idx).isPetition()) {
+                // o pedido de um fiel: atender (custa espiritualidade) ou ignorar
+                int cost = de.jakob.lotm.addons.church.ChurchPrayers.cost(prayers.get(idx).petition());
+                this.addRenderableWidget(new MysticButton(
+                        leftPos + PADDING + 8, entryY + 22, 108, 16,
+                        Component.translatable("lotmcraft.church.petition.grant", cost),
+                        btn -> respondToPrayer(btnIdx, HonorificNamesRespondPacket.GRANT)));
+                this.addRenderableWidget(new MysticButton(
+                        leftPos + PADDING + 8 + 112, entryY + 22, 108, 16,
+                        Component.translatable("lotmcraft.church.petition.ignore"),
+                        btn -> respondToPrayer(btnIdx, HonorificNamesRespondPacket.IGNORE)));
+                continue;
+            }
+
             this.addRenderableWidget(new MysticButton(
                     leftPos + PADDING + 8, entryY + 22, 108, 16,
                     Component.translatableWithFallback("lotmcraft.text.send_message", "Send Message"),
-                    btn -> respondToPrayer(btnIdx, false)));
+                    btn -> respondToPrayer(btnIdx, HonorificNamesRespondPacket.MESSAGE)));
 
             this.addRenderableWidget(new MysticButton(
                     leftPos + PADDING + 8 + 112, entryY + 22, 108, 16,
                     Component.translatableWithFallback("lotmcraft.text.teleport", "Teleport"),
-                    btn -> respondToPrayer(btnIdx, true)));
+                    btn -> respondToPrayer(btnIdx, HonorificNamesRespondPacket.TELEPORT)));
         }
 
         if (prayers.size() > visibleCount) {
@@ -166,11 +180,11 @@ public class HonorificNamesScreen extends AbstractContainerScreen<HonorificNames
         }
     }
 
-    private void respondToPrayer(int index, boolean teleport) {
+    private void respondToPrayer(int index, int action) {
         List<PendingPrayer> prayers = menu.getPendingPrayers();
         if (index >= 0 && index < prayers.size()) {
             PendingPrayer prayer = prayers.get(index);
-            PacketHandler.sendToServer(new HonorificNamesRespondPacket(prayer.senderUUID(), teleport));
+            PacketHandler.sendToServer(new HonorificNamesRespondPacket(prayer.senderUUID(), action));
             prayers.remove(index);
             prayerScrollOffset = Math.min(prayerScrollOffset, Math.max(0, prayers.size() - visibleCount()));
             rebuildButtons();
@@ -362,6 +376,14 @@ public class HonorificNamesScreen extends AbstractContainerScreen<HonorificNames
             PendingPrayer prayer = prayers.get(idx);
             int entryRelY = listTop + i * PRAYER_ENTRY_H;
 
+            if (prayer.isPetition()) {
+                // o que o fiel pede, no lugar do caminho e da Sequência
+                String petitionLine = font.plainSubstrByWidth(Component.translatable("lotmcraft.church.petition.card", prayer.senderName(),
+                        Component.translatable("lotmcraft.church.petition." + prayer.petition())).getString(), CARD_W - 16);
+                gfx.drawString(font, petitionLine, PADDING + 8, entryRelY + 2, COL_GOLD, true);
+                gfx.drawString(font, String.format("@ %.0f, %.0f, %.0f", prayer.x(), prayer.y(), prayer.z()), PADDING + 8, entryRelY + 12, 0xFF9090BC, false);
+                continue;
+            }
             String nameLine = LotmText.f("lotmcraft.text.seq", "%s  [%s / Seq %s]", prayer.senderName(), prayer.senderPathway(), prayer.senderSequence());
             nameLine = font.plainSubstrByWidth(nameLine, CARD_W - 16);
             gfx.drawString(font, nameLine, PADDING + 8, entryRelY + 2, COL_GOLD, true);

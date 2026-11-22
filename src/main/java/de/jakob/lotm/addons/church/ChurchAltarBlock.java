@@ -39,6 +39,11 @@ public class ChurchAltarBlock extends Block {
             player.displayClientMessage(Component.translatable("lotmcraft.church.altar.no_temple").withColor(0xFFB070), true);
             return InteractionResult.CONSUME;
         }
+        // agachado e com a mão vazia: reza ao Deus do templo
+        if (player.isShiftKeyDown() && player.getMainHandItem().isEmpty() && !player.getUUID().equals(temple.getGod())) {
+            ChurchPrayers.prayAtAltar((ServerPlayer) player, temple);
+            return InteractionResult.CONSUME;
+        }
         PacketHandler.sendToPlayer((ServerPlayer) player, new OpenChurchPacket(temple.getPosition()));
         return InteractionResult.CONSUME;
     }
