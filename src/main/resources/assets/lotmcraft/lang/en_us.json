@@ -5923,7 +5923,7 @@
   "lotmcraft.church.petition.no_spirituality": "Not enough spirituality: granting costs %s.",
   "lotmcraft.church.petition.granted": "You granted %s: %s. Faith grows in the colony.",
   "lotmcraft.church.petition.lost_faith": "%s had their prayers ignored too many times and lost their faith.",
-  "lotmcraft.church.mass.held": "Morning mass: %s believers prayed in %s temple(s). Anchors +%s%% until tomorrow.",
+  "lotmcraft.church.mass.held": "6 PM mass: %s believers prayed in %s temple(s). Anchors +%s%% until tomorrow.",
   "lotmcraft.church.altar.no_god": "This temple has not been consecrated to a god yet.",
   "lotmcraft.church.altar.prayed": "Your prayer rose to %s.",
   "lotmcraft.church.altar.prayed_recently": "You have just prayed. Wait a little.",

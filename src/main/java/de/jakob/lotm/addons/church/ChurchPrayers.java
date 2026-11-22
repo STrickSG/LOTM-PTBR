@@ -36,8 +36,8 @@ import java.util.UUID;
  *   <li>Pedidos: um fiel ferido, com fome ou com a colônia atacada reza pedindo ajuda ao seu Deus. O pedido chega às
  *   Preces Pendentes (menu de Nomes Honoríficos). Atender custa espiritualidade e faz a fé crescer na colônia;
  *   ignorar três vezes seguidas faz o fiel perder a fé.</li>
- *   <li>Missa: toda manhã, os fiéis que moram no templo ou estão perto dele rezam juntos; reforça as âncoras do Deus até
- *   a missa do dia seguinte.</li>
+ *   <li>Missa: às 18h, os fiéis que foram ao templo (ou moram nele) rezam juntos; reforça as âncoras do Deus até
+ *   a missa do dia seguinte. A ida e a volta dos colonos ficam em {@link ChurchMass}.</li>
  *   <li>Prece no altar: um jogador agachado clica no altar com a mão vazia e reza ao Deus do templo.</li>
  * </ul>
  */
@@ -56,8 +56,8 @@ public final class ChurchPrayers {
         };
     }
 
-    /** A hora da missa: 9 da manhã (o dia começa às 6) */
-    public static final long MASS_TIME = 3000;
+    /** A hora da missa: 18h (o dia começa às 6); os fiéis vão ao templo desde as 17h (ChurchMass) */
+    public static final long MASS_TIME = ChurchMass.MASS;
     private static final int CHECK_EVERY = 1200, PER_GOD = 8, IGNORES_TO_LEAVE = 3;
     private static final long PETITION_COOLDOWN = 24000, PETITION_EXPIRES = 24000;
 
@@ -99,7 +99,7 @@ public final class ChurchPrayers {
         MinecraftServer server = event.getServer();
         long time = server.overworld().getDayTime();
         long day = time / 24000L;
-        if (time % 24000L >= MASS_TIME && time % 24000L < MASS_TIME + 2000 && day != lastMassDay) {
+        if (time % 24000L >= MASS_TIME && time % 24000L < ChurchMass.END && day != lastMassDay) {
             lastMassDay = day;
             holdMasses(server, day);
         }
@@ -242,9 +242,7 @@ public final class ChurchPrayers {
                 for (ICitizenData citizen : colony.getCitizenManager().getCitizens()) {
                     if (!god.equals(Believers.godOfCitizen(server, citizen.getUUID()))) continue;
                     LivingEntity entity = citizen.getEntity().orElse(null);
-                    boolean lives = citizen.getHomeBuilding() == temple;
-                    boolean near = entity != null && entity.blockPosition().closerThan(at, 48);
-                    if (!lives && !near) continue;
+                    if (!ChurchMass.isAttending(citizen, temple)) continue;
                     attendees++;
                     if (entity != null && entity.level() instanceof ServerLevel level) {
                         level.sendParticles(ParticleTypes.ENCHANT, entity.getX(), entity.getY(1.2), entity.getZ(), 20, 0.3, 0.4, 0.3, 0.6);

@@ -5722,7 +5722,7 @@
   "lotmcraft.church.petition.no_spirituality": "Espiritualidade insuficiente: atender custa %s.",
   "lotmcraft.church.petition.granted": "Você atendeu %s: %s. A fé cresce na colônia.",
   "lotmcraft.church.petition.lost_faith": "%s teve as preces ignoradas vezes demais e perdeu a fé.",
-  "lotmcraft.church.mass.held": "Missa da manhã: %s fiéis rezaram em %s templo(s). Âncoras +%s%% até amanhã.",
+  "lotmcraft.church.mass.held": "Missa das 18h: %s fiéis rezaram em %s templo(s). Âncoras +%s%% até amanhã.",
   "lotmcraft.church.altar.no_god": "Este templo ainda não foi consagrado a um Deus.",
   "lotmcraft.church.altar.prayed": "Sua prece subiu a %s.",
   "lotmcraft.church.altar.prayed_recently": "Você acabou de rezar. Espere um pouco.",
