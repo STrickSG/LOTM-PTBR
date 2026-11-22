@@ -36,6 +36,50 @@ public class ChurchBuilding extends AbstractBuilding {
         return 5;
     }
 
+    /**
+     * As regras das Catedrais: uma Catedral (nível 4) por colônia; a Catedral Sagrada (nível 5) é uma só por Deus,
+     * e só na colônia do próprio Deus. Recusa a melhoria com a mensagem quando a regra não deixa.
+     */
+    @Override
+    public void requestUpgrade(net.minecraft.world.entity.player.Player player, BlockPos builder) {
+        String refusal = upgradeRefusal(getBuildingLevel() + 1);
+        if (refusal != null) {
+            if (player != null) player.sendSystemMessage(net.minecraft.network.chat.Component.translatable(refusal).withColor(0xFF7A7A));
+            return;
+        }
+        super.requestUpgrade(player, builder);
+    }
+
+    /** A chave da mensagem de recusa, ou null se pode melhorar para este nível */
+    public String upgradeRefusal(int next) {
+        if (next == 4) {
+            for (var other : getColony().getServerBuildingManager().getBuildings().values()) {
+                if (other == this || !(other instanceof ChurchBuilding church)) continue;
+                if (church.getBuildingLevel() >= 4 || church.getBuildingLevel() == 3 && church.isPendingConstruction())
+                    return "lotmcraft.church.rule.one_cathedral";
+            }
+        }
+        if (next == 5) {
+            if (god == null) return "lotmcraft.church.rule.sacred_needs_god";
+            if (!god.equals(getColony().getPermissions().getOwner())) return "lotmcraft.church.rule.sacred_own_colony";
+            MinecraftServer server = getColony().getWorld().getServer();
+            if (server != null) for (ChurchBuilding church : Churches.temples(server, god)) {
+                if (church == this) continue;
+                if (church.getBuildingLevel() >= 5 || church.getBuildingLevel() == 4 && church.isPendingConstruction())
+                    return "lotmcraft.church.rule.one_sacred";
+            }
+        }
+        return null;
+    }
+
+    /** O Deus tem uma Catedral Sagrada pronta nesta colônia (onde ficam os Santos, os Anjos e o Papa) */
+    public static boolean hasSacredCathedral(IColony colony, UUID god) {
+        if (colony == null || god == null) return false;
+        for (var b : colony.getServerBuildingManager().getBuildings().values())
+            if (b instanceof ChurchBuilding church && god.equals(church.getGod()) && church.getBuildingLevel() >= 5) return true;
+        return false;
+    }
+
     public UUID getGod() {
         return god;
     }

@@ -160,6 +160,11 @@ public final class ColonistBeyonders extends SavedData {
             say(player, "lotmcraft.colonist_beyonder.too_high", 0xFF7A7A);
             return;
         }
+        // Santos (4 e 3) e Anjos (2 e 1) só onde o Deus tem a Catedral Sagrada
+        if (sequence <= 4 && !ChurchBuilding.hasSacredCathedral(citizen.getColony(), player.getUUID())) {
+            say(player, "lotmcraft.colonist_beyonder.needs_sacred", 0xFF7A7A);
+            return;
+        }
         ColonistBeyonders data = get(server);
         Info current = data.colonists.get(id);
         long day = server.overworld().getDayTime() / 24000L;

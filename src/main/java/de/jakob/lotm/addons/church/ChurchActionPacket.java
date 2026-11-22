@@ -171,6 +171,12 @@ public record ChurchActionPacket(BlockPos temple, String action, String name, St
         try { id = UUID.fromString(citizenId); } catch (IllegalArgumentException e) { return; }
         var citizen = colony.getCitizenManager().getCitizens().stream().filter(c -> c.getUUID().equals(id)).findFirst().orElse(null);
         if (citizen == null || !god.equals(Believers.godOfCitizen(player.server, id))) return;
+        // o Papa (ou o líder da Seita) fica na Catedral Sagrada
+        if (("pope".equals(role) || "leader".equals(role)) && temple.getBuildingLevel() < 5) {
+            say(player, Component.translatable("lotmcraft.church.role.needs_sacred", Component.translatable("lotmcraft.church.role." + role)), 0xFF7A7A);
+            sendMembers(player, colony, temple);
+            return;
+        }
         int needed = ColonistBeyonders.requiredSequence(role);
         if (needed <= 9) {
             ColonistBeyonders.Info b = ColonistBeyonders.info(player.server, id);
