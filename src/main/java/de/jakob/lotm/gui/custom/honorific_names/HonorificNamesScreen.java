@@ -379,9 +379,13 @@ public class HonorificNamesScreen extends AbstractContainerScreen<HonorificNames
             if (prayer.isPetition()) {
                 // o que o fiel pede, no lugar do caminho e da Sequência
                 String petitionLine = font.plainSubstrByWidth(Component.translatable("lotmcraft.church.petition.card", prayer.senderName(),
-                        de.jakob.lotm.addons.church.ChurchPrayers.describe(prayer.petition())).getString(), CARD_W - 16);
+                        Component.translatable("lotmcraft.church.petition." + de.jakob.lotm.addons.church.ChurchPrayers.kindOf(prayer.petition()))).getString(), CARD_W - 16);
                 gfx.drawString(font, petitionLine, PADDING + 8, entryRelY + 2, COL_GOLD, true);
-                gfx.drawString(font, String.format("@ %.0f, %.0f, %.0f", prayer.x(), prayer.y(), prayer.z()), PADDING + 8, entryRelY + 12, 0xFF9090BC, false);
+                // a segunda linha: o sacrifício que acompanha o pedido da Seita, ou onde o fiel está
+                String offering = de.jakob.lotm.addons.church.ChurchPrayers.offeringOf(prayer.petition());
+                String second = offering.isEmpty() ? String.format("@ %.0f, %.0f, %.0f", prayer.x(), prayer.y(), prayer.z())
+                        : Component.translatable("lotmcraft.sect.offering_line." + offering).getString();
+                gfx.drawString(font, font.plainSubstrByWidth(second, CARD_W - 16), PADDING + 8, entryRelY + 12, offering.isEmpty() ? 0xFF9090BC : 0xFFD0607A, false);
                 continue;
             }
             String nameLine = LotmText.f("lotmcraft.text.seq", "%s  [%s / Seq %s]", prayer.senderName(), prayer.senderPathway(), prayer.senderSequence());

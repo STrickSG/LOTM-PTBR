@@ -150,7 +150,7 @@ public final class SectGatherings {
         for (ICitizenData c : colony.getCitizenManager().getCitizens()) {
             if (!g.members.contains(c.getUUID())) continue;
             LivingEntity e = c.getEntity().orElse(null);
-            if (e != null && e.blockPosition().closerThan(g.temple, 24)) present.add(c);
+            if (arrived(e, g.temple)) present.add(c);
         }
         if (present.isEmpty()) return;
         for (ICitizenData c : present) c.getEntity().ifPresent(e ->
@@ -164,7 +164,7 @@ public final class SectGatherings {
                 for (ICitizenData c : colony.getCitizenManager().getCitizens())
                     if (c.getUUID().equals(g.victim)) {
                         LivingEntity e = c.getEntity().orElse(null);
-                        if (e != null && e.blockPosition().closerThan(g.temple, 24)) {
+                        if (arrived(e, g.temple)) {
                             victim = e;
                             offered = Believers.originalName(server, c);
                         }
@@ -208,6 +208,13 @@ public final class SectGatherings {
             god.sendSystemMessage(Component.translatable(key, present.size(), info.name(), offered,
                     ChurchPrayers.describe(petition), ChurchPrayers.cost(petition)).withColor(info.isDark() ? 0xC04070 : 0xB9A0FF));
         }
+    }
+
+    /** Chegou à reunião: sentado nos bancos (ou a caminho deles) ou perto do altar */
+    private static boolean arrived(LivingEntity e, BlockPos temple) {
+        if (e == null) return false;
+        if (e instanceof EntityCitizen c && c.getCitizenAI().getState() == ChurchMass.MassState.MASS) return true;
+        return e.blockPosition().closerThan(temple, 24);
     }
 
     /** Os colonos não podem ser feridos à toa pelo MineColonies: o sacrifício os mata diretamente */

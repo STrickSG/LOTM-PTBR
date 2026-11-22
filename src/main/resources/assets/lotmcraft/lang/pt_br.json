@@ -5742,6 +5742,8 @@
   "lotmcraft.sect.gathering.order": "Em segredo, %s membros de %s se reuniram no esconderijo%s. Pedem %s (custa %s de espiritualidade): veja as Preces Pendentes.",
   "lotmcraft.sect.hint.dark": "A Seita não prega nem tem missa: algumas noites, membros se reúnem em segredo e fazem sacrifícios com os seus pedidos.",
   "lotmcraft.sect.hint.order": "A Ordem não prega nem tem missa: algumas noites, membros se reúnem em segredo e fazem os seus pedidos.",
+  "lotmcraft.sect.offering_line.animal": "Sacrificaram um animal",
+  "lotmcraft.sect.offering_line.human": "Sacrificaram uma pessoa",
   "lotmcraft.church.home.moved": "%s agora mora no templo.",
   "lotmcraft.church.home.left": "%s não mora mais no templo.",
   "lotmcraft.church.home.full": "Não há cama livre no templo (%s camas).",

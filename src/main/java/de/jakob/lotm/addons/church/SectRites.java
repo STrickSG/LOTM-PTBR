@@ -2,7 +2,6 @@ package de.jakob.lotm.addons.church;
 
 import com.minecolonies.api.colony.ICitizenData;
 import com.minecolonies.api.colony.IColony;
-import de.jakob.lotm.LOTMCraft;
 import de.jakob.lotm.addons.colonies.Colonists;
 import de.jakob.lotm.addons.rituals.Believers;
 import de.jakob.lotm.util.BeyonderData;
@@ -14,8 +13,6 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.LivingEntity;
-import net.neoforged.bus.api.SubscribeEvent;
-import net.neoforged.fml.common.EventBusSubscriber;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -33,7 +30,6 @@ import java.util.UUID;
  *   organização), e os membros escondidos corrompem fiéis infelizes da Igreja.</li>
  * </ul>
  */
-@EventBusSubscriber(modid = LOTMCraft.MOD_ID)
 public final class SectRites {
     private SectRites() {}
 

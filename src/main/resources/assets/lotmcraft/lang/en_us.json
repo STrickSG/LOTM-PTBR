@@ -5943,6 +5943,8 @@
   "lotmcraft.sect.gathering.order": "In secret, %s members of %s gathered at the hideout%s. They ask for %s (costs %s spirituality): see Pending Prayers.",
   "lotmcraft.sect.hint.dark": "The Sect neither preaches nor holds mass: some nights, members gather in secret and make sacrifices with their requests.",
   "lotmcraft.sect.hint.order": "The Order neither preaches nor holds mass: some nights, members gather in secret and make their requests.",
+  "lotmcraft.sect.offering_line.animal": "An animal was sacrificed",
+  "lotmcraft.sect.offering_line.human": "A person was sacrificed",
   "lotmcraft.church.home.moved": "%s now lives in the temple.",
   "lotmcraft.church.home.left": "%s no longer lives in the temple.",
   "lotmcraft.church.home.full": "There is no free bed in the temple (%s beds).",
