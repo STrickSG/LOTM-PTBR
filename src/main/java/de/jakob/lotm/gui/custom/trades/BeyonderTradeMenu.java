@@ -1,5 +1,7 @@
 package de.jakob.lotm.gui.custom.trades;
 
+import java.util.List;
+
 import de.jakob.lotm.entity.custom.BeyonderNPCEntity;
 import de.jakob.lotm.gui.ModMenuTypes;
 import net.minecraft.world.entity.player.Inventory;
@@ -16,26 +18,36 @@ public class BeyonderTradeMenu extends AbstractContainerMenu {
     private final int npcEntityId;
     private final BeyonderNPCEntity npc;
     private final Container inputSlotsContainer;
+    /** As ofertas: as do Beyonder NPC, ou as de outro vendedor (um colono numa reunião de Beyonders) */
+    private final List<BeyonderNPCEntity.TradeEntry> trades;
+    /** Só no servidor, para vendedores que não são Beyonder NPC: tira a oferta vendida */
+    private java.util.function.IntConsumer onSold;
 
     private static final int INPUT_SLOTS_PER_TRADE = 2;
 
     public BeyonderTradeMenu(int windowId, Inventory playerInventory, int npcEntityId) {
+        this(windowId, playerInventory, npcEntityId, null);
+    }
+
+    /** Com ofertas dadas (outro vendedor que não um Beyonder NPC); null usa as do Beyonder NPC */
+    public BeyonderTradeMenu(int windowId, Inventory playerInventory, int npcEntityId, List<BeyonderNPCEntity.TradeEntry> givenTrades) {
         super(ModMenuTypes.BEYONDER_TRADE_MENU.get(), windowId);
         this.npcEntityId = npcEntityId;
 
         net.minecraft.world.entity.Entity entity = playerInventory.player.level().getEntity(npcEntityId);
-        if (entity instanceof BeyonderNPCEntity beyonderNPC) {
+        if (givenTrades == null && entity instanceof BeyonderNPCEntity beyonderNPC) {
             this.npc = beyonderNPC;
         } else {
             this.npc = null;
         }
+        this.trades = givenTrades != null ? givenTrades : this.npc != null ? this.npc.getCurrentTrades() : List.of();
 
-        int tradeCount = this.npc != null ? this.npc.getCurrentTrades().size() : 0;
+        int tradeCount = this.trades.size();
         this.inputSlotsContainer = new SimpleContainer(Math.max(1, tradeCount) * INPUT_SLOTS_PER_TRADE);
 
         for (int i = 0; i < tradeCount; i++) {
             final int tradeIndex = i;
-            BeyonderNPCEntity.TradeEntry trade = this.npc.getCurrentTrades().get(i);
+            BeyonderNPCEntity.TradeEntry trade = this.trades.get(i);
 
             int slotAIndex = tradeIndex * 2;
             this.addSlot(new Slot(inputSlotsContainer, slotAIndex, 0, 0) {
@@ -77,6 +89,37 @@ public class BeyonderTradeMenu extends AbstractContainerMenu {
 
     public BeyonderNPCEntity getNpc() {
         return npc;
+    }
+
+    public List<BeyonderNPCEntity.TradeEntry> getTrades() {
+        return trades;
+    }
+
+    public BeyonderTradeMenu onSold(java.util.function.IntConsumer onSold) {
+        this.onSold = onSold;
+        return this;
+    }
+
+    public java.util.function.IntConsumer getOnSold() {
+        return onSold;
+    }
+
+    /** Escreve as ofertas para o cliente (vendedores que não são Beyonder NPC) */
+    public static void writeTrades(net.minecraft.network.RegistryFriendlyByteBuf buf, List<BeyonderNPCEntity.TradeEntry> trades) {
+        buf.writeVarInt(trades.size());
+        for (BeyonderNPCEntity.TradeEntry t : trades) {
+            ItemStack.OPTIONAL_STREAM_CODEC.encode(buf, t.costA());
+            ItemStack.OPTIONAL_STREAM_CODEC.encode(buf, t.costB());
+            ItemStack.OPTIONAL_STREAM_CODEC.encode(buf, t.result());
+        }
+    }
+
+    public static List<BeyonderNPCEntity.TradeEntry> readTrades(net.minecraft.network.RegistryFriendlyByteBuf buf) {
+        int n = buf.readVarInt();
+        List<BeyonderNPCEntity.TradeEntry> list = new java.util.ArrayList<>();
+        for (int i = 0; i < n; i++)
+            list.add(new BeyonderNPCEntity.TradeEntry(ItemStack.OPTIONAL_STREAM_CODEC.decode(buf), ItemStack.OPTIONAL_STREAM_CODEC.decode(buf), ItemStack.OPTIONAL_STREAM_CODEC.decode(buf)));
+        return list;
     }
 
     public int getNpcEntityId() {

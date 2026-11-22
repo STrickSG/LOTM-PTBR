@@ -38,6 +38,9 @@ public class ModItems {
     public static final DeferredItem<Item> MYSTERIOUS_SILVER_PLATE = ITEMS.registerItem("mysterious_silver_plate", Item::new, new Item.Properties());
     public static final DeferredItem<Item> ONE_POUND = ITEMS.registerItem("one_pound", Item::new, new Item.Properties());
     public static final DeferredItem<Item> ONE_SOLI = ITEMS.registerItem("one_soli", Item::new, new Item.Properties());
+    /** O convite para a reunião de Beyonders de um reino de NPC */
+    public static final DeferredItem<Item> GATHERING_INVITATION = ITEMS.registerItem("gathering_invitation",
+            de.jakob.lotm.addons.colonies.GatheringInvitationItem::new, new Item.Properties().stacksTo(1));
     public static final DeferredItem<Item> CRYSTAL_BALL = ITEMS.registerItem("crystal_ball", Item::new, new Item.Properties().stacksTo(1));
     public static final DeferredItem<Item> CANE = ITEMS.registerItem("cane", Item::new, new Item.Properties().stacksTo(1));
     public static final DeferredItem<Item> MOD_ICON = ITEMS.registerItem("lotm_icon", Item::new, new Item.Properties());

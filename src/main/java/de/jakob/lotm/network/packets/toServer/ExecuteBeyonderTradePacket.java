@@ -43,11 +43,12 @@ public record ExecuteBeyonderTradePacket(int npcEntityId, int tradeIndex) implem
             if (!(serverPlayer.containerMenu instanceof BeyonderTradeMenu menu)) return;
 
             Entity entity = serverPlayer.level().getEntity(packet.npcEntityId());
-            if (!(entity instanceof BeyonderNPCEntity npc)) return;
+            BeyonderNPCEntity npc = entity instanceof BeyonderNPCEntity n && menu.getNpc() != null ? n : null;
+            if (npc == null && menu.getOnSold() == null) return;
 
             if (menu.getNpcEntityId() != packet.npcEntityId()) return;
 
-            var trades = npc.getCurrentTrades();
+            var trades = menu.getTrades();
             int tradeIndex = packet.tradeIndex();
 
             if (tradeIndex < 0 || tradeIndex >= trades.size()) return;
@@ -80,7 +81,8 @@ public record ExecuteBeyonderTradePacket(int npcEntityId, int tradeIndex) implem
             ItemStack result = trade.result().copy();
             BeyonderTradeMenu.giveOrDrop(serverPlayer, result);
 
-            npc.removeTrade(tradeIndex);
+            if (npc != null) npc.removeTrade(tradeIndex);
+            else menu.getOnSold().accept(tradeIndex);
 
             serverPlayer.closeContainer();
         });

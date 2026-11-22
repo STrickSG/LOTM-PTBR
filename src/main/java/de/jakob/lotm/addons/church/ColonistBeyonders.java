@@ -219,6 +219,12 @@ public final class ColonistBeyonders extends SavedData {
         return next;
     }
 
+    /** Faz do colono um Beyonder já digerido (os Beyonders que nascem nos reinos de NPC) */
+    public static void makeBeyonder(MinecraftServer server, ICitizenData citizen, String pathway, int sequence) {
+        advance(server, citizen, citizen.getEntity().orElse(null), pathway, sequence);
+        hasten(server, citizen.getUUID(), 100);
+    }
+
     private static void advance(MinecraftServer server, ICitizenData citizen, LivingEntity entity, String pathway, int sequence) {
         ColonistBeyonders data = get(server);
         Info info = new Info(pathway, sequence, server.overworld().getDayTime() / 24000L);

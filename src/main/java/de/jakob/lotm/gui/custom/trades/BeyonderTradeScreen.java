@@ -28,9 +28,7 @@ public class BeyonderTradeScreen extends AbstractContainerScreen<BeyonderTradeMe
     public BeyonderTradeScreen(BeyonderTradeMenu menu, Inventory playerInventory, Component title) {
         super(menu, playerInventory, title);
 
-        this.trades = menu.getNpc() != null
-                ? menu.getNpc().getCurrentTrades()
-                : List.of();
+        this.trades = menu.getTrades();
 
         int tradeCount = Math.max(1, trades.size());
         this.imageHeight = TRADE_LIST_START_Y + tradeCount * TRADE_ROW_HEIGHT + 4 + 76 + 14;

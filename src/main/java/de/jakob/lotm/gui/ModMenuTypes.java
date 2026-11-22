@@ -49,7 +49,9 @@ public class ModMenuTypes {
             "beyonder_trade_menu",
             () -> IMenuTypeExtension.create((windowId, inv, data) -> {
                 int npcEntityId = data.readVarInt();
-                return new BeyonderTradeMenu(windowId, inv, npcEntityId);
+                // um vendedor que não é Beyonder NPC manda as ofertas junto
+                var trades = data.isReadable() && data.readBoolean() ? BeyonderTradeMenu.readTrades(data) : null;
+                return new BeyonderTradeMenu(windowId, inv, npcEntityId, trades);
             })
     );
 
