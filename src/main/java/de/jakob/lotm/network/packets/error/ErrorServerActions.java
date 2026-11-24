@@ -53,7 +53,8 @@ public final class ErrorServerActions {
                 }
             }
             case "self_char" -> {
-                if (has(player, "steal_characteristic_ability")) {
+                // o menu também se abre pela Autoridade Angelical (qualquer caminho), não só pelo Roubar Característica do Erro
+                if (has(player, "steal_characteristic_ability") || has(player, "angel_authority_ability")) {
                     if (data.contains("path")) StealCharacteristicAbility.get().extractNeighborFromSelf(player, data.getString("path"));
                     else StealCharacteristicAbility.get().extractFromSelf(player, data.getInt("seq"));
                 }
