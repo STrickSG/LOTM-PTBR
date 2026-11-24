@@ -1570,12 +1570,21 @@ public class IntrospectScreen extends AbstractContainerScreen<IntrospectMenu> {
             longest = Math.max(longest, this.font.width(sq + " · " + BeyonderData.getSequenceName(pathOf(sq, pathway), sq)));
         for (String n : de.jakob.lotm.addons.characteristics.NeighborCharsSyncPacket.clientCounts.keySet())
             longest = Math.max(longest, this.font.width("1 · " + BeyonderData.getSequenceName(n, 1)));
+        for (String n : de.jakob.lotm.addons.characteristics.NeighborCharsSyncPacket.clientUniquenesses)
+            longest = Math.max(longest, this.font.width(Component.translatable("lotm.characteristics.neighbor_uniqueness", Component.translatable("lotm.pathway." + n)).getString()));
         int panelW = Math.max(ACTING_PANEL_WIDTH + 20, Math.min(ACTING_PANEL_WIDTH + 90, longest + 58));
         int[] stacks = this.minecraft != null && this.minecraft.player != null
                 ? ClientBeyonderCache.getCharStacks(this.minecraft.player.getUUID()) : new int[10];
         var neighbors = de.jakob.lotm.addons.characteristics.NeighborCharsSyncPacket.clientCounts;
-        int rows = Math.max(0, 9 - current + 1) + neighbors.size();
-        int panelH = 22 + rows * 18 + 36;
+        var neighborUniq = de.jakob.lotm.addons.characteristics.NeighborCharsSyncPacket.clientUniquenesses;
+        boolean greatOldOne = de.jakob.lotm.addons.characteristics.NeighborCharsSyncPacket.clientGreatOldOne;
+        int rows = Math.max(0, 9 - current + 1) + neighbors.size() + neighborUniq.size();
+        // muitas linhas (um Deus com vizinhos): as linhas apertam para o painel caber na tela
+        int extraH = 22 + 36 + (greatOldOne ? 12 : 0);
+        int rowH = Math.max(12, Math.min(18, (this.height - panelY - 6 - extraH) / Math.max(1, rows)));
+        int panelH = extraH + rows * rowH;
+        // linhas apertadas: a porcentagem vai para o lado da contagem (o nome encolhe um pouco)
+        int shift = rowH < 18 ? 24 : 0;
 
         drawDrawer(g, panelX, panelY, panelW, panelH);
         heading(g, Component.translatable("lotm.characteristics"), panelX + 5, panelY + 5);
@@ -1596,7 +1605,7 @@ public class IntrospectScreen extends AbstractContainerScreen<IntrospectMenu> {
                     g.pose().popPose();
                 }
                 g.drawString(this.font, Component.translatable("lotm.characteristics.uniqueness"), panelX + 22, y + 4, TEXT_HEADING, true);
-                y += 18;
+                y += rowH;
                 continue;
             }
             String seqPath = pathOf(seq, pathway);
@@ -1610,7 +1619,7 @@ public class IntrospectScreen extends AbstractContainerScreen<IntrospectMenu> {
             }
             String name = BeyonderData.getSequenceName(seqPath, seq);
             Component line = Component.literal(seq + " · " + name);
-            int maxW = panelW - 24 - 34;
+            int maxW = panelW - 24 - 34 - shift;
             float sc = Math.min(1f, maxW / (float) Math.max(1, this.font.width(line)));
             g.pose().pushPose();
             g.pose().translate(panelX + 22, y + 4, 0);
@@ -1618,17 +1627,17 @@ public class IntrospectScreen extends AbstractContainerScreen<IntrospectMenu> {
             g.drawString(this.font, line, 0, 0, seq == current ? TEXT_HEADING : TEXT_BODY, true);
             g.pose().popPose();
             Component count = Component.literal("×" + (1 + extra)).withStyle(extra > 0 ? ChatFormatting.GOLD : ChatFormatting.GRAY);
-            g.drawString(this.font, count, panelX + panelW - 32, y + 4, TEXT_NORMAL, true);
+            g.drawString(this.font, count, panelX + panelW - 32 - shift, y + 4, TEXT_NORMAL, true);
             if (extra > 0) {
                 int pct = Math.round(extra * (0.04f + 0.02f * (9 - seq)) * 100);
                 Component w = Component.literal("+" + pct + "%");
                 g.pose().pushPose();
-                g.pose().translate(panelX + panelW - 6 - this.font.width(w) * 0.75f, y + 13, 0);
+                g.pose().translate(panelX + panelW - 6 - this.font.width(w) * 0.75f, (shift > 0 ? y + 5 : y + 13), 0);
                 g.pose().scale(0.75f, 0.75f, 1f);
                 g.drawString(this.font, w, 0, 0, 0xFFC0506E, true);
                 g.pose().popPose();
             }
-            y += 18;
+            y += rowH;
         }
 
         // as de Sequência 1 dos caminhos vizinhos guardadas no corpo
@@ -1642,21 +1651,52 @@ public class IntrospectScreen extends AbstractContainerScreen<IntrospectMenu> {
                 g.pose().popPose();
             }
             Component line = Component.literal("1 · " + BeyonderData.getSequenceName(e.getKey(), 1));
-            int maxW = panelW - 24 - 34;
+            int maxW = panelW - 24 - 34 - shift;
             float sc = Math.min(1f, maxW / (float) Math.max(1, this.font.width(line)));
             g.pose().pushPose();
             g.pose().translate(panelX + 22, y + 4, 0);
             g.pose().scale(sc, sc, 1f);
             g.drawString(this.font, line, 0, 0, 0xFFB9A7E8, true);
             g.pose().popPose();
-            g.drawString(this.font, Component.literal("×" + e.getValue()).withStyle(ChatFormatting.LIGHT_PURPLE), panelX + panelW - 32, y + 4, TEXT_NORMAL, true);
+            g.drawString(this.font, Component.literal("×" + e.getValue()).withStyle(ChatFormatting.LIGHT_PURPLE), panelX + panelW - 32 - shift, y + 4, TEXT_NORMAL, true);
             Component w = Component.literal("+" + Math.round(e.getValue() * de.jakob.lotm.addons.characteristics.NeighborCharacteristics.WEIGHT * 100) + "%");
             g.pose().pushPose();
-            g.pose().translate(panelX + panelW - 6 - this.font.width(w) * 0.75f, y + 13, 0);
+            g.pose().translate(panelX + panelW - 6 - this.font.width(w) * 0.75f, (shift > 0 ? y + 5 : y + 13), 0);
             g.pose().scale(0.75f, 0.75f, 1f);
             g.drawString(this.font, w, 0, 0, 0xFFC0506E, true);
             g.pose().popPose();
-            y += 18;
+            y += rowH;
+        }
+
+        // as Unicidades dos caminhos vizinhos (só um Deus as guarda)
+        for (String n : neighborUniq) {
+            var uniq = net.minecraft.core.registries.BuiltInRegistries.ITEM.get(net.minecraft.resources.ResourceLocation.fromNamespaceAndPath(LOTMCraft.MOD_ID, n + "_uniqueness"));
+            if (uniq != net.minecraft.world.item.Items.AIR) {
+                g.pose().pushPose();
+                g.pose().translate(panelX + 5, y, 0);
+                g.pose().scale(0.875f, 0.875f, 1f);
+                g.renderItem(new ItemStack(uniq), 0, 0);
+                g.pose().popPose();
+            }
+            Component line = Component.translatable("lotm.characteristics.neighbor_uniqueness", Component.translatable("lotm.pathway." + n));
+            int maxW = panelW - 24 - 34 - shift;
+            float sc = Math.min(1f, maxW / (float) Math.max(1, this.font.width(line)));
+            g.pose().pushPose();
+            g.pose().translate(panelX + 22, y + 4, 0);
+            g.pose().scale(sc, sc, 1f);
+            g.drawString(this.font, line, 0, 0, 0xFFB9A7E8, true);
+            g.pose().popPose();
+            Component w = Component.literal("+" + Math.round(de.jakob.lotm.addons.characteristics.GreatOldOnes.WEIGHT * 100) + "%");
+            g.pose().pushPose();
+            g.pose().translate(panelX + panelW - 6 - this.font.width(w) * 0.75f, (shift > 0 ? y + 5 : y + 13), 0);
+            g.pose().scale(0.75f, 0.75f, 1f);
+            g.drawString(this.font, w, 0, 0, 0xFFC0506E, true);
+            g.pose().popPose();
+            y += rowH;
+        }
+        if (greatOldOne) {
+            g.drawCenteredString(this.font, Component.translatable("lotm.characteristics.great_old_one").withStyle(ChatFormatting.BOLD), panelX + panelW / 2, y + 3, 0xFFD9B36A);
+            y += 12;
         }
 
         g.fill(panelX + 6, y + 1, panelX + panelW - 6, y + 2, 0x60F4D58A);

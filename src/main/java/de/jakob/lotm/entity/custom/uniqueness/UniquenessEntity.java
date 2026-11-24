@@ -148,6 +148,21 @@ public class UniquenessEntity extends Entity {
             return;
         }
 
+        // um Deus de um caminho vizinho guarda a Unicidade no corpo (o caminho para o Grande Antigo)
+        if (entity instanceof ServerPlayer god && de.jakob.lotm.addons.characteristics.GreatOldOnes.canTake(god, pathway)) {
+            var discerning = god.getData(ModAttachments.DISCERNMENT_DATA.get());
+            var controlling = god.getData(ModAttachments.ENTITY_CONTROLLING_COMPONENT.get());
+            if (discerning.isDiscerning() || controlling.isControlling()) return;
+            de.jakob.lotm.addons.characteristics.GreatOldOnes.take(god, pathway);
+            int color = BeyonderData.pathwayInfos.containsKey(pathway) ? BeyonderData.pathwayInfos.get(pathway).color() : 0xFFFFFF;
+            serverLevel.players().forEach(p -> p.displayClientMessage(Component.translatableWithFallback("lotmcraft.text.somebody", "Somebody")
+                    .append(Component.translatable("lotm.uniqueness.picked_up")).withColor(color), false));
+            god.playSound(SoundEvents.ITEM_PICKUP);
+            ACTIVE_ENTITIES.remove(pathway);
+            this.discard();
+            return;
+        }
+
         // Others are harmed
         if (seq <= 2 && BeyonderData.isBeyonder(entity)) {
             // Angels (seq <= 2) take massive damage
@@ -226,6 +241,10 @@ public class UniquenessEntity extends Entity {
         }
 
         if (BeyonderData.playerMap.anyPlayerHoldsUniqueness(pathway)) {
+            return true;
+        }
+
+        if (de.jakob.lotm.addons.characteristics.GreatOldOnes.isHeld(level.getServer(), pathway)) {
             return true;
         }
 

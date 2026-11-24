@@ -56,7 +56,11 @@ public final class NeighborCharacteristics {
     }
 
     public static void sync(ServerPlayer player) {
-        de.jakob.lotm.network.PacketHandler.sendToPlayer(player, new NeighborCharsSyncPacket(all(player).entrySet().stream().map(e -> e.getKey() + "=" + e.getValue()).toList()));
+        java.util.List<String> out = new java.util.ArrayList<>(all(player).entrySet().stream().map(e -> e.getKey() + "=" + e.getValue()).toList());
+        // as Unicidades dos vizinhos e o título de Grande Antigo vão junto
+        for (String u : GreatOldOnes.uniquenesses(player)) out.add("#uniq:" + u);
+        if (GreatOldOnes.isGreatOldOne(player)) out.add("#goo");
+        de.jakob.lotm.network.PacketHandler.sendToPlayer(player, new NeighborCharsSyncPacket(out));
     }
 
     @SubscribeEvent
@@ -112,7 +116,7 @@ public final class NeighborCharacteristics {
         return new ItemStack(item);
     }
 
-    public static float weight(Player p) { return total(p) * WEIGHT; }
+    public static float weight(Player p) { return total(p) * WEIGHT + GreatOldOnes.weight(p); }
 
     // ------------------------------------------------------------------ sobrecarga
 

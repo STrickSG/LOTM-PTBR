@@ -6062,5 +6062,9 @@
   "gui.lotmcraft.expel_characteristic.info": "%s extra · +%s%% corruption",
   "lotmcraft.characteristics.overload": "The characteristics of the whole group have gathered in your body. You have lost control.",
   "lotmcraft.characteristics.overload_end": "The surplus characteristics left. You are yourself again.",
-  "lotm.characteristics.uniqueness": "Uniqueness"
+  "lotm.characteristics.uniqueness": "Uniqueness",
+  "lotm.characteristics.neighbor_uniqueness": "Uniqueness · %s",
+  "lotm.characteristics.great_old_one": "Great Old One",
+  "lotmcraft.great_old_one.ascended": "%s has become a Great Old One.",
+  "lotmcraft.great_old_one.lost": "You are no longer a Great Old One."
 }
