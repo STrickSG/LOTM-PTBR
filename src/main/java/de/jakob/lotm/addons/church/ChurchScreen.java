@@ -106,8 +106,10 @@ public class ChurchScreen extends Screen {
         }
 
         if (tab == 0) {
+            // na Seita e na Ordem o Deus vê o aviso de como elas se reúnem: o nome e o botão descem para dar lugar
+            int shift = sectHint() ? 18 : 0;
             if (!consecrated() || isGod()) {
-                nameBox = new EditBox(font, left + 30, top + 150, W - 60, 16, Component.translatable("lotmcraft.church.name"));
+                nameBox = new EditBox(font, left + 30, top + 150 + shift, W - 60, 16, Component.translatable("lotmcraft.church.name"));
                 nameBox.setMaxLength(Churches.MAX_NAME);
                 nameBox.setHint(Component.translatable("lotmcraft.church.name_hint").withStyle(ChatFormatting.GRAY));
                 if (isGod()) nameBox.setValue(view.churchName);
@@ -123,11 +125,15 @@ public class ChurchScreen extends Screen {
                         .bounds(left + 30, top + 189, W - 60, 18).build());
             } else if (isGod()) {
                 addRenderableWidget(Button.builder(Component.translatable("lotmcraft.church.rename"), b -> send("rename"))
-                        .bounds(left + 30, top + 170, W - 60, 18).build());
+                        .bounds(left + 30, top + 170 + shift, W - 60, 18).build());
             }
         }
         addRenderableWidget(Button.builder(Component.translatable("lotmcraft.church.building"), b -> view.openColonyWindow())
                 .bounds(left + 30, top + H - 26, W - 60, 16).build());
+    }
+
+    private boolean sectHint() {
+        return isGod() && Churches.SECT.equals(view.kind);
     }
 
     private Component kindLabel() {
@@ -204,14 +210,20 @@ public class ChurchScreen extends Screen {
                 line(g, Component.translatable("lotmcraft.church.info.pathway", pathwayName(view.pathway)), y + 24);
                 line(g, Component.translatable("lotmcraft.church.info.temples", view.temples), y + 36);
                 line(g, Component.translatable("lotmcraft.church.info.level", view.getBuildingLevel()), y + 48);
-                if (isGod()) g.drawCenteredString(font, Component.translatable("lotmcraft.church.rename_hint"), left + W / 2, top + 138, DIM);
-                if (isGod() && Churches.SECT.equals(view.kind)) {
-                    int hy = y + 62;
-                    for (var l : font.split(Component.translatable(Churches.DARK.equals(view.nature) ? "lotmcraft.sect.hint.dark" : "lotmcraft.sect.hint.order"), W - 50)) {
-                        g.drawString(font, l, left + 25, hy, 0x7A1A3A, false);
-                        hy += 10;
+                if (sectHint()) {
+                    g.drawCenteredString(font, Component.translatable("lotmcraft.church.rename_hint"), left + W / 2, top + 124, DIM);
+                    // o aviso em letra menor, entre as informações e o nome
+                    float hs = 0.8f;
+                    int hy = top + 136;
+                    for (var l : font.split(Component.translatable(Churches.DARK.equals(view.nature) ? "lotmcraft.sect.hint.dark" : "lotmcraft.sect.hint.order"), (int) ((W - 50) / hs))) {
+                        g.pose().pushPose();
+                        g.pose().translate(left + 25, hy, 0);
+                        g.pose().scale(hs, hs, 1f);
+                        g.drawString(font, l, 0, 0, 0x7A1A3A, false);
+                        g.pose().popPose();
+                        hy += 9;
                     }
-                }
+                } else if (isGod()) g.drawCenteredString(font, Component.translatable("lotmcraft.church.rename_hint"), left + W / 2, top + 138, DIM);
             } else {
                 for (var l : font.split(Component.translatable("lotmcraft.church.consecrate_hint", Churches.MAX_SEQUENCE), W - 50)) {
                     g.drawString(font, l, left + 25, y, TEXT, false);
