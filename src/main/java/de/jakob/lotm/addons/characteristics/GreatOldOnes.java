@@ -33,6 +33,10 @@ import java.util.UUID;
 /**
  * As Unicidades dos caminhos vizinhos e o Grande Antigo.
  * <ul>
+ *   <li>Ritual de Ascensão: com tudo reunido, o Deus começa a Ascensão dentro da própria Sefirah (pela Introspecção).
+ *   Dura 5 minutos, o servidor inteiro fica sabendo e a corrupção sobe; se morrer, sair da Sefirah, perder um requisito
+ *   ou perder o controle, falha e as Unicidades dos vizinhos voltam ao mundo. Ao fim, ganha o nome do grupo
+ *   (Senhor dos Mistérios, Escuridão Eterna...).</li>
  *   <li>Só um Deus (Seq 0) pega a Unicidade de um caminho vizinho; ela não muda o caminho, mas pesa na corrupção.</li>
  *   <li>Grande Antigo: o Deus que abriga a Sefirah do grupo, as Unicidades dos vizinhos e pelo menos uma característica
  *   de Sequência 1 de cada vizinho. Só um por grupo. Quem trocou de caminho não consegue.</li>
@@ -43,7 +47,29 @@ import java.util.UUID;
 public final class GreatOldOnes {
     private GreatOldOnes() {}
 
-    private static final String KEY = "LotmNeighborUniq", TITLE = "LotmGreatOldOne";
+    private static final String KEY = "LotmNeighborUniq", TITLE = "LotmGreatOldOne", ASCENSION = "LotmAscension", READY = "LotmAscensionReady";
+    /** A Ascensão dura 5 minutos */
+    public static final int ASCENSION_TICKS = 20 * 60 * 5;
+    /** Quanto a corrupção sobe por segundo durante a Ascensão */
+    private static final float ASCENSION_CORRUPTION = 0.001f;
+
+    /** Caminho -> o Grande Antigo do grupo (a chave do nome) */
+    private static final Map<String, String> GROUP_NAMES = Map.ofEntries(
+            Map.entry("fool", "lord_of_mysteries"), Map.entry("error", "lord_of_mysteries"), Map.entry("door", "lord_of_mysteries"),
+            Map.entry("visionary", "god_almighty"), Map.entry("sun", "god_almighty"), Map.entry("tyrant", "god_almighty"),
+            Map.entry("white_tower", "god_almighty"), Map.entry("hanged_man", "god_almighty"),
+            Map.entry("darkness", "eternal_darkness"), Map.entry("death", "eternal_darkness"), Map.entry("twilight_giant", "eternal_darkness"),
+            Map.entry("red_priest", "calamity_of_destruction"), Map.entry("demoness", "calamity_of_destruction"),
+            Map.entry("hermit", "demon_of_knowledge"), Map.entry("paragon", "demon_of_knowledge"),
+            Map.entry("mother", "goddess_of_origin"), Map.entry("moon", "goddess_of_origin"),
+            Map.entry("abyss", "father_of_devils"), Map.entry("chained", "father_of_devils"),
+            Map.entry("wheel_of_fortune", "key_of_light"));
+
+    /** O nome do Grande Antigo do grupo deste caminho (ex.: Senhor dos Mistérios) */
+    public static Component titleOf(String pathway) {
+        String id = GROUP_NAMES.get(pathway);
+        return id == null ? Component.translatable("lotm.characteristics.great_old_one") : Component.translatable("lotmcraft.great_old_one.name." + id);
+    }
     /** Cada Unicidade de um vizinho pesa isto na corrupção */
     public static final float WEIGHT = 0.15f;
     private static final int COLOR = 0xD9B36A;
@@ -132,49 +158,182 @@ public final class GreatOldOnes {
         return null;
     }
 
+    /** Confere o título (some se faltar um requisito) e se a Ascensão está liberada (para o botão da Introspecção) */
     public static void check(ServerPlayer player) {
-        boolean ready = missing(player) == null;
-        boolean has = isGreatOldOne(player);
-        if (ready == has) return;
-        String group = groupKey(BeyonderData.getPathway(player));
-        setTitle(player, ready);
-        if (ready) {
-            data(player.server).titles.put(group, player.getUUID());
-            for (ServerPlayer p : player.server.getPlayerList().getPlayers()) {
-                p.sendSystemMessage(Component.translatable("lotmcraft.great_old_one.ascended", player.getName()).withColor(COLOR));
-                p.playNotifySound(SoundEvents.WITHER_SPAWN, net.minecraft.sounds.SoundSource.MASTER, 0.6f, 0.6f);
-            }
-        } else {
-            data(player.server).titles.remove(group, player.getUUID());
-            player.sendSystemMessage(Component.translatable("lotmcraft.great_old_one.lost").withColor(0xB0306A));
+        String missing = missing(player);
+        boolean changed = false;
+        if (isGreatOldOne(player) && missing != null) {
+            data(player.server).titles.values().remove(player.getUUID());
+            data(player.server).setDirty();
+            setTitle(player, false);
+            player.sendSystemMessage(Component.translatable("lotmcraft.great_old_one.lost", titleOf(BeyonderData.getPathway(player))).withColor(0xB0306A));
+            changed = true;
         }
-        data(player.server).setDirty();
+        boolean ready = missing == null && !isGreatOldOne(player);
+        CompoundTag persisted = persisted(player);
+        if (persisted.getBoolean(READY) != ready) {
+            if (ready) persisted.putBoolean(READY, true); else persisted.remove(READY);
+            save(player, persisted);
+            changed = true;
+        }
+        if (changed) NeighborCharacteristics.sync(player);
+    }
+
+    public static boolean isReady(Player p) { return persisted(p).getBoolean(READY); }
+
+    // ------------------------------------------------------------------ o Ritual de Ascensão
+
+    public static int ascensionTicks(Player p) { return persisted(p).getInt(ASCENSION); }
+
+    private static void setAscension(Player p, int ticks) {
+        CompoundTag persisted = persisted(p);
+        if (ticks > 0) persisted.putInt(ASCENSION, ticks); else persisted.remove(ASCENSION);
+        save(p, persisted);
+    }
+
+    /** O Deus pede a Ascensão (botão da Introspecção) */
+    public static void requestAscension(ServerPlayer player) {
+        if (isGreatOldOne(player) || ascensionTicks(player) > 0) return;
+        String missing = missing(player);
+        if (missing != null) {
+            player.displayClientMessage(Component.translatable("lotmcraft.great_old_one.not_ready"), true);
+            return;
+        }
+        String sefirah = SefirahHandler.getClaimedSefirot(player);
+        if (!SefirahHandler.isInSefirot(player, sefirah)) {
+            player.displayClientMessage(Component.translatable("lotmcraft.great_old_one.inside_sefirah"), true);
+            return;
+        }
+        setAscension(player, ASCENSION_TICKS);
+        Component title = titleOf(BeyonderData.getPathway(player));
+        int color = BeyonderData.pathwayInfos.containsKey(BeyonderData.getPathway(player)) ? BeyonderData.pathwayInfos.get(BeyonderData.getPathway(player)).color() : COLOR;
+        for (ServerPlayer p : player.server.getPlayerList().getPlayers()) {
+            p.sendSystemMessage(Component.translatable("lotmcraft.great_old_one.ascension_start", player.getName(), title).withColor(color));
+            p.playNotifySound(SoundEvents.WITHER_SPAWN, net.minecraft.sounds.SoundSource.MASTER, 0.8f, 0.5f);
+        }
+        player.closeContainer();
+    }
+
+    private static void ascensionTick(ServerPlayer player) {
+        int left = ascensionTicks(player);
+        if (left <= 0) return;
+        ServerLevel level = player.serverLevel();
+        String pathway = BeyonderData.getPathway(player);
+        // de pé no ar, sem habilidades, envolto na cor do caminho
+        player.setDeltaMovement(new net.minecraft.world.phys.Vec3(0, 0.02, 0));
+        player.hurtMarked = true;
+        player.getData(de.jakob.lotm.attachments.ModAttachments.DISABLED_ABILITIES_COMPONENT).disableAbilityUsageForTime("ascension", 20, player);
+        int c = BeyonderData.pathwayInfos.containsKey(pathway) ? BeyonderData.pathwayInfos.get(pathway).color() : COLOR;
+        var dust = new net.minecraft.core.particles.DustParticleOptions(new org.joml.Vector3f(((c >> 16) & 0xFF) / 255f, ((c >> 8) & 0xFF) / 255f, (c & 0xFF) / 255f), 2.5f);
+        de.jakob.lotm.util.helper.ParticleUtil.spawnSphereParticles(level, dust, player.position().add(0, player.getBbHeight() / 2, 0), 2.0, 70);
+        if (left % 120 == 0)
+            de.jakob.lotm.rendering.effectRendering.EffectManager.playMovableEffect(de.jakob.lotm.rendering.effectRendering.EffectIds.BEAMS_OF_LIGHT, level, player,
+                    de.jakob.lotm.rendering.effectRendering.EffectParams.ofDuration(120));
+
+        if (left % 20 == 0) {
+            // a cada segundo: confere os requisitos e o lugar, e a corrupção sobe
+            String fail = missing(player);
+            if (fail == null && !SefirahHandler.isInSefirot(player, SefirahHandler.getClaimedSefirot(player))) fail = "left_sefirah";
+            float corruption = de.jakob.lotm.addons.corruption.Corruption.get(player) + ASCENSION_CORRUPTION;
+            de.jakob.lotm.addons.corruption.Corruption.set(player, Math.min(1f, corruption));
+            if (fail == null && corruption >= 1f) fail = "lost_control";
+            if (fail != null) {
+                failAscension(player, fail);
+                return;
+            }
+        }
+
+        setAscension(player, left - 1);
+        if (left - 1 == 0) {
+            setTitle(player, true);
+            data(player.server).titles.put(groupKey(pathway), player.getUUID());
+            data(player.server).setDirty();
+            check(player);
+            NeighborCharacteristics.sync(player);
+            Component title = titleOf(pathway);
+            for (ServerPlayer p : player.server.getPlayerList().getPlayers()) {
+                p.sendSystemMessage(Component.translatable("lotmcraft.great_old_one.ascended", player.getName(), title).withColor(c));
+                p.playNotifySound(SoundEvents.UI_TOAST_CHALLENGE_COMPLETE, net.minecraft.sounds.SoundSource.MASTER, 1f, 0.6f);
+            }
+        }
+    }
+
+    /** A Ascensão falhou: as Unicidades dos vizinhos se soltam e voltam ao mundo */
+    private static void failAscension(ServerPlayer player, String reason) {
+        setAscension(player, 0);
+        LOTMCraft.LOGGER.info("Ascensão de {} falhou: {}", player.getName().getString(), reason);
+        releaseUniquenesses(player);
+        Component title = titleOf(BeyonderData.getPathway(player));
+        for (ServerPlayer p : player.server.getPlayerList().getPlayers())
+            p.sendSystemMessage(Component.translatable("lotmcraft.great_old_one.ascension_failed", player.getName(), title).withColor(0xB0306A));
+        if ("lost_control".equals(reason)) de.jakob.lotm.addons.corruption.LostToCorruption.lose(player);
+        check(player);
+    }
+
+    /** Na falha da Ascensão, as Unicidades dos vizinhos se soltam e fogem para longe, cada uma para um lado (300 a 800 blocos) */
+    private static void releaseUniquenesses(ServerPlayer player) {
+        Set<String> held = uniquenesses(player);
+        if (held.isEmpty()) return;
+        Data data = data(player.server);
+        for (String pathway : held) data.holders.remove(pathway, player.getUUID());
+        data.setDirty();
+        setUniquenesses(player, Set.of());
+        ServerLevel overworld = player.server.overworld();
+        var from = player.level() == overworld ? player.position() : net.minecraft.world.phys.Vec3.atBottomCenterOf(overworld.getSharedSpawnPos());
+        var random = player.getRandom();
+        for (String pathway : held) {
+            double angle = random.nextDouble() * Math.PI * 2, dist = 300 + random.nextDouble() * 500;
+            int x = (int) (from.x + Math.cos(angle) * dist), z = (int) (from.z + Math.sin(angle) * dist);
+            overworld.getChunk(x >> 4, z >> 4);   // carrega o lugar para ela aparecer
+            int y = overworld.getHeight(net.minecraft.world.level.levelgen.Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, x, z);
+            UniquenessEntity.trySpawn(overworld, new net.minecraft.world.phys.Vec3(x + 0.5, y + 1, z + 0.5), pathway);
+            LOTMCraft.LOGGER.info("Unicidade {} fugiu para {} {} {}", pathway, x, y + 1, z);
+        }
+        de.jakob.lotm.addons.corruption.Corruption.set(player, de.jakob.lotm.addons.corruption.Corruption.get(player));
         NeighborCharacteristics.sync(player);
     }
 
     @SubscribeEvent
+    public static void onLogout(net.neoforged.neoforge.event.entity.player.PlayerEvent.PlayerLoggedOutEvent event) {
+        // sair do jogo interrompe a Ascensão sem castigo (como a Apoteose)
+        if (event.getEntity() instanceof ServerPlayer player && ascensionTicks(player) > 0) setAscension(player, 0);
+    }
+
+    @SubscribeEvent
     public static void onTick(PlayerTickEvent.Post event) {
-        if (!(event.getEntity() instanceof ServerPlayer player) || player.tickCount % 40 != 7) return;
+        if (!(event.getEntity() instanceof ServerPlayer player)) return;
+        if (ascensionTicks(player) > 0) ascensionTick(player);
+        if (player.tickCount % 40 != 7) return;
         if (BeyonderData.getSequence(player) != 0 && !isGreatOldOne(player) && uniquenesses(player).isEmpty()) return;
         check(player);
     }
 
-    /** Morto: as Unicidades dos vizinhos se soltam e voltam ao mundo, e o título acaba */
+    /** Morto: as Unicidades dos vizinhos se soltam e voltam ao mundo, a Ascensão falha e o título acaba */
     @SubscribeEvent(priority = EventPriority.LOWEST)
     public static void onDeath(LivingDeathEvent event) {
         if (event.isCanceled() || !(event.getEntity() instanceof ServerPlayer player) || !(player.level() instanceof ServerLevel level)) return;
         Set<String> held = uniquenesses(player);
-        if (held.isEmpty() && !isGreatOldOne(player)) return;
+        boolean ascending = ascensionTicks(player) > 0;
+        if (held.isEmpty() && !isGreatOldOne(player) && !ascending) return;
+        if (ascending) {
+            setAscension(player, 0);
+            Component title = titleOf(BeyonderData.getPathway(player));
+            for (ServerPlayer p : player.server.getPlayerList().getPlayers())
+                p.sendSystemMessage(Component.translatable("lotmcraft.great_old_one.ascension_failed", player.getName(), title).withColor(0xB0306A));
+        }
         Data data = data(player.server);
-        for (String pathway : held) data.holders.remove(pathway, player.getUUID());
-        setUniquenesses(player, Set.of());
         if (isGreatOldOne(player)) {
             setTitle(player, false);
             data.titles.values().remove(player.getUUID());
+            data.setDirty();
         }
+        // morreu no Mundo Normal: as Unicidades caem ali mesmo
+        for (String pathway : held) data.holders.remove(pathway, player.getUUID());
         data.setDirty();
-        var at = player.position();
-        for (String pathway : held) UniquenessEntity.trySpawn(level, at, pathway);
+        setUniquenesses(player, Set.of());
+        ServerLevel overworld = player.server.overworld();
+        var at = level == overworld ? player.position() : net.minecraft.world.phys.Vec3.atBottomCenterOf(overworld.getSharedSpawnPos());
+        for (String pathway : held) UniquenessEntity.trySpawn(overworld, at, pathway);
         NeighborCharacteristics.sync(player);
     }
 

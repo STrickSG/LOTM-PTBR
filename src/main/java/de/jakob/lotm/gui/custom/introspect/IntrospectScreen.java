@@ -809,6 +809,18 @@ public class IntrospectScreen extends AbstractContainerScreen<IntrospectMenu> {
             this.addRenderableWidget(apotheosisButton);
         }
 
+        // o Ritual de Ascensão: o Deus que reuniu tudo vira o Grande Antigo do grupo
+        if (menu.getSequence() == 0 && !de.jakob.lotm.addons.characteristics.NeighborCharsSyncPacket.clientGreatOldOne) {
+            boolean ready = de.jakob.lotm.addons.characteristics.NeighborCharsSyncPacket.clientAscensionReady;
+            BrassButton ascension = new BrassButton(baseLeftPos - TAB_W + 2, this.topPos + 135, TAB_W, TAB_H,
+                    Component.translatable("lotmcraft.text.ascension").withStyle(ready ? ChatFormatting.GOLD : ChatFormatting.GRAY),
+                    ICON_APOTHEOSIS,
+                    button -> { if (ready) PacketHandler.sendToServer(new de.jakob.lotm.addons.characteristics.RequestAscensionPacket()); })
+                    .glow(0xFFAA00);
+            ascension.active = ready;
+            this.addRenderableWidget(ascension);
+        }
+
         if (isCreativeOp()) {
             LeverButton lever = new LeverButton(baseLeftPos - TAB_W + 2, this.topPos + 162, showAllAbilities,
                     button -> {
@@ -1173,6 +1185,9 @@ public class IntrospectScreen extends AbstractContainerScreen<IntrospectMenu> {
         g.blitSprite(SPR_NAMEPLATE, x + 16, y + NAMEPLATE_Y, NAMEPLATE_W, NAMEPLATE_H);
 
         String name = BeyonderData.getSequenceName(menu.getPathway(), menu.getSequence());
+        // o Grande Antigo leva o nome do grupo no lugar do da Sequência (ex.: Senhor dos Mistérios)
+        if (menu.getSequence() == 0 && de.jakob.lotm.addons.characteristics.NeighborCharsSyncPacket.clientGreatOldOne)
+            name = de.jakob.lotm.addons.characteristics.GreatOldOnes.titleOf(menu.getPathway()).getString();
         List<String> nameLines = wrapText(name, NAMEPLATE_W - 20);
         if (nameLines.size() > 2) {
             nameLines = new ArrayList<>(nameLines.subList(0, 2));
@@ -1577,7 +1592,7 @@ public class IntrospectScreen extends AbstractContainerScreen<IntrospectMenu> {
                 ? ClientBeyonderCache.getCharStacks(this.minecraft.player.getUUID()) : new int[10];
         var neighbors = de.jakob.lotm.addons.characteristics.NeighborCharsSyncPacket.clientCounts;
         var neighborUniq = de.jakob.lotm.addons.characteristics.NeighborCharsSyncPacket.clientUniquenesses;
-        boolean greatOldOne = de.jakob.lotm.addons.characteristics.NeighborCharsSyncPacket.clientGreatOldOne;
+        boolean greatOldOne = false;   // o título aparece no quadro da Sequência
         int rows = Math.max(0, 9 - current + 1) + neighbors.size() + neighborUniq.size();
         // muitas linhas (um Deus com vizinhos): as linhas apertam para o painel caber na tela
         int extraH = 22 + 36 + (greatOldOne ? 12 : 0);

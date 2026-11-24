@@ -60,6 +60,7 @@ public final class NeighborCharacteristics {
         // as Unicidades dos vizinhos e o título de Grande Antigo vão junto
         for (String u : GreatOldOnes.uniquenesses(player)) out.add("#uniq:" + u);
         if (GreatOldOnes.isGreatOldOne(player)) out.add("#goo");
+        if (GreatOldOnes.isReady(player)) out.add("#ready");
         de.jakob.lotm.network.PacketHandler.sendToPlayer(player, new NeighborCharsSyncPacket(out));
     }
 

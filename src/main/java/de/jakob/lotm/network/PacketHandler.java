@@ -1185,6 +1185,12 @@ public class PacketHandler {
         );
 
         registrar.playToServer(
+                de.jakob.lotm.addons.characteristics.RequestAscensionPacket.TYPE,
+                de.jakob.lotm.addons.characteristics.RequestAscensionPacket.STREAM_CODEC,
+                de.jakob.lotm.addons.characteristics.RequestAscensionPacket::handle
+        );
+
+        registrar.playToServer(
                 RequestUniquenessApotheosisPacket.TYPE,
                 RequestUniquenessApotheosisPacket.STREAM_CODEC,
                 RequestUniquenessApotheosisPacket::handle

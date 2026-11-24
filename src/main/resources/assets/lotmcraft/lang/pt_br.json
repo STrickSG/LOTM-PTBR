@@ -5864,6 +5864,19 @@
   "lotm.characteristics.uniqueness": "Unicidade",
   "lotm.characteristics.neighbor_uniqueness": "Unicidade · %s",
   "lotm.characteristics.great_old_one": "Grande Antigo",
-  "lotmcraft.great_old_one.ascended": "%s tornou-se um Grande Antigo.",
-  "lotmcraft.great_old_one.lost": "Você deixou de ser um Grande Antigo."
+  "lotmcraft.great_old_one.ascended": "%s ascendeu: agora é %s.",
+  "lotmcraft.great_old_one.lost": "Você deixou de ser %s.",
+  "lotmcraft.great_old_one.name.lord_of_mysteries": "Senhor dos Mistérios",
+  "lotmcraft.great_old_one.name.god_almighty": "Deus Todo-Poderoso",
+  "lotmcraft.great_old_one.name.eternal_darkness": "Escuridão Eterna",
+  "lotmcraft.great_old_one.name.calamity_of_destruction": "Calamidade da Destruição",
+  "lotmcraft.great_old_one.name.demon_of_knowledge": "Demônio do Conhecimento",
+  "lotmcraft.great_old_one.name.goddess_of_origin": "Deusa da Origem",
+  "lotmcraft.great_old_one.name.father_of_devils": "Pai dos Demônios",
+  "lotmcraft.great_old_one.name.key_of_light": "Chave da Luz",
+  "lotmcraft.great_old_one.not_ready": "Ainda falta algo para a Ascensão.",
+  "lotmcraft.great_old_one.inside_sefirah": "A Ascensão só pode começar dentro da sua Sefirah.",
+  "lotmcraft.great_old_one.ascension_start": "%s começou a Ascensão para se tornar %s.",
+  "lotmcraft.great_old_one.ascension_failed": "A Ascensão de %s falhou: não se tornou %s, e as Unicidades se soltaram.",
+  "lotmcraft.text.ascension": "Ascensão"
 }
