@@ -1161,12 +1161,24 @@ public class IntrospectScreen extends AbstractContainerScreen<IntrospectMenu> {
         RenderSystem.setShaderColor(1f, 1f, 1f, 1f);
 
         // --- sequence counter ---
-        heading(g, Component.translatable("lotm.sequence"), x + 16, y + SEQ_LABEL_Y);
-        drawCounter(g, x + 16, y + SEQ_COUNTER_Y, 30, 16, String.valueOf(menu.getSequence()), TEXT_HEADING);
+        // o Grande Antigo está Além da Sequência: a frase toma o lugar do número (e não volta à Seq 1 ao tirar as próprias)
+        boolean beyond = menu.getSequence() == 0 && de.jakob.lotm.addons.characteristics.NeighborCharsSyncPacket.clientGreatOldOne;
+        if (beyond) {
+            Component phrase = Component.translatable("lotm.beyond_the_sequence").withStyle(ChatFormatting.BOLD);
+            float sc = Math.min(1f, (ICON_FRAME_X - 22) / (float) Math.max(1, this.font.width(phrase)));
+            g.pose().pushPose();
+            g.pose().translate(x + 16, y + SEQ_LABEL_Y, 0);
+            g.pose().scale(sc, sc, 1f);
+            g.drawString(this.font, phrase, 0, 0, TEXT_HEADING, true);
+            g.pose().popPose();
+        } else {
+            heading(g, Component.translatable("lotm.sequence"), x + 16, y + SEQ_LABEL_Y);
+            drawCounter(g, x + 16, y + SEQ_COUNTER_Y, 30, 16, String.valueOf(menu.getSequence()), TEXT_HEADING);
+        }
 
         Player player = playerInventory.player;
         int charStackCount = 0;
-        if (player.level().isClientSide) {
+        if (player.level().isClientSide && !beyond) {
             charStackCount = ClientBeyonderCache.getCharStack(player.getUUID());
         }
         if (charStackCount > 0) {
@@ -1176,7 +1188,7 @@ public class IntrospectScreen extends AbstractContainerScreen<IntrospectMenu> {
 
         float years = menu.getYears();
         String yearsLabel = LotmText.f("lotmcraft.text.age", "Age: %s", (years == (int) years ? String.valueOf((int) years) : String.format(java.util.Locale.ROOT, "%.1f", years)));
-        int yearsX = x + 50;
+        int yearsX = beyond ? x + 16 : x + 50;
         if (charStackCount > 0) yearsX += this.font.width("+" + charStackCount) + 4;
         g.drawString(this.font, yearsLabel, yearsX, y + SEQ_COUNTER_Y + 4, TEXT_NORMAL, true);
 
@@ -1588,6 +1600,8 @@ public class IntrospectScreen extends AbstractContainerScreen<IntrospectMenu> {
         for (String n : de.jakob.lotm.addons.characteristics.NeighborCharsSyncPacket.clientUniquenesses)
             longest = Math.max(longest, this.font.width(Component.translatable("lotm.characteristics.neighbor_uniqueness", Component.translatable("lotm.pathway." + n)).getString()));
         int panelW = Math.max(ACTING_PANEL_WIDTH + 20, Math.min(ACTING_PANEL_WIDTH + 90, longest + 58));
+        // nunca passa da borda da tela (os nomes compridos encolhem)
+        panelW = Math.max(ACTING_PANEL_WIDTH, Math.min(panelW, this.width - panelX - 4));
         int[] stacks = this.minecraft != null && this.minecraft.player != null
                 ? ClientBeyonderCache.getCharStacks(this.minecraft.player.getUUID()) : new int[10];
         var neighbors = de.jakob.lotm.addons.characteristics.NeighborCharsSyncPacket.clientCounts;
@@ -1608,8 +1622,7 @@ public class IntrospectScreen extends AbstractContainerScreen<IntrospectMenu> {
         int y = panelY + 19;
         for (int seq = 9; seq >= current && seq >= 0; seq--) {
             int extra = stacks != null && seq < stacks.length ? Math.max(0, stacks[seq]) : 0;
-            // o Deus é a soma das 3 de Sequência 1 com a Unicidade: não existe característica de Sequência 0
-            if (current == 0 && seq == 1) extra = Math.max(extra, 2);
+            // o Deus é a soma das 3 de Sequência 1 com a Unicidade (as 2 extras ficam guardadas; tiradas, o número cai)
             if (seq == 0) {
                 var uniq = net.minecraft.core.registries.BuiltInRegistries.ITEM.get(net.minecraft.resources.ResourceLocation.fromNamespaceAndPath(LOTMCraft.MOD_ID, pathway + "_uniqueness"));
                 if (uniq != net.minecraft.world.item.Items.AIR) {

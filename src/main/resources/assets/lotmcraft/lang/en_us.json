@@ -6079,5 +6079,6 @@
   "lotmcraft.great_old_one.inside_sefirah": "The Ascension can only begin inside your Sefirah.",
   "lotmcraft.great_old_one.ascension_start": "%s has begun the Ascension to become %s.",
   "lotmcraft.great_old_one.ascension_failed": "%s's Ascension failed: they did not become %s, and the Uniquenesses broke free.",
-  "lotmcraft.text.ascension": "Ascension"
+  "lotmcraft.text.ascension": "Ascension",
+  "lotm.beyond_the_sequence": "Beyond the Sequence"
 }

@@ -5878,5 +5878,6 @@
   "lotmcraft.great_old_one.inside_sefirah": "A Ascensão só pode começar dentro da sua Sefirah.",
   "lotmcraft.great_old_one.ascension_start": "%s começou a Ascensão para se tornar %s.",
   "lotmcraft.great_old_one.ascension_failed": "A Ascensão de %s falhou: não se tornou %s, e as Unicidades se soltaram.",
-  "lotmcraft.text.ascension": "Ascensão"
+  "lotmcraft.text.ascension": "Ascensão",
+  "lotm.beyond_the_sequence": "Além da Sequência"
 }
